@@ -1,0 +1,16 @@
+{
+  "name": "Bobcat Language School",
+  "short_name": "Bobcat",
+  "description": "Aprenda inglês com a Bobcat Language School — lições, exercícios e acompanhamento de progresso.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fdfaf7",
+  "theme_color": "#D9793F",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

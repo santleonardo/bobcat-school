@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bobcat Language School</title>
+<meta name="theme-color" content="#D9793F">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Bobcat">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <div id="boot-loading" style="position:fixed; inset:0; z-index:999; background:#fdfaf7; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;">
+    <img src="./icons/icon-192.png" alt="Bobcat" style="height:64px;">
+    <div style="color:#C9622A; font-weight:700; font-size:14px;">Carregando...</div>
+  </div>
+
+  <div class="topbar">
+    <img src="./icons/icon-192.png" alt="Bobcat">
+    <div>
+      <div class="brand">Bobcat Language School</div>
+      <small>Aprenda inglês no seu ritmo</small>
+    </div>
+  </div>
+
+  <!-- TELA: CRIAR/EDITAR PERFIL -->
+  <div class="screen" id="screen-profile-setup">
+    <h2 class="screen-title">Vamos criar seu perfil</h2>
+
+    <label class="field-label">Como você se chama?</label>
+    <input type="text" id="input-name" placeholder="Seu nome" maxlength="40">
+
+    <label class="field-label">Escolha um avatar</label>
+    <div class="avatar-picker" id="avatar-picker">
+      <div class="avatar-option" data-avatar="🦁">🦁</div>
+      <div class="avatar-option" data-avatar="🐱">🐱</div>
+      <div class="avatar-option" data-avatar="🦉">🦉</div>
+      <div class="avatar-option" data-avatar="🐼">🐼</div>
+      <div class="avatar-option" data-avatar="🦊">🦊</div>
+      <div class="avatar-option" data-avatar="🐨">🐨</div>
+      <div class="avatar-option" data-avatar="🐸">🐸</div>
+      <div class="avatar-option" data-avatar="🦄">🦄</div>
+    </div>
+
+    <label class="field-label">Seu nível em inglês</label>
+    <select id="input-level">
+      <option value="A1">A1 — Iniciante</option>
+      <option value="A2">A2 — Básico</option>
+      <option value="B1">B1 — Intermediário</option>
+      <option value="B2">B2 — Intermediário avançado</option>
+    </select>
+
+    <button class="btn" id="btn-save-profile">Começar a estudar</button>
+  </div>
+
+  <!-- TELA: HOME -->
+  <div class="screen hidden" id="screen-home">
+    <div id="install-banner-slot"></div>
+
+    <div class="hello-card">
+      <div class="emoji" id="home-avatar">🦁</div>
+      <div>
+        <div class="greeting" id="home-greeting">Olá!</div>
+        <div class="sub" id="home-level-sub">Nível A1</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="num" id="stat-completed">0</div>
+        <div class="label">lições concluídas</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="stat-score">—</div>
+        <div class="label">média de acertos</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="stat-streak">0</div>
+        <div class="label">lições disponíveis</div>
+      </div>
+    </div>
+
+    <h2 class="screen-title" style="margin-bottom:10px;">Suas lições</h2>
+    <div id="lesson-list"></div>
+  </div>
+
+  <!-- TELA: PERFIL (visualização/edição) -->
+  <div class="screen hidden" id="screen-profile-view">
+    <h2 class="screen-title">Meu perfil</h2>
+
+    <div class="hello-card">
+      <div class="emoji" id="profile-avatar">🦁</div>
+      <div>
+        <div class="greeting" id="profile-name-display">Nome</div>
+        <div class="sub" id="profile-level-display">Nível A1</div>
+      </div>
+    </div>
+
+    <label class="field-label">Nome</label>
+    <input type="text" id="edit-name" maxlength="40">
+
+    <label class="field-label">Avatar</label>
+    <div class="avatar-picker" id="avatar-picker-edit">
+      <div class="avatar-option" data-avatar="🦁">🦁</div>
+      <div class="avatar-option" data-avatar="🐱">🐱</div>
+      <div class="avatar-option" data-avatar="🦉">🦉</div>
+      <div class="avatar-option" data-avatar="🐼">🐼</div>
+      <div class="avatar-option" data-avatar="🦊">🦊</div>
+      <div class="avatar-option" data-avatar="🐨">🐨</div>
+      <div class="avatar-option" data-avatar="🐸">🐸</div>
+      <div class="avatar-option" data-avatar="🦄">🦄</div>
+    </div>
+
+    <label class="field-label">Nível em inglês</label>
+    <select id="edit-level">
+      <option value="A1">A1 — Iniciante</option>
+      <option value="A2">A2 — Básico</option>
+      <option value="B1">B1 — Intermediário</option>
+      <option value="B2">B2 — Intermediário avançado</option>
+    </select>
+
+    <button class="btn" id="btn-update-profile">Salvar alterações</button>
+    <button class="btn secondary" id="btn-reset-progress" style="width:100%; margin-top:10px; background:#fff; color:#C0392B; border-color:#C0392B;">Zerar progresso das lições</button>
+    <p id="cloud-status" style="text-align:center; font-size:11.5px; color:#999; margin-top:14px;"></p>
+  </div>
+
+  <div class="bottom-nav" id="bottom-nav" style="display:none;">
+    <button class="nav-btn active" data-screen="home">
+      <span class="nav-icon">🏠</span>
+      <span>Início</span>
+    </button>
+    <button class="nav-btn" data-screen="profile-view">
+      <span class="nav-icon">👤</span>
+      <span>Perfil</span>
+    </button>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./config.js"></script>
+<script src="./db-client.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
