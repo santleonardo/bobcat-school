@@ -17,7 +17,9 @@ Este guia cobre os três passos: **Supabase** (banco de dados) → **GitHub** (c
 3. Espere o projeto terminar de subir (~2 minutos).
 4. No menu lateral, vá em **SQL Editor** → **New query**, cole todo o conteúdo do arquivo `schema.sql` deste projeto, e clique em **Run**.
    - Isso cria as tabelas `profiles` e `progress`, com as regras de segurança (RLS) já configuradas.
-5. Vá em **Authentication → Providers**, encontre **Email** e **ative**. Ainda na mesma tela, **desligue "Confirm email"** (o app usa um usuário+senha simples, não um e-mail de verdade — se a confirmação ficar ligada, ninguém consegue confirmar e o cadastro trava).
+5. Vá em **Authentication → Providers**, encontre **Email** e **ative**. Nessa mesma tela tem a opção **"Confirm email"** — escolha um dos dois caminhos:
+   - **Desligado (mais simples):** o aluno cria a conta e já entra na hora, sem precisar checar o e-mail. Bom para turmas pequenas / alunos mais novos.
+   - **Ligado (mais seguro):** o aluno recebe um e-mail de confirmação e precisa clicar no link antes de conseguir entrar. Se escolher essa opção, configure também **Authentication → URL Configuration → Site URL** com a URL do seu site (ex. `https://SEU-SITE.vercel.app`), senão o link de confirmação pode não redirecionar direito.
 6. Vá em **Project Settings → API**. Copie:
    - **Project URL**
    - **anon public key**
@@ -30,9 +32,9 @@ Este guia cobre os três passos: **Supabase** (banco de dados) → **GitHub** (c
    };
    ```
 
-Pronto — o app já vai detectar automaticamente que o Supabase está configurado e passar a exigir login (usuário + senha) antes de criar o perfil, sincronizando tudo na nuvem (dá pra conferir isso na tela de Perfil do app, que mostra "☁️ Conta na nuvem").
+Pronto — o app já vai detectar automaticamente que o Supabase está configurado e passar a exigir login (e-mail + senha) antes de criar o perfil, sincronizando tudo na nuvem (dá pra conferir isso na tela de Perfil do app, que mostra "☁️ Conta na nuvem").
 
-> **Sobre login:** o app não usa e-mail de verdade — o aluno escolhe um **usuário** (ex. `joao123`) e uma **senha** (mínimo 6 caracteres), e por trás das cenas isso vira um login do Supabase Auth. Assim, mesmo se o aluno trocar de aparelho, desinstalar o app ou limpar os dados do navegador, ele recupera o perfil e o progresso de qualquer lugar, só entrando de novo com usuário e senha. Se um aluno esquecer a senha, você (professor) pode redefinir manualmente em **Authentication → Users** no painel do Supabase (procure pelo usuário, ele aparece como `usuario@bobcat.app`).
+> **Sobre login:** o app usa o e-mail de verdade do aluno + uma senha (mínimo 6 caracteres) no Supabase Auth. Assim, mesmo se o aluno trocar de aparelho, desinstalar o app ou limpar os dados do navegador, ele recupera o perfil e o progresso de qualquer lugar, só entrando de novo com e-mail e senha. Também tem um link **"Esqueci minha senha"** na tela de login, que envia um e-mail de redefinição automaticamente — não precisa mais do professor mexer no painel do Supabase pra isso (mas se preferir, ainda dá pra redefinir manualmente em **Authentication → Users**).
 
 > **Sobre segurança:** a chave `anon public key` é feita para ser exposta no navegador — ela sozinha não dá acesso a nada; quem protege os dados são as regras de RLS no `schema.sql`. Por padrão, cada aluno só consegue **escrever** no próprio perfil/progresso, mas **qualquer** aluno logado consegue **ler** todos os perfis — é isso que permite o painel do professor funcionar sem precisar de um login separado de professor. Para uma turma pequena isso costuma ser aceitável; se quiser bloquear a leitura só para um login de professor de verdade, é só pedir que eu ajusto o schema.
 

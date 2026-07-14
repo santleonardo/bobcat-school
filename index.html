@@ -38,8 +38,8 @@
       <button type="button" class="auth-tab" id="tab-signup" data-mode="signup">Criar conta</button>
     </div>
 
-    <label class="field-label">Usuário</label>
-    <input type="text" id="auth-username" placeholder="ex: joao123" autocomplete="username">
+    <label class="field-label">E-mail</label>
+    <input type="email" id="auth-username" placeholder="seuemail@exemplo.com" autocomplete="username">
 
     <label class="field-label">Senha</label>
     <input type="password" id="auth-password" placeholder="pelo menos 6 caracteres" autocomplete="current-password">
@@ -50,9 +50,11 @@
     </div>
 
     <p class="auth-error" id="auth-error"></p>
+    <p class="auth-error" id="auth-success" style="color: var(--ok);"></p>
 
     <button class="btn" id="btn-auth-submit">Entrar</button>
-    <p class="auth-hint">Combine com seu professor(a) um usuário e senha simples — não precisa ser um e-mail de verdade.</p>
+    <button type="button" class="link-btn hidden" id="btn-forgot-password">Esqueci minha senha</button>
+    <p class="auth-hint">Use um e-mail de verdade — é como você recupera sua conta se trocar de aparelho ou esquecer a senha.</p>
   </div>
 
   <!-- TELA: CRIAR/EDITAR PERFIL -->

@@ -12,18 +12,13 @@
 const PROFILE_KEY = 'bobcat_profile';
 const PROGRESS_KEY = 'bobcat_progress';
 
-// Domínio "falso" usado para transformar o nome de usuário do aluno
-// em um e-mail válido para o Supabase Auth (o aluno nunca vê isso).
-const AUTH_FAKE_DOMAIN = 'bobcat.app';
-
 let supabaseClient = null;
 let currentUserId = null;
 let useSupabase = false;      // Supabase está configurado (config.js preenchido)
 let dataLayerReady = false;
 
-function usernameToEmail(username) {
-  const clean = username.trim().toLowerCase().replace(/[^a-z0-9._-]/g, '');
-  return clean + '@' + AUTH_FAKE_DOMAIN;
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 async function initDataLayer() {
@@ -57,36 +52,52 @@ function isLoggedIn() {
   return useSupabase ? !!currentUserId : true; // sem Supabase, "logado" sempre (localStorage)
 }
 
-// Retorna { ok: true } ou { ok: false, message: '...' }
-async function signUpStudent(username, password) {
+// Retorna { ok: true } ou { ok: false, message: '...', needsConfirmation: true|false }
+async function signUpStudent(email, password) {
   if (!useSupabase) return { ok: false, message: 'Cadastro só está disponível com Supabase configurado.' };
-  if (!username || username.trim().length < 3) return { ok: false, message: 'O usuário precisa ter pelo menos 3 caracteres.' };
+  email = (email || '').trim().toLowerCase();
+  if (!isValidEmail(email)) return { ok: false, message: 'Digite um e-mail válido.' };
   if (!password || password.length < 6) return { ok: false, message: 'A senha precisa ter pelo menos 6 caracteres.' };
 
-  const email = usernameToEmail(username);
   const { data, error } = await supabaseClient.auth.signUp({ email, password });
   if (error) {
     if (error.message && error.message.toLowerCase().includes('already registered')) {
-      return { ok: false, message: 'Esse usuário já existe. Tente fazer login.' };
+      return { ok: false, message: 'Esse e-mail já está cadastrado. Tente fazer login.' };
     }
     return { ok: false, message: error.message };
   }
-  currentUserId = data.user ? data.user.id : (data.session ? data.session.user.id : null);
-  if (!currentUserId) {
-    return { ok: false, message: 'Conta criada, mas não foi possível entrar automaticamente. Tente fazer login.' };
+
+  // Se a confirmação por e-mail estiver ligada no Supabase, `session` vem nulo
+  // aqui — o aluno precisa clicar no link recebido por e-mail antes de entrar.
+  if (!data.session) {
+    return { ok: false, message: 'Conta criada! Verifique seu e-mail e clique no link de confirmação antes de entrar.', needsConfirmation: true };
   }
+
+  currentUserId = data.user.id;
   return { ok: true };
 }
 
-async function signInStudent(username, password) {
+async function signInStudent(email, password) {
   if (!useSupabase) return { ok: false, message: 'Login só está disponível com Supabase configurado.' };
-  const email = usernameToEmail(username);
+  email = (email || '').trim().toLowerCase();
   const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
   if (error) {
-    return { ok: false, message: 'Usuário ou senha incorretos.' };
+    if (error.message && error.message.toLowerCase().includes('email not confirmed')) {
+      return { ok: false, message: 'Confirme seu e-mail (verifique sua caixa de entrada) antes de entrar.' };
+    }
+    return { ok: false, message: 'E-mail ou senha incorretos.' };
   }
   currentUserId = data.user.id;
   return { ok: true };
+}
+
+async function resetPasswordForEmail(email) {
+  if (!useSupabase) return { ok: false, message: 'Só disponível com Supabase configurado.' };
+  email = (email || '').trim().toLowerCase();
+  if (!isValidEmail(email)) return { ok: false, message: 'Digite um e-mail válido para recuperar a senha.' };
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+  if (error) return { ok: false, message: error.message };
+  return { ok: true, message: 'Enviamos um link de redefinição de senha para o seu e-mail.' };
 }
 
 async function signOutStudent() {

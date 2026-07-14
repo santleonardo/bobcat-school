@@ -53,7 +53,9 @@ function setAuthMode(mode) {
   document.getElementById('auth-signup-extra').classList.toggle('hidden', mode === 'login');
   document.getElementById('auth-title').textContent = mode === 'login' ? 'Entrar' : 'Criar conta';
   document.getElementById('btn-auth-submit').textContent = mode === 'login' ? 'Entrar' : 'Criar conta';
+  document.getElementById('btn-forgot-password').classList.toggle('hidden', mode !== 'login');
   document.getElementById('auth-error').textContent = '';
+  document.getElementById('auth-success').textContent = '';
 }
 
 function setupAuthScreen() {
@@ -61,13 +63,15 @@ function setupAuthScreen() {
   document.getElementById('tab-signup').addEventListener('click', () => setAuthMode('signup'));
 
   document.getElementById('btn-auth-submit').addEventListener('click', async () => {
-    const username = document.getElementById('auth-username').value.trim();
+    const email = document.getElementById('auth-username').value.trim();
     const password = document.getElementById('auth-password').value;
     const errorEl = document.getElementById('auth-error');
+    const successEl = document.getElementById('auth-success');
     errorEl.textContent = '';
+    successEl.textContent = '';
 
-    if (!username || !password) {
-      errorEl.textContent = 'Preencha usuário e senha.';
+    if (!email || !password) {
+      errorEl.textContent = 'Preencha e-mail e senha.';
       return;
     }
 
@@ -82,20 +86,52 @@ function setupAuthScreen() {
         return;
       }
       btn.textContent = 'Criando conta...';
-      const result = await signUpStudent(username, password);
+      const result = await signUpStudent(email, password);
       btn.disabled = false;
       btn.textContent = 'Criar conta';
-      if (!result.ok) { errorEl.textContent = result.message; return; }
+      if (!result.ok) {
+        if (result.needsConfirmation) {
+          successEl.textContent = result.message;
+          setAuthModeKeepMessage('login');
+        } else {
+          errorEl.textContent = result.message;
+        }
+        return;
+      }
       await afterAuthSuccess();
     } else {
       btn.textContent = 'Entrando...';
-      const result = await signInStudent(username, password);
+      const result = await signInStudent(email, password);
       btn.disabled = false;
       btn.textContent = 'Entrar';
       if (!result.ok) { errorEl.textContent = result.message; return; }
       await afterAuthSuccess();
     }
   });
+
+  document.getElementById('btn-forgot-password').addEventListener('click', async () => {
+    const email = document.getElementById('auth-username').value.trim();
+    const errorEl = document.getElementById('auth-error');
+    const successEl = document.getElementById('auth-success');
+    errorEl.textContent = '';
+    successEl.textContent = '';
+
+    if (!email) {
+      errorEl.textContent = 'Digite seu e-mail acima primeiro, depois clique em "Esqueci minha senha".';
+      return;
+    }
+    const result = await resetPasswordForEmail(email);
+    if (result.ok) successEl.textContent = result.message;
+    else errorEl.textContent = result.message;
+  });
+}
+
+// Troca de aba sem apagar a mensagem de sucesso (usado após cadastro que
+// exige confirmação por e-mail, pra mostrar o aviso na aba de login).
+function setAuthModeKeepMessage(mode) {
+  const msg = document.getElementById('auth-success').textContent;
+  setAuthMode(mode);
+  document.getElementById('auth-success').textContent = msg;
 }
 
 async function afterAuthSuccess() {
