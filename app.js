@@ -42,6 +42,76 @@ function showScreen(id) {
   if (id === 'profile-view') renderProfileView();
 }
 
+// ---------- Tela de login / cadastro ----------
+
+let authMode = 'login'; // 'login' | 'signup'
+
+function setAuthMode(mode) {
+  authMode = mode;
+  document.getElementById('tab-login').classList.toggle('active', mode === 'login');
+  document.getElementById('tab-signup').classList.toggle('active', mode === 'signup');
+  document.getElementById('auth-signup-extra').classList.toggle('hidden', mode === 'login');
+  document.getElementById('auth-title').textContent = mode === 'login' ? 'Entrar' : 'Criar conta';
+  document.getElementById('btn-auth-submit').textContent = mode === 'login' ? 'Entrar' : 'Criar conta';
+  document.getElementById('auth-error').textContent = '';
+}
+
+function setupAuthScreen() {
+  document.getElementById('tab-login').addEventListener('click', () => setAuthMode('login'));
+  document.getElementById('tab-signup').addEventListener('click', () => setAuthMode('signup'));
+
+  document.getElementById('btn-auth-submit').addEventListener('click', async () => {
+    const username = document.getElementById('auth-username').value.trim();
+    const password = document.getElementById('auth-password').value;
+    const errorEl = document.getElementById('auth-error');
+    errorEl.textContent = '';
+
+    if (!username || !password) {
+      errorEl.textContent = 'Preencha usuário e senha.';
+      return;
+    }
+
+    const btn = document.getElementById('btn-auth-submit');
+    btn.disabled = true;
+
+    if (authMode === 'signup') {
+      const confirm = document.getElementById('auth-password-confirm').value;
+      if (password !== confirm) {
+        errorEl.textContent = 'As senhas não coincidem.';
+        btn.disabled = false;
+        return;
+      }
+      btn.textContent = 'Criando conta...';
+      const result = await signUpStudent(username, password);
+      btn.disabled = false;
+      btn.textContent = 'Criar conta';
+      if (!result.ok) { errorEl.textContent = result.message; return; }
+      await afterAuthSuccess();
+    } else {
+      btn.textContent = 'Entrando...';
+      const result = await signInStudent(username, password);
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
+      if (!result.ok) { errorEl.textContent = result.message; return; }
+      await afterAuthSuccess();
+    }
+  });
+}
+
+async function afterAuthSuccess() {
+  document.getElementById('auth-username').value = '';
+  document.getElementById('auth-password').value = '';
+  const confirmField = document.getElementById('auth-password-confirm');
+  if (confirmField) confirmField.value = '';
+
+  const profile = await getProfile();
+  if (profile) {
+    enterApp();
+  } else {
+    showScreen('profile-setup');
+  }
+}
+
 // ---------- Tela de criação de perfil ----------
 
 let selectedAvatarSetup = '🦁';
@@ -103,9 +173,12 @@ async function renderProfileView() {
   const cloudNote = document.getElementById('cloud-status');
   if (cloudNote) {
     cloudNote.textContent = isUsingCloud()
-      ? '☁️ Sincronizado com a nuvem (Supabase)'
+      ? '☁️ Conta na nuvem (Supabase) — funciona em qualquer aparelho'
       : '💾 Salvo apenas neste navegador (sem Supabase configurado)';
   }
+
+  const logoutBtn = document.getElementById('btn-logout');
+  if (logoutBtn) logoutBtn.classList.toggle('hidden', !isUsingCloud());
 }
 
 function setupProfileViewScreen() {
@@ -130,6 +203,14 @@ function setupProfileViewScreen() {
       await renderHome();
       alert('Progresso zerado.');
     }
+  });
+
+  document.getElementById('btn-logout').addEventListener('click', async () => {
+    if (!confirm('Sair da conta? Você vai precisar do usuário e senha para entrar de novo.')) return;
+    await signOutStudent();
+    document.getElementById('bottom-nav').style.display = 'none';
+    setAuthMode('login');
+    showScreen('auth');
   });
 }
 
@@ -200,6 +281,7 @@ async function boot() {
   showLoadingState(true);
   await initDataLayer();
 
+  setupAuthScreen();
   setupProfileScreen();
   setupProfileViewScreen();
 
@@ -207,13 +289,18 @@ async function boot() {
     btn.addEventListener('click', () => showScreen(btn.dataset.screen));
   });
 
-  const profile = await getProfile();
   showLoadingState(false);
 
-  if (profile) {
-    enterApp();
+  if (isUsingCloud() && !isLoggedIn()) {
+    setAuthMode('login');
+    showScreen('auth');
   } else {
-    showScreen('profile-setup');
+    const profile = await getProfile();
+    if (profile) {
+      enterApp();
+    } else {
+      showScreen('profile-setup');
+    }
   }
 
   setupInstallPrompt();

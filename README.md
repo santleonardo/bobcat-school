@@ -17,8 +17,7 @@ Este guia cobre os três passos: **Supabase** (banco de dados) → **GitHub** (c
 3. Espere o projeto terminar de subir (~2 minutos).
 4. No menu lateral, vá em **SQL Editor** → **New query**, cole todo o conteúdo do arquivo `schema.sql` deste projeto, e clique em **Run**.
    - Isso cria as tabelas `profiles` e `progress`, com as regras de segurança (RLS) já configuradas.
-5. Vá em **Authentication → Providers**, encontre **Anonymous Sign-Ins** e **ative**.
-   - O app usa login anônimo (o aluno não precisa criar senha) para identificar cada perfil com segurança.
+5. Vá em **Authentication → Providers**, encontre **Email** e **ative**. Ainda na mesma tela, **desligue "Confirm email"** (o app usa um usuário+senha simples, não um e-mail de verdade — se a confirmação ficar ligada, ninguém consegue confirmar e o cadastro trava).
 6. Vá em **Project Settings → API**. Copie:
    - **Project URL**
    - **anon public key**
@@ -31,9 +30,13 @@ Este guia cobre os três passos: **Supabase** (banco de dados) → **GitHub** (c
    };
    ```
 
-Pronto — o app já vai detectar automaticamente que o Supabase está configurado e passar a sincronizar na nuvem (dá pra conferir isso na tela de Perfil do app, que mostra "☁️ Sincronizado com a nuvem").
+Pronto — o app já vai detectar automaticamente que o Supabase está configurado e passar a exigir login (usuário + senha) antes de criar o perfil, sincronizando tudo na nuvem (dá pra conferir isso na tela de Perfil do app, que mostra "☁️ Conta na nuvem").
 
-> **Sobre segurança:** a chave `anon public key` é feita para ser exposta no navegador — ela sozinha não dá acesso a nada; quem protege os dados são as regras de RLS no `schema.sql`. Por padrão, cada aluno só consegue **escrever** no próprio perfil/progresso, mas **qualquer** sessão (inclusive anônima) consegue **ler** todos os perfis — é isso que permite o painel do professor funcionar sem precisar de login separado. Para uma turma pequena isso costuma ser aceitável; se quiser bloquear a leitura só para um login de professor de verdade, é só pedir que eu ajusto o schema.
+> **Sobre login:** o app não usa e-mail de verdade — o aluno escolhe um **usuário** (ex. `joao123`) e uma **senha** (mínimo 6 caracteres), e por trás das cenas isso vira um login do Supabase Auth. Assim, mesmo se o aluno trocar de aparelho, desinstalar o app ou limpar os dados do navegador, ele recupera o perfil e o progresso de qualquer lugar, só entrando de novo com usuário e senha. Se um aluno esquecer a senha, você (professor) pode redefinir manualmente em **Authentication → Users** no painel do Supabase (procure pelo usuário, ele aparece como `usuario@bobcat.app`).
+
+> **Sobre segurança:** a chave `anon public key` é feita para ser exposta no navegador — ela sozinha não dá acesso a nada; quem protege os dados são as regras de RLS no `schema.sql`. Por padrão, cada aluno só consegue **escrever** no próprio perfil/progresso, mas **qualquer** aluno logado consegue **ler** todos os perfis — é isso que permite o painel do professor funcionar sem precisar de um login separado de professor. Para uma turma pequena isso costuma ser aceitável; se quiser bloquear a leitura só para um login de professor de verdade, é só pedir que eu ajusto o schema.
+
+> **Sem Supabase configurado:** o app funciona do mesmo jeito de antes — sem tela de login, perfil salvo só no navegador (localStorage). É só para quando você quiser sincronizar entre aparelhos e ter o painel do professor que vale a pena configurar o Supabase.
 
 ---
 
