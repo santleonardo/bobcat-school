@@ -4,6 +4,6 @@
 // vem das políticas de Row Level Security (RLS) definidas em schema.sql.
 
 window.SUPABASE_CONFIG = {
-  url: 'https://SEU-PROJETO.supabase.co',
-  anonKey: 'SUA-CHAVE-ANON-PUBLICA'
+  url: 'https://zzezrrqewsiowblqnkyw.supabase.co',
+  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp6ZXpycnFld3Npb3dibHFua3l3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM5ODY0MjksImV4cCI6MjA5OTU2MjQyOX0.Nek0nV6595BroDReR2gQvinByV-bNiE2VNI_eIwKZMI'
 };
