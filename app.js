@@ -197,6 +197,13 @@ async function renderProfileView() {
   document.getElementById('profile-name-display').textContent = profile.name;
   document.getElementById('profile-level-display').textContent = 'Nível ' + profile.level;
 
+  const progress = await getProgress();
+  const stats = computeProgressStats(progress);
+  document.getElementById('profile-stat-completed').textContent = stats.completed;
+  document.getElementById('profile-stat-score').textContent = stats.avgPct !== null ? stats.avgPct + '%' : '—';
+  document.getElementById('profile-stat-total').textContent = stats.total;
+  renderLessonCardsInto('profile-lesson-list', progress);
+
   document.getElementById('edit-name').value = profile.name;
   document.getElementById('edit-level').value = profile.level;
 
@@ -236,7 +243,7 @@ function setupProfileViewScreen() {
   document.getElementById('btn-reset-progress').addEventListener('click', async () => {
     if (confirm('Isso vai apagar o progresso de todas as lições. Tem certeza?')) {
       await resetAllProgress();
-      await renderHome();
+      await renderProfileView();
       alert('Progresso zerado.');
     }
   });
@@ -261,45 +268,54 @@ async function renderHome() {
   document.getElementById('home-level-sub').textContent = 'Nível ' + profile.level + ' • continue praticando';
 
   const progress = await getProgress();
+  const stats = computeProgressStats(progress);
 
-  const completedLessons = LESSONS.filter(l => progress[l.id] && progress[l.id].completed);
-  document.getElementById('stat-completed').textContent = completedLessons.length;
+  document.getElementById('stat-completed').textContent = stats.completed;
+  document.getElementById('stat-score').textContent = stats.avgPct !== null ? stats.avgPct + '%' : '—';
+  document.getElementById('stat-streak').textContent = stats.total;
 
-  const scored = LESSONS.filter(l => progress[l.id] && progress[l.id].total > 0);
-  if (scored.length > 0) {
-    const avgPct = Math.round(
-      scored.reduce((sum, l) => sum + (progress[l.id].correct / progress[l.id].total), 0) / scored.length * 100
-    );
-    document.getElementById('stat-score').textContent = avgPct + '%';
-  } else {
-    document.getElementById('stat-score').textContent = '—';
-  }
+  renderLessonCardsInto('lesson-list', progress);
+}
 
-  document.getElementById('stat-streak').textContent = LESSONS.length;
+function buildLessonCardHTML(lesson, progress) {
+  const p = progress[lesson.id];
+  const pct = p && p.total > 0 ? Math.round((p.correct / p.total) * 100) : 0;
+  const done = p && p.completed;
+  return `
+    <div class="icon">${lesson.icon}</div>
+    <div class="info">
+      <div class="name">${lesson.name}</div>
+      <div class="level">Nível ${lesson.level} • ${lesson.description}</div>
+      <div class="progress-track"><div class="progress-fill" style="width:${pct}%;"></div></div>
+    </div>
+    <div class="badge ${done ? 'done' : ''}">${done ? '✓ ' + pct + '%' : (p ? pct + '%' : 'Não iniciada')}</div>
+    <div class="chevron">›</div>
+  `;
+}
 
-  const list = document.getElementById('lesson-list');
+function renderLessonCardsInto(containerId, progress) {
+  const list = document.getElementById(containerId);
+  if (!list) return;
   list.innerHTML = '';
-
   LESSONS.forEach(lesson => {
-    const p = progress[lesson.id];
-    const pct = p && p.total > 0 ? Math.round((p.correct / p.total) * 100) : 0;
-    const done = p && p.completed;
-
     const card = document.createElement('div');
     card.className = 'lesson-card';
-    card.innerHTML = `
-      <div class="icon">${lesson.icon}</div>
-      <div class="info">
-        <div class="name">${lesson.name}</div>
-        <div class="level">Nível ${lesson.level} • ${lesson.description}</div>
-        <div class="progress-track"><div class="progress-fill" style="width:${pct}%;"></div></div>
-      </div>
-      <div class="badge ${done ? 'done' : ''}">${done ? '✓ ' + pct + '%' : (p ? pct + '%' : 'Começar')}</div>
-      <div class="chevron">›</div>
-    `;
+    card.innerHTML = buildLessonCardHTML(lesson, progress);
     card.addEventListener('click', () => openLesson(lesson));
     list.appendChild(card);
   });
+}
+
+function computeProgressStats(progress) {
+  const completedLessons = LESSONS.filter(l => progress[l.id] && progress[l.id].completed);
+  const scored = LESSONS.filter(l => progress[l.id] && progress[l.id].total > 0);
+  let avgPct = null;
+  if (scored.length > 0) {
+    avgPct = Math.round(
+      scored.reduce((sum, l) => sum + (progress[l.id].correct / progress[l.id].total), 0) / scored.length * 100
+    );
+  }
+  return { completed: completedLessons.length, avgPct, total: LESSONS.length };
 }
 
 function openLesson(lesson) {

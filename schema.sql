@@ -60,7 +60,9 @@ create policy "Authenticated can view all progress"
 -- ============================================================
 -- IMPORTANTE: também é preciso habilitar login por e-mail/senha:
 -- painel do Supabase → Authentication → Providers → Email → Enable.
--- Em "Confirm email", DEIXE DESLIGADO — o app usa um usuário+senha
--- simples (não um e-mail de verdade), então a confirmação por
--- e-mail nunca chegaria a lugar nenhum.
+-- A opção "Confirm email" é sua escolha:
+--   - desligada: aluno cria a conta e já entra na hora (mais simples)
+--   - ligada: aluno recebe um e-mail e precisa confirmar antes de
+--     entrar (mais seguro, mas exige configurar Site URL em
+--     Authentication → URL Configuration)
 -- ============================================================

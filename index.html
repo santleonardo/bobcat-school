@@ -82,6 +82,8 @@
       <option value="A2">A2 — Básico</option>
       <option value="B1">B1 — Intermediário</option>
       <option value="B2">B2 — Intermediário avançado</option>
+      <option value="C1">C1 — Avançado</option>
+      <option value="C2">C2 — Proficiente</option>
     </select>
 
     <button class="btn" id="btn-save-profile">Começar a estudar</button>
@@ -130,6 +132,24 @@
       </div>
     </div>
 
+    <h2 class="screen-title" style="font-size:16px; margin:20px 0 10px 0;">Progresso do aprendizado</h2>
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="num" id="profile-stat-completed">0</div>
+        <div class="label">lições concluídas</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="profile-stat-score">—</div>
+        <div class="label">média de acertos</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="profile-stat-total">0</div>
+        <div class="label">lições disponíveis</div>
+      </div>
+    </div>
+    <div id="profile-lesson-list"></div>
+
+    <h2 class="screen-title" style="font-size:16px; margin:24px 0 10px 0;">Editar perfil</h2>
     <label class="field-label">Nome</label>
     <input type="text" id="edit-name" maxlength="40">
 
@@ -151,6 +171,8 @@
       <option value="A2">A2 — Básico</option>
       <option value="B1">B1 — Intermediário</option>
       <option value="B2">B2 — Intermediário avançado</option>
+      <option value="C1">C1 — Avançado</option>
+      <option value="C2">C2 — Proficiente</option>
     </select>
 
     <button class="btn" id="btn-update-profile">Salvar alterações</button>
