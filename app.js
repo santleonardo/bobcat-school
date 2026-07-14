@@ -14,6 +14,15 @@ const LESSONS = [
     description: 'am, is, are — afirmativas, negativas e perguntas',
     url: 'lessons/verb-to-be.html',
     totalQuestions: 21 // 8 (parte1) + 6 (parte2) + 7 (parte3)
+  },
+  {
+    id: 'saudacoes-apresentacoes',
+    name: 'Saudações e Apresentações',
+    level: 'A1',
+    icon: '👋',
+    description: 'Greetings, introductions e diálogos com áudio',
+    url: 'lessons/saudacoes-apresentacoes.html',
+    totalQuestions: 17 // 5 (parte1) + 3 (parte2) + 3 (parte3) + 4 (parte4) + 2 (parte5)
   }
   // próximas lições entram aqui, ex:
   // { id: 'present-simple', name: 'Present Simple', level: 'A1', icon: '📗', url: 'lessons/present-simple.html', totalQuestions: 15 }

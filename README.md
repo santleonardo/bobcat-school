@@ -92,12 +92,42 @@ lessons/
 
 ## Adicionando novas lições
 
-1. Duplique `lessons/verb-to-be.html`, troque o conteúdo pela nova lição, mas mantenha:
+1. Duplique `lessons/verb-to-be.html` (ou `lessons/saudacoes-apresentacoes.html`, que já tem áudio embutido), troque o conteúdo pela nova lição, mas mantenha:
    - a linha `const LESSON_ID = '...'` com um id novo e único;
    - as três tags `<script src="../config.js">`, `<script src="../db-client.js">` e o `<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">` no `<head>`;
    - a função `finishLesson()` (ajuste a contagem de `total` para o número de questões da nova lição).
 2. Em `app.js`, adicione a lição no array `LESSONS` no topo do arquivo.
-3. Em `sw.js`, adicione o novo arquivo à lista `APP_SHELL` para funcionar offline.
+3. Em `sw.js`, adicione o novo arquivo à lista `APP_SHELL` para funcionar offline, e suba o número em `CACHE_NAME` (ex.: `bobcat-app-v3` → `v4`) para forçar o navegador dos alunos a buscar a versão nova.
+
+### Transformando um PDF de lição em lição interativa
+
+Fluxo recomendado para pegar uma apostila em PDF (como a de "Saudações e Apresentações") e virar uma lição do app:
+
+1. Extraia do PDF: objetivo da aula, vocabulário novo, diálogo modelo, exercícios (e o gabarito).
+2. Duplique um arquivo `.html` de lição existente e reescreva o conteúdo, reaproveitando os componentes já prontos: `.fill-grid` (completar lacunas), `.mc-item`/`.mc-options` (múltipla escolha), `.dialog-box` (diálogo).
+3. Adapte a função `checkParts()`/`finishLesson()` com as respostas certas de cada exercício novo.
+4. Registre a lição em `app.js` e `sw.js` como no passo acima.
+
+### Áudio (pronúncia) sem precisar hospedar arquivos de som
+
+A lição `saudacoes-apresentacoes.html` já usa a **Web Speech API** do navegador (`speechSynthesis`), que faz o próprio navegador "falar" o texto em inglês — não precisa gravar, subir nem hospedar nenhum arquivo `.mp3`. Função pronta (`speak(btn, texto)`) e um botão `🔊 ouvir` já ficam ao lado de cada palavra/frase do vocabulário e do diálogo. Para reaproveitar em outra lição, basta chamar `speak(this, 'texto em inglês')` no `onclick` de um botão com a classe `audio-btn`.
+   - Vantagem: funciona offline, sem custo, sem hospedagem.
+   - Limitação: a voz depende do navegador/aparelho do aluno (qualidade varia, mas é totalmente aceitável para prática de pronúncia).
+
+### Vídeo
+
+Para vídeo real (ex. um vídeo do YouTube sobre o tema), incorpore um `<iframe>` no corpo da lição, por exemplo:
+
+```html
+<div class="video-box">
+  <iframe width="100%" height="315"
+    src="https://www.youtube.com/embed/SEU_VIDEO_ID"
+    title="Vídeo da lição" frameborder="0" allowfullscreen></iframe>
+</div>
+```
+
+Troque `SEU_VIDEO_ID` pelo ID do vídeo escolhido (a parte depois de `watch?v=` na URL do YouTube). A lição `saudacoes-apresentacoes.html` já tem um bloco `.video-box` reservado para isso — é só trocar o texto de aviso pelo `<iframe>`.
+
 
 ## Painel do professor
 

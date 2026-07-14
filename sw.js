@@ -1,7 +1,7 @@
 // Bobcat Language School — Service Worker
 // Faz o cache do "app shell" para o app abrir mesmo sem internet.
 
-const CACHE_NAME = 'bobcat-app-v2';
+const CACHE_NAME = 'bobcat-app-v3';
 const APP_SHELL = [
   './',
   './index.html',
@@ -12,7 +12,8 @@ const APP_SHELL = [
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
-  './lessons/verb-to-be.html'
+  './lessons/verb-to-be.html',
+  './lessons/saudacoes-apresentacoes.html'
 ];
 
 self.addEventListener('install', (event) => {
