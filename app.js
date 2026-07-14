@@ -23,6 +23,87 @@ const LESSONS = [
     description: 'Greetings, introductions e diálogos com áudio',
     url: 'lessons/saudacoes-apresentacoes.html',
     totalQuestions: 17 // 5 (parte1) + 3 (parte2) + 3 (parte3) + 4 (parte4) + 2 (parte5)
+  },
+  {
+    id: 'licao-2-perguntas-artigos',
+    name: 'Lição 2 — Fazendo Perguntas e Apresentando Coisas',
+    level: 'A1',
+    icon: '❓',
+    description: 'Perguntas com Wh- words e o uso de a, an, the',
+    url: 'lessons/licao-2-perguntas-artigos.html',
+    totalQuestions: 5 // preenchimento de exercícios (prática, sem correção automática)
+  },
+  {
+    id: 'licao-3-revisao-perguntas',
+    name: 'Lição 3 — Revisando e Praticando: Quem é Você? O Que é Isso?',
+    level: 'A1',
+    icon: '🔁',
+    description: 'Revisão das lições 1 e 2 com prática de diálogos',
+    url: 'lessons/licao-3-revisao-perguntas.html',
+    totalQuestions: 11 // preenchimento de exercícios (prática, sem correção automática)
+  },
+  {
+    id: 'licao-4-preposicoes',
+    name: 'Lição 4 — Preposições em Ação: Onde? Com Quem? Como?',
+    level: 'A1',
+    icon: '📍',
+    description: 'Preposições: onde, com quem e como',
+    url: 'lessons/licao-4-preposicoes.html',
+    totalQuestions: 7 // preenchimento de exercícios (prática, sem correção automática)
+  },
+  {
+    id: 'licao-5-posse',
+    name: 'Lição 5 — O Que É Isso? De Quem É?',
+    level: 'A1',
+    icon: '🎒',
+    description: 'O que é isso e de quem é: posse em inglês',
+    url: 'lessons/licao-5-posse.html',
+    totalQuestions: 12 // preenchimento de exercícios (prática, sem correção automática)
+  },
+  {
+    id: 'licao-6-here-there',
+    name: 'Lição 6 — Aqui e Ali: Localização e Posição',
+    level: 'A1',
+    icon: '📌',
+    description: 'Localização, posição e phrasal verbs básicos',
+    url: 'lessons/licao-6-here-there.html',
+    totalQuestions: 7 // preenchimento de exercícios (prática, sem correção automática)
+  },
+  {
+    id: 'licao-8-to-be-passado',
+    name: 'Lição 8 — Verbo To Be no Passado: Como Era e Onde Estava?',
+    level: 'A1',
+    icon: '⏳',
+    description: 'O verbo to be no passado: was e were',
+    url: 'lessons/licao-8-to-be-passado.html',
+    totalQuestions: 8 // preenchimento de exercícios (prática, sem correção automática)
+  },
+  {
+    id: 'licao-9-revisao-completa',
+    name: 'Lição 9 — Revisão Completa: Tudo que Aprendemos Até Aqui!',
+    level: 'A1',
+    icon: '📚',
+    description: 'Revisão completa das lições anteriores',
+    url: 'lessons/licao-9-revisao-completa.html',
+    totalQuestions: 26 // preenchimento de exercícios (prática, sem correção automática)
+  },
+  {
+    id: 'licao-10-do-does-to-for',
+    name: 'Lição 10 — Verbos Essenciais, Perguntas com DO/DOES, e o Uso de TO e FOR',
+    level: 'A1',
+    icon: '🔧',
+    description: 'Verbos essenciais, DO/DOES, TO e FOR',
+    url: 'lessons/licao-10-do-does-to-for.html',
+    totalQuestions: 20 // preenchimento de exercícios (prática, sem correção automática)
+  },
+  {
+    id: 'licao-11-object-possessive-pronouns',
+    name: 'Lesson 11 — People, Objects and Possession',
+    level: 'A1',
+    icon: '👥',
+    description: 'Pronomes objetos, possessivos e mais de 20 verbos',
+    url: 'lessons/licao-11-object-possessive-pronouns.html',
+    totalQuestions: 14 // preenchimento de exercícios (prática, sem correção automática)
   }
   // próximas lições entram aqui, ex:
   // { id: 'present-simple', name: 'Present Simple', level: 'A1', icon: '📗', url: 'lessons/present-simple.html', totalQuestions: 15 }

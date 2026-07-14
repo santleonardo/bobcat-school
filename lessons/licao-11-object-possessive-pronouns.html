@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Lesson 11 — People, Objects and Possession</title>
+<style>
+  :root {
+    --orange: #D9793F;
+    --orange-dark: #C9622A;
+    --cream: #FBEFE6;
+    --cream-2: #F7F1EC;
+    --ink: #2b2b2b;
+    --ok: #2E8B57;
+    --bad: #C0392B;
+    --border: #EBC9AE;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    background: #fdfaf7;
+    margin: 0;
+    padding: 0 0 60px 0;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 28px 20px; }
+
+  .back-link {
+    display: inline-block;
+    font-size: 13.5px;
+    color: var(--orange-dark);
+    text-decoration: none;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+  .back-link:hover { text-decoration: underline; }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 3px solid var(--orange);
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .header img { height: 56px; }
+  .header .school { font-size: 24px; font-weight: 800; color: var(--orange-dark); }
+  .header .subtitle { font-size: 13px; font-style: italic; color: #666; margin-top: 2px; }
+
+  .info-bar {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    border-bottom: 2px solid var(--orange);
+    padding-bottom: 14px;
+    margin-bottom: 22px;
+    font-size: 13.5px;
+  }
+  .info-bar label { display: flex; align-items: center; gap: 6px; font-weight: 600; color: #555; }
+  .info-bar input[type=text], .info-bar input[type=date] {
+    border: none;
+    border-bottom: 1px solid #999;
+    background: transparent;
+    padding: 3px 2px;
+    font-size: 13.5px;
+    min-width: 150px;
+    font-family: inherit;
+  }
+  .info-bar input:focus { outline: none; border-bottom: 2px solid var(--orange); }
+
+  h1.title { text-align: center; color: var(--orange-dark); font-size: 27px; margin: 6px 0 2px 0; }
+  .level { text-align: center; font-style: italic; color: #666; font-size: 13px; margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px solid #eee; }
+
+  .section-title {
+    background: var(--orange);
+    color: #fff;
+    font-weight: 700;
+    font-size: 14.5px;
+    padding: 8px 14px;
+    border-radius: 5px;
+    margin: 26px 0 10px 0;
+  }
+  .subheading { font-weight: 700; font-size: 13.5px; margin: 14px 0 6px 0; color: var(--orange-dark); }
+
+  p { margin: 8px 0; font-size: 14px; }
+  .tip {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    font-size: 13.5px;
+    margin: 10px 0;
+    border-radius: 6px;
+  }
+
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 18px 0; font-size: 13.5px; }
+  th { background: var(--orange); color: #fff; text-align: left; padding: 8px 12px; }
+  td { padding: 8px 12px; border-bottom: 1px solid #eee; }
+  tr:nth-child(even) td { background: var(--cream-2); }
+
+  .example { font-style: italic; color: #555; font-size: 13.5px; margin: 6px 0 18px 0; }
+
+  .dialog-box { background: var(--cream); padding: 14px 16px; border-radius: 8px; }
+  .dialog-box p { margin: 4px 0; font-size: 14px; }
+
+  /* Exercise styling */
+  .ex-card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin: 14px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  }
+  .ex-intro { font-style: italic; color: #666; font-size: 13.5px; margin: 0 0 12px 0; }
+
+  .fill-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 30px;
+  }
+  @media (max-width: 620px) { .fill-grid { grid-template-columns: 1fr; } }
+
+  .fill-item { display: flex; align-items: center; gap: 8px; font-size: 14px; flex-wrap: wrap; }
+  .fill-item input[type=text] {
+    width: 70px;
+    padding: 5px 8px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    font-family: inherit;
+    text-align: center;
+    transition: border-color .15s, background .15s;
+  }
+  .fill-item input[type=text].longer { width: 240px; text-align: left; }
+  .fill-item input:focus { outline: none; border-color: var(--orange); }
+  .fill-item input.correct { border-color: var(--ok); background: #EAF7EF; color: #1e6b40; font-weight: 600; }
+  .fill-item input.incorrect { border-color: var(--bad); background: #FBEAE8; color: var(--bad); }
+  .answer-hint { font-size: 12px; color: var(--bad); margin-left: 4px; display: none; }
+  .answer-hint.show { display: inline; }
+
+  .mc-item { margin: 14px 0; font-size: 14px; }
+  .mc-item .q { font-weight: 700; margin-bottom: 6px; }
+  .mc-options { display: flex; gap: 18px; flex-wrap: wrap; }
+  .mc-options label {
+    display: flex; align-items: center; gap: 6px;
+    border: 2px solid #ddd; border-radius: 6px;
+    padding: 5px 12px; cursor: pointer; font-size: 13.5px;
+    transition: border-color .15s, background .15s;
+  }
+  .mc-options label:hover { border-color: var(--orange); }
+  .mc-options label.correct { border-color: var(--ok); background: #EAF7EF; color: #1e6b40; font-weight: 600; }
+  .mc-options label.incorrect { border-color: var(--bad); background: #FBEAE8; color: var(--bad); }
+  .mc-options input { accent-color: var(--orange); }
+
+  .btn {
+    background: var(--orange);
+    color: #fff;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 7px;
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .15s, transform .1s;
+  }
+  .btn:hover { background: var(--orange-dark); }
+  .btn:active { transform: scale(0.98); }
+  .btn.secondary { background: #fff; color: var(--orange-dark); border: 2px solid var(--orange); padding: 9px 20px; }
+  .btn.secondary:hover { background: var(--cream); }
+
+  .score-badge {
+    display: inline-block;
+    margin-left: 14px;
+    font-weight: 700;
+    font-size: 14.5px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--cream-2);
+    color: var(--orange-dark);
+  }
+
+  .actions { display: flex; align-items: center; gap: 6px; margin-top: 14px; flex-wrap: wrap; }
+
+  .gabarito-box {
+    background: var(--cream-2);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 13.5px;
+    margin-top: 10px;
+    display: none;
+  }
+  .gabarito-box.show { display: block; }
+  .gabarito-box p { margin: 4px 0; }
+
+  .note-italic { font-size: 12px; font-style: italic; color: #777; margin-top: 10px; }
+
+  .progress-bar-wrap {
+    position: sticky; top: 0; z-index: 10;
+    background: #fdfaf7ee;
+    backdrop-filter: blur(4px);
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex; align-items: center; gap: 12px; justify-content: center;
+    font-size: 13px; color: #666;
+  }
+  .progress-track { width: 220px; height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--orange); width: 0%; transition: width .3s; }
+
+  .footer-note { text-align: center; font-size: 11.5px; color: #aaa; margin-top: 40px; }
+
+  textarea {
+    width: 100%; font-family: inherit; font-size: 14px; padding: 8px 10px;
+    border: 2px solid #ddd; border-radius: 6px; resize: vertical; min-height: 40px;
+  }
+  textarea:focus { outline: none; border-color: var(--orange); }
+
+  .audio-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: #fff; border: 1.5px solid var(--orange);
+    color: var(--orange-dark); border-radius: 20px;
+    padding: 3px 10px; font-size: 12px; font-weight: 700;
+    cursor: pointer; margin-left: 6px; vertical-align: middle;
+    transition: background .15s;
+  }
+  .audio-btn:hover { background: var(--cream); }
+  .audio-btn:active { transform: scale(0.96); }
+  .audio-btn.playing { background: var(--orange); color: #fff; }
+  .vocab-line { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; padding: 4px 0; border-bottom: 1px dashed #eee; }
+  .vocab-en { font-weight: 700; min-width: 150px; }
+  .vocab-pt { color: #666; flex: 1; min-width: 140px; }
+  .dialog-box p { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+  .video-box {
+    background: var(--cream-2); border: 1px dashed var(--border);
+    border-radius: 8px; padding: 14px 16px; font-size: 13px; color: #666; margin: 10px 0;
+  }
+  .tongue-twister { font-style: italic; font-size: 14.5px; margin: 6px 0; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+
+  .letter-heading { font-weight: 800; font-size: 14.5px; color: var(--orange-dark); margin: 18px 0 8px 0; }
+  .note-block { background: var(--cream-2); border-left: 3px solid var(--orange); padding: 8px 12px; border-radius: 4px; font-size: 13.5px; margin: 8px 0; }
+  .paragraph-text { font-size: 14px; margin: 6px 0; }
+  .example-line-block { font-size: 14px; margin: 6px 0; font-style: italic; color: #444; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .check-list { list-style: none; padding: 0; margin: 8px 0 14px 0; }
+  .check-list li { padding: 5px 0 5px 4px; font-size: 13.5px; border-bottom: 1px dashed #eee; }
+  table.lesson-table { width: 100%; border-collapse: collapse; margin: 10px 0 18px 0; font-size: 13.5px; }
+  table.lesson-table th { background: var(--orange); color: #fff; text-align: left; padding: 8px 10px; }
+  table.lesson-table td { padding: 7px 10px; border-bottom: 1px solid #eee; }
+  table.lesson-table tr:nth-child(even) td { background: #FAFAFA; }
+  .fill-item .practice-input { flex: 1; min-width: 140px; }
+  .completion-note { font-size: 12px; color: #888; margin-top: 6px; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+</head>
+<body>
+
+<div class="progress-bar-wrap">
+  <span>Progresso da atividade</span>
+  <div class="progress-track"><div class="progress-fill" id="globalProgress"></div></div>
+  <span id="globalProgressLabel">0%</span>
+</div>
+
+<div class="wrap">
+
+  <a href="../index.html" class="back-link">← Voltar ao app</a>
+
+  <div class="header">
+    <img src="data:image/png;base64,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" alt="Bobcat Language School">
+    <div>
+      <div class="school">Bobcat Language School</div>
+      <div class="subtitle">Object Pronouns, Possessive Pronouns &amp; Everyday Verbs</div>
+    </div>
+  </div>
+
+  <div class="info-bar">
+    <label>Nome: <input type="text" id="studentName" placeholder="seu nome"></label>
+    <label>Data: <input type="date" id="studentDate"></label>
+    <label>Professor(a): <input type="text" id="teacherName" placeholder="nome do professor(a)"></label>
+  </div>
+
+  <h1 class="title">Lesson 11 — People, Objects and Possession</h1>
+
+  <div class="dialog-box">
+<p><b>Habilidades:</b> <span>Listening • Speaking • Reading • Writing</span><button class="audio-btn" onclick="speak(this,'Listening • Speaking • Reading • Writing')">🔊</button></p>
+</div>
+<p class="paragraph-text">🎯 Objetivos da Lição</p>
+<p class="paragraph-text">Ao terminar esta lição, você será capaz de:</p>
+<ul class="check-list">
+<li>✅ Substituir nomes por object pronouns.</li>
+<li>✅ Usar possessive pronouns sem repetir substantivos.</li>
+<li>✅ Aprender mais de 20 verbos extremamente comuns.</li>
+</ul>
+<div class="section-title">✅ Entender a diferença entre:</div>
+<p class="paragraph-text">my × mine</p>
+<p class="paragraph-text">your × yours</p>
+<p class="paragraph-text">his × him</p>
+<p class="paragraph-text">her × hers × her</p>
+<ul class="check-list">
+<li>✅ Conversar de forma mais natural.</li>
+</ul>
+<p class="paragraph-text">🔥 Warm-up</p>
+<p class="example-line-block"><span>Leia em voz alta.</span><button class="audio-btn" onclick="speak(this,'Leia em voz alta.')">🔊</button></p>
+<p class="paragraph-text">Hello!</p>
+<p class="example-line-block"><span>My name is Sarah.</span><button class="audio-btn" onclick="speak(this,'My name is Sarah.')">🔊</button></p>
+<p class="example-line-block"><span>This is my brother.</span><button class="audio-btn" onclick="speak(this,'This is my brother.')">🔊</button></p>
+<p class="example-line-block"><span>His name is David.</span><button class="audio-btn" onclick="speak(this,'His name is David.')">🔊</button></p>
+<p class="example-line-block"><span>I like David.</span><button class="audio-btn" onclick="speak(this,'I like David.')">🔊</button></p>
+<p class="example-line-block"><span>David likes me.</span><button class="audio-btn" onclick="speak(this,'David likes me.')">🔊</button></p>
+<p class="ex-intro">Agora observe.</p>
+<p class="paragraph-text">Na última frase podemos dizer:</p>
+<p class="example-line-block"><span>David likes me.</span><button class="audio-btn" onclick="speak(this,'David likes me.')">🔊</button></p>
+<p class="paragraph-text">Em vez de repetir:</p>
+<p class="example-line-block"><span>David likes Sarah.</span><button class="audio-btn" onclick="speak(this,'David likes Sarah.')">🔊</button></p>
+<p class="paragraph-text">É exatamente isso que aprenderemos hoje.</p>
+<p class="paragraph-text">📖 Story Time</p>
+<p class="paragraph-text">A New Neighbor</p>
+<p class="example-line-block"><span>Mike has a new neighbor.</span><button class="audio-btn" onclick="speak(this,'Mike has a new neighbor.')">🔊</button></p>
+<p class="example-line-block"><span>Her name is Emma.</span><button class="audio-btn" onclick="speak(this,'Her name is Emma.')">🔊</button></p>
+<p class="example-line-block"><span>She is very friendly.</span><button class="audio-btn" onclick="speak(this,'She is very friendly.')">🔊</button></p>
+<p class="example-line-block"><span>Mike sees her every morning.</span><button class="audio-btn" onclick="speak(this,'Mike sees her every morning.')">🔊</button></p>
+<p class="paragraph-text">One day, Emma says:</p>
+<p class="paragraph-text">&quot;Hi, Mike!&quot;</p>
+<p class="example-line-block"><span>Mike smiles.</span><button class="audio-btn" onclick="speak(this,'Mike smiles.')">🔊</button></p>
+<p class="paragraph-text">&quot;Hello! Welcome to the neighborhood.&quot;</p>
+<p class="paragraph-text">Emma says,</p>
+<p class="paragraph-text">&quot;Thank you!</p>
+<p class="paragraph-text">Can you help me?&quot;</p>
+<p class="paragraph-text">Mike says,</p>
+<p class="paragraph-text">&quot;Of course.&quot;</p>
+<p class="example-line-block"><span>Emma gives him a box.</span><button class="audio-btn" onclick="speak(this,'Emma gives him a box.')">🔊</button></p>
+<p class="example-line-block"><span>Mike carries it.</span><button class="audio-btn" onclick="speak(this,'Mike carries it.')">🔊</button></p>
+<p class="paragraph-text">Emma says,</p>
+<p class="paragraph-text">&quot;Thank you!</p>
+<p class="paragraph-text">You&#x27;re very kind.&quot;</p>
+<p class="paragraph-text">Later, Mike meets Emma&#x27;s parents.</p>
+<p class="example-line-block"><span>He likes them.</span><button class="audio-btn" onclick="speak(this,'He likes them.')">🔊</button></p>
+<p class="example-line-block"><span>They like him too.</span><button class="audio-btn" onclick="speak(this,'They like him too.')">🔊</button></p>
+<p class="paragraph-text">Emma says,</p>
+<p class="paragraph-text">&quot;This house is ours now.&quot;</p>
+<p class="example-line-block"><span>Mike smiles.</span><button class="audio-btn" onclick="speak(this,'Mike smiles.')">🔊</button></p>
+<p class="paragraph-text">&quot;Welcome!</p>
+<p class="paragraph-text">If you need anything,</p>
+<p class="paragraph-text">call me.&quot;</p>
+<p class="paragraph-text">📖 Reading Comprehension</p>
+<p class="example-line-block"><span>Answer.</span><button class="audio-btn" onclick="speak(this,'Answer.')">🔊</button></p>
+<p class="example-line-block"><span>Who is Emma?</span><button class="audio-btn" onclick="speak(this,'Who is Emma?')">🔊</button></p>
+<p class="example-line-block"><span>Does Mike help her?</span><button class="audio-btn" onclick="speak(this,'Does Mike help her?')">🔊</button></p>
+<p class="example-line-block"><span>What does Emma give him?</span><button class="audio-btn" onclick="speak(this,'What does Emma give him?')">🔊</button></p>
+<p class="example-line-block"><span>Do Emma&#x27;s parents like Mike?</span><button class="audio-btn" onclick="speak(this,'Do Emma\'s parents like Mike?')">🔊</button></p>
+<p class="example-line-block"><span>Whose house is it?</span><button class="audio-btn" onclick="speak(this,'Whose house is it?')">🔊</button></p>
+<p class="paragraph-text">📚 New Vocabulary</p>
+<p class="paragraph-text">Everyday Verbs</p>
+<table class="lesson-table"><tr><th>Verb</th><th>Meaning</th></tr>
+<tr><td>call <button class="audio-btn" onclick="speak(this,'call')">🔊</button></td><td>ligar/chamar</td></tr>
+<tr><td>carry <button class="audio-btn" onclick="speak(this,'carry')">🔊</button></td><td>carregar</td></tr>
+<tr><td>open <button class="audio-btn" onclick="speak(this,'open')">🔊</button></td><td>abrir</td></tr>
+<tr><td>close <button class="audio-btn" onclick="speak(this,'close')">🔊</button></td><td>fechar</td></tr>
+<tr><td>start <button class="audio-btn" onclick="speak(this,'start')">🔊</button></td><td>começar</td></tr>
+<tr><td>finish <button class="audio-btn" onclick="speak(this,'finish')">🔊</button></td><td>terminar</td></tr>
+<tr><td>bring <button class="audio-btn" onclick="speak(this,'bring')">🔊</button></td><td>trazer</td></tr>
+<tr><td>show <button class="audio-btn" onclick="speak(this,'show')">🔊</button></td><td>mostrar</td></tr>
+<tr><td>tell <button class="audio-btn" onclick="speak(this,'tell')">🔊</button></td><td>contar/dizer</td></tr>
+<tr><td>ask <button class="audio-btn" onclick="speak(this,'ask')">🔊</button></td><td>perguntar</td></tr>
+<tr><td>answer <button class="audio-btn" onclick="speak(this,'answer')">🔊</button></td><td>responder</td></tr>
+<tr><td>wait <button class="audio-btn" onclick="speak(this,'wait')">🔊</button></td><td>esperar</td></tr>
+<tr><td>use <button class="audio-btn" onclick="speak(this,'use')">🔊</button></td><td>usar</td></tr>
+<tr><td>find <button class="audio-btn" onclick="speak(this,'find')">🔊</button></td><td>encontrar</td></tr>
+<tr><td>lose <button class="audio-btn" onclick="speak(this,'lose')">🔊</button></td><td>perder</td></tr>
+<tr><td>buy <button class="audio-btn" onclick="speak(this,'buy')">🔊</button></td><td>comprar</td></tr>
+<tr><td>sell <button class="audio-btn" onclick="speak(this,'sell')">🔊</button></td><td>vender</td></tr>
+<tr><td>send <button class="audio-btn" onclick="speak(this,'send')">🔊</button></td><td>enviar</td></tr>
+<tr><td>pay <button class="audio-btn" onclick="speak(this,'pay')">🔊</button></td><td>pagar</td></tr>
+<tr><td>wash <button class="audio-btn" onclick="speak(this,'wash')">🔊</button></td><td>lavar</td></tr>
+<tr><td>clean <button class="audio-btn" onclick="speak(this,'clean')">🔊</button></td><td>limpar</td></tr>
+<tr><td>watch <button class="audio-btn" onclick="speak(this,'watch')">🔊</button></td><td>assistir</td></tr>
+<tr><td>read <button class="audio-btn" onclick="speak(this,'read')">🔊</button></td><td>ler</td></tr>
+<tr><td>write <button class="audio-btn" onclick="speak(this,'write')">🔊</button></td><td>escrever</td></tr>
+</table>
+<p class="paragraph-text">Exemplos</p>
+<p class="example-line-block"><span>I read books.</span><button class="audio-btn" onclick="speak(this,'I read books.')">🔊</button></p>
+<p class="example-line-block"><span>She watches TV.</span><button class="audio-btn" onclick="speak(this,'She watches TV.')">🔊</button></p>
+<p class="example-line-block"><span>They buy food.</span><button class="audio-btn" onclick="speak(this,'They buy food.')">🔊</button></p>
+<p class="example-line-block"><span>He opens the window.</span><button class="audio-btn" onclick="speak(this,'He opens the window.')">🔊</button></p>
+<p class="example-line-block"><span>We clean the house.</span><button class="audio-btn" onclick="speak(this,'We clean the house.')">🔊</button></p>
+<p class="paragraph-text">🧠 Grammar</p>
+<p class="paragraph-text">Object Pronouns</p>
+<p class="paragraph-text">Até agora aprendemos:</p>
+<p class="paragraph-text">I</p>
+<p class="paragraph-text">You</p>
+<p class="paragraph-text">He</p>
+<p class="paragraph-text">She</p>
+<p class="paragraph-text">We</p>
+<p class="paragraph-text">They</p>
+<p class="ex-intro">Agora veremos quando essas palavras deixam de ser sujeito e passam a receber a ação.</p>
+<table class="lesson-table"><tr><th>Subject</th><th>Object</th></tr>
+<tr><td>I <button class="audio-btn" onclick="speak(this,'I')">🔊</button></td><td>me</td></tr>
+<tr><td>You <button class="audio-btn" onclick="speak(this,'You')">🔊</button></td><td>you</td></tr>
+<tr><td>He <button class="audio-btn" onclick="speak(this,'He')">🔊</button></td><td>him</td></tr>
+<tr><td>She <button class="audio-btn" onclick="speak(this,'She')">🔊</button></td><td>her</td></tr>
+<tr><td>It <button class="audio-btn" onclick="speak(this,'It')">🔊</button></td><td>it</td></tr>
+<tr><td>We <button class="audio-btn" onclick="speak(this,'We')">🔊</button></td><td>us</td></tr>
+<tr><td>They <button class="audio-btn" onclick="speak(this,'They')">🔊</button></td><td>them</td></tr>
+</table>
+<p class="ex-intro">Observe</p>
+<p class="example-line-block"><span>I like Sarah.</span><button class="audio-btn" onclick="speak(this,'I like Sarah.')">🔊</button></p>
+<p class="paragraph-text">↓</p>
+<p class="example-line-block"><span>I like her.</span><button class="audio-btn" onclick="speak(this,'I like her.')">🔊</button></p>
+<p class="example-line-block"><span>John helps Mike.</span><button class="audio-btn" onclick="speak(this,'John helps Mike.')">🔊</button></p>
+<p class="paragraph-text">↓</p>
+<p class="example-line-block"><span>John helps him.</span><button class="audio-btn" onclick="speak(this,'John helps him.')">🔊</button></p>
+<p class="example-line-block"><span>The teacher teaches us.</span><button class="audio-btn" onclick="speak(this,'The teacher teaches us.')">🔊</button></p>
+<p class="example-line-block"><span>The dog follows me.</span><button class="audio-btn" onclick="speak(this,'The dog follows me.')">🔊</button></p>
+<p class="example-line-block"><span>Can you see them?</span><button class="audio-btn" onclick="speak(this,'Can you see them?')">🔊</button></p>
+<p class="ex-intro">Quando usar?</p>
+<p class="example-line-block"><span>Sempre depois do verbo.</span><button class="audio-btn" onclick="speak(this,'Sempre depois do verbo.')">🔊</button></p>
+<p class="paragraph-text">NOT</p>
+<p class="paragraph-text">❌ I like she.</p>
+<p class="paragraph-text">RIGHT</p>
+<ul class="check-list">
+<li>✅ I like her.</li>
+</ul>
+<p class="paragraph-text">Possessive Pronouns</p>
+<p class="paragraph-text">Já conhecemos:</p>
+<p class="paragraph-text">my</p>
+<p class="paragraph-text">your</p>
+<p class="paragraph-text">his</p>
+<p class="paragraph-text">her</p>
+<p class="paragraph-text">our</p>
+<p class="paragraph-text">their</p>
+<p class="example-line-block"><span>Esses são adjetivos possessivos.</span><button class="audio-btn" onclick="speak(this,'Esses são adjetivos possessivos.')">🔊</button></p>
+<p class="example-line-block"><span>Eles precisam de um substantivo.</span><button class="audio-btn" onclick="speak(this,'Eles precisam de um substantivo.')">🔊</button></p>
+<p class="example-line-block"><span>My book.</span><button class="audio-btn" onclick="speak(this,'My book.')">🔊</button></p>
+<p class="example-line-block"><span>Your car.</span><button class="audio-btn" onclick="speak(this,'Your car.')">🔊</button></p>
+<p class="example-line-block"><span>Her phone.</span><button class="audio-btn" onclick="speak(this,'Her phone.')">🔊</button></p>
+<p class="ex-intro">Agora veremos os pronomes possessivos.</p>
+<p class="example-line-block"><span>Eles substituem o substantivo.</span><button class="audio-btn" onclick="speak(this,'Eles substituem o substantivo.')">🔊</button></p>
+<table class="lesson-table"><tr><th>Possessive Adjective</th><th>Possessive Pronoun</th></tr>
+<tr><td>my <button class="audio-btn" onclick="speak(this,'my')">🔊</button></td><td>mine</td></tr>
+<tr><td>your <button class="audio-btn" onclick="speak(this,'your')">🔊</button></td><td>yours</td></tr>
+<tr><td>his <button class="audio-btn" onclick="speak(this,'his')">🔊</button></td><td>his</td></tr>
+<tr><td>her <button class="audio-btn" onclick="speak(this,'her')">🔊</button></td><td>hers</td></tr>
+<tr><td>our <button class="audio-btn" onclick="speak(this,'our')">🔊</button></td><td>ours</td></tr>
+<tr><td>their <button class="audio-btn" onclick="speak(this,'their')">🔊</button></td><td>theirs</td></tr>
+</table>
+<p class="ex-intro">Observe.</p>
+<p class="example-line-block"><span>This is my book.</span><button class="audio-btn" onclick="speak(this,'This is my book.')">🔊</button></p>
+<p class="paragraph-text">↓</p>
+<p class="example-line-block"><span>This book is mine.</span><button class="audio-btn" onclick="speak(this,'This book is mine.')">🔊</button></p>
+<p class="example-line-block"><span>That is her car.</span><button class="audio-btn" onclick="speak(this,'That is her car.')">🔊</button></p>
+<p class="paragraph-text">↓</p>
+<p class="example-line-block"><span>That car is hers.</span><button class="audio-btn" onclick="speak(this,'That car is hers.')">🔊</button></p>
+<p class="example-line-block"><span>Those are our keys.</span><button class="audio-btn" onclick="speak(this,'Those are our keys.')">🔊</button></p>
+<p class="paragraph-text">↓</p>
+<p class="example-line-block"><span>Those keys are ours.</span><button class="audio-btn" onclick="speak(this,'Those keys are ours.')">🔊</button></p>
+<p class="example-line-block"><span>This isn&#x27;t your phone.</span><button class="audio-btn" onclick="speak(this,'This isn\'t your phone.')">🔊</button></p>
+<p class="example-line-block"><span>It&#x27;s mine.</span><button class="audio-btn" onclick="speak(this,'It\'s mine.')">🔊</button></p>
+<p class="paragraph-text">Dica importante</p>
+<p class="example-line-block"><span>Veja a diferença.</span><button class="audio-btn" onclick="speak(this,'Veja a diferença.')">🔊</button></p>
+<p class="paragraph-text">My = meu + substantivo</p>
+<p class="paragraph-text">My phone</p>
+<p class="paragraph-text">Mine = o meu</p>
+<p class="example-line-block"><span>This phone is mine.</span><button class="audio-btn" onclick="speak(this,'This phone is mine.')">🔊</button></p>
+<p class="paragraph-text">Her = dela + substantivo</p>
+<p class="paragraph-text">Her bag</p>
+<p class="paragraph-text">Hers = a dela</p>
+<p class="example-line-block"><span>That bag is hers.</span><button class="audio-btn" onclick="speak(this,'That bag is hers.')">🔊</button></p>
+<p class="paragraph-text">Comparando</p>
+<p class="example-line-block"><span>This is my book.</span><button class="audio-btn" onclick="speak(this,'This is my book.')">🔊</button></p>
+<p class="example-line-block"><span>This book is mine.</span><button class="audio-btn" onclick="speak(this,'This book is mine.')">🔊</button></p>
+<p class="example-line-block"><span>That is her car.</span><button class="audio-btn" onclick="speak(this,'That is her car.')">🔊</button></p>
+<p class="example-line-block"><span>That car is hers.</span><button class="audio-btn" onclick="speak(this,'That car is hers.')">🔊</button></p>
+<p class="example-line-block"><span>Those are our keys.</span><button class="audio-btn" onclick="speak(this,'Those are our keys.')">🔊</button></p>
+<p class="example-line-block"><span>Those keys are ours.</span><button class="audio-btn" onclick="speak(this,'Those keys are ours.')">🔊</button></p>
+<p class="paragraph-text">Muito cuidado!</p>
+<p class="example-line-block"><span>Her pode significar DUAS coisas.</span><button class="audio-btn" onclick="speak(this,'Her pode significar DUAS coisas.')">🔊</button></p>
+<p class="paragraph-text">Como possessivo</p>
+<p class="paragraph-text">Her book</p>
+<p class="paragraph-text">O livro dela</p>
+<p class="paragraph-text">Como objeto</p>
+<p class="example-line-block"><span>I know her.</span><button class="audio-btn" onclick="speak(this,'I know her.')">🔊</button></p>
+<p class="example-line-block"><span>Eu conheço ela.</span><button class="audio-btn" onclick="speak(this,'Eu conheço ela.')">🔊</button></p>
+<p class="example-line-block"><span>Quem define é a posição.</span><button class="audio-btn" onclick="speak(this,'Quem define é a posição.')">🔊</button></p>
+<p class="paragraph-text">Mini Conversation</p>
+<p class="example-line-block"><span>Is this your pen?</span><button class="audio-btn" onclick="speak(this,'Is this your pen?')">🔊</button></p>
+<p class="example-line-block"><span>Yes.</span><button class="audio-btn" onclick="speak(this,'Yes.')">🔊</button></p>
+<p class="example-line-block"><span>It&#x27;s mine.</span><button class="audio-btn" onclick="speak(this,'It\'s mine.')">🔊</button></p>
+<p class="example-line-block"><span>Is that John&#x27;s car?</span><button class="audio-btn" onclick="speak(this,'Is that John\'s car?')">🔊</button></p>
+<p class="example-line-block"><span>Yes.</span><button class="audio-btn" onclick="speak(this,'Yes.')">🔊</button></p>
+<p class="example-line-block"><span>It&#x27;s his.</span><button class="audio-btn" onclick="speak(this,'It\'s his.')">🔊</button></p>
+<p class="example-line-block"><span>Do you know Emma?</span><button class="audio-btn" onclick="speak(this,'Do you know Emma?')">🔊</button></p>
+<p class="example-line-block"><span>Yes.</span><button class="audio-btn" onclick="speak(this,'Yes.')">🔊</button></p>
+<p class="example-line-block"><span>I know her.</span><button class="audio-btn" onclick="speak(this,'I know her.')">🔊</button></p>
+<p class="example-line-block"><span>Do you like Mike?</span><button class="audio-btn" onclick="speak(this,'Do you like Mike?')">🔊</button></p>
+<p class="example-line-block"><span>Yes.</span><button class="audio-btn" onclick="speak(this,'Yes.')">🔊</button></p>
+<p class="example-line-block"><span>I like him.</span><button class="audio-btn" onclick="speak(this,'I like him.')">🔊</button></p>
+<p class="paragraph-text">Speaking Practice</p>
+<p class="ex-intro">Complete oralmente.</p>
+<p class="example-line-block"><span>Do you know Tom?</span><button class="audio-btn" onclick="speak(this,'Do you know Tom?')">🔊</button></p>
+<p class="paragraph-text">Yes, I know ______.</p>
+<p class="example-line-block"><span>Do you like pizza?</span><button class="audio-btn" onclick="speak(this,'Do you like pizza?')">🔊</button></p>
+<p class="paragraph-text">Yes, I like ______.</p>
+<p class="example-line-block"><span>Can you help me?</span><button class="audio-btn" onclick="speak(this,'Can you help me?')">🔊</button></p>
+<p class="paragraph-text">Yes, I can help ______.</p>
+<p class="example-line-block"><span>Do they know Sarah?</span><button class="audio-btn" onclick="speak(this,'Do they know Sarah?')">🔊</button></p>
+<p class="paragraph-text">Yes, they know ______.</p>
+<p class="paragraph-text">Everyday English</p>
+<p class="example-line-block"><span>Can you help me?</span><button class="audio-btn" onclick="speak(this,'Can you help me?')">🔊</button></p>
+<p class="example-line-block"><span>I&#x27;ll call you.</span><button class="audio-btn" onclick="speak(this,'I\'ll call you.')">🔊</button></p>
+<p class="example-line-block"><span>Please wait.</span><button class="audio-btn" onclick="speak(this,'Please wait.')">🔊</button></p>
+<p class="example-line-block"><span>Come with us.</span><button class="audio-btn" onclick="speak(this,'Come with us.')">🔊</button></p>
+<p class="example-line-block"><span>Tell me.</span><button class="audio-btn" onclick="speak(this,'Tell me.')">🔊</button></p>
+<p class="example-line-block"><span>Show me.</span><button class="audio-btn" onclick="speak(this,'Show me.')">🔊</button></p>
+<p class="example-line-block"><span>Open it.</span><button class="audio-btn" onclick="speak(this,'Open it.')">🔊</button></p>
+<p class="example-line-block"><span>Close it.</span><button class="audio-btn" onclick="speak(this,'Close it.')">🔊</button></p>
+<p class="example-line-block"><span>Read it.</span><button class="audio-btn" onclick="speak(this,'Read it.')">🔊</button></p>
+<p class="example-line-block"><span>Write it.</span><button class="audio-btn" onclick="speak(this,'Write it.')">🔊</button></p>
+<p class="example-line-block"><span>Bring it.</span><button class="audio-btn" onclick="speak(this,'Bring it.')">🔊</button></p>
+<p class="example-line-block"><span>Take it.</span><button class="audio-btn" onclick="speak(this,'Take it.')">🔊</button></p>
+<p class="paragraph-text">Pronunciation Tip</p>
+<p class="paragraph-text">No inglês quase nunca pronunciamos:</p>
+<p class="paragraph-text">him</p>
+<p class="paragraph-text">como</p>
+<p class="paragraph-text">&quot;RIM&quot;</p>
+<p class="example-line-block"><span>O H deve aparecer.</span><button class="audio-btn" onclick="speak(this,'O H deve aparecer.')">🔊</button></p>
+<p class="paragraph-text">him</p>
+<p class="paragraph-text">/her/</p>
+<p class="paragraph-text">O mesmo vale para</p>
+<p class="paragraph-text">her</p>
+<p class="paragraph-text">help</p>
+<p class="paragraph-text">house</p>
+<p class="paragraph-text">hello</p>
+<p class="paragraph-text">Common Mistakes</p>
+<p class="paragraph-text">❌ I like she.</p>
+<ul class="check-list">
+<li>✅ I like her.</li>
+</ul>
+<p class="paragraph-text">❌ This is mine book.</p>
+<ul class="check-list">
+<li>✅ This is my book.</li>
+</ul>
+<p class="paragraph-text">❌ This book is my.</p>
+<ul class="check-list">
+<li>✅ This book is mine.</li>
+</ul>
+<p class="paragraph-text">❌ I know they.</p>
+<ul class="check-list">
+<li>✅ I know them.</li>
+</ul>
+<p class="paragraph-text">Cultural Note</p>
+<p class="example-line-block"><span>Os americanos usam muito object pronouns.</span><button class="audio-btn" onclick="speak(this,'Os americanos usam muito object pronouns.')">🔊</button></p>
+<p class="paragraph-text">É extremamente comum ouvir:</p>
+<p class="paragraph-text">Love you!</p>
+<p class="paragraph-text">Miss you!</p>
+<p class="paragraph-text">See you!</p>
+<p class="example-line-block"><span>Call me.</span><button class="audio-btn" onclick="speak(this,'Call me.')">🔊</button></p>
+<p class="example-line-block"><span>Text me.</span><button class="audio-btn" onclick="speak(this,'Text me.')">🔊</button></p>
+<p class="example-line-block"><span>Help me.</span><button class="audio-btn" onclick="speak(this,'Help me.')">🔊</button></p>
+<p class="example-line-block"><span>Tell him.</span><button class="audio-btn" onclick="speak(this,'Tell him.')">🔊</button></p>
+<p class="example-line-block"><span>Ask her.</span><button class="audio-btn" onclick="speak(this,'Ask her.')">🔊</button></p>
+<p class="example-line-block"><span>Come with us.</span><button class="audio-btn" onclick="speak(this,'Come with us.')">🔊</button></p>
+<p class="example-line-block"><span>Essas pequenas palavras aparecem milhares de vezes por dia.</span><button class="audio-btn" onclick="speak(this,'Essas pequenas palavras aparecem milhares de vezes por dia.')">🔊</button></p>
+<p class="paragraph-text">Exercises</p>
+<p class="paragraph-text">Exercise 1</p>
+<p class="ex-intro">Complete.</p>
+<div class="fill-grid">
+<div class="fill-item"><span>I like ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+</div>
+<p class="paragraph-text">(she)</p>
+<div class="fill-grid">
+<div class="fill-item"><span>We know ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+</div>
+<p class="paragraph-text">(they)</p>
+<div class="fill-grid">
+<div class="fill-item"><span>Can you help ______?</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+</div>
+<p class="paragraph-text">(I)</p>
+<div class="fill-grid">
+<div class="fill-item"><span>She calls ______ every day.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+</div>
+<p class="paragraph-text">(he)</p>
+<div class="fill-grid">
+<div class="fill-item"><span>They invite ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+</div>
+<p class="paragraph-text">(we)</p>
+<p class="paragraph-text">Exercise 2</p>
+<p class="example-line-block"><span>Substitua.</span><button class="audio-btn" onclick="speak(this,'Substitua.')">🔊</button></p>
+<p class="example-line-block"><span>I know Sarah.</span><button class="audio-btn" onclick="speak(this,'I know Sarah.')">🔊</button></p>
+<p class="paragraph-text">↓</p>
+<div class="fill-grid">
+<div class="fill-item"><span>I know ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+<p class="example-line-block"><span>I like John.</span><button class="audio-btn" onclick="speak(this,'I like John.')">🔊</button></p>
+</div>
+<p class="paragraph-text">↓</p>
+<div class="fill-grid">
+<div class="fill-item"><span>I like ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+<p class="example-line-block"><span>We see the children.</span><button class="audio-btn" onclick="speak(this,'We see the children.')">🔊</button></p>
+</div>
+<p class="paragraph-text">↓</p>
+<div class="fill-grid">
+<div class="fill-item"><span>We see ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+</div>
+<p class="paragraph-text">Exercise 3</p>
+<p class="ex-intro">Complete.</p>
+<div class="fill-grid">
+<div class="fill-item"><span>This book is ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+</div>
+<p class="paragraph-text">(I)</p>
+<div class="fill-grid">
+<div class="fill-item"><span>That car is ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+</div>
+<p class="paragraph-text">(she)</p>
+<div class="fill-grid">
+<div class="fill-item"><span>Those bags are ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+</div>
+<p class="paragraph-text">(they)</p>
+<div class="fill-grid">
+<div class="fill-item"><span>Is this pen ______?</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+</div>
+<p class="paragraph-text">(you)</p>
+<p class="paragraph-text">Exercise 4</p>
+<p class="ex-intro">Escolha.</p>
+<p class="paragraph-text">This phone is</p>
+<p class="paragraph-text">a) my</p>
+<p class="paragraph-text">b) mine</p>
+<div class="fill-grid">
+<div class="fill-item"><span>______ can help me.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+</div>
+<p class="paragraph-text">a) Him</p>
+<p class="paragraph-text">b) He</p>
+<div class="fill-grid">
+<div class="fill-item"><span>I know ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+</div>
+<p class="paragraph-text">a) she</p>
+<p class="paragraph-text">b) her</p>
+<p class="paragraph-text">These books are</p>
+<p class="paragraph-text">a) ours</p>
+<p class="paragraph-text">b) our</p>
+<p class="paragraph-text">Exercise 5</p>
+<p class="example-line-block"><span>Traduza.</span><button class="audio-btn" onclick="speak(this,'Traduza.')">🔊</button></p>
+<p class="example-line-block"><span>Eu conheço ela.</span><button class="audio-btn" onclick="speak(this,'Eu conheço ela.')">🔊</button></p>
+<p class="example-line-block"><span>Ele ajuda nós.</span><button class="audio-btn" onclick="speak(this,'Ele ajuda nós.')">🔊</button></p>
+<p class="example-line-block"><span>Esse carro é meu.</span><button class="audio-btn" onclick="speak(this,'Esse carro é meu.')">🔊</button></p>
+<p class="example-line-block"><span>Aquela casa é deles.</span><button class="audio-btn" onclick="speak(this,'Aquela casa é deles.')">🔊</button></p>
+<p class="example-line-block"><span>Você pode me ajudar?</span><button class="audio-btn" onclick="speak(this,'Você pode me ajudar?')">🔊</button></p>
+<p class="paragraph-text">Exercise 6</p>
+<p class="ex-intro">Escreva 8 frases usando:</p>
+<p class="paragraph-text">✔ me</p>
+<p class="paragraph-text">✔ him</p>
+<p class="paragraph-text">✔ her</p>
+<p class="paragraph-text">✔ us</p>
+<p class="paragraph-text">✔ them</p>
+<p class="paragraph-text">✔ mine</p>
+<p class="paragraph-text">✔ yours</p>
+<p class="paragraph-text">✔ theirs</p>
+<p class="paragraph-text">Exercise 7</p>
+<p class="ex-intro">Escreva um pequeno diálogo usando pelo menos:</p>
+<p class="paragraph-text">5 verbos da lição</p>
+<p class="paragraph-text">3 object pronouns</p>
+<p class="paragraph-text">2 possessive pronouns</p>
+<p class="paragraph-text">📖 Glossário</p>
+<table class="lesson-table"><tr><th>Palavra</th><th>Tradução</th></tr>
+<tr><td>me <button class="audio-btn" onclick="speak(this,'me')">🔊</button></td><td>me / mim</td></tr>
+<tr><td>him <button class="audio-btn" onclick="speak(this,'him')">🔊</button></td><td>ele</td></tr>
+<tr><td>her <button class="audio-btn" onclick="speak(this,'her')">🔊</button></td><td>ela / dela</td></tr>
+<tr><td>us <button class="audio-btn" onclick="speak(this,'us')">🔊</button></td><td>nós</td></tr>
+<tr><td>them <button class="audio-btn" onclick="speak(this,'them')">🔊</button></td><td>eles / elas</td></tr>
+<tr><td>mine <button class="audio-btn" onclick="speak(this,'mine')">🔊</button></td><td>o meu / a minha</td></tr>
+<tr><td>yours <button class="audio-btn" onclick="speak(this,'yours')">🔊</button></td><td>o seu / a sua</td></tr>
+<tr><td>hers <button class="audio-btn" onclick="speak(this,'hers')">🔊</button></td><td>o dela</td></tr>
+<tr><td>ours <button class="audio-btn" onclick="speak(this,'ours')">🔊</button></td><td>o nosso</td></tr>
+<tr><td>theirs <button class="audio-btn" onclick="speak(this,'theirs')">🔊</button></td><td>o deles</td></tr>
+<tr><td>call <button class="audio-btn" onclick="speak(this,'call')">🔊</button></td><td>ligar</td></tr>
+<tr><td>carry <button class="audio-btn" onclick="speak(this,'carry')">🔊</button></td><td>carregar</td></tr>
+<tr><td>bring <button class="audio-btn" onclick="speak(this,'bring')">🔊</button></td><td>trazer</td></tr>
+<tr><td>wait <button class="audio-btn" onclick="speak(this,'wait')">🔊</button></td><td>esperar</td></tr>
+<tr><td>answer <button class="audio-btn" onclick="speak(this,'answer')">🔊</button></td><td>responder</td></tr>
+<tr><td>tell <button class="audio-btn" onclick="speak(this,'tell')">🔊</button></td><td>dizer</td></tr>
+<tr><td>ask <button class="audio-btn" onclick="speak(this,'ask')">🔊</button></td><td>perguntar</td></tr>
+<tr><td>watch <button class="audio-btn" onclick="speak(this,'watch')">🔊</button></td><td>assistir</td></tr>
+<tr><td>read <button class="audio-btn" onclick="speak(this,'read')">🔊</button></td><td>ler</td></tr>
+<tr><td>write <button class="audio-btn" onclick="speak(this,'write')">🔊</button></td><td>escrever</td></tr>
+<tr><td>clean <button class="audio-btn" onclick="speak(this,'clean')">🔊</button></td><td>limpar</td></tr>
+<tr><td>lose <button class="audio-btn" onclick="speak(this,'lose')">🔊</button></td><td>perder</td></tr>
+<tr><td>find <button class="audio-btn" onclick="speak(this,'find')">🔊</button></td><td>encontrar</td></tr>
+<tr><td>send <button class="audio-btn" onclick="speak(this,'send')">🔊</button></td><td>enviar</td></tr>
+<tr><td>pay <button class="audio-btn" onclick="speak(this,'pay')">🔊</button></td><td>pagar</td></tr>
+</table>
+<p class="paragraph-text">📝 Resumo da Lição</p>
+<p class="paragraph-text">Nesta lição você aprendeu:</p>
+<p class="paragraph-text">✔ Object Pronouns (me, him, her, us, them)</p>
+<p class="paragraph-text">✔ Possessive Pronouns (mine, yours, hers, ours, theirs)</p>
+<p class="paragraph-text">✔ Mais de 20 verbos extremamente comuns no inglês americano.</p>
+<p class="paragraph-text">✔ Como evitar repetições usando pronomes.</p>
+<p class="paragraph-text">✔ Frases naturais usadas diariamente por falantes nativos.</p>
+
+  <div class="actions" style="margin-top:24px;">
+    <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
+    <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
+  </div>
+  <p class="completion-note">O progresso mostra quanto da prática escrita você já preencheu. Use os botões "Ver gabarito" para conferir suas respostas — essa lição não é corrigida automaticamente.</p>
+
+  <div class="footer-note">Bobcat Language School • Lesson 11 — People, Objects and Possession</div>
+
+</div>
+
+<script>
+const LESSON_ID = 'licao-11-object-possessive-pronouns';
+let finishing = false;
+
+async function prefillFromProfile() {
+  await initDataLayer();
+  const profile = await getProfile();
+  if (profile && profile.name) {
+    const nameInput = document.getElementById('studentName');
+    if (nameInput && !nameInput.value) nameInput.value = profile.name;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const dateInput = document.getElementById('studentDate');
+  if (dateInput && !dateInput.value) dateInput.value = today;
+  updateGlobalProgress();
+}
+document.addEventListener('DOMContentLoaded', prefillFromProfile);
+
+function speak(btn, text) {
+  if (!('speechSynthesis' in window)) {
+    alert('Seu navegador não suporta áudio de voz (Web Speech API). Tente no Chrome ou Edge.');
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'en-US';
+  utter.rate = 0.9;
+  if (btn) {
+    btn.classList.add('playing');
+    utter.onend = () => btn.classList.remove('playing');
+  }
+  window.speechSynthesis.speak(utter);
+}
+
+function toggleGabarito(boxId, btnId) {
+  const box = document.getElementById(boxId);
+  const btn = document.getElementById(btnId);
+  box.classList.toggle('show');
+  btn.textContent = box.classList.contains('show') ? 'Ocultar gabarito' : 'Ver gabarito';
+}
+
+function updateGlobalProgress() {
+  const inputs = document.querySelectorAll('.practice-input');
+  const total = inputs.length;
+  let filled = 0;
+  inputs.forEach(inp => { if (inp.value.trim() !== '') filled++; });
+  const pct = total ? Math.round((filled / total) * 100) : 100;
+  document.getElementById('globalProgress').style.width = pct + '%';
+  document.getElementById('globalProgressLabel').textContent = pct + '%';
+  return { filled, total };
+}
+document.addEventListener('input', updateGlobalProgress);
+
+async function finishLesson() {
+  if (finishing) return;
+  finishing = true;
+
+  const { filled, total } = updateGlobalProgress();
+  const safeTotal = total || 1;
+  const safeFilled = total ? filled : 1;
+
+  const msg = document.getElementById('finishMessage');
+  msg.style.display = 'block';
+  msg.style.color = '#888';
+  msg.textContent = 'Salvando progresso...';
+
+  await initDataLayer();
+  await saveLessonProgressData(LESSON_ID, safeFilled, safeTotal);
+
+  const pct = Math.round((safeFilled / safeTotal) * 100);
+  msg.style.color = '#1e6b40';
+  const cloudNote = isUsingCloud() ? ' (sincronizado na nuvem ☁️)' : ' (salvo neste navegador 💾)';
+  msg.textContent = '🎉 Progresso salvo! Você preencheu ' + safeFilled + ' de ' + safeTotal + ' exercícios (' + pct + '%)' + cloudNote + '. Voltando ao app...';
+
+  setTimeout(() => { window.location.href = '../index.html'; }, 2600);
+}
+</script>
+
+</body>
+</html>
