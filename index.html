@@ -31,30 +31,50 @@
 
   <!-- TELA: LOGIN / CADASTRO (só aparece quando o Supabase está configurado) -->
   <div class="screen hidden" id="screen-auth">
-    <h2 class="screen-title" id="auth-title">Entrar</h2>
-
-    <div class="auth-tabs">
-      <button type="button" class="auth-tab active" id="tab-login" data-mode="login">Entrar</button>
-      <button type="button" class="auth-tab" id="tab-signup" data-mode="signup">Criar conta</button>
+    <div class="auth-hero">
+      <img src="./icons/icon-192.png" alt="Bobcat Language School" class="auth-hero-logo">
+      <div class="auth-hero-title">Bobcat Language School</div>
+      <div class="auth-hero-sub">Aprenda inglês no seu ritmo</div>
     </div>
 
-    <label class="field-label">E-mail</label>
-    <input type="email" id="auth-username" placeholder="seuemail@exemplo.com" autocomplete="username">
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" id="tab-login" data-mode="login">Entrar</button>
+        <button type="button" class="auth-tab" id="tab-signup" data-mode="signup">Criar conta</button>
+      </div>
 
-    <label class="field-label">Senha</label>
-    <input type="password" id="auth-password" placeholder="pelo menos 6 caracteres" autocomplete="current-password">
+      <h2 class="auth-form-title" id="auth-title">Bem-vindo(a) de volta!</h2>
 
-    <div id="auth-signup-extra" class="hidden">
-      <label class="field-label">Confirme a senha</label>
-      <input type="password" id="auth-password-confirm" placeholder="repita a senha" autocomplete="new-password">
+      <label class="field-label">E-mail</label>
+      <div class="input-icon-wrap">
+        <span class="input-icon">✉️</span>
+        <input type="email" id="auth-username" placeholder="seuemail@exemplo.com" autocomplete="username">
+      </div>
+
+      <label class="field-label">Senha</label>
+      <div class="input-icon-wrap">
+        <span class="input-icon">🔒</span>
+        <input type="password" id="auth-password" placeholder="pelo menos 6 caracteres" autocomplete="current-password">
+        <button type="button" class="input-toggle" id="toggle-auth-password" aria-label="Mostrar senha">👁</button>
+      </div>
+
+      <div id="auth-signup-extra" class="hidden">
+        <label class="field-label">Confirme a senha</label>
+        <div class="input-icon-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="auth-password-confirm" placeholder="repita a senha" autocomplete="new-password">
+          <button type="button" class="input-toggle" id="toggle-auth-password-confirm" aria-label="Mostrar senha">👁</button>
+        </div>
+      </div>
+
+      <p class="auth-alert error" id="auth-error"></p>
+      <p class="auth-alert success" id="auth-success"></p>
+
+      <button class="btn" id="btn-auth-submit">Entrar</button>
+      <button type="button" class="link-btn hidden" id="btn-forgot-password">Esqueci minha senha</button>
     </div>
 
-    <p class="auth-error" id="auth-error"></p>
-    <p class="auth-error" id="auth-success" style="color: var(--ok);"></p>
-
-    <button class="btn" id="btn-auth-submit">Entrar</button>
-    <button type="button" class="link-btn hidden" id="btn-forgot-password">Esqueci minha senha</button>
-    <p class="auth-hint">Use um e-mail de verdade — é como você recupera sua conta se trocar de aparelho ou esquecer a senha.</p>
+    <p class="auth-hint">🔒 Use um e-mail de verdade — é como você recupera sua conta se trocar de aparelho ou esquecer a senha.</p>
   </div>
 
   <!-- TELA: CRIAR/EDITAR PERFIL -->

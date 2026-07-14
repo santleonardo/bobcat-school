@@ -115,6 +115,8 @@ function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
   document.getElementById('screen-' + id).classList.remove('hidden');
 
+  document.body.classList.toggle('on-auth-screen', id === 'auth');
+
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   const navBtn = document.querySelector('.nav-btn[data-screen="' + id + '"]');
   if (navBtn) navBtn.classList.add('active');
@@ -132,27 +134,55 @@ function setAuthMode(mode) {
   document.getElementById('tab-login').classList.toggle('active', mode === 'login');
   document.getElementById('tab-signup').classList.toggle('active', mode === 'signup');
   document.getElementById('auth-signup-extra').classList.toggle('hidden', mode === 'login');
-  document.getElementById('auth-title').textContent = mode === 'login' ? 'Entrar' : 'Criar conta';
+  document.getElementById('auth-title').textContent = mode === 'login' ? 'Bem-vindo(a) de volta!' : 'Crie sua conta gratuita';
   document.getElementById('btn-auth-submit').textContent = mode === 'login' ? 'Entrar' : 'Criar conta';
   document.getElementById('btn-forgot-password').classList.toggle('hidden', mode !== 'login');
-  document.getElementById('auth-error').textContent = '';
-  document.getElementById('auth-success').textContent = '';
+  document.getElementById('auth-error').classList.remove('show');
+  document.getElementById('auth-success').classList.remove('show');
+}
+
+function togglePasswordVisibility(inputId, btnId) {
+  const input = document.getElementById(inputId);
+  const btn = document.getElementById(btnId);
+  const show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  btn.textContent = show ? '🙈' : '👁';
+  btn.setAttribute('aria-label', show ? 'Ocultar senha' : 'Mostrar senha');
+}
+
+function showAuthError(text) {
+  const el = document.getElementById('auth-error');
+  document.getElementById('auth-success').classList.remove('show');
+  el.textContent = text;
+  el.classList.toggle('show', !!text);
+}
+
+function showAuthSuccess(text) {
+  const el = document.getElementById('auth-success');
+  document.getElementById('auth-error').classList.remove('show');
+  el.textContent = text;
+  el.classList.toggle('show', !!text);
 }
 
 function setupAuthScreen() {
   document.getElementById('tab-login').addEventListener('click', () => setAuthMode('login'));
   document.getElementById('tab-signup').addEventListener('click', () => setAuthMode('signup'));
 
+  document.getElementById('toggle-auth-password').addEventListener('click', () => {
+    togglePasswordVisibility('auth-password', 'toggle-auth-password');
+  });
+  document.getElementById('toggle-auth-password-confirm').addEventListener('click', () => {
+    togglePasswordVisibility('auth-password-confirm', 'toggle-auth-password-confirm');
+  });
+
   document.getElementById('btn-auth-submit').addEventListener('click', async () => {
     const email = document.getElementById('auth-username').value.trim();
     const password = document.getElementById('auth-password').value;
-    const errorEl = document.getElementById('auth-error');
-    const successEl = document.getElementById('auth-success');
-    errorEl.textContent = '';
-    successEl.textContent = '';
+    showAuthError('');
+    showAuthSuccess('');
 
     if (!email || !password) {
-      errorEl.textContent = 'Preencha e-mail e senha.';
+      showAuthError('Preencha e-mail e senha.');
       return;
     }
 
@@ -162,7 +192,7 @@ function setupAuthScreen() {
     if (authMode === 'signup') {
       const confirm = document.getElementById('auth-password-confirm').value;
       if (password !== confirm) {
-        errorEl.textContent = 'As senhas não coincidem.';
+        showAuthError('As senhas não coincidem.');
         btn.disabled = false;
         return;
       }
@@ -172,10 +202,10 @@ function setupAuthScreen() {
       btn.textContent = 'Criar conta';
       if (!result.ok) {
         if (result.needsConfirmation) {
-          successEl.textContent = result.message;
+          showAuthSuccess(result.message);
           setAuthModeKeepMessage('login');
         } else {
-          errorEl.textContent = result.message;
+          showAuthError(result.message);
         }
         return;
       }
@@ -185,25 +215,23 @@ function setupAuthScreen() {
       const result = await signInStudent(email, password);
       btn.disabled = false;
       btn.textContent = 'Entrar';
-      if (!result.ok) { errorEl.textContent = result.message; return; }
+      if (!result.ok) { showAuthError(result.message); return; }
       await afterAuthSuccess();
     }
   });
 
   document.getElementById('btn-forgot-password').addEventListener('click', async () => {
     const email = document.getElementById('auth-username').value.trim();
-    const errorEl = document.getElementById('auth-error');
-    const successEl = document.getElementById('auth-success');
-    errorEl.textContent = '';
-    successEl.textContent = '';
+    showAuthError('');
+    showAuthSuccess('');
 
     if (!email) {
-      errorEl.textContent = 'Digite seu e-mail acima primeiro, depois clique em "Esqueci minha senha".';
+      showAuthError('Digite seu e-mail acima primeiro, depois clique em "Esqueci minha senha".');
       return;
     }
     const result = await resetPasswordForEmail(email);
-    if (result.ok) successEl.textContent = result.message;
-    else errorEl.textContent = result.message;
+    if (result.ok) showAuthSuccess(result.message);
+    else showAuthError(result.message);
   });
 }
 
@@ -212,7 +240,7 @@ function setupAuthScreen() {
 function setAuthModeKeepMessage(mode) {
   const msg = document.getElementById('auth-success').textContent;
   setAuthMode(mode);
-  document.getElementById('auth-success').textContent = msg;
+  showAuthSuccess(msg);
 }
 
 async function afterAuthSuccess() {
