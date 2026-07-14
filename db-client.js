@@ -1,0 +1,186 @@
+// ============================================================
+// Camada de dados do app Bobcat.
+// Se o Supabase estiver configurado (config.js), os dados ficam
+// na nuvem, sincronizam entre dispositivos e exigem login (usuário
+// + senha) — assim o aluno recupera o perfil mesmo trocando de
+// aparelho ou depois de limpar os dados do navegador.
+// Caso o Supabase não esteja configurado, tudo cai automaticamente
+// para localStorage (funciona offline, sem login, sem configuração,
+// mas só naquele navegador/aparelho).
+// ============================================================
+
+const PROFILE_KEY = 'bobcat_profile';
+const PROGRESS_KEY = 'bobcat_progress';
+
+let supabaseClient = null;
+let currentUserId = null;
+let useSupabase = false;      // Supabase está configurado (config.js preenchido)
+let dataLayerReady = false;
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+async function initDataLayer() {
+  const cfg = window.SUPABASE_CONFIG;
+  const configured = cfg && cfg.url && cfg.anonKey && !cfg.url.includes('SEU-PROJETO');
+
+  if (configured && window.supabase) {
+    try {
+      supabaseClient = window.supabase.createClient(cfg.url, cfg.anonKey);
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      currentUserId = session ? session.user.id : null;
+      useSupabase = true;
+      console.log('Conectado ao Supabase.', currentUserId ? 'Sessão ativa.' : 'Nenhuma sessão — login necessário.');
+    } catch (e) {
+      console.warn('Não foi possível conectar ao Supabase — usando armazenamento local.', e);
+      useSupabase = false;
+    }
+  } else {
+    useSupabase = false;
+  }
+  dataLayerReady = true;
+}
+
+// ---------- Login / Cadastro / Logout ----------
+
+function isUsingCloud() {
+  return useSupabase;
+}
+
+function isLoggedIn() {
+  return useSupabase ? !!currentUserId : true; // sem Supabase, "logado" sempre (localStorage)
+}
+
+// Retorna { ok: true } ou { ok: false, message: '...', needsConfirmation: true|false }
+async function signUpStudent(email, password) {
+  if (!useSupabase) return { ok: false, message: 'Cadastro só está disponível com Supabase configurado.' };
+  email = (email || '').trim().toLowerCase();
+  if (!isValidEmail(email)) return { ok: false, message: 'Digite um e-mail válido.' };
+  if (!password || password.length < 6) return { ok: false, message: 'A senha precisa ter pelo menos 6 caracteres.' };
+
+  const { data, error } = await supabaseClient.auth.signUp({ email, password });
+  if (error) {
+    if (error.message && error.message.toLowerCase().includes('already registered')) {
+      return { ok: false, message: 'Esse e-mail já está cadastrado. Tente fazer login.' };
+    }
+    return { ok: false, message: error.message };
+  }
+
+  // Se a confirmação por e-mail estiver ligada no Supabase, `session` vem nulo
+  // aqui — o aluno precisa clicar no link recebido por e-mail antes de entrar.
+  if (!data.session) {
+    return { ok: false, message: 'Conta criada! Verifique seu e-mail e clique no link de confirmação antes de entrar.', needsConfirmation: true };
+  }
+
+  currentUserId = data.user.id;
+  return { ok: true };
+}
+
+async function signInStudent(email, password) {
+  if (!useSupabase) return { ok: false, message: 'Login só está disponível com Supabase configurado.' };
+  email = (email || '').trim().toLowerCase();
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  if (error) {
+    if (error.message && error.message.toLowerCase().includes('email not confirmed')) {
+      return { ok: false, message: 'Confirme seu e-mail (verifique sua caixa de entrada) antes de entrar.' };
+    }
+    return { ok: false, message: 'E-mail ou senha incorretos.' };
+  }
+  currentUserId = data.user.id;
+  return { ok: true };
+}
+
+async function resetPasswordForEmail(email) {
+  if (!useSupabase) return { ok: false, message: 'Só disponível com Supabase configurado.' };
+  email = (email || '').trim().toLowerCase();
+  if (!isValidEmail(email)) return { ok: false, message: 'Digite um e-mail válido para recuperar a senha.' };
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+  if (error) return { ok: false, message: error.message };
+  return { ok: true, message: 'Enviamos um link de redefinição de senha para o seu e-mail.' };
+}
+
+async function signOutStudent() {
+  if (useSupabase && supabaseClient) {
+    await supabaseClient.auth.signOut();
+  }
+  currentUserId = null;
+}
+
+// ---------- Perfil ----------
+
+async function getProfile() {
+  if (useSupabase) {
+    if (!currentUserId) return null;
+    const { data, error } = await supabaseClient
+      .from('profiles').select('*').eq('id', currentUserId).maybeSingle();
+    if (error) { console.error(error); return null; }
+    return data;
+  }
+  const raw = localStorage.getItem(PROFILE_KEY);
+  return raw ? JSON.parse(raw) : null;
+}
+
+async function saveProfile(profile) {
+  if (useSupabase) {
+    if (!currentUserId) return;
+    const row = { id: currentUserId, name: profile.name, avatar: profile.avatar, level: profile.level };
+    const { error } = await supabaseClient.from('profiles').upsert(row);
+    if (error) console.error(error);
+    return;
+  }
+  localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+}
+
+// ---------- Progresso das lições ----------
+
+async function getProgress() {
+  if (useSupabase) {
+    if (!currentUserId) return {};
+    const { data, error } = await supabaseClient
+      .from('progress').select('*').eq('user_id', currentUserId);
+    if (error) { console.error(error); return {}; }
+    const map = {};
+    (data || []).forEach(row => {
+      map[row.lesson_id] = {
+        completed: row.completed,
+        correct: row.correct,
+        total: row.total,
+        lastAttempt: row.last_attempt
+      };
+    });
+    return map;
+  }
+  const raw = localStorage.getItem(PROGRESS_KEY);
+  return raw ? JSON.parse(raw) : {};
+}
+
+async function saveLessonProgressData(lessonId, correct, total) {
+  if (useSupabase) {
+    if (!currentUserId) return;
+    const row = {
+      user_id: currentUserId,
+      lesson_id: lessonId,
+      completed: true,
+      correct: correct,
+      total: total,
+      last_attempt: new Date().toISOString()
+    };
+    const { error } = await supabaseClient.from('progress').upsert(row, { onConflict: 'user_id,lesson_id' });
+    if (error) console.error(error);
+    return;
+  }
+  const progress = await getProgress();
+  progress[lessonId] = { completed: true, correct, total, lastAttempt: new Date().toISOString() };
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+}
+
+async function resetAllProgress() {
+  if (useSupabase) {
+    if (!currentUserId) return;
+    const { error } = await supabaseClient.from('progress').delete().eq('user_id', currentUserId);
+    if (error) console.error(error);
+    return;
+  }
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify({}));
+}
