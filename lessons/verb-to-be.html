@@ -215,6 +215,47 @@
     border: 2px solid #ddd; border-radius: 6px; resize: vertical; min-height: 40px;
   }
   textarea:focus { outline: none; border-color: var(--orange); }
+
+  /* Acordeão — organização em cascata das partes da lição */
+  .section-title {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .section-title:hover { background: var(--orange-dark); }
+  .accordion-arrow {
+    display: inline-block;
+    font-size: 12px;
+    transition: transform .2s ease;
+    flex-shrink: 0;
+  }
+  .section-title.open .accordion-arrow { transform: rotate(90deg); }
+  .section-body {
+    display: none;
+    animation: fadeInBody .15s ease;
+  }
+  .section-body.open { display: block; }
+  @keyframes fadeInBody { from { opacity: 0; } to { opacity: 1; } }
+  .accordion-controls {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin: 4px 0 10px 0;
+  }
+  .accordion-controls button {
+    background: #fff;
+    border: 1.5px solid var(--orange);
+    color: var(--orange-dark);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .accordion-controls button:hover { background: var(--cream); }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
@@ -246,6 +287,10 @@
     <label>Professor(a): <input type="text" id="teacherName" placeholder="nome do professor(a)"></label>
   </div>
 
+    <div class="accordion-controls">
+    <button type="button" onclick="expandAllSections()">Expandir tudo</button>
+    <button type="button" onclick="collapseAllSections()">Recolher tudo</button>
+  </div>
   <h1 class="title">Aula Introdutória: Verb To Be</h1>
   <div class="level">Nível A1 • Primeiros passos em inglês</div>
 
@@ -680,6 +725,46 @@ function toggleGabarito() {
   box.classList.toggle('show');
   btn.textContent = box.classList.contains('show') ? 'Ocultar gabarito' : 'Mostrar gabarito';
 }
+
+// ---------- Acordeão — organização em cascata das partes da lição ----------
+function initAccordion() {
+  const wrap = document.querySelector('.wrap');
+  if (!wrap) return;
+  const children = Array.from(wrap.children);
+  let current = null;
+  let stopped = false;
+  children.forEach(el => {
+    if (stopped) return;
+    if (el.classList.contains('footer-note')) { stopped = true; return; }
+    if (el.classList.contains('actions')) { stopped = true; return; }
+    if (el.classList.contains('section-title')) {
+      const body = document.createElement('div');
+      body.className = 'section-body';
+      el.insertAdjacentElement('afterend', body);
+      current = body;
+      const arrow = document.createElement('span');
+      arrow.className = 'accordion-arrow';
+      arrow.textContent = '▸';
+      el.appendChild(arrow);
+      el.addEventListener('click', () => {
+        const isOpen = body.classList.toggle('open');
+        el.classList.toggle('open', isOpen);
+      });
+      return;
+    }
+    if (current) current.appendChild(el);
+  });
+}
+
+function expandAllSections() {
+  document.querySelectorAll('.section-body').forEach(b => b.classList.add('open'));
+  document.querySelectorAll('.section-title').forEach(t => t.classList.add('open'));
+}
+function collapseAllSections() {
+  document.querySelectorAll('.section-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.section-title').forEach(t => t.classList.remove('open'));
+}
+document.addEventListener('DOMContentLoaded', initAccordion);
 </script>
 
 </body>
