@@ -11,6 +11,7 @@
 
 const PROFILE_KEY = 'bobcat_profile';
 const PROGRESS_KEY = 'bobcat_progress';
+const PASSING_PCT = 85; // nota mínima (85% / 8.5) para considerar a lição concluída
 
 let supabaseClient = null;
 let currentUserId = null;
@@ -156,23 +157,65 @@ async function getProgress() {
 }
 
 async function saveLessonProgressData(lessonId, correct, total) {
+  const pct = total > 0 ? (correct / total) * 100 : 0;
+  const completed = pct >= PASSING_PCT;
+
   if (useSupabase) {
-    if (!currentUserId) return;
+    if (!currentUserId) return { completed, pct };
     const row = {
       user_id: currentUserId,
       lesson_id: lessonId,
-      completed: true,
+      completed: completed,
       correct: correct,
       total: total,
       last_attempt: new Date().toISOString()
     };
     const { error } = await supabaseClient.from('progress').upsert(row, { onConflict: 'user_id,lesson_id' });
     if (error) console.error(error);
-    return;
+    return { completed, pct };
   }
   const progress = await getProgress();
-  progress[lessonId] = { completed: true, correct, total, lastAttempt: new Date().toISOString() };
+  progress[lessonId] = { completed, correct, total, lastAttempt: new Date().toISOString() };
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+  return { completed, pct };
+}
+
+// Fluxo compartilhado de "finalizar lição", usado por todas as páginas de lição.
+// kind: 'correct' (exercícios com gabarito, ex: "Você acertou X de Y") ou
+//       'filled' (lições de prática sem correção automática, ex: "Você preencheu X de Y").
+// Retorna true se a nota mínima (85%) foi atingida (e portanto a lição foi
+// marcada como concluída e o app vai redirecionar); false se o aluno precisa
+// tentar novamente (nesse caso o botão de finalizar continua liberado).
+async function handleLessonFinish(lessonId, correct, total, kind) {
+  const msg = document.getElementById('finishMessage');
+  if (msg) {
+    msg.style.display = 'block';
+    msg.style.color = '#888';
+    msg.textContent = 'Salvando progresso...';
+  }
+
+  await initDataLayer();
+  const { completed, pct } = await saveLessonProgressData(lessonId, correct, total);
+  const roundedPct = Math.round(pct);
+
+  const cloudNote = isUsingCloud() ? ' (sincronizado na nuvem ☁️)' : ' (salvo neste navegador 💾)';
+  const verb = kind === 'filled' ? 'preencheu' : 'acertou';
+  const noun = kind === 'filled' ? 'exercícios' : (total === 1 ? 'questão' : 'questões');
+
+  if (!msg) return completed;
+
+  if (completed) {
+    msg.style.color = '#1e6b40';
+    msg.textContent = '🎉 Parabéns! Você ' + verb + ' ' + correct + ' de ' + total + ' ' + noun +
+      ' (' + roundedPct + '%) — lição concluída' + cloudNote + '. Voltando ao app...';
+    setTimeout(() => { window.location.href = '../index.html'; }, 2600);
+  } else {
+    msg.style.color = '#C0392B';
+    msg.textContent = '📌 Você ' + verb + ' ' + correct + ' de ' + total + ' ' + noun +
+      ' (' + roundedPct + '%). É preciso pelo menos ' + PASSING_PCT + '% (nota 8,5) para concluir a lição e desbloquear a próxima. Revise as respostas e tente novamente!' + cloudNote;
+  }
+
+  return completed;
 }
 
 async function resetAllProgress() {

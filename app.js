@@ -395,10 +395,22 @@ async function renderHome() {
   renderLessonCardsInto('lesson-list', progress);
 }
 
-function buildLessonCardHTML(lesson, progress) {
+function buildLessonCardHTML(lesson, progress, locked) {
   const p = progress[lesson.id];
   const pct = p && p.total > 0 ? Math.round((p.correct / p.total) * 100) : 0;
   const done = p && p.completed;
+
+  if (locked) {
+    return `
+      <div class="icon locked-icon">🔒</div>
+      <div class="info">
+        <div class="name">${lesson.name}</div>
+        <div class="level">Conclua a lição anterior com pelo menos 85% para desbloquear</div>
+      </div>
+      <div class="badge locked">Bloqueada</div>
+    `;
+  }
+
   return `
     <div class="icon">${lesson.icon}</div>
     <div class="info">
@@ -432,10 +444,30 @@ function groupLessonsByLevel() {
   return levels.map(level => ({ level, lessons: groups[level] }));
 }
 
+// Uma lição só é desbloqueada depois que a anterior no catálogo LESSONS
+// (a ordem em que elas aparecem no array, que segue a progressão pedagógica)
+// tiver sido concluída com pelo menos 85% de aproveitamento. A primeira
+// lição do catálogo está sempre desbloqueada.
+function computeLockStatus(progress) {
+  const locked = {};
+  LESSONS.forEach((lesson, idx) => {
+    if (idx === 0) { locked[lesson.id] = false; return; }
+    const prev = LESSONS[idx - 1];
+    const prevProgress = progress[prev.id];
+    locked[lesson.id] = !(prevProgress && prevProgress.completed);
+  });
+  return locked;
+}
+
+function showLockedMessage(lesson) {
+  alert('🔒 "' + lesson.name + '" ainda está bloqueada.\n\nConclua a lição anterior com pelo menos 85% (nota 8,5) de aproveitamento para desbloqueá-la.');
+}
+
 function renderLessonCardsInto(containerId, progress) {
   const list = document.getElementById(containerId);
   if (!list) return;
   list.innerHTML = '';
+  const lockStatus = computeLockStatus(progress);
   const groups = groupLessonsByLevel();
   groups.forEach(({ level, lessons }) => {
     const section = document.createElement('div');
@@ -449,10 +481,11 @@ function renderLessonCardsInto(containerId, progress) {
       </div>
     `;
     lessons.forEach(lesson => {
+      const locked = lockStatus[lesson.id];
       const card = document.createElement('div');
-      card.className = 'lesson-card';
-      card.innerHTML = buildLessonCardHTML(lesson, progress);
-      card.addEventListener('click', () => openLesson(lesson));
+      card.className = 'lesson-card' + (locked ? ' locked' : '');
+      card.innerHTML = buildLessonCardHTML(lesson, progress, locked);
+      card.addEventListener('click', () => locked ? showLockedMessage(lesson) : openLesson(lesson));
       section.appendChild(card);
     });
     list.appendChild(section);

@@ -519,20 +519,8 @@ async function finishLesson() {
   const safeTotal = total || 1;
   const safeFilled = total ? filled : 1;
 
-  const msg = document.getElementById('finishMessage');
-  msg.style.display = 'block';
-  msg.style.color = '#888';
-  msg.textContent = 'Salvando progresso...';
-
-  await initDataLayer();
-  await saveLessonProgressData(LESSON_ID, safeFilled, safeTotal);
-
-  const pct = Math.round((safeFilled / safeTotal) * 100);
-  msg.style.color = '#1e6b40';
-  const cloudNote = isUsingCloud() ? ' (sincronizado na nuvem ☁️)' : ' (salvo neste navegador 💾)';
-  msg.textContent = '🎉 Progresso salvo! Você preencheu ' + safeFilled + ' de ' + safeTotal + ' exercícios (' + pct + '%)' + cloudNote + '. Voltando ao app...';
-
-  setTimeout(() => { window.location.href = '../index.html'; }, 2600);
+  const passed = await handleLessonFinish(LESSON_ID, safeFilled, safeTotal, 'filled');
+  if (!passed) finishing = false; // permite tentar novamente sem recarregar a página
 }
 </script>
 

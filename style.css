@@ -265,6 +265,12 @@ body.on-auth-screen .topbar { display: none; }
 .lesson-card .badge.done { background: #EAF7EF; color: #1e6b40; }
 .lesson-card .chevron { font-size: 18px; color: #ccc; }
 
+/* Lições bloqueadas (aguardando conclusão da lição anterior) */
+.lesson-card.locked { cursor: pointer; opacity: 0.6; }
+.lesson-card.locked:hover { box-shadow: none; transform: none; }
+.lesson-card .icon.locked-icon { background: #eee; color: #999; }
+.lesson-card .badge.locked { background: #eee; color: #888; }
+
 /* Level group headers (separação de lições por nível) */
 .level-group { margin-bottom: 22px; }
 .level-group:last-child { margin-bottom: 0; }

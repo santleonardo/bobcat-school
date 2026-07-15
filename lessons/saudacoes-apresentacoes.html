@@ -588,20 +588,8 @@ async function finishLesson() {
 
   const { correct, total } = checkParts();
 
-  const msg = document.getElementById('finishMessage');
-  msg.style.display = 'block';
-  msg.style.color = '#888';
-  msg.textContent = 'Salvando progresso...';
-
-  await initDataLayer();
-  await saveLessonProgressData(LESSON_ID, correct, total);
-
-  const pct = Math.round((correct / total) * 100);
-  msg.style.color = '#1e6b40';
-  const cloudNote = isUsingCloud() ? ' (sincronizado na nuvem ☁️)' : ' (salvo neste navegador 💾)';
-  msg.textContent = '🎉 Progresso salvo! Você acertou ' + correct + ' de ' + total + ' (' + pct + '%)' + cloudNote + '. Voltando ao app...';
-
-  setTimeout(() => { window.location.href = '../index.html'; }, 2400);
+  const passed = await handleLessonFinish(LESSON_ID, correct, total, 'correct');
+  if (!passed) finishing = false; // permite tentar novamente sem recarregar a página
 }
 </script>
 
