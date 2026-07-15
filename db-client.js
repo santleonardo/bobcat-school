@@ -127,7 +127,8 @@ async function getProfile() {
         ? data.level_test_score : null,
       levelTestTotal: data.level_test_total !== undefined && data.level_test_total !== null
         ? data.level_test_total : null,
-      levelTestDate: data.level_test_date || null
+      levelTestDate: data.level_test_date || null,
+      levelTestAnswers: Array.isArray(data.level_test_answers) ? data.level_test_answers : null
     };
   }
   const raw = localStorage.getItem(PROFILE_KEY);
@@ -154,6 +155,9 @@ async function saveProfile(profile) {
     }
     if (profile.levelTestDate) {
       row.level_test_date = profile.levelTestDate;
+    }
+    if (profile.levelTestAnswers !== undefined && profile.levelTestAnswers !== null) {
+      row.level_test_answers = profile.levelTestAnswers;
     }
     const { error } = await supabaseClient.from('profiles').upsert(row);
     if (error) console.error(error);

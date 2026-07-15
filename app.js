@@ -235,6 +235,7 @@ function showScreen(id) {
 
   if (id === 'home') renderHome();
   if (id === 'profile-view') renderProfileView();
+  if (id === 'level-test-review') renderLevelTestReview();
 }
 
 // ---------- Tela de login / cadastro ----------
@@ -455,6 +456,13 @@ async function renderProfileView() {
     levelDisplay.textContent = txt;
   }
 
+  // Mostra o botão de detalhes do teste só quando há respostas salvas
+  // (perfis antigos, feitos antes dessa funcionalidade, podem não ter).
+  const detailsBtn = document.getElementById('btn-view-test-details');
+  if (detailsBtn) {
+    detailsBtn.classList.toggle('hidden', !Array.isArray(profile.levelTestAnswers));
+  }
+
   selectedAvatarEdit = profile.avatar;
   const editContainer = document.getElementById('avatar-picker-edit');
   editContainer.querySelectorAll('.avatar-option').forEach(o => {
@@ -503,6 +511,21 @@ function setupProfileViewScreen() {
     setAuthMode('login');
     showScreen('auth');
   });
+
+  const viewDetailsBtn = document.getElementById('btn-view-test-details');
+  if (viewDetailsBtn) {
+    viewDetailsBtn.addEventListener('click', () => {
+      showScreen('level-test-review');
+      window.scrollTo(0, 0);
+    });
+  }
+
+  const backFromReviewBtn = document.getElementById('btn-back-from-test-review');
+  if (backFromReviewBtn) {
+    backFromReviewBtn.addEventListener('click', () => {
+      showScreen('profile-view');
+    });
+  }
 }
 
 // ---------- Tela Home / lista de lições ----------
@@ -874,6 +897,7 @@ async function finishLevelTest() {
   profile.levelTestScore = score;
   profile.levelTestTotal = LEVEL_TEST_QUESTIONS.length;
   profile.levelTestDate = new Date().toISOString();
+  profile.levelTestAnswers = levelTestState.answers.slice();
   await saveProfile(profile);
 
   renderLevelTestResult(score, achievedLevel);
@@ -916,6 +940,106 @@ function renderLevelTestResult(score, achievedLevel) {
   document.querySelector('.lt-btn-continue').addEventListener('click', () => {
     enterApp();
   });
+}
+
+// ---------- Detalhes do Teste de Nivelamento (revisão pós-teste) ----------
+// Mostra todas as 46 questões do teste já respondido, com a alternativa
+// escolhida pelo aluno, a alternativa correta, e um resumo de acertos
+// por nível CEFR. Só é exibido se o perfil já tiver `levelTestAnswers`
+// salvo (testes feitos antes dessa funcionalidade existir não terão isso).
+async function renderLevelTestReview() {
+  const container = document.getElementById('level-test-review-container');
+  if (!container) return;
+
+  const profile = await getProfile();
+  const answers = profile && Array.isArray(profile.levelTestAnswers) ? profile.levelTestAnswers : null;
+
+  if (!answers) {
+    container.innerHTML = `
+      <h2 class="screen-title">Detalhes do teste</h2>
+      <p class="lt-sub">As respostas detalhadas desse teste não ficaram salvas (ele foi feito antes dessa funcionalidade existir). Só o resultado final está disponível no seu perfil.</p>
+    `;
+    return;
+  }
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const total = LEVEL_TEST_QUESTIONS.length;
+  const score = typeof profile.levelTestScore === 'number' ? profile.levelTestScore : answers.filter((a, i) => a === LEVEL_TEST_QUESTIONS[i].answer).length;
+  const date = profile.levelTestDate ? new Date(profile.levelTestDate).toLocaleDateString('pt-BR') : null;
+
+  // Resumo de acertos por nível CEFR.
+  const byLevel = {};
+  CEFR_ORDER.forEach(lv => { byLevel[lv] = { correct: 0, total: 0 }; });
+  LEVEL_TEST_QUESTIONS.forEach((item, i) => {
+    if (!byLevel[item.level]) byLevel[item.level] = { correct: 0, total: 0 };
+    byLevel[item.level].total++;
+    if (answers[i] === item.answer) byLevel[item.level].correct++;
+  });
+
+  let html = `
+    <h2 class="screen-title">Detalhes do teste de nivelamento</h2>
+    <p class="lt-sub">
+      Resultado: <strong>${score}/${total}</strong> acertos • Nível: <strong>${levelLabel(profile.level)}</strong>${date ? ' • ' + date : ''}
+    </p>
+
+    <div class="lt-review-summary">
+      ${CEFR_ORDER.map(lv => `
+        <div class="lt-review-summary-item">
+          <span class="lt-level-tag lt-level-${lv}">${lv}</span>
+          <span class="lt-review-summary-score">${byLevel[lv].correct}/${byLevel[lv].total}</span>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  let lastPassage = null;
+
+  LEVEL_TEST_QUESTIONS.forEach((item, i) => {
+    const chosen = answers[i];
+    const isAnswered = chosen !== null && chosen !== undefined;
+    const isCorrect = chosen === item.answer;
+
+    // Mostra o texto de leitura apenas quando ele muda (evita repetir o
+    // mesmo texto em cada uma das 3 questões que o usam).
+    if (item.passage && item.passage !== lastPassage) {
+      const [passageTitle, ...rest] = item.passage.split('\n');
+      const passageBody = rest.join('\n').trim();
+      html += `
+        <div class="lt-passage">
+          <div class="lt-passage-title">📖 ${passageTitle}</div>
+          <p class="lt-passage-body">${passageBody}</p>
+        </div>
+      `;
+    }
+    lastPassage = item.passage || null;
+
+    html += `
+      <div class="lt-review-card ${isCorrect ? 'is-correct' : 'is-wrong'}">
+        <div class="lt-review-card-head">
+          <span class="lt-level-tag lt-level-${item.level}">${item.level}</span>
+          <span class="lt-review-badge ${isCorrect ? 'ok' : 'bad'}">${isCorrect ? '✅ Acertou' : (isAnswered ? '❌ Errou' : '⚠️ Não respondeu')}</span>
+        </div>
+        <div class="lt-question">${i + 1}. ${item.q}</div>
+        <div class="lt-options">
+          ${item.options.map((opt, oi) => {
+            let cls = 'lt-review-option';
+            if (oi === item.answer) cls += ' correct-answer';
+            if (oi === chosen && chosen !== item.answer) cls += ' wrong-answer';
+            return `
+              <div class="${cls}">
+                <span class="lt-option-letter">${letters[oi]}</span>
+                <span class="lt-option-text">${opt}</span>
+                ${oi === item.answer ? '<span class="lt-review-tag">correta</span>' : ''}
+                ${oi === chosen && chosen !== item.answer ? '<span class="lt-review-tag">sua resposta</span>' : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
 }
 
 document.addEventListener('DOMContentLoaded', boot);

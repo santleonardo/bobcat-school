@@ -584,3 +584,84 @@ body.on-auth-screen .topbar { display: none; }
   margin: 0 0 22px 0;
 }
 .lt-btn-continue { max-width: 280px; margin: 0 auto; }
+
+/* ---------- Revisão detalhada do Teste de Nivelamento ---------- */
+#screen-level-test-review { padding: 18px; }
+
+.lt-review-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 20px 0;
+}
+.lt-review-summary-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--cream-2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 10px 5px 5px;
+}
+.lt-review-summary-score {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.lt-review-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+.lt-review-card.is-correct { border-left-color: var(--good, #3F8E5A); }
+.lt-review-card.is-wrong { border-left-color: var(--bad, #C0392B); }
+
+.lt-review-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.lt-review-badge {
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.lt-review-badge.ok { background: #E7F5EC; color: #2E7D4F; }
+.lt-review-badge.bad { background: #FBEAEA; color: #C0392B; }
+
+.lt-review-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 9px 12px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+.lt-review-option:last-child { margin-bottom: 0; }
+.lt-review-option.correct-answer {
+  border-color: var(--good, #3F8E5A);
+  background: #F0FAF3;
+}
+.lt-review-option.wrong-answer {
+  border-color: var(--bad, #C0392B);
+  background: #FDF1F1;
+}
+.lt-review-tag {
+  margin-left: auto;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #888;
+  white-space: nowrap;
+}
+.lt-review-option.correct-answer .lt-review-tag { color: #2E7D4F; }
+.lt-review-option.wrong-answer .lt-review-tag { color: #C0392B; }
