@@ -116,7 +116,19 @@ async function getProfile() {
     const { data, error } = await supabaseClient
       .from('profiles').select('*').eq('id', currentUserId).maybeSingle();
     if (error) { console.error(error); return null; }
-    return data;
+    if (!data) return null;
+    // Mapeia as colunas snake_case do Supabase para camelCase do app.
+    return {
+      name: data.name,
+      avatar: data.avatar,
+      level: data.level,
+      createdAt: data.created_at,
+      levelTestScore: data.level_test_score !== undefined && data.level_test_score !== null
+        ? data.level_test_score : null,
+      levelTestTotal: data.level_test_total !== undefined && data.level_test_total !== null
+        ? data.level_test_total : null,
+      levelTestDate: data.level_test_date || null
+    };
   }
   const raw = localStorage.getItem(PROFILE_KEY);
   return raw ? JSON.parse(raw) : null;
@@ -125,7 +137,24 @@ async function getProfile() {
 async function saveProfile(profile) {
   if (useSupabase) {
     if (!currentUserId) return;
-    const row = { id: currentUserId, name: profile.name, avatar: profile.avatar, level: profile.level };
+    // Mantém compatível com o schema: só envia as colunas que existem na tabela.
+    // level_test_score / level_test_total / level_test_date podem não existir
+    // ainda em projetos Supabase antigos — quem cria as colunas é o schema.sql.
+    const row = {
+      id: currentUserId,
+      name: profile.name,
+      avatar: profile.avatar,
+      level: profile.level
+    };
+    if (profile.levelTestScore !== undefined && profile.levelTestScore !== null) {
+      row.level_test_score = profile.levelTestScore;
+    }
+    if (profile.levelTestTotal !== undefined && profile.levelTestTotal !== null) {
+      row.level_test_total = profile.levelTestTotal;
+    }
+    if (profile.levelTestDate) {
+      row.level_test_date = profile.levelTestDate;
+    }
     const { error } = await supabaseClient.from('profiles').upsert(row);
     if (error) console.error(error);
     return;

@@ -9,8 +9,30 @@ create table if not exists profiles (
   name text not null,
   avatar text not null default '🦁',
   level text not null default 'A1',
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  -- Resultado do Teste de Nivelamento (feito uma única vez no cadastro):
+  level_test_score int,            -- qtde de acertos (de 46)
+  level_test_total int,            -- total de questões (46)
+  level_test_date timestamptz      -- quando o teste foi feito
 );
+
+-- Garante as colunas do teste de nivelamento mesmo em projetos que já
+-- tinham a tabela profiles criada antes dessa atualização.
+do $$
+begin
+  if not exists (select 1 from information_schema.columns
+                 where table_name = 'profiles' and column_name = 'level_test_score') then
+    alter table profiles add column level_test_score int;
+  end if;
+  if not exists (select 1 from information_schema.columns
+                 where table_name = 'profiles' and column_name = 'level_test_total') then
+    alter table profiles add column level_test_total int;
+  end if;
+  if not exists (select 1 from information_schema.columns
+                 where table_name = 'profiles' and column_name = 'level_test_date') then
+    alter table profiles add column level_test_date timestamptz;
+  end if;
+end$$;
 
 -- Tabela de progresso (1 linha por aluno + lição)
 create table if not exists progress (

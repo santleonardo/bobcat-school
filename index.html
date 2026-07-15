@@ -96,17 +96,19 @@
       <div class="avatar-option" data-avatar="🦄">🦄</div>
     </div>
 
-    <label class="field-label">Seu nível em inglês</label>
-    <select id="input-level">
-      <option value="A1">A1 — Iniciante</option>
-      <option value="A2">A2 — Básico</option>
-      <option value="B1">B1 — Intermediário</option>
-      <option value="B2">B2 — Intermediário avançado</option>
-      <option value="C1">C1 — Avançado</option>
-      <option value="C2">C2 — Proficiente</option>
-    </select>
+    <div class="level-test-note">
+      📝 Na próxima tela você fará o <strong>Teste de Nivelamento</strong>.
+      Ele tem 46 questões (do A1 ao C2) e serve para descobrir seu nível
+      e liberar as lições certas para você. Não tem tempo limite — responda
+      com calma. É feito só uma vez.
+    </div>
 
-    <button class="btn" id="btn-save-profile">Começar a estudar</button>
+    <button class="btn" id="btn-save-profile">Continuar para o teste</button>
+  </div>
+
+  <!-- TELA: TESTE DE NIVELAMENTO -->
+  <div class="screen hidden" id="screen-level-test">
+    <div id="level-test-container"></div>
   </div>
 
   <!-- TELA: HOME -->
@@ -185,15 +187,8 @@
       <div class="avatar-option" data-avatar="🦄">🦄</div>
     </div>
 
-    <label class="field-label">Nível em inglês</label>
-    <select id="edit-level">
-      <option value="A1">A1 — Iniciante</option>
-      <option value="A2">A2 — Básico</option>
-      <option value="B1">B1 — Intermediário</option>
-      <option value="B2">B2 — Intermediário avançado</option>
-      <option value="C1">C1 — Avançado</option>
-      <option value="C2">C2 — Proficiente</option>
-    </select>
+    <label class="field-label">Nível em inglês (definido pelo teste de nivelamento)</label>
+    <div id="edit-level-display" class="level-readout">A1</div>
 
     <button class="btn" id="btn-update-profile">Salvar alterações</button>
     <button class="btn secondary" id="btn-reset-progress" style="width:100%; margin-top:10px; background:#fff; color:#C0392B; border-color:#C0392B;">Zerar progresso das lições</button>

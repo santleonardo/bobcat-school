@@ -249,47 +249,6 @@
   table.lesson-table tr:nth-child(even) td { background: #FAFAFA; }
   .fill-item .practice-input { flex: 1; min-width: 140px; }
   .completion-note { font-size: 12px; color: #888; margin-top: 6px; }
-
-  /* Acordeão — organização em cascata das partes da lição */
-  .section-title {
-    cursor: pointer;
-    user-select: none;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .section-title:hover { background: var(--orange-dark); }
-  .accordion-arrow {
-    display: inline-block;
-    font-size: 12px;
-    transition: transform .2s ease;
-    flex-shrink: 0;
-  }
-  .section-title.open .accordion-arrow { transform: rotate(90deg); }
-  .section-body {
-    display: none;
-    animation: fadeInBody .15s ease;
-  }
-  .section-body.open { display: block; }
-  @keyframes fadeInBody { from { opacity: 0; } to { opacity: 1; } }
-  .accordion-controls {
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-    margin: 4px 0 10px 0;
-  }
-  .accordion-controls button {
-    background: #fff;
-    border: 1.5px solid var(--orange);
-    color: var(--orange-dark);
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-  .accordion-controls button:hover { background: var(--cream); }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
@@ -321,10 +280,6 @@
     <label>Professor(a): <input type="text" id="teacherName" placeholder="nome do professor(a)"></label>
   </div>
 
-    <div class="accordion-controls">
-    <button type="button" onclick="expandAllSections()">Expandir tudo</button>
-    <button type="button" onclick="collapseAllSections()">Recolher tudo</button>
-  </div>
   <h1 class="title">Lesson 11 — People, Objects and Possession</h1>
 
   <div class="dialog-box">
@@ -610,23 +565,23 @@
 <p class="paragraph-text">Exercise 1</p>
 <p class="ex-intro">Complete.</p>
 <div class="fill-grid">
-<div class="fill-item"><span>I like ______.</span><input type="text" class="practice-input" id="q1" data-answer="her" placeholder="sua resposta"></div>
+<div class="fill-item"><span>I like ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
 </div>
 <p class="paragraph-text">(she)</p>
 <div class="fill-grid">
-<div class="fill-item"><span>We know ______.</span><input type="text" class="practice-input" id="q2" data-answer="them" placeholder="sua resposta"></div>
+<div class="fill-item"><span>We know ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
 </div>
 <p class="paragraph-text">(they)</p>
 <div class="fill-grid">
-<div class="fill-item"><span>Can you help ______?</span><input type="text" class="practice-input" id="q3" data-answer="me" placeholder="sua resposta"></div>
+<div class="fill-item"><span>Can you help ______?</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
 </div>
 <p class="paragraph-text">(I)</p>
 <div class="fill-grid">
-<div class="fill-item"><span>She calls ______ every day.</span><input type="text" class="practice-input" id="q4" data-answer="him" placeholder="sua resposta"></div>
+<div class="fill-item"><span>She calls ______ every day.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
 </div>
 <p class="paragraph-text">(he)</p>
 <div class="fill-grid">
-<div class="fill-item"><span>They invite ______.</span><input type="text" class="practice-input" id="q5" data-answer="us" placeholder="sua resposta"></div>
+<div class="fill-item"><span>They invite ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
 </div>
 <p class="paragraph-text">(we)</p>
 <p class="paragraph-text">Exercise 2</p>
@@ -634,34 +589,34 @@
 <p class="example-line-block"><span>I know Sarah.</span><button class="audio-btn" onclick="speak(this,'I know Sarah.')">🔊</button></p>
 <p class="paragraph-text">↓</p>
 <div class="fill-grid">
-<div class="fill-item"><span>I know ______.</span><input type="text" class="practice-input" id="q6" data-answer="her" placeholder="sua resposta"></div>
+<div class="fill-item"><span>I know ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
 <p class="example-line-block"><span>I like John.</span><button class="audio-btn" onclick="speak(this,'I like John.')">🔊</button></p>
 </div>
 <p class="paragraph-text">↓</p>
 <div class="fill-grid">
-<div class="fill-item"><span>I like ______.</span><input type="text" class="practice-input" id="q7" data-answer="him" placeholder="sua resposta"></div>
+<div class="fill-item"><span>I like ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
 <p class="example-line-block"><span>We see the children.</span><button class="audio-btn" onclick="speak(this,'We see the children.')">🔊</button></p>
 </div>
 <p class="paragraph-text">↓</p>
 <div class="fill-grid">
-<div class="fill-item"><span>We see ______.</span><input type="text" class="practice-input" id="q8" data-answer="them" placeholder="sua resposta"></div>
+<div class="fill-item"><span>We see ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
 </div>
 <p class="paragraph-text">Exercise 3</p>
 <p class="ex-intro">Complete.</p>
 <div class="fill-grid">
-<div class="fill-item"><span>This book is ______.</span><input type="text" class="practice-input" id="q9" data-answer="mine" placeholder="sua resposta"></div>
+<div class="fill-item"><span>This book is ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
 </div>
 <p class="paragraph-text">(I)</p>
 <div class="fill-grid">
-<div class="fill-item"><span>That car is ______.</span><input type="text" class="practice-input" id="q10" data-answer="hers" placeholder="sua resposta"></div>
+<div class="fill-item"><span>That car is ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
 </div>
 <p class="paragraph-text">(she)</p>
 <div class="fill-grid">
-<div class="fill-item"><span>Those bags are ______.</span><input type="text" class="practice-input" id="q11" data-answer="theirs" placeholder="sua resposta"></div>
+<div class="fill-item"><span>Those bags are ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
 </div>
 <p class="paragraph-text">(they)</p>
 <div class="fill-grid">
-<div class="fill-item"><span>Is this pen ______?</span><input type="text" class="practice-input" id="q12" data-answer="yours" placeholder="sua resposta"></div>
+<div class="fill-item"><span>Is this pen ______?</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
 </div>
 <p class="paragraph-text">(you)</p>
 <p class="paragraph-text">Exercise 4</p>
@@ -670,12 +625,12 @@
 <p class="paragraph-text">a) my</p>
 <p class="paragraph-text">b) mine</p>
 <div class="fill-grid">
-<div class="fill-item"><span>______ can help me.</span><input type="text" class="practice-input" id="q13" data-answer="he" placeholder="sua resposta"></div>
+<div class="fill-item"><span>______ can help me.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
 </div>
 <p class="paragraph-text">a) Him</p>
 <p class="paragraph-text">b) He</p>
 <div class="fill-grid">
-<div class="fill-item"><span>I know ______.</span><input type="text" class="practice-input" id="q14" data-answer="her" placeholder="sua resposta"></div>
+<div class="fill-item"><span>I know ______.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
 </div>
 <p class="paragraph-text">a) she</p>
 <p class="paragraph-text">b) her</p>
@@ -741,14 +696,10 @@
 <p class="paragraph-text">✔ Frases naturais usadas diariamente por falantes nativos.</p>
 
   <div class="actions" style="margin-top:24px;">
-    <button class="btn secondary" onclick="checkAnswers()">✅ Verificar respostas</button>
-    <span class="score-badge" id="scoreBadge" style="display:none;"></span>
-  </div>
-  <div class="actions" style="margin-top:10px;">
     <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
     <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
   </div>
-  <p class="completion-note">Os exercícios com resposta objetiva têm correção automática — clique em "Verificar respostas" para conferir (ou use "Ver gabarito" como referência). Itens de produção livre/criativa não entram na nota. É preciso pelo menos 85% de acerto nos itens corrigíveis para concluir a lição.</p>
+  <p class="completion-note">O progresso mostra quanto da prática escrita você já preencheu. Use os botões "Ver gabarito" para conferir suas respostas — essa lição não é corrigida automaticamente.</p>
 
   <div class="footer-note">Bobcat Language School • Lesson 11 — People, Objects and Possession</div>
 
@@ -795,40 +746,6 @@ function toggleGabarito(boxId, btnId) {
   btn.textContent = box.classList.contains('show') ? 'Ocultar gabarito' : 'Ver gabarito';
 }
 
-function normalizeAnswer(s) {
-  return (s || '')
-    .toString()
-    .toLowerCase()
-    .replace(/[^a-z0-9' ]+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function checkAnswers() {
-  let correct = 0, total = 0;
-  document.querySelectorAll('input.practice-input[data-answer], input.practice-input[data-answers]').forEach(inp => {
-    total++;
-    const accepted = inp.dataset.answers
-      ? inp.dataset.answers.split('|').map(normalizeAnswer)
-      : [normalizeAnswer(inp.dataset.answer)];
-    const val = normalizeAnswer(inp.value);
-    inp.classList.remove('correct', 'incorrect');
-    if (val && accepted.includes(val)) {
-      inp.classList.add('correct');
-      correct++;
-    } else {
-      inp.classList.add('incorrect');
-    }
-  });
-  const badge = document.getElementById('scoreBadge');
-  if (badge) {
-    badge.style.display = 'inline-block';
-    badge.textContent = correct + ' / ' + total + ' corretas';
-  }
-  updateGlobalProgress();
-  return { correct, total };
-}
-
 function updateGlobalProgress() {
   const inputs = document.querySelectorAll('.practice-input');
   const total = inputs.length;
@@ -845,52 +762,13 @@ async function finishLesson() {
   if (finishing) return;
   finishing = true;
 
-  const { correct, total } = checkAnswers();
+  const { filled, total } = updateGlobalProgress();
   const safeTotal = total || 1;
+  const safeFilled = total ? filled : 1;
 
-  const passed = await handleLessonFinish(LESSON_ID, correct, safeTotal, 'correct');
+  const passed = await handleLessonFinish(LESSON_ID, safeFilled, safeTotal, 'filled');
   if (!passed) finishing = false; // permite tentar novamente sem recarregar a página
 }
-
-// ---------- Acordeão — organização em cascata das partes da lição ----------
-function initAccordion() {
-  const wrap = document.querySelector('.wrap');
-  if (!wrap) return;
-  const children = Array.from(wrap.children);
-  let current = null;
-  let stopped = false;
-  children.forEach(el => {
-    if (stopped) return;
-    if (el.classList.contains('footer-note')) { stopped = true; return; }
-    if (el.classList.contains('actions')) { stopped = true; return; }
-    if (el.classList.contains('section-title')) {
-      const body = document.createElement('div');
-      body.className = 'section-body';
-      el.insertAdjacentElement('afterend', body);
-      current = body;
-      const arrow = document.createElement('span');
-      arrow.className = 'accordion-arrow';
-      arrow.textContent = '▸';
-      el.appendChild(arrow);
-      el.addEventListener('click', () => {
-        const isOpen = body.classList.toggle('open');
-        el.classList.toggle('open', isOpen);
-      });
-      return;
-    }
-    if (current) current.appendChild(el);
-  });
-}
-
-function expandAllSections() {
-  document.querySelectorAll('.section-body').forEach(b => b.classList.add('open'));
-  document.querySelectorAll('.section-title').forEach(t => t.classList.add('open'));
-}
-function collapseAllSections() {
-  document.querySelectorAll('.section-body').forEach(b => b.classList.remove('open'));
-  document.querySelectorAll('.section-title').forEach(t => t.classList.remove('open'));
-}
-document.addEventListener('DOMContentLoaded', initAccordion);
 </script>
 
 </body>

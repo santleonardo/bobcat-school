@@ -3,6 +3,109 @@
 // Perfil e progresso vêm do db-client.js (Supabase ou localStorage).
 // ============================================================
 
+// ---------- Teste de Nivelamento (A1–C2) ----------
+// 46 questões de múltipla escolha, em ordem crescente de dificuldade.
+// Aplicado uma única vez no cadastro do aluno. O resultado define o
+// nível no perfil e libera as lições dos níveis A1 até o nível alcançado.
+
+const LEVEL_TEST_QUESTIONS = [
+  // ----- A1 (1–8) -----
+  { id: 1, level: 'A1', q: 'She ___ a teacher.', options: ['is', 'are', 'am', 'be'], answer: 0 },
+  { id: 2, level: 'A1', q: 'I have two ___.', options: ['child', 'childs', 'children', 'childrens'], answer: 2 },
+  { id: 3, level: 'A1', q: 'There ___ a book on the table.', options: ['is', 'are', 'am', 'be'], answer: 0 },
+  { id: 4, level: 'A1', q: "What's your name? My name ___ Ana.", options: ['is', 'are', 'am', 'be'], answer: 0 },
+  { id: 5, level: 'A1', q: "He doesn't ___ coffee.", options: ['like', 'likes', 'liking', 'liked'], answer: 0 },
+  { id: 6, level: 'A1', q: 'This is ___ apple.', options: ['a', 'an', 'the', 'some'], answer: 1 },
+  { id: 7, level: 'A1', q: '___ you from Brazil?', options: ['Is', 'Are', 'Am', 'Do'], answer: 1 },
+  { id: 8, level: 'A1', q: 'My brother ___ football every Sunday.', options: ['play', 'plays', 'playing', 'played'], answer: 1 },
+
+  // ----- A2 (9–16) -----
+  { id: 9, level: 'A2', q: 'Yesterday, I ___ to the cinema.', options: ['go', 'goes', 'went', 'gone'], answer: 2 },
+  { id: 10, level: 'A2', q: 'London is ___ than Paris in winter.', options: ['cold', 'colder', 'coldest', 'more cold'], answer: 1 },
+  { id: 11, level: 'A2', q: 'We ___ going to travel next month.', options: ['is', 'are', 'am', 'be'], answer: 1 },
+  { id: 12, level: 'A2', q: 'She was born ___ 1998.', options: ['in', 'on', 'at', 'since'], answer: 0 },
+  { id: 13, level: 'A2', q: 'I ___ my homework last night.', options: ['do', 'did', 'done', 'doing'], answer: 1 },
+  { id: 14, level: 'A2', q: 'There ___ some milk in the fridge.', options: ['is', 'are', 'be', 'were'], answer: 0 },
+  { id: 15, level: 'A2', q: 'He is the ___ student in the class.', options: ['good', 'better', 'best', 'goodest'], answer: 2 },
+  { id: 16, level: 'A2', q: 'Look! It ___ raining.', options: ['rain', 'rains', 'is', 'was'], answer: 2 },
+
+  // ----- B1 (17–24) -----
+  { id: 17, level: 'B1', q: 'I have ___ been to Japan.', options: ['never', 'ever', 'already', 'yet'], answer: 0 },
+  { id: 18, level: 'B1', q: 'If it rains tomorrow, we ___ the picnic.', options: ['cancel', 'will cancel', 'cancelled', 'cancelling'], answer: 1 },
+  { id: 19, level: 'B1', q: 'The letter ___ by John yesterday.', options: ['wrote', 'was written', 'is written', 'has written'], answer: 1 },
+  { id: 20, level: 'B1', q: 'She has lived here ___ 2015.', options: ['for', 'since', 'during', 'at'], answer: 1 },
+  { id: 21, level: 'B1', q: 'I wish I ___ more free time.', options: ['have', 'had', 'has', 'will have'], answer: 1 },
+  { id: 22, level: 'B1', passage: 'Remote Work\nRemote work has become increasingly common over the last few years. Many companies now allow their employees to work from home, at least a few days a week. Supporters say this arrangement saves time and money, because people don\'t need to travel to an office every day. However, some managers believe that remote work makes it harder for teams to communicate and to build strong relationships. As a result, many businesses have started offering a hybrid model, combining days in the office with days at home.', q: 'According to the text, why do supporters like remote work?', options: ['Because it is more traditional', 'Because it saves time and money', 'Because it requires more meetings', 'Because it is required by law'], answer: 1 },
+  { id: 23, level: 'B1', passage: 'Remote Work\nRemote work has become increasingly common over the last few years. Many companies now allow their employees to work from home, at least a few days a week. Supporters say this arrangement saves time and money, because people don\'t need to travel to an office every day. However, some managers believe that remote work makes it harder for teams to communicate and to build strong relationships. As a result, many businesses have started offering a hybrid model, combining days in the office with days at home.', q: 'What concern do some managers have about remote work?', options: ['It is too expensive', 'It makes communication harder', 'It increases travel', 'It reduces employee salaries'], answer: 1 },
+  { id: 24, level: 'B1', passage: 'Remote Work\nRemote work has become increasingly common over the last few years. Many companies now allow their employees to work from home, at least a few days a week. Supporters say this arrangement saves time and money, because people don\'t need to travel to an office every day. However, some managers believe that remote work makes it harder for teams to communicate and to build strong relationships. As a result, many businesses have started offering a hybrid model, combining days in the office with days at home.', q: "What is a 'hybrid model', according to the text?", options: ['Working only from home', 'Working only in the office', 'A mix of office days and home days', 'A model used only by managers'], answer: 2 },
+
+  // ----- B2 (25–32) -----
+  { id: 25, level: 'B2', q: 'She said that she ___ tired.', options: ['is', 'was', 'has been', 'be'], answer: 1 },
+  { id: 26, level: 'B2', q: 'If I had studied harder, I ___ the exam.', options: ['would pass', 'would have passed', 'will pass', 'passed'], answer: 1 },
+  { id: 27, level: 'B2', q: 'They finally managed to ___ the problem after hours of work.', options: ['give up', 'sort out', 'look up', 'take off'], answer: 1 },
+  { id: 28, level: 'B2', q: 'He asked me where ___.', options: ['did I live', 'I live', 'I lived', 'I have lived'], answer: 2 },
+  { id: 29, level: 'B2', q: 'The meeting ___ postponed because of the storm.', options: ['was', 'has', 'did', 'is being being'], answer: 0 },
+  { id: 30, level: 'B2', passage: 'The Rise of Electric Vehicles\nElectric vehicles (EVs) are no longer a niche product for environmentally conscious consumers. Falling battery costs, government incentives, and a growing network of charging stations have made EVs a realistic option for millions of drivers. Critics, however, point out that the manufacturing of batteries has its own environmental cost, and that electricity grids in many countries still rely heavily on fossil fuels. Whether EVs represent a truly sustainable solution, they argue, depends on how quickly the energy sector itself can be transformed.', q: 'What has helped make EVs more accessible?', options: ['Higher battery costs', 'Falling battery costs and incentives', 'A shortage of charging stations', 'Stricter emissions-only regulations'], answer: 1 },
+  { id: 31, level: 'B2', passage: 'The Rise of Electric Vehicles\nElectric vehicles (EVs) are no longer a niche product for environmentally conscious consumers. Falling battery costs, government incentives, and a growing network of charging stations have made EVs a realistic option for millions of drivers. Critics, however, point out that the manufacturing of batteries has its own environmental cost, and that electricity grids in many countries still rely heavily on fossil fuels. Whether EVs represent a truly sustainable solution, they argue, depends on how quickly the energy sector itself can be transformed.', q: 'What criticism do some people make about EVs?', options: ['They are too quiet', 'Battery production has environmental costs', 'They are cheaper than expected', "They don't require electricity"], answer: 1 },
+  { id: 32, level: 'B2', passage: 'The Rise of Electric Vehicles\nElectric vehicles (EVs) are no longer a niche product for environmentally conscious consumers. Falling battery costs, government incentives, and a growing network of charging stations have made EVs a realistic option for millions of drivers. Critics, however, point out that the manufacturing of batteries has its own environmental cost, and that electricity grids in many countries still rely heavily on fossil fuels. Whether EVs represent a truly sustainable solution, they argue, depends on how quickly the energy sector itself can be transformed.', q: 'What does the sustainability of EVs ultimately depend on, according to the text?', options: ['The price of gasoline', 'How fast the energy sector is transformed', 'The number of cars sold', 'The color of the vehicles'], answer: 1 },
+
+  // ----- C1 (33–40) -----
+  { id: 33, level: 'C1', q: 'Rarely ___ such a compelling argument in a debate.', options: ['I have seen', 'have I seen', 'I saw', 'did I saw'], answer: 1 },
+  { id: 34, level: 'C1', q: 'The committee insists that the report ___ submitted by Friday.', options: ['is', 'be', 'will be', 'was'], answer: 1 },
+  { id: 35, level: 'C1', q: 'It was not until she moved abroad ___ she realized how much she missed home.', options: ['that', 'when', 'then', 'which'], answer: 0 },
+  { id: 36, level: 'C1', q: 'Had I known about the delay, I ___ earlier.', options: ['would leave', 'would have left', 'left', 'will leave'], answer: 1 },
+  { id: 37, level: 'C1', q: 'Not only ___ the deadline, but he also improved the quality of the work.', options: ['he met', 'did he meet', 'he did meet', 'meeting he'], answer: 1 },
+  { id: 38, level: 'C1', passage: 'The Attention Economy\nIn an age saturated with information, attention has arguably become the scarcest resource of all. Platforms compete fiercely for the fleeting moments of focus that users are willing to grant them, and in doing so, they have reshaped everything from journalism to political discourse. Some commentators argue that this relentless competition has driven a race to the bottom, in which sensationalism is rewarded over nuance. Others contend that users are far from passive victims, and that framing the debate solely in terms of manipulation underestimates people\'s ability to navigate — and occasionally resist — the platforms they use.', q: 'What does the author suggest attention has become?', options: ['An unlimited resource', 'The scarcest resource', 'Irrelevant to platforms', 'A form of currency only in politics'], answer: 1 },
+  { id: 39, level: 'C1', passage: 'The Attention Economy\nIn an age saturated with information, attention has arguably become the scarcest resource of all. Platforms compete fiercely for the fleeting moments of focus that users are willing to grant them, and in doing so, they have reshaped everything from journalism to political discourse. Some commentators argue that this relentless competition has driven a race to the bottom, in which sensationalism is rewarded over nuance. Others contend that users are far from passive victims, and that framing the debate solely in terms of manipulation underestimates people\'s ability to navigate — and occasionally resist — the platforms they use.', q: "What is the 'race to the bottom' mentioned in the text?", options: ['Platforms competing to lower prices', 'A trend toward rewarding sensationalism over nuance', 'A competition to reduce screen time', 'A decline in the number of users'], answer: 1 },
+  { id: 40, level: 'C1', passage: 'The Attention Economy\nIn an age saturated with information, attention has arguably become the scarcest resource of all. Platforms compete fiercely for the fleeting moments of focus that users are willing to grant them, and in doing so, they have reshaped everything from journalism to political discourse. Some commentators argue that this relentless competition has driven a race to the bottom, in which sensationalism is rewarded over nuance. Others contend that users are far from passive victims, and that framing the debate solely in terms of manipulation underestimates people\'s ability to navigate — and occasionally resist — the platforms they use.', q: "What is the view of those who disagree with the 'race to the bottom' argument?", options: ['They believe users have no agency at all', 'They believe users can navigate and resist platform influence', 'They agree completely with the manipulation theory', 'They think platforms should be banned'], answer: 1 },
+
+  // ----- C2 (41–46) -----
+  { id: 41, level: 'C2', q: 'The negotiations reached an impasse, and neither side was willing to ___.', options: ['budge', 'budged', 'budging', 'to budge'], answer: 0 },
+  { id: 42, level: 'C2', q: 'Her argument, while eloquent, was ultimately ___ — it sounded convincing but had little real content.', options: ['specious', 'meticulous', 'candid', 'succinct'], answer: 0 },
+  { id: 43, level: 'C2', q: 'He has a knack ___ making even the dullest topics sound fascinating.', options: ['of', 'for', 'with', 'in'], answer: 1 },
+  { id: 44, level: 'C2', q: 'The critics were scathing, describing the film as ___ pretentious.', options: ['utter', 'utterly', 'uttering', 'utterness'], answer: 1 },
+  { id: 45, level: 'C2', q: 'Given the circumstances, resigning was, ___, the only honourable course of action.', options: ['if anything', 'for all intents and purposes', 'by and large', 'in the same vein'], answer: 1 },
+  { id: 46, level: 'C2', q: "The professor's remark was laced with ___; she clearly meant the opposite of what she said.", options: ['irony', 'clarity', 'brevity', 'sincerity'], answer: 0 }
+];
+
+// Ordem dos níveis CEFR para cálculo de desbloqueio.
+const CEFR_ORDER = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+
+// Faixas de acertos (de 46) → nível alcançado (e nível máximo liberado).
+// Quanto mais acertos, mais níveis de lições ficam disponíveis.
+//   0–8   → A1   (libera A1)
+//   9–16  → A2   (libera A1–A2)
+//   17–24 → B1   (libera A1–B1)
+//   25–32 → B2   (libera A1–B2)  ← exemplo do usuário
+//   33–40 → C1   (libera A1–C1)
+//   41–46 → C2   (libera A1–C2)
+function levelFromTestScore(score) {
+  if (score <= 8) return 'A1';
+  if (score <= 16) return 'A2';
+  if (score <= 24) return 'B1';
+  if (score <= 32) return 'B2';
+  if (score <= 40) return 'C1';
+  return 'C2';
+}
+
+function levelLabel(code) {
+  const map = {
+    A1: 'A1 — Iniciante', A2: 'A2 — Básico', B1: 'B1 — Intermediário',
+    B2: 'B2 — Intermediário avançado', C1: 'C1 — Avançado', C2: 'C2 — Proficiente'
+  };
+  return map[code] || code;
+}
+
+// Verifica se uma lição (por nível) está liberada pelo resultado do teste.
+function isLevelUnlockedByTest(lessonLevel, studentLevel) {
+  if (lessonLevel === 'Introdutório') return true;
+  const li = CEFR_ORDER.indexOf(lessonLevel);
+  const si = CEFR_ORDER.indexOf(studentLevel);
+  if (li === -1) return true;       // nível desconhecido: libera por padrão
+  if (si === -1) return false;      // aluno sem nível válido: trava
+  return li <= si;
+}
+
 // Catálogo de lições. Para adicionar uma nova lição, basta
 // incluir um novo objeto aqui e criar o arquivo em /lessons.
 const LESSONS = [
@@ -260,7 +363,13 @@ async function afterAuthSuccess() {
 
   const profile = await getProfile();
   if (profile) {
-    enterApp();
+    // Aluno com perfil mas sem teste de nivelamento → precisa fazer o teste
+    // uma única vez para que o nível e o acesso às lições sejam definidos.
+    if (profile.levelTestScore === undefined || profile.levelTestScore === null) {
+      startLevelTest();
+    } else {
+      enterApp();
+    }
   } else {
     showScreen('profile-setup');
   }
@@ -292,14 +401,21 @@ function setupProfileScreen() {
       document.getElementById('input-name').style.borderColor = 'var(--bad)';
       return;
     }
-    const level = document.getElementById('input-level').value;
+    // O nível não é mais escolhido manualmente — ele é definido pelo
+    // Teste de Nivelamento a seguir. Salvamos um nível inicial provisório
+    // (A1) que será sobrescrito pelo resultado do teste.
     const btn = document.getElementById('btn-save-profile');
     btn.disabled = true;
     btn.textContent = 'Salvando...';
-    await saveProfile({ name, avatar: selectedAvatarSetup, level, createdAt: new Date().toISOString() });
+    await saveProfile({
+      name,
+      avatar: selectedAvatarSetup,
+      level: 'A1',
+      createdAt: new Date().toISOString()
+    });
     btn.disabled = false;
-    btn.textContent = 'Começar a estudar';
-    enterApp();
+    btn.textContent = 'Continuar para o teste';
+    startLevelTest();
   });
 }
 
@@ -320,10 +436,24 @@ async function renderProfileView() {
   document.getElementById('profile-stat-completed').textContent = stats.completed;
   document.getElementById('profile-stat-score').textContent = stats.avgPct !== null ? stats.avgPct + '%' : '—';
   document.getElementById('profile-stat-total').textContent = stats.total;
-  renderLessonCardsInto('profile-lesson-list', progress);
+  await renderLessonCardsInto('profile-lesson-list', progress);
 
   document.getElementById('edit-name').value = profile.name;
-  document.getElementById('edit-level').value = profile.level;
+
+  // Mostra o nível como somente leitura (definido pelo teste de nivelamento).
+  const levelDisplay = document.getElementById('edit-level-display');
+  if (levelDisplay) {
+    const score = profile.levelTestScore;
+    const date = profile.levelTestDate ? new Date(profile.levelTestDate).toLocaleDateString('pt-BR') : null;
+    let txt = levelLabel(profile.level);
+    if (score !== undefined && score !== null) {
+      txt += '  •  ' + score + '/46 acertos';
+      if (date) txt += '  •  ' + date;
+    } else {
+      txt += '  •  teste não realizado';
+    }
+    levelDisplay.textContent = txt;
+  }
 
   selectedAvatarEdit = profile.avatar;
   const editContainer = document.getElementById('avatar-picker-edit');
@@ -348,11 +478,11 @@ function setupProfileViewScreen() {
   document.getElementById('btn-update-profile').addEventListener('click', async () => {
     const name = document.getElementById('edit-name').value.trim();
     if (!name) return;
-    const level = document.getElementById('edit-level').value;
+    // O nível NÃO é editável aqui — ele vem do Teste de Nivelamento.
+    // Mantemos o nível e o resultado do teste que já estão no perfil.
     const profile = (await getProfile()) || {};
     profile.name = name;
     profile.avatar = selectedAvatarEdit;
-    profile.level = level;
     await saveProfile(profile);
     await renderProfileView();
     showScreen('home');
@@ -392,7 +522,7 @@ async function renderHome() {
   document.getElementById('stat-score').textContent = stats.avgPct !== null ? stats.avgPct + '%' : '—';
   document.getElementById('stat-streak').textContent = stats.total;
 
-  renderLessonCardsInto('lesson-list', progress);
+  await renderLessonCardsInto('lesson-list', progress);
 }
 
 function buildLessonCardHTML(lesson, progress, locked) {
@@ -405,7 +535,7 @@ function buildLessonCardHTML(lesson, progress, locked) {
       <div class="icon locked-icon">🔒</div>
       <div class="info">
         <div class="name">${lesson.name}</div>
-        <div class="level">Conclua a lição anterior com pelo menos 85% para desbloquear</div>
+        <div class="level">Nível não liberado pelo teste de nivelamento</div>
       </div>
       <div class="badge locked">Bloqueada</div>
     `;
@@ -444,30 +574,28 @@ function groupLessonsByLevel() {
   return levels.map(level => ({ level, lessons: groups[level] }));
 }
 
-// Uma lição só é desbloqueada depois que a anterior no catálogo LESSONS
-// (a ordem em que elas aparecem no array, que segue a progressão pedagógica)
-// tiver sido concluída com pelo menos 85% de aproveitamento. A primeira
-// lição do catálogo está sempre desbloqueada.
-function computeLockStatus(progress) {
+// O acesso às lições é definido pelo Teste de Nivelamento: o aluno só vê
+// as lições dos níveis A1 até o nível que alcançou no teste. Lições de
+// níveis acima ficam bloqueadas (o teste é feito uma única vez, no cadastro).
+async function computeLockStatus(progress) {
+  const profile = await getProfile();
+  const studentLevel = (profile && profile.level) || 'A1';
   const locked = {};
-  LESSONS.forEach((lesson, idx) => {
-    if (idx === 0) { locked[lesson.id] = false; return; }
-    const prev = LESSONS[idx - 1];
-    const prevProgress = progress[prev.id];
-    locked[lesson.id] = !(prevProgress && prevProgress.completed);
+  LESSONS.forEach(lesson => {
+    locked[lesson.id] = !isLevelUnlockedByTest(lesson.level, studentLevel);
   });
   return locked;
 }
 
 function showLockedMessage(lesson) {
-  alert('🔒 "' + lesson.name + '" ainda está bloqueada.\n\nConclua a lição anterior com pelo menos 85% (nota 8,5) de aproveitamento para desbloqueá-la.');
+  alert('🔒 "' + lesson.name + '" está bloqueada.\n\nEsta lição é de um nível acima do que você alcançou no Teste de Nivelamento. O acesso às lições é definido uma única vez no cadastro.');
 }
 
-function renderLessonCardsInto(containerId, progress) {
+async function renderLessonCardsInto(containerId, progress) {
   const list = document.getElementById(containerId);
   if (!list) return;
   list.innerHTML = '';
-  const lockStatus = computeLockStatus(progress);
+  const lockStatus = await computeLockStatus(progress);
   const groups = groupLessonsByLevel();
   groups.forEach(({ level, lessons }) => {
     const section = document.createElement('div');
@@ -535,7 +663,14 @@ async function boot() {
   } else {
     const profile = await getProfile();
     if (profile) {
-      enterApp();
+      // Perfil já existe. Se o teste de nivelamento ainda não foi feito,
+      // manda direto pra ele (caso de aluno antigo sem teste, ou de perfil
+      // criado mas com teste interrompido).
+      if (profile.levelTestScore === undefined || profile.levelTestScore === null) {
+        startLevelTest();
+      } else {
+        enterApp();
+      }
     } else {
       showScreen('profile-setup');
     }
@@ -592,6 +727,195 @@ function registerServiceWorker() {
       console.log('Service worker não registrado (provavelmente rodando via file://).');
     });
   }
+}
+
+// ---------- Teste de Nivelamento (UI) ----------
+
+// Estado em memória do teste em andamento.
+let levelTestState = {
+  current: 0,           // índice da questão atual (0..N-1)
+  answers: [],          // resposta escolhida em cada questão (índice 0..3 ou null)
+  finished: false
+};
+
+function startLevelTest() {
+  // (Re)inicia o estado do teste. Como o teste é feito uma única vez,
+  // só deve ser chamado quando o aluno ainda não tem resultado.
+  levelTestState = {
+    current: 0,
+    answers: new Array(LEVEL_TEST_QUESTIONS.length).fill(null),
+    finished: false
+  };
+  document.getElementById('bottom-nav').style.display = 'none';
+  renderLevelTest();
+  showScreen('level-test');
+  window.scrollTo(0, 0);
+}
+
+function renderLevelTest() {
+  const container = document.getElementById('level-test-container');
+  if (!container) return;
+
+  const total = LEVEL_TEST_QUESTIONS.length;
+  const idx = levelTestState.current;
+  const item = LEVEL_TEST_QUESTIONS[idx];
+  const answered = levelTestState.answers.filter(a => a !== null).length;
+  const pct = Math.round(((idx) / total) * 100);
+  const isLast = idx === total - 1;
+  const selected = levelTestState.answers[idx];
+
+  // Cabeçalho com instrução e progresso.
+  let html = `
+    <div class="lt-header">
+      <h2 class="screen-title">Teste de Nivelamento</h2>
+      <p class="lt-sub">46 questões do A1 ao C2. Não tem tempo limite — responda com calma. É feito só uma vez e define quais lições ficarão liberadas para você.</p>
+    </div>
+
+    <div class="lt-progress">
+      <div class="lt-progress-bar"><div class="lt-progress-fill" style="width:${pct}%;"></div></div>
+      <div class="lt-progress-info">
+        <span>Questão ${idx + 1} de ${total}</span>
+        <span>${answered} respondidas</span>
+      </div>
+    </div>
+
+    <div class="lt-level-tag lt-level-${item.level}">Nível ${item.level}</div>
+  `;
+
+  // Texto de leitura (se houver) — aparece acima da questão.
+  if (item.passage) {
+    const [passageTitle, ...rest] = item.passage.split('\n');
+    const passageBody = rest.join('\n').trim();
+    html += `
+      <div class="lt-passage">
+        <div class="lt-passage-title">📖 ${passageTitle}</div>
+        <p class="lt-passage-body">${passageBody}</p>
+      </div>
+    `;
+  }
+
+  // Enunciado e alternativas.
+  html += `<div class="lt-question">${idx + 1}. ${item.q}</div>`;
+  html += `<div class="lt-options">`;
+  item.options.forEach((opt, i) => {
+    const letters = ['A', 'B', 'C', 'D'];
+    const isSel = selected === i;
+    html += `
+      <button type="button" class="lt-option${isSel ? ' selected' : ''}" data-opt="${i}">
+        <span class="lt-option-letter">${letters[i]}</span>
+        <span class="lt-option-text">${opt}</span>
+      </button>
+    `;
+  });
+  html += `</div>`;
+
+  // Navegação.
+  html += `<div class="lt-nav">
+    <button type="button" class="btn secondary lt-btn-back"${idx === 0 ? ' disabled' : ''}>← Anterior</button>
+    ${isLast
+      ? `<button type="button" class="btn lt-btn-finish"${selected === null ? ' disabled' : ''}>Finalizar teste</button>`
+      : `<button type="button" class="btn lt-btn-next"${selected === null ? ' disabled' : ''}>Próxima →</button>`
+    }
+  </div>`;
+
+  // Aviso caso ainda haja não respondidas no fim.
+  if (isLast && answered < total) {
+    html += `<p class="lt-warn">Você ainda não respondeu ${total - answered} questão(ões). Pode finalizar mesmo assim, mas as não respondidas contam como erro.</p>`;
+  }
+
+  container.innerHTML = html;
+
+  // Liga os eventos dos botões.
+  container.querySelectorAll('.lt-option').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const opt = parseInt(btn.dataset.opt, 10);
+      levelTestState.answers[idx] = opt;
+      renderLevelTest();
+    });
+  });
+
+  const backBtn = container.querySelector('.lt-btn-back');
+  if (backBtn) backBtn.addEventListener('click', () => {
+    if (levelTestState.current > 0) {
+      levelTestState.current--;
+      renderLevelTest();
+      window.scrollTo(0, 0);
+    }
+  });
+
+  const nextBtn = container.querySelector('.lt-btn-next');
+  if (nextBtn) nextBtn.addEventListener('click', () => {
+    if (levelTestState.current < total - 1) {
+      levelTestState.current++;
+      renderLevelTest();
+      window.scrollTo(0, 0);
+    }
+  });
+
+  const finishBtn = container.querySelector('.lt-btn-finish');
+  if (finishBtn) finishBtn.addEventListener('click', () => {
+    finishLevelTest();
+  });
+}
+
+async function finishLevelTest() {
+  // Conta acertos e calcula o nível alcançado.
+  let score = 0;
+  LEVEL_TEST_QUESTIONS.forEach((item, i) => {
+    if (levelTestState.answers[i] === item.answer) score++;
+  });
+
+  const achievedLevel = levelFromTestScore(score);
+  levelTestState.finished = true;
+
+  // Salva o resultado no perfil (sobrescreve o nível inicial provisório).
+  const profile = (await getProfile()) || {};
+  profile.level = achievedLevel;
+  profile.levelTestScore = score;
+  profile.levelTestTotal = LEVEL_TEST_QUESTIONS.length;
+  profile.levelTestDate = new Date().toISOString();
+  await saveProfile(profile);
+
+  renderLevelTestResult(score, achievedLevel);
+}
+
+function renderLevelTestResult(score, achievedLevel) {
+  const container = document.getElementById('level-test-container');
+  if (!container) return;
+
+  // Determina a faixa de níveis liberada (sempre A1 até o nível alcançado).
+  const unlockedRange = 'A1 até ' + achievedLevel;
+
+  container.innerHTML = `
+    <div class="lt-result">
+      <div class="lt-result-emoji">🎯</div>
+      <h2 class="lt-result-title">Teste concluído!</h2>
+
+      <div class="lt-result-score">
+        Você acertou <strong>${score}</strong> de <strong>${LEVEL_TEST_QUESTIONS.length}</strong> questões
+      </div>
+
+      <div class="lt-result-level lt-level-tag lt-level-${achievedLevel}">
+        Seu nível: ${achievedLevel}
+      </div>
+
+      <div class="lt-result-unlocked">
+        <div class="lt-result-unlocked-label">Lições liberadas:</div>
+        <div class="lt-result-unlocked-range">${unlockedRange}</div>
+      </div>
+
+      <p class="lt-result-note">
+        ✅ Pronto! Agora você tem acesso a todas as lições dos níveis liberados.
+        O teste não precisa ser feito de novo — suas lições já estão disponíveis na tela inicial.
+      </p>
+
+      <button type="button" class="btn lt-btn-continue">Começar a estudar →</button>
+    </div>
+  `;
+
+  document.querySelector('.lt-btn-continue').addEventListener('click', () => {
+    enterApp();
+  });
 }
 
 document.addEventListener('DOMContentLoaded', boot);
