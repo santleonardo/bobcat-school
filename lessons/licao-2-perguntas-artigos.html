@@ -347,11 +347,11 @@
 <p class="paragraph-text">✍️ Exercícios Escritos (com gabarito no final)</p>
 <div class="letter-heading">A. Complete com a, an ou the:</div>
 <div class="fill-grid">
-<div class="fill-item"><span>I see ___ elephant.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
-<div class="fill-item"><span>She has ___ umbrella.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
-<div class="fill-item"><span>___ sun is hot today.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
-<div class="fill-item"><span>I need ___ pen.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
-<div class="fill-item"><span>He is eating ___ banana.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+<div class="fill-item"><span>I see ___ elephant.</span><input type="text" class="practice-input" id="q1" data-answer="an" placeholder="sua resposta"></div>
+<div class="fill-item"><span>She has ___ umbrella.</span><input type="text" class="practice-input" id="q2" data-answer="an" placeholder="sua resposta"></div>
+<div class="fill-item"><span>___ sun is hot today.</span><input type="text" class="practice-input" id="q3" data-answer="the" placeholder="sua resposta"></div>
+<div class="fill-item"><span>I need ___ pen.</span><input type="text" class="practice-input" id="q4" data-answer="a" placeholder="sua resposta"></div>
+<div class="fill-item"><span>He is eating ___ banana.</span><input type="text" class="practice-input" id="q5" data-answer="a" placeholder="sua resposta"></div>
 </div>
 <div class="letter-heading">B. Faça perguntas usando Wh-words:</div>
 <div class="dialog-box">
@@ -415,10 +415,14 @@
 </div>
 
   <div class="actions" style="margin-top:24px;">
+    <button class="btn secondary" onclick="checkAnswers()">✅ Verificar respostas</button>
+    <span class="score-badge" id="scoreBadge" style="display:none;"></span>
+  </div>
+  <div class="actions" style="margin-top:10px;">
     <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
     <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
   </div>
-  <p class="completion-note">O progresso mostra quanto da prática escrita você já preencheu. Use os botões "Ver gabarito" para conferir suas respostas — essa lição não é corrigida automaticamente.</p>
+  <p class="completion-note">Os exercícios com resposta objetiva têm correção automática — clique em "Verificar respostas" para conferir (ou use "Ver gabarito" como referência). Itens de produção livre/criativa não entram na nota. É preciso pelo menos 85% de acerto nos itens corrigíveis para concluir a lição.</p>
 
   <div class="footer-note">Bobcat Language School • Lição 2 — Fazendo Perguntas e Apresentando Coisas</div>
 
@@ -465,6 +469,40 @@ function toggleGabarito(boxId, btnId) {
   btn.textContent = box.classList.contains('show') ? 'Ocultar gabarito' : 'Ver gabarito';
 }
 
+function normalizeAnswer(s) {
+  return (s || '')
+    .toString()
+    .toLowerCase()
+    .replace(/[^a-z0-9' ]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function checkAnswers() {
+  let correct = 0, total = 0;
+  document.querySelectorAll('input.practice-input[data-answer], input.practice-input[data-answers]').forEach(inp => {
+    total++;
+    const accepted = inp.dataset.answers
+      ? inp.dataset.answers.split('|').map(normalizeAnswer)
+      : [normalizeAnswer(inp.dataset.answer)];
+    const val = normalizeAnswer(inp.value);
+    inp.classList.remove('correct', 'incorrect');
+    if (val && accepted.includes(val)) {
+      inp.classList.add('correct');
+      correct++;
+    } else {
+      inp.classList.add('incorrect');
+    }
+  });
+  const badge = document.getElementById('scoreBadge');
+  if (badge) {
+    badge.style.display = 'inline-block';
+    badge.textContent = correct + ' / ' + total + ' corretas';
+  }
+  updateGlobalProgress();
+  return { correct, total };
+}
+
 function updateGlobalProgress() {
   const inputs = document.querySelectorAll('.practice-input');
   const total = inputs.length;
@@ -481,11 +519,10 @@ async function finishLesson() {
   if (finishing) return;
   finishing = true;
 
-  const { filled, total } = updateGlobalProgress();
+  const { correct, total } = checkAnswers();
   const safeTotal = total || 1;
-  const safeFilled = total ? filled : 1;
 
-  const passed = await handleLessonFinish(LESSON_ID, safeFilled, safeTotal, 'filled');
+  const passed = await handleLessonFinish(LESSON_ID, correct, safeTotal, 'correct');
   if (!passed) finishing = false; // permite tentar novamente sem recarregar a página
 }
 </script>

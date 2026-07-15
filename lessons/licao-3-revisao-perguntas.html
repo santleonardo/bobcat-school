@@ -300,11 +300,11 @@
 <div class="section-title">🗣️ PARTE 1 – VOCÊ CONSEGUE PERGUNTAR?</div>
 <div class="letter-heading">A. Complete as perguntas com Wh-words corretos:</div>
 <div class="fill-grid">
-<div class="fill-item"><span>___ is your name?</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
-<div class="fill-item"><span>___ is that woman?</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
-<div class="fill-item"><span>___ are you from?</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
-<div class="fill-item"><span>___ is in your backpack?</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
-<div class="fill-item"><span>___ is your teacher?</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+<div class="fill-item"><span>___ is your name?</span><input type="text" class="practice-input" id="q1" data-answer="what" placeholder="sua resposta"></div>
+<div class="fill-item"><span>___ is that woman?</span><input type="text" class="practice-input" id="q2" data-answer="who" placeholder="sua resposta"></div>
+<div class="fill-item"><span>___ are you from?</span><input type="text" class="practice-input" id="q3" data-answer="where" placeholder="sua resposta"></div>
+<div class="fill-item"><span>___ is in your backpack?</span><input type="text" class="practice-input" id="q4" data-answer="what" placeholder="sua resposta"></div>
+<div class="fill-item"><span>___ is your teacher?</span><input type="text" class="practice-input" id="q5" data-answer="who" placeholder="sua resposta"></div>
 </div>
 <p class="paragraph-text">💬 Depois de completar, leia as perguntas em voz alta.</p>
 <div class="section-title">🧩 PARTE 2 – QUEM É QUEM?</div>
@@ -320,7 +320,7 @@
 <div class="section-title">🧠 PARTE 3 – ESCOLHA A RESPOSTA CORRETA</div>
 <div class="letter-heading">C. Marque a alternativa correta:</div>
 <div class="fill-grid">
-<div class="fill-item"><span>What ___ in your bag?</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+<div class="fill-item"><span>What ___ in your bag?</span><input type="text" class="practice-input" id="q6" data-answer="is" placeholder="sua resposta"></div>
 </div>
 <ul class="check-list">
 <li>☐ is</li>
@@ -328,7 +328,7 @@
 <li>☐ am</li>
 </ul>
 <div class="fill-grid">
-<div class="fill-item"><span>She has ___ apple.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+<div class="fill-item"><span>She has ___ apple.</span><input type="text" class="practice-input" id="q7" data-answer="an" placeholder="sua resposta"></div>
 </div>
 <ul class="check-list">
 <li>☐ a</li>
@@ -336,7 +336,7 @@
 <li>☐ the</li>
 </ul>
 <div class="fill-grid">
-<div class="fill-item"><span>___ is that man?</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+<div class="fill-item"><span>___ is that man?</span><input type="text" class="practice-input" id="q8" data-answer="who" placeholder="sua resposta"></div>
 </div>
 <ul class="check-list">
 <li>☐ Why</li>
@@ -344,7 +344,7 @@
 <li>☐ What</li>
 </ul>
 <div class="fill-grid">
-<div class="fill-item"><span>I have ___ book and ___ umbrella.</span><input type="text" class="practice-input" placeholder="sua resposta"></div>
+<div class="fill-item"><span>I have ___ book and ___ umbrella.</span><input type="text" class="practice-input" id="q9" data-answers="a an|a/an|a / an" placeholder="sua resposta"></div>
 </div>
 <ul class="check-list">
 <li>☐ an / a</li>
@@ -414,10 +414,14 @@
 <p class="paragraph-text">🎉 Parabéns! Você está construindo frases, fazendo perguntas, e se apresentando com confiança! Na próxima lição, vamos aprender sobre cores, números e objetos da sala de aula.</p>
 
   <div class="actions" style="margin-top:24px;">
+    <button class="btn secondary" onclick="checkAnswers()">✅ Verificar respostas</button>
+    <span class="score-badge" id="scoreBadge" style="display:none;"></span>
+  </div>
+  <div class="actions" style="margin-top:10px;">
     <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
     <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
   </div>
-  <p class="completion-note">O progresso mostra quanto da prática escrita você já preencheu. Use os botões "Ver gabarito" para conferir suas respostas — essa lição não é corrigida automaticamente.</p>
+  <p class="completion-note">Os exercícios com resposta objetiva têm correção automática — clique em "Verificar respostas" para conferir (ou use "Ver gabarito" como referência). Itens de produção livre/criativa não entram na nota. É preciso pelo menos 85% de acerto nos itens corrigíveis para concluir a lição.</p>
 
   <div class="footer-note">Bobcat Language School • Lição 3 — Revisando e Praticando: Quem é Você? O Que é Isso?</div>
 
@@ -464,6 +468,40 @@ function toggleGabarito(boxId, btnId) {
   btn.textContent = box.classList.contains('show') ? 'Ocultar gabarito' : 'Ver gabarito';
 }
 
+function normalizeAnswer(s) {
+  return (s || '')
+    .toString()
+    .toLowerCase()
+    .replace(/[^a-z0-9' ]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function checkAnswers() {
+  let correct = 0, total = 0;
+  document.querySelectorAll('input.practice-input[data-answer], input.practice-input[data-answers]').forEach(inp => {
+    total++;
+    const accepted = inp.dataset.answers
+      ? inp.dataset.answers.split('|').map(normalizeAnswer)
+      : [normalizeAnswer(inp.dataset.answer)];
+    const val = normalizeAnswer(inp.value);
+    inp.classList.remove('correct', 'incorrect');
+    if (val && accepted.includes(val)) {
+      inp.classList.add('correct');
+      correct++;
+    } else {
+      inp.classList.add('incorrect');
+    }
+  });
+  const badge = document.getElementById('scoreBadge');
+  if (badge) {
+    badge.style.display = 'inline-block';
+    badge.textContent = correct + ' / ' + total + ' corretas';
+  }
+  updateGlobalProgress();
+  return { correct, total };
+}
+
 function updateGlobalProgress() {
   const inputs = document.querySelectorAll('.practice-input');
   const total = inputs.length;
@@ -480,11 +518,10 @@ async function finishLesson() {
   if (finishing) return;
   finishing = true;
 
-  const { filled, total } = updateGlobalProgress();
+  const { correct, total } = checkAnswers();
   const safeTotal = total || 1;
-  const safeFilled = total ? filled : 1;
 
-  const passed = await handleLessonFinish(LESSON_ID, safeFilled, safeTotal, 'filled');
+  const passed = await handleLessonFinish(LESSON_ID, correct, safeTotal, 'correct');
   if (!passed) finishing = false; // permite tentar novamente sem recarregar a página
 }
 </script>
