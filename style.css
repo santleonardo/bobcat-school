@@ -219,6 +219,37 @@ body.on-auth-screen .topbar { display: none; }
 .hello-card .greeting { font-size: 17px; font-weight: 700; }
 .hello-card .sub { font-size: 12.5px; opacity: 0.9; margin-top: 2px; }
 
+/* Abas do perfil: Lições / Perfil / Testes */
+.profile-tabs {
+  display: flex;
+  gap: 6px;
+  background: var(--cream-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 20px;
+}
+.profile-tab {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: #888;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 9px 6px;
+  border-radius: 9px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, color 0.15s;
+}
+.profile-tab:hover { color: var(--ink); }
+.profile-tab.active {
+  background: #fff;
+  color: var(--orange-dark);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.profile-tab-content.hidden { display: none; }
+
 .stats-row { display: flex; gap: 10px; margin-bottom: 20px; }
 .stat-box {
   flex: 1;

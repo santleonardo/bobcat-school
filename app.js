@@ -493,8 +493,26 @@ async function renderProfileView() {
   if (logoutBtn) logoutBtn.classList.toggle('hidden', !isUsingCloud());
 }
 
+// Controla a troca entre as 3 abas do perfil: Lições, Perfil e Testes.
+function selectProfileTab(tabName) {
+  document.querySelectorAll('#profile-tabs .profile-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === tabName);
+  });
+  document.querySelectorAll('.profile-tab-content').forEach(content => {
+    const isTarget = content.id === 'profile-tab-' + tabName;
+    content.classList.toggle('hidden', !isTarget);
+  });
+}
+
+function setupProfileTabs() {
+  document.querySelectorAll('#profile-tabs .profile-tab').forEach(btn => {
+    btn.addEventListener('click', () => selectProfileTab(btn.dataset.tab));
+  });
+}
+
 function setupProfileViewScreen() {
   initAvatarPicker('avatar-picker-edit', (avatar) => { selectedAvatarEdit = avatar; });
+  setupProfileTabs();
 
   document.getElementById('btn-update-profile').addEventListener('click', async () => {
     const name = document.getElementById('edit-name').value.trim();
@@ -536,6 +554,7 @@ function setupProfileViewScreen() {
   const backFromReviewBtn = document.getElementById('btn-back-from-test-review');
   if (backFromReviewBtn) {
     backFromReviewBtn.addEventListener('click', () => {
+      selectProfileTab('tests');
       showScreen('profile-view');
     });
   }

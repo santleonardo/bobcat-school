@@ -154,49 +154,62 @@
       </div>
     </div>
 
-    <h2 class="screen-title" style="font-size:16px; margin:20px 0 10px 0;">Progresso do aprendizado</h2>
-    <div class="stats-row">
-      <div class="stat-box">
-        <div class="num" id="profile-stat-completed">0</div>
-        <div class="label">lições concluídas</div>
-      </div>
-      <div class="stat-box">
-        <div class="num" id="profile-stat-score">—</div>
-        <div class="label">média de acertos</div>
-      </div>
-      <div class="stat-box">
-        <div class="num" id="profile-stat-total">0</div>
-        <div class="label">lições disponíveis</div>
-      </div>
-    </div>
-    <div id="profile-lesson-list"></div>
-
-    <h2 class="screen-title" style="font-size:16px; margin:24px 0 10px 0;">Editar perfil</h2>
-    <label class="field-label">Nome</label>
-    <input type="text" id="edit-name" maxlength="40">
-
-    <label class="field-label">Avatar</label>
-    <div class="avatar-picker" id="avatar-picker-edit">
-      <div class="avatar-option" data-avatar="🦁">🦁</div>
-      <div class="avatar-option" data-avatar="🐱">🐱</div>
-      <div class="avatar-option" data-avatar="🦉">🦉</div>
-      <div class="avatar-option" data-avatar="🐼">🐼</div>
-      <div class="avatar-option" data-avatar="🦊">🦊</div>
-      <div class="avatar-option" data-avatar="🐨">🐨</div>
-      <div class="avatar-option" data-avatar="🐸">🐸</div>
-      <div class="avatar-option" data-avatar="🦄">🦄</div>
+    <div class="profile-tabs" id="profile-tabs">
+      <button type="button" class="profile-tab active" data-tab="lessons">📚 Lições</button>
+      <button type="button" class="profile-tab" data-tab="info">👤 Perfil</button>
+      <button type="button" class="profile-tab" data-tab="tests">📝 Testes</button>
     </div>
 
-    <label class="field-label">Nível em inglês (definido pelo teste de nivelamento)</label>
-    <div id="edit-level-display" class="level-readout">A1</div>
-    <button type="button" class="btn secondary hidden" id="btn-view-test-details" style="width:100%; margin-top:10px;">📋 Ver todas as questões do teste (acertos e erros)</button>
-    <button type="button" class="btn secondary hidden" id="btn-retake-test" style="width:100%; margin-top:10px; background:#fff; color:#C0392B; border-color:#C0392B;">🔄 Refazer teste de nivelamento (1 tentativa extra)</button>
-    <p id="retake-used-note" class="hidden" style="font-size:12px; color:#999; text-align:center; margin-top:8px;">Você já usou sua tentativa extra de refazer o teste.</p>
+    <!-- ABA: LIÇÕES / PROGRESSO -->
+    <div class="profile-tab-content" id="profile-tab-lessons">
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="num" id="profile-stat-completed">0</div>
+          <div class="label">lições concluídas</div>
+        </div>
+        <div class="stat-box">
+          <div class="num" id="profile-stat-score">—</div>
+          <div class="label">média de acertos</div>
+        </div>
+        <div class="stat-box">
+          <div class="num" id="profile-stat-total">0</div>
+          <div class="label">lições disponíveis</div>
+        </div>
+      </div>
+      <div id="profile-lesson-list"></div>
+    </div>
 
-    <button class="btn" id="btn-update-profile">Salvar alterações</button>
-    <button class="btn secondary" id="btn-reset-progress" style="width:100%; margin-top:10px; background:#fff; color:#C0392B; border-color:#C0392B;">Zerar progresso das lições</button>
-    <button class="btn secondary hidden" id="btn-logout" style="width:100%; margin-top:10px;">Sair da conta</button>
-    <p id="cloud-status" style="text-align:center; font-size:11.5px; color:#999; margin-top:14px;"></p>
+    <!-- ABA: INFORMAÇÕES DO PERFIL -->
+    <div class="profile-tab-content hidden" id="profile-tab-info">
+      <label class="field-label">Nome</label>
+      <input type="text" id="edit-name" maxlength="40">
+
+      <label class="field-label">Avatar</label>
+      <div class="avatar-picker" id="avatar-picker-edit">
+        <div class="avatar-option" data-avatar="🦁">🦁</div>
+        <div class="avatar-option" data-avatar="🐱">🐱</div>
+        <div class="avatar-option" data-avatar="🦉">🦉</div>
+        <div class="avatar-option" data-avatar="🐼">🐼</div>
+        <div class="avatar-option" data-avatar="🦊">🦊</div>
+        <div class="avatar-option" data-avatar="🐨">🐨</div>
+        <div class="avatar-option" data-avatar="🐸">🐸</div>
+        <div class="avatar-option" data-avatar="🦄">🦄</div>
+      </div>
+
+      <button class="btn" id="btn-update-profile">Salvar alterações</button>
+      <button class="btn secondary" id="btn-reset-progress" style="width:100%; margin-top:10px; background:#fff; color:#C0392B; border-color:#C0392B;">Zerar progresso das lições</button>
+      <button class="btn secondary hidden" id="btn-logout" style="width:100%; margin-top:10px;">Sair da conta</button>
+      <p id="cloud-status" style="text-align:center; font-size:11.5px; color:#999; margin-top:14px;"></p>
+    </div>
+
+    <!-- ABA: RESULTADO DOS TESTES -->
+    <div class="profile-tab-content hidden" id="profile-tab-tests">
+      <label class="field-label">Nível em inglês (definido pelo teste de nivelamento)</label>
+      <div id="edit-level-display" class="level-readout">A1</div>
+      <button type="button" class="btn secondary hidden" id="btn-view-test-details" style="width:100%; margin-top:10px;">📋 Ver todas as questões do teste (acertos e erros)</button>
+      <button type="button" class="btn secondary hidden" id="btn-retake-test" style="width:100%; margin-top:10px; background:#fff; color:#C0392B; border-color:#C0392B;">🔄 Refazer teste de nivelamento (1 tentativa extra)</button>
+      <p id="retake-used-note" class="hidden" style="font-size:12px; color:#999; text-align:center; margin-top:8px;">Você já usou sua tentativa extra de refazer o teste.</p>
+    </div>
   </div>
 
   <div class="screen hidden" id="screen-level-test-review">
