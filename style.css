@@ -71,7 +71,7 @@ h2.screen-title { font-size: 20px; color: var(--orange-dark); margin: 4px 0 16px
 .avatar-option.selected { border-color: var(--orange); background: var(--cream); transform: scale(1.05); }
 
 label.field-label { display: block; font-size: 13px; font-weight: 700; color: #555; margin: 14px 0 6px 0; }
-input[type=text], input[type=password], select {
+input[type=text], input[type=email], input[type=password], select {
   width: 100%;
   padding: 11px 14px;
   border: 2px solid #ddd;
@@ -79,7 +79,7 @@ input[type=text], input[type=password], select {
   font-size: 15px;
   font-family: inherit;
 }
-input[type=text]:focus, input[type=password]:focus, select:focus { outline: none; border-color: var(--orange); }
+input[type=text]:focus, input[type=email]:focus, input[type=password]:focus, select:focus { outline: none; border-color: var(--orange); }
 
 /* Auth screen */
 body.on-auth-screen .topbar { display: none; }
