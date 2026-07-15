@@ -1,7 +1,7 @@
 // Bobcat Language School — Service Worker
 // Faz o cache do "app shell" para o app abrir mesmo sem internet.
 
-const CACHE_NAME = 'bobcat-app-v9';
+const CACHE_NAME = 'bobcat-app-v10';
 const APP_SHELL = [
   './',
   './index.html',

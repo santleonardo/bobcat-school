@@ -13,7 +13,8 @@ create table if not exists profiles (
   -- Resultado do Teste de Nivelamento (feito uma única vez no cadastro):
   level_test_score int,            -- qtde de acertos (de 46)
   level_test_total int,            -- total de questões (46)
-  level_test_date timestamptz      -- quando o teste foi feito
+  level_test_date timestamptz,     -- quando o teste foi feito
+  level_test_answers jsonb         -- respostas do aluno por questão (índice da opção escolhida, ou null)
 );
 
 -- Garante as colunas do teste de nivelamento mesmo em projetos que já
@@ -31,6 +32,10 @@ begin
   if not exists (select 1 from information_schema.columns
                  where table_name = 'profiles' and column_name = 'level_test_date') then
     alter table profiles add column level_test_date timestamptz;
+  end if;
+  if not exists (select 1 from information_schema.columns
+                 where table_name = 'profiles' and column_name = 'level_test_answers') then
+    alter table profiles add column level_test_answers jsonb;
   end if;
 end$$;
 
