@@ -7,6 +7,15 @@
 // incluir um novo objeto aqui e criar o arquivo em /lessons.
 const LESSONS = [
   {
+    id: 'pronuncia-essencial',
+    name: 'Pronúncia Essencial do Inglês',
+    level: 'Introdutório',
+    icon: '🔤',
+    description: 'Comece por aqui: alfabeto, vogais, consoantes e combinações mais comuns',
+    url: 'lessons/pronuncia-essencial.html',
+    totalQuestions: 15 // 5 (parte1) + 5 (parte2) + 5 (parte3)
+  },
+  {
     id: 'verb-to-be',
     name: 'Verb To Be',
     level: 'A1',
