@@ -403,7 +403,7 @@ function buildLessonCardHTML(lesson, progress) {
     <div class="icon">${lesson.icon}</div>
     <div class="info">
       <div class="name">${lesson.name}</div>
-      <div class="level">Nível ${lesson.level} • ${lesson.description}</div>
+      <div class="level">${lesson.description}</div>
       <div class="progress-track"><div class="progress-fill" style="width:${pct}%;"></div></div>
     </div>
     <div class="badge ${done ? 'done' : ''}">${done ? '✓ ' + pct + '%' : (p ? pct + '%' : 'Não iniciada')}</div>
@@ -411,16 +411,51 @@ function buildLessonCardHTML(lesson, progress) {
   `;
 }
 
+// Ordem preferida de exibição das seções de nível. Níveis não listados aqui
+// aparecem depois, em ordem alfabética.
+const LEVEL_ORDER = ['Introdutório', 'A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+
+function groupLessonsByLevel() {
+  const groups = {};
+  LESSONS.forEach(lesson => {
+    if (!groups[lesson.level]) groups[lesson.level] = [];
+    groups[lesson.level].push(lesson);
+  });
+  const levels = Object.keys(groups).sort((a, b) => {
+    const ia = LEVEL_ORDER.indexOf(a);
+    const ib = LEVEL_ORDER.indexOf(b);
+    if (ia === -1 && ib === -1) return a.localeCompare(b);
+    if (ia === -1) return 1;
+    if (ib === -1) return -1;
+    return ia - ib;
+  });
+  return levels.map(level => ({ level, lessons: groups[level] }));
+}
+
 function renderLessonCardsInto(containerId, progress) {
   const list = document.getElementById(containerId);
   if (!list) return;
   list.innerHTML = '';
-  LESSONS.forEach(lesson => {
-    const card = document.createElement('div');
-    card.className = 'lesson-card';
-    card.innerHTML = buildLessonCardHTML(lesson, progress);
-    card.addEventListener('click', () => openLesson(lesson));
-    list.appendChild(card);
+  const groups = groupLessonsByLevel();
+  groups.forEach(({ level, lessons }) => {
+    const section = document.createElement('div');
+    section.className = 'level-group';
+    const countLabel = lessons.length === 1 ? '1 lição' : lessons.length + ' lições';
+    section.innerHTML = `
+      <div class="level-group-title">
+        <span class="label">${level}</span>
+        <span class="line"></span>
+        <span class="count">${countLabel}</span>
+      </div>
+    `;
+    lessons.forEach(lesson => {
+      const card = document.createElement('div');
+      card.className = 'lesson-card';
+      card.innerHTML = buildLessonCardHTML(lesson, progress);
+      card.addEventListener('click', () => openLesson(lesson));
+      section.appendChild(card);
+    });
+    list.appendChild(section);
   });
 }
 
