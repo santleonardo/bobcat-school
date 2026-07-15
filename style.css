@@ -557,6 +557,23 @@ body.on-auth-screen .topbar { display: none; }
   padding: 10px 22px;
   margin-bottom: 22px;
 }
+.lt-result-compare {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.lt-result-compare .lt-level-tag {
+  font-size: 16px;
+  padding: 10px 18px;
+  margin-bottom: 0;
+}
+.lt-result-compare-arrow {
+  font-size: 20px;
+  font-weight: 800;
+  color: #999;
+}
 .lt-result-unlocked {
   background: var(--cream);
   border: 1px solid var(--border);

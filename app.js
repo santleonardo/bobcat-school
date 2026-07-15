@@ -463,6 +463,19 @@ async function renderProfileView() {
     detailsBtn.classList.toggle('hidden', !Array.isArray(profile.levelTestAnswers));
   }
 
+  // Botão de refazer o teste: só aparece se o aluno já fez o teste ao menos
+  // uma vez e ainda não usou a tentativa extra de refação.
+  const hasDoneTest = profile.levelTestScore !== undefined && profile.levelTestScore !== null;
+  const retakeUsed = !!profile.levelTestRetakeUsed;
+  const retakeBtn = document.getElementById('btn-retake-test');
+  if (retakeBtn) {
+    retakeBtn.classList.toggle('hidden', !hasDoneTest || retakeUsed);
+  }
+  const retakeNote = document.getElementById('retake-used-note');
+  if (retakeNote) {
+    retakeNote.classList.toggle('hidden', !hasDoneTest || !retakeUsed);
+  }
+
   selectedAvatarEdit = profile.avatar;
   const editContainer = document.getElementById('avatar-picker-edit');
   editContainer.querySelectorAll('.avatar-option').forEach(o => {
@@ -524,6 +537,31 @@ function setupProfileViewScreen() {
   if (backFromReviewBtn) {
     backFromReviewBtn.addEventListener('click', () => {
       showScreen('profile-view');
+    });
+  }
+
+  const retakeBtn = document.getElementById('btn-retake-test');
+  if (retakeBtn) {
+    retakeBtn.addEventListener('click', async () => {
+      const profile = (await getProfile()) || {};
+      const currentLevel = profile.level || 'A1';
+
+      const step1 = confirm(
+        'Tem certeza que deseja refazer o teste de nivelamento?\n\n' +
+        'Você só tem 1 tentativa extra — depois de usá-la, não será possível refazer de novo.'
+      );
+      if (!step1) return;
+
+      const step2 = confirm(
+        '⚠️ Atenção: refazer o teste vai:\n\n' +
+        '• Zerar o progresso de TODAS as lições\n' +
+        '• Recalcular seu nível com base no novo resultado — ele pode subir, ficar igual, OU REGREDIR ' +
+        '(por exemplo, cair de B2 para A1) se o desempenho for pior que o do teste anterior\n\n' +
+        'Seu nível atual é ' + currentLevel + '. Deseja continuar mesmo assim?'
+      );
+      if (!step2) return;
+
+      startLevelTest({ isRetake: true, previousLevel: currentLevel });
     });
   }
 }
@@ -758,16 +796,22 @@ function registerServiceWorker() {
 let levelTestState = {
   current: 0,           // índice da questão atual (0..N-1)
   answers: [],          // resposta escolhida em cada questão (índice 0..3 ou null)
-  finished: false
+  finished: false,
+  isRetake: false,       // true quando é a tentativa extra (não o teste obrigatório do cadastro)
+  previousLevel: null    // nível antes da refação, pra mostrar comparação no resultado
 };
 
-function startLevelTest() {
-  // (Re)inicia o estado do teste. Como o teste é feito uma única vez,
-  // só deve ser chamado quando o aluno ainda não tem resultado.
+function startLevelTest(options) {
+  const opts = options || {};
+  // (Re)inicia o estado do teste. Como o teste é feito uma única vez (mais
+  // uma tentativa extra opcional), só deve ser chamado quando o aluno ainda
+  // não tem resultado, ou explicitamente pediu para refazer.
   levelTestState = {
     current: 0,
     answers: new Array(LEVEL_TEST_QUESTIONS.length).fill(null),
-    finished: false
+    finished: false,
+    isRetake: !!opts.isRetake,
+    previousLevel: opts.previousLevel || null
   };
   document.getElementById('bottom-nav').style.display = 'none';
   renderLevelTest();
@@ -893,22 +937,51 @@ async function finishLevelTest() {
 
   // Salva o resultado no perfil (sobrescreve o nível inicial provisório).
   const profile = (await getProfile()) || {};
+  const previousLevel = levelTestState.isRetake ? (levelTestState.previousLevel || profile.level) : null;
   profile.level = achievedLevel;
   profile.levelTestScore = score;
   profile.levelTestTotal = LEVEL_TEST_QUESTIONS.length;
   profile.levelTestDate = new Date().toISOString();
   profile.levelTestAnswers = levelTestState.answers.slice();
+
+  if (levelTestState.isRetake) {
+    // A tentativa extra só pode ser usada uma vez, e sempre zera o progresso
+    // das lições (o conjunto de lições liberadas pode mudar com o novo nível).
+    profile.levelTestRetakeUsed = true;
+    await resetAllProgress();
+  }
+
   await saveProfile(profile);
 
-  renderLevelTestResult(score, achievedLevel);
+  renderLevelTestResult(score, achievedLevel, previousLevel);
 }
 
-function renderLevelTestResult(score, achievedLevel) {
+function renderLevelTestResult(score, achievedLevel, previousLevel) {
   const container = document.getElementById('level-test-container');
   if (!container) return;
 
   // Determina a faixa de níveis liberada (sempre A1 até o nível alcançado).
   const unlockedRange = 'A1 até ' + achievedLevel;
+
+  const isRetake = !!previousLevel;
+  const levelChanged = isRetake && previousLevel !== achievedLevel;
+
+  const levelChangeHtml = isRetake ? `
+    <div class="lt-result-compare">
+      <span class="lt-level-tag lt-level-${previousLevel}">${previousLevel}</span>
+      <span class="lt-result-compare-arrow">→</span>
+      <span class="lt-level-tag lt-level-${achievedLevel}">${achievedLevel}</span>
+    </div>
+  ` : '';
+
+  const noteHtml = isRetake
+    ? (levelChanged
+        ? `<p class="lt-result-note">🔄 Refação concluída! Seu nível foi atualizado de <strong>${previousLevel}</strong> para <strong>${achievedLevel}</strong>, e o progresso das lições foi zerado para refletir o novo nível.</p>`
+        : `<p class="lt-result-note">🔄 Refação concluída! Seu nível se manteve em <strong>${achievedLevel}</strong>. O progresso das lições foi zerado, mas as lições liberadas continuam as mesmas.</p>`)
+    : `<p class="lt-result-note">
+        ✅ Pronto! Agora você tem acesso a todas as lições dos níveis liberados.
+        O teste não precisa ser feito de novo — suas lições já estão disponíveis na tela inicial.
+      </p>`;
 
   container.innerHTML = `
     <div class="lt-result">
@@ -919,19 +992,18 @@ function renderLevelTestResult(score, achievedLevel) {
         Você acertou <strong>${score}</strong> de <strong>${LEVEL_TEST_QUESTIONS.length}</strong> questões
       </div>
 
+      ${levelChangeHtml || `
       <div class="lt-result-level lt-level-tag lt-level-${achievedLevel}">
         Seu nível: ${achievedLevel}
       </div>
+      `}
 
       <div class="lt-result-unlocked">
         <div class="lt-result-unlocked-label">Lições liberadas:</div>
         <div class="lt-result-unlocked-range">${unlockedRange}</div>
       </div>
 
-      <p class="lt-result-note">
-        ✅ Pronto! Agora você tem acesso a todas as lições dos níveis liberados.
-        O teste não precisa ser feito de novo — suas lições já estão disponíveis na tela inicial.
-      </p>
+      ${noteHtml}
 
       <button type="button" class="btn lt-btn-continue">Começar a estudar →</button>
     </div>
