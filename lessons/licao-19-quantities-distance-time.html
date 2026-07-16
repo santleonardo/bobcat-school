@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Lesson 19 — Asking About Quantities, Distance and Time</title>
+<style>
+:root {
+  --orange: #D9793F;
+  --orange-dark: #C9622A;
+  --cream: #FBEFE6;
+  --cream-2: #F7F1EC;
+  --ink: #2b2b2b;
+  --ok: #2E8B57;
+  --bad: #C0392B;
+  --border: #EBC9AE;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  background:#fdfaf7;
+  line-height:1.55;
+}
+.app-layout{display:flex;min-height:100vh;}
+.sidebar{
+  width:280px;min-height:100vh;position:fixed;top:0;left:0;z-index:100;
+  background:#fff;border-right:2px solid var(--border);
+  display:flex;flex-direction:column;transition:transform .3s ease;
+}
+.sidebar-header{display:flex;align-items:center;gap:12px;padding:18px 20px 14px;border-bottom:3px solid var(--orange);}
+.sidebar-header .logo{font-size:32px;}
+.sidebar-header .brand{font-weight:800;font-size:16px;color:var(--orange-dark);}
+.sidebar-header .brand small{display:block;font-weight:400;font-size:11px;color:#888;font-style:italic;}
+.sidebar-progress{padding:14px 20px 10px;border-bottom:1px solid #eee;}
+.sidebar-progress .prog-label{font-size:12px;color:#888;font-weight:600;margin-bottom:6px;}
+.sidebar-progress .prog-track{width:100%;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.sidebar-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.sidebar-progress .prog-text{font-size:11px;color:#999;margin-top:4px;text-align:right;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13.5px;font-weight:600;color:#555;text-decoration:none;transition:background .15s,color .15s;border-left:3px solid transparent;}
+.sidebar-nav a:hover{background:var(--cream-2);color:var(--orange-dark);}
+.sidebar-nav a.active{background:var(--cream);color:var(--orange-dark);border-left-color:var(--orange);font-weight:700;}
+.sidebar-nav a .lnum{width:26px;height:26px;border-radius:50%;background:var(--cream-2);color:var(--orange-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.sidebar-nav a.active .lnum{background:var(--orange);color:#fff;}
+.sidebar-nav a.completed .lnum{background:var(--ok);color:#fff;}
+.sidebar-nav a .check{margin-left:auto;font-size:14px;color:var(--ok);display:none;}
+.sidebar-nav a.completed .check{display:inline;}
+.sidebar-close{display:none;position:absolute;top:14px;right:14px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;}
+.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--orange);color:#fff;border:none;width:42px;height:42px;border-radius:10px;font-size:22px;cursor:pointer;box-shadow:0 2px 8px rgba(217,121,63,.3);}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:99;}
+.main{flex:1;margin-left:280px;padding:0 0 80px 0;}
+.top-progress{position:sticky;top:0;z-index:50;background:#fdfaf7ee;backdrop-filter:blur(4px);padding:10px 20px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px;justify-content:center;font-size:13px;color:#666;}
+.top-progress .prog-track{width:220px;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.top-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.lesson{display:none;padding:28px 24px 40px;max-width:880px;margin:0 auto;}
+.lesson.active{display:block;}
+.back-link{display:inline-block;font-size:13.5px;color:var(--orange-dark);text-decoration:none;font-weight:700;margin-bottom:14px;}
+.back-link:hover{text-decoration:underline;}
+.header{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--orange);padding-bottom:14px;margin-bottom:14px;flex-wrap:wrap;}
+.header .logo-icon{font-size:48px;}
+.header .school{font-size:24px;font-weight:800;color:var(--orange-dark);}
+.header .subtitle{font-size:13px;font-style:italic;color:#666;margin-top:2px;}
+.info-bar{display:flex;gap:24px;flex-wrap:wrap;border-bottom:2px solid var(--orange);padding-bottom:14px;margin-bottom:22px;font-size:13.5px;}
+.info-bar label{display:flex;align-items:center;gap:6px;font-weight:600;color:#555;}
+.info-bar input[type=text],.info-bar input[type=date]{border:none;border-bottom:1px solid #999;background:transparent;padding:3px 2px;font-size:13.5px;min-width:150px;font-family:inherit;}
+.info-bar input:focus{outline:none;border-bottom:2px solid var(--orange);}
+h1.title{text-align:center;color:var(--orange-dark);font-size:27px;margin:6px 0 2px 0;}
+.level{text-align:center;font-style:italic;color:#666;font-size:13px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #eee;}
+.level-badge{display:inline-block;background:var(--orange);color:#fff;font-size:12px;font-weight:700;padding:3px 12px;border-radius:20px;font-style:normal;letter-spacing:.3px;}
+.section-title,.section-header{background:var(--orange);color:#fff;font-weight:700;font-size:14.5px;padding:8px 14px;border-radius:5px;margin:28px 0 10px 0;}
+.subheading{font-weight:700;font-size:13.5px;margin:14px 0 6px 0;color:var(--orange-dark);}
+p{margin:8px 0;font-size:14px;}
+.tip{background:var(--cream);border:1px solid var(--border);padding:10px 14px;font-size:13.5px;margin:10px 0;border-radius:6px;}
+.tip::before{content:"💡 ";}
+table{width:100%;border-collapse:collapse;margin:8px 0 18px 0;font-size:13.5px;}
+th{background:var(--orange);color:#fff;text-align:left;padding:8px 12px;}
+td{padding:8px 12px;border-bottom:1px solid #eee;}
+tr:nth-child(even) td{background:var(--cream-2);}
+.example{font-style:italic;color:#555;font-size:13.5px;margin:6px 0 18px 0;padding-left:12px;border-left:3px solid var(--border);}
+.dialog-box,.dialogue-box{background:var(--cream);padding:14px 16px;border-radius:8px;margin:8px 0;}
+.dialogue-box{background:var(--cream-2);border-left:4px solid var(--orange);border-radius:0 6px 6px 0;}
+.dialog-box p,.dialogue-box p{margin:4px 0;font-size:14px;}
+.body-text{margin:4px 0;line-height:1.65;color:var(--ink);font-size:14px;}
+.instruction{margin:6px 0;padding:8px 14px;background:var(--cream);border-left:4px solid var(--orange);border-radius:0 4px 4px 0;color:var(--ink);font-size:13.5px;}
+.numbered-item{margin:8px 0 4px 16px;padding:4px 0;font-size:14px;font-weight:700;color:var(--orange-dark);}
+.letter-item{margin:10px 0 6px 0;padding:4px 0;font-weight:700;font-size:14px;color:var(--orange-dark);}
+.example-line{margin:3px 0 3px 24px;font-style:italic;color:#555;font-size:13.5px;}
+.fill-blank{margin:4px 0 4px 24px;font-size:14px;color:var(--ink);}
+.check-item{margin:4px 0;padding:4px 0;font-size:14px;}
+.gabarito-box{background:#F0FFF0;border:1px solid #4CAF50;border-left:5px solid #4CAF50;border-radius:0 6px 6px 0;padding:16px 20px;margin:18px 0;display:none;}
+.gabarito-box.show{display:block;}
+.gabarito-title{font-weight:700;font-size:14px;color:#2E7D32;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.gabarito-line{margin:3px 0;font-size:13px;color:#333;}
+.ex-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.03);}
+.ex-intro{font-style:italic;color:#666;font-size:13.5px;margin:0 0 12px 0;}
+.fill-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 30px;}
+.fill-item{display:flex;align-items:center;gap:8px;font-size:14px;flex-wrap:wrap;}
+.fill-item input[type=text]{width:80px;padding:5px 8px;border:2px solid #ddd;border-radius:5px;font-size:14px;font-family:inherit;text-align:center;transition:border-color .15s,background .15s;}
+.fill-item input[type=text].longer{width:200px;text-align:left;}
+.fill-item input:focus{outline:none;border-color:var(--orange);}
+.fill-item input.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.fill-item input.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-item{margin:14px 0;font-size:14px;}
+.mc-item .q{font-weight:700;margin-bottom:6px;}
+.mc-options{display:flex;gap:10px;flex-wrap:wrap;}
+.mc-options label{display:flex;align-items:center;gap:6px;border:2px solid #ddd;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:13.5px;transition:border-color .15s,background .15s;}
+.mc-options label:hover{border-color:var(--orange);}
+.mc-options label.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.mc-options label.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-options input{accent-color:var(--orange);}
+.btn{background:var(--orange);color:#fff;border:none;padding:11px 22px;border-radius:7px;font-size:14.5px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;}
+.btn:hover{background:var(--orange-dark);}
+.btn:active{transform:scale(.98);}
+.btn.secondary{background:#fff;color:var(--orange-dark);border:2px solid var(--orange);padding:9px 20px;}
+.btn.secondary:hover{background:var(--cream);}
+.score-badge{display:inline-block;margin-left:14px;font-weight:700;font-size:14.5px;padding:6px 14px;border-radius:20px;background:var(--cream-2);color:var(--orange-dark);}
+.actions{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
+.note-italic{font-size:12px;font-style:italic;color:#777;margin-top:10px;}
+textarea{width:100%;font-family:inherit;font-size:14px;padding:8px 10px;border:2px solid #ddd;border-radius:6px;resize:vertical;min-height:80px;}
+textarea:focus{outline:none;border-color:var(--orange);}
+.footer-note{text-align:center;font-size:11.5px;color:#aaa;margin-top:40px;}
+.vocab-card{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid #eee;border-radius:8px;padding:8px 14px;margin:4px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
+.vocab-card:hover{border-color:var(--orange);}
+.vocab-card .vc-en{font-weight:700;font-size:14px;}
+.vocab-card .vc-pt{font-size:13px;color:var(--ok);display:none;}
+.vocab-card.revealed .vc-pt{display:inline;}
+.vocab-card.revealed{border-color:var(--ok);background:#EAF7EF;}
+.collapse-btn{width:100%;text-align:left;background:var(--cream);border:1px solid var(--border);padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;color:var(--orange-dark);margin:8px 0 0 0;display:flex;align-items:center;gap:8px;}
+.collapse-btn:hover{background:var(--cream-2);}
+.collapse-btn .arrow{transition:transform .2s;font-size:12px;}
+.collapse-btn.open .arrow{transform:rotate(90deg);}
+.collapse-body{display:none;padding:12px 0 4px 0;}
+.collapse-body.open{display:block;}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;box-shadow:0 -2px 8px rgba(0,0,0,.04);z-index:80;padding:6px 0 env(safe-area-inset-bottom,6px);}
+.bottom-nav-inner{display:flex;max-width:480px;margin:0 auto;}
+.bottom-nav .bnav-btn{flex:1;border:none;background:none;padding:10px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:#999;cursor:pointer;font-weight:600;}
+.bottom-nav .bnav-btn .bnav-icon{font-size:20px;}
+.bottom-nav .bnav-btn.active{color:var(--orange-dark);font-weight:700;}
+.bottom-nav .bnav-btn:disabled{color:#ddd;cursor:default;}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);width:280px;}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-close{display:block;}
+  .sidebar-overlay.open{display:block;}
+  .hamburger{display:flex;align-items:center;justify-content:center;}
+  .main{margin-left:0;}
+  .lesson{padding:20px 16px 120px;}
+  .bottom-nav{display:block;}
+  .fill-grid{grid-template-columns:1fr;}
+  .top-progress{padding-left:56px;}
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.lesson.active{animation:fadeIn .3s ease;}
+</style>
+</head>
+<body>
+<div class="wrap" style="max-width:880px;margin:0 auto;padding:28px 20px;">
+<a class="back-link" href="../index.html">&larr; Voltar às Lições</a>
+<div class="header"><span class="logo-icon">🐱</span><div><div class="school">Bobcat Language School</div><div class="subtitle">Aprenda inglês no seu ritmo</div></div></div>
+<div class="info-bar"><label>👤 Aluno: <input type="text" placeholder="Seu nome"></label><label>📅 Data: <input type="date"></label></div>
+<h1 class="title">LIÇÃO 19 — Asking About Quantities, Distance and Time</h1>
+<div class="level"><span class="level-badge">Nível A1</span></div>
+
+<div class="section-header">🎯 Objetivo da Lição</div>
+<p class="body-text">• Usar <strong>How much + uncountable</strong> e <strong>How many + countable</strong> para perguntar sobre quantidades.</p>
+<p class="body-text">• Aprender <strong>How long, How far, How old, How often, How tall, How high</strong> para diferentes tipos de perguntas.</p>
+<p class="body-text">• Usar os conectores <strong>Because</strong> (razão) e <strong>So</strong> (resultado).</p>
+
+<div class="section-header">🔥 Warm-Up: Quantas perguntas você consegue fazer?</div>
+<p class="instruction">Tente formular perguntas com "How..." sobre estas situações:</p>
+<p class="example-line">1. Você quer saber a idade de alguém → How old are you?</p>
+<p class="example-line">2. Você quer saber a distância até o aeroporto → How far is the airport?</p>
+<p class="example-line">3. Você quer saber o preço de algo → How much is it?</p>
+<p class="example-line">4. Você quer saber a duração de algo → How long is the class?</p>
+<p class="example-line">5. Você quer saber a frequência → How often do you study?</p>
+<div class="dialogue-box"><p>💡 Dica: "How" + adjetivo/adverb = diferentes tipos de perguntas! Cada combinação pergunta algo diferente.</p></div>
+
+<div class="section-header">🗣️ Diálogo: At a Tourist Information Center</div>
+<div class="dialogue-box">
+  <p><strong>Tourist:</strong> Excuse me! How far is the airport from here?</p>
+  <p><strong>Agent:</strong> It's about 30 kilometers. How are you getting there?</p>
+  <p><strong>Tourist:</strong> By taxi. How much is the fare?</p>
+  <p><strong>Agent:</strong> About $40. How many suitcases do you have?</p>
+  <p><strong>Tourist:</strong> I have two suitcases. How long does it take to get there?</p>
+  <p><strong>Agent:</strong> About 40 minutes, because there's not much traffic today.</p>
+  <p><strong>Tourist:</strong> Great! How often do the buses run?</p>
+  <p><strong>Agent:</strong> Every 30 minutes. But the bus is slower, so I recommend the taxi.</p>
+  <p><strong>Tourist:</strong> OK, I'll take a taxi. How high is that mountain over there?</p>
+  <p><strong>Agent:</strong> It's 1,200 meters high! It's beautiful. How tall are you?</p>
+  <p><strong>Tourist:</strong> Ha! I'm 1.70 meters tall. Not as tall as the mountain!</p>
+</div>
+<div class="instruction">🔁 Repita com atenção: Observe os diferentes "How + adjetivo" e os conectores because/so!</div>
+
+<div class="section-header">📖 Vocabulário-Chave</div>
+<p class="subheading">💰 Money</p>
+<table><tr><th>Word</th><th>Translation</th><th>Example</th></tr>
+<tr><td>cash</td><td>dinheiro em espécie</td><td>Do you accept cash?</td></tr>
+<tr><td>coins</td><td>moedas</td><td>I have some coins.</td></tr>
+<tr><td>bill</td><td>cédula / conta</td><td>Give me a $10 bill.</td></tr>
+<tr><td>price</td><td>preço</td><td>How much is the price?</td></tr>
+<tr><td>cheap</td><td>barato</td><td>This is very cheap!</td></tr>
+<tr><td>expensive</td><td>caro</td><td>The hotel is too expensive.</td></tr>
+<tr><td>cost</td><td>custar</td><td>How much does it cost?</td></tr>
+<tr><td>pay</td><td>pagar</td><td>I need to pay the bill.</td></tr>
+<tr><td>save</td><td>economizar</td><td>I'm saving money for a trip.</td></tr>
+<tr><td>spend</td><td>gastar</td><td>Don't spend too much!</td></tr>
+</table>
+
+<p class="subheading">🚌 Transportation</p>
+<table><tr><th>Word</th><th>Translation</th><th>Example</th></tr>
+<tr><td>bus</td><td>ônibus</td><td>The bus is cheap.</td></tr>
+<tr><td>train</td><td>trem</td><td>I prefer the train.</td></tr>
+<tr><td>subway</td><td>metrô</td><td>The subway is fast.</td></tr>
+<tr><td>taxi</td><td>táxi</td><td>Can you call a taxi?</td></tr>
+<tr><td>plane / flight</td><td>avião / voo</td><td>My flight is at 3 p.m.</td></tr>
+<tr><td>ticket</td><td>passagem / bilhete</td><td>How much is the ticket?</td></tr>
+<tr><td>station</td><td>estação</td><td>Where is the train station?</td></tr>
+<tr><td>airport</td><td>aeroporto</td><td>How far is the airport?</td></tr>
+<tr><td>departure</td><td>partida</td><td>Departure is at gate 5.</td></tr>
+<tr><td>arrival</td><td>chegada</td><td>The arrival time is 6 p.m.</td></tr>
+</table>
+
+<p class="subheading">✈️ Travel</p>
+<table><tr><th>Word</th><th>Translation</th><th>Example</th></tr>
+<tr><td>hotel</td><td>hotel</td><td>How much is the hotel?</td></tr>
+<tr><td>reservation</td><td>reserva</td><td>I have a reservation.</td></tr>
+<tr><td>passport</td><td>passaporte</td><td>Don't forget your passport!</td></tr>
+<tr><td>suitcase</td><td>mala</td><td>How many suitcases?</td></tr>
+<tr><td>trip</td><td>viagem</td><td>How long is the trip?</td></tr>
+<tr><td>vacation</td><td>férias</td><td>I'm on vacation!</td></tr>
+<tr><td>tourist</td><td>turista</td><td>There are many tourists here.</td></tr>
+<tr><td>map</td><td>mapa</td><td>Can I see the map?</td></tr>
+</table>
+
+<p class="subheading">💊 Health</p>
+<table><tr><th>Word</th><th>Translation</th><th>Example</th></tr>
+<tr><td>doctor</td><td>médico(a)</td><td>I need to see a doctor.</td></tr>
+<tr><td>pharmacy</td><td>farmácia</td><td>Is there a pharmacy near here?</td></tr>
+<tr><td>medicine</td><td>remédio</td><td>Take the medicine twice a day.</td></tr>
+<tr><td>headache</td><td>dor de cabeça</td><td>I have a headache.</td></tr>
+<tr><td>fever</td><td>febre</td><td>She has a fever.</td></tr>
+<tr><td>appointment</td><td>consulta</td><td>I have an appointment at 3.</td></tr>
+<tr><td>prescription</td><td>receita médica</td><td>Do you have a prescription?</td></tr>
+<tr><td>painkiller</td><td>analgésico</td><td>I need a painkiller.</td></tr>
+</table>
+
+<div class="section-header">📘 Gramática em Ação: How + Adjective/Adverb</div>
+
+<div class="numbered-item">1. How much / How many</div>
+<p class="example-line">How much + uncountable: How much water? How much money? How much rice?</p>
+<p class="example-line">How many + countable plural: How many students? How many eggs? How many suitcases?</p>
+
+<div class="numbered-item">2. Other How questions</div>
+<table><tr><th>Question</th><th>Asks about</th><th>Example</th></tr>
+<tr><td>How long...?</td><td>tempo/duração</td><td>How long is the class? — 2 hours.</td></tr>
+<tr><td>How far...?</td><td>distância</td><td>How far is the airport? — 30 km.</td></tr>
+<tr><td>How old...?</td><td>idade</td><td>How old are you? — I'm 15.</td></tr>
+<tr><td>How often...?</td><td>frequência</td><td>How often do you study? — Every day.</td></tr>
+<tr><td>How tall...?</td><td>altura (pessoa)</td><td>How tall are you? — 1.70 m.</td></tr>
+<tr><td>How high...?</td><td>altura (coisa)</td><td>How high is that building? — 50 meters.</td></tr>
+</table>
+
+<div class="numbered-item">3. Connectors: Because & So</div>
+<p class="body-text">A. <strong>Because</strong> = razão (porque): I stayed home because it was raining.</p>
+<p class="body-text">B. <strong>So</strong> = resultado (então/portanto): It was raining, so I stayed home.</p>
+<p class="example-line">I'm happy because it's my birthday! | It's my birthday, so I'm happy!</p>
+<p class="example-line">She studies hard because she wants to pass. | She wants to pass, so she studies hard.</p>
+
+<div class="tip">Dica: <strong>Because</strong> vem antes da razão. <strong>So</strong> vem antes do resultado.</div>
+
+<div class="section-header">📝 Exercícios</div>
+
+<div class="letter-item">A. Complete com How much ou How many.</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item"><input type="text" data-answer="How much" placeholder="?"> water do you drink?</div>
+    <div class="fill-item"><input type="text" data-answer="How many" placeholder="?"> students are in the class?</div>
+    <div class="fill-item"><input type="text" data-answer="How much" placeholder="?"> does this cost?</div>
+    <div class="fill-item"><input type="text" data-answer="How many" placeholder="?"> suitcases do you have?</div>
+    <div class="fill-item"><input type="text" data-answer="How much" placeholder="?"> money do you need?</div>
+    <div class="fill-item"><input type="text" data-answer="How many" placeholder="?"> tickets do you want?</div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">B. Conecte a pergunta ao significado.</div>
+<div class="ex-card">
+  <div class="mc-item"><div class="q">"How old are you?" pergunta sobre:</div><div class="mc-options"><label><input type="radio" name="l19mc1" value="Distância"> Distância</label><label><input type="radio" name="l19mc1" value="Idade" class="correct-answer"> Idade</label><label><input type="radio" name="l19mc1" value="Tempo"> Tempo</label></div></div>
+  <div class="mc-item"><div class="q">"How far is the school?" pergunta sobre:</div><div class="mc-options"><label><input type="radio" name="l19mc2" value="Distância" class="correct-answer"> Distância</label><label><input type="radio" name="l19mc2" value="Frequência"> Frequência</label><label><input type="radio" name="l19mc2" value="Altura"> Altura</label></div></div>
+  <div class="mc-item"><div class="q">"How often do you study?" pergunta sobre:</div><div class="mc-options"><label><input type="radio" name="l19mc3" value="Distância"> Distância</label><label><input type="radio" name="l19mc3" value="Frequência" class="correct-answer"> Frequência</label><label><input type="radio" name="l19mc3" value="Duração"> Duração</label></div></div>
+  <div class="mc-item"><div class="q">"How long is the movie?" pergunta sobre:</div><div class="mc-options"><label><input type="radio" name="l19mc4" value="Distância"> Distância</label><label><input type="radio" name="l19mc4" value="Duração" class="correct-answer"> Duração</label><label><input type="radio" name="l19mc4" value="Preço"> Preço</label></div></div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">C. Complete com because ou so.</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item">I'm happy <input type="text" data-answer="because" placeholder="?"> it's my birthday!</div>
+    <div class="fill-item">It's raining, <input type="text" data-answer="so" placeholder="?"> I'm staying home.</div>
+    <div class="fill-item">She studies hard <input type="text" data-answer="because" placeholder="?"> she wants to pass.</div>
+    <div class="fill-item">I'm tired, <input type="text" data-answer="so" placeholder="?"> I'm going to bed.</div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">D. Verdadeiro ou Falso?</div>
+<div class="ex-card">
+  <div class="mc-item"><div class="q">"How many water?" é correto.</div><div class="mc-options"><label><input type="radio" name="l19tf1" value="True"> V</label><label><input type="radio" name="l19tf1" value="False" class="correct-answer"> F</label></div></div>
+  <div class="mc-item"><div class="q">"How tall" pergunta sobre a altura de uma pessoa.</div><div class="mc-options"><label><input type="radio" name="l19tf2" value="True" class="correct-answer"> V</label><label><input type="radio" name="l19tf2" value="False"> F</label></div></div>
+  <div class="mc-item"><div class="q">"Because" indica resultado.</div><div class="mc-options"><label><input type="radio" name="l19tf3" value="True"> V</label><label><input type="radio" name="l19tf3" value="False" class="correct-answer"> F</label></div></div>
+  <div class="mc-item"><div class="q">"How high" pergunta sobre a altura de um prédio.</div><div class="mc-options"><label><input type="radio" name="l19tf4" value="True" class="correct-answer"> V</label><label><input type="radio" name="l19tf4" value="False"> F</label></div></div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="section-header">🎭 Prática Oral / Role-Play</div>
+<p class="instruction">Simule uma conversa em um centro de informações turísticas!</p>
+<div class="dialogue-box">
+  <p><strong>Tourist:</strong> Excuse me! How far is the hotel from here?</p>
+  <p><strong>Agent:</strong> It's about 5 kilometers. How are you getting there?</p>
+  <p><strong>Tourist:</strong> By bus. How much is the ticket?</p>
+  <p><strong>Agent:</strong> $2.50. How many people are traveling?</p>
+  <p><strong>Tourist:</strong> Just me. How long does the bus take?</p>
+  <p><strong>Agent:</strong> About 15 minutes, because the traffic is light today.</p>
+  <p><strong>Tourist:</strong> Great! How often do the buses run?</p>
+  <p><strong>Agent:</strong> Every 10 minutes, so you don't have to wait long.</p>
+</div>
+
+<div class="section-header">👅 Trava-língua</div>
+<div class="dialogue-box"><p><strong>How far can a far-flyer fly if a far-flyer could fly far?</strong></p><p>🔁 Repita 3x rápido!</p></div>
+
+<div class="section-header">🌍 Curiosidade Cultural: Miles vs. Kilometers</div>
+<p class="body-text">Nos <strong>EUA</strong> e no <strong>Reino Unido</strong>, a distância é medida em <strong>miles</strong> (milhas), não em quilômetros! 1 mile = 1.609 km. Nos EUA, os limites de velocidade são em <strong>mph</strong> (miles per hour).</p>
+<p class="body-text">Na maioria dos outros países (incluindo Brasil), usamos <strong>kilometers</strong> e <strong>km/h</strong>. Então, quando um americano diz "It's 50 miles away", isso é cerca de 80 km!</p>
+<div class="dialogue-box"><p>💡 Dica: 1 mile ≈ 1.6 km. Então 10 miles ≈ 16 km. Para converter mentalmente, multiplique por 1.5!</p></div>
+
+<div class="section-header">🎨 Atividade Criativa: Plan a Trip!</div>
+<p class="instruction">Planeje uma viagem! Escreva 10 perguntas que você faria usando How much/many/far/long/often/old:</p>
+
+<div class="section-header">🧠 Desafio Extra</div>
+<p class="fill-blank">1. Pergunte a idade de alguém: ____________________</p>
+<p class="fill-blank">2. Pergunte a distância até a praia: ____________________</p>
+<p class="fill-blank">3. Pergunte a duração do voo: ____________________</p>
+<p class="fill-blank">4. Escreva uma frase com because e outra com so: ____________________</p>
+<p class="fill-blank">5. Traduza: "Quanto custa a passagem?" → ____________________</p>
+
+<div class="section-header">🔁 Revisão</div>
+<p class="check-item">✅ Sei usar How much + uncountable e How many + countable.</p>
+<p class="check-item">✅ Conheço How long, How far, How old, How often, How tall, How high.</p>
+<p class="check-item">✅ Sei usar because (razão) e so (resultado).</p>
+<p class="check-item">✅ Aprendi vocabulário de dinheiro, transporte, viagem e saúde.</p>
+
+<div class="section-header">🏠 Tarefa de Casa</div>
+<p class="body-text">1. Entreviste um colega usando 5 perguntas com How...? e escreva as respostas.</p>
+<p class="body-text">2. Planeje uma viagem e escreva 10 perguntas que você faria.</p>
+<p class="body-text">3. Escreva 5 frases com because e 5 com so.</p>
+<textarea rows="6" placeholder="Interview: Ask 5 How...? questions and write answers..."></textarea>
+
+<button class="btn secondary" onclick="this.nextElementSibling.classList.toggle('show')">📋 Ver Gabarito</button>
+<div class="gabarito-box">
+  <div class="gabarito-title">✅ Gabarito — Lição 19</div>
+  <p class="gabarito-line"><strong>A.</strong> How much | How many | How much | How many | How much | How many</p>
+  <p class="gabarito-line"><strong>B.</strong> Idade | Distância | Frequência | Duração</p>
+  <p class="gabarito-line"><strong>C.</strong> because | so | because | so</p>
+  <p class="gabarito-line"><strong>D.</strong> F | V | F (because = razão) | V</p>
+  <p class="gabarito-line"><strong>Desafio:</strong> 1. How old are you? | 2. How far is the beach? | 3. How long is the flight? | 5. How much is the ticket?</p>
+</div>
+
+<div class="section-header">🏁 Conclusão</div>
+<p class="body-text">🎉 Fantástico! Agora você sabe fazer perguntas sobre quantidades, distância, tempo, idade e frequência, e usar because e so! Na próxima lição: <strong>Survival English</strong> — tudo que você precisa para se comunicar em viagens! See you in Lesson 20! 👋</p>
+
+<div class="actions" style="margin-top:24px;">
+  <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
+  <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
+</div>
+<p class="completion-note" style="font-size:12px;font-style:italic;color:#777;margin-top:10px;">Responda os exercícios (preenchimento e múltipla escolha) e clique em "Finalizar" para conferir sua nota. É preciso pelo menos 85% de acerto para concluir a lição.</p>
+<div class="footer-note">Bobcat Language School • Lição 19 — Perguntando Sobre Quantidade, Distância e Tempo</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<script>
+const LESSON_ID = 'licao-19-quantities-distance-time';
+let finishing = false;
+
+async function prefillFromProfile() {
+  await initDataLayer();
+  const profile = await getProfile();
+  if (profile && profile.name) {
+    const nameInput = document.querySelector('.info-bar input[type=text]');
+    if (nameInput && !nameInput.value) nameInput.value = profile.name;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const dateInput = document.querySelector('.info-bar input[type=date]');
+  if (dateInput && !dateInput.value) dateInput.value = today;
+}
+document.addEventListener('DOMContentLoaded', prefillFromProfile);
+
+function checkFills(btn) {
+  const card = btn.closest('.ex-card');
+  const inputs = card.querySelectorAll('.fill-item input[type=text]');
+  let correct = 0, total = 0;
+  inputs.forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    inp.classList.remove('correct', 'incorrect');
+    if (cleanVal === cleanAnswer) { inp.classList.add('correct'); correct++; }
+    else { inp.classList.add('incorrect'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  const badge = document.createElement('span');
+  badge.className = 'score-badge';
+  badge.textContent = correct + '/' + total + ' ✅';
+  btn.parentElement.appendChild(badge);
+}
+
+function checkMC(btn) {
+  const card = btn.closest('.ex-card');
+  const items = card.querySelectorAll('.mc-item');
+  let correct = 0, total = 0;
+  items.forEach(item => {
+    const options = item.querySelectorAll('.mc-options label');
+    const selected = item.querySelector('input[type=radio]:checked');
+    options.forEach(l => l.classList.remove('correct', 'incorrect'));
+    if (!selected) return;
+    total++;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) { selected.parentElement.classList.add('correct'); correct++; }
+    else { selected.parentElement.classList.add('incorrect'); if (correctRadio) correctRadio.parentElement.classList.add('correct'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  if (total > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'score-badge';
+    badge.textContent = correct + '/' + total + ' ✅';
+    btn.parentElement.appendChild(badge);
+  }
+}
+
+function toggleCollapse(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+async function finishLesson() {
+  if (finishing) return;
+  finishing = true;
+
+  let correct = 0, total = 0;
+  document.querySelectorAll('input[data-answer]').forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    if (cleanVal === cleanAnswer) correct++;
+  });
+  document.querySelectorAll('.mc-item').forEach(item => {
+    total++;
+    const selected = item.querySelector('input[type=radio]:checked');
+    if (!selected) return;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) correct++;
+  });
+
+  const safeTotal = total || 1;
+  const passed = await handleLessonFinish(LESSON_ID, correct, safeTotal, 'correct');
+  if (!passed) finishing = false;
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Lesson 20 — Survival English</title>
+<style>
+:root {
+  --orange: #D9793F;
+  --orange-dark: #C9622A;
+  --cream: #FBEFE6;
+  --cream-2: #F7F1EC;
+  --ink: #2b2b2b;
+  --ok: #2E8B57;
+  --bad: #C0392B;
+  --border: #EBC9AE;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  background:#fdfaf7;
+  line-height:1.55;
+}
+.app-layout{display:flex;min-height:100vh;}
+.sidebar{
+  width:280px;min-height:100vh;position:fixed;top:0;left:0;z-index:100;
+  background:#fff;border-right:2px solid var(--border);
+  display:flex;flex-direction:column;transition:transform .3s ease;
+}
+.sidebar-header{display:flex;align-items:center;gap:12px;padding:18px 20px 14px;border-bottom:3px solid var(--orange);}
+.sidebar-header .logo{font-size:32px;}
+.sidebar-header .brand{font-weight:800;font-size:16px;color:var(--orange-dark);}
+.sidebar-header .brand small{display:block;font-weight:400;font-size:11px;color:#888;font-style:italic;}
+.sidebar-progress{padding:14px 20px 10px;border-bottom:1px solid #eee;}
+.sidebar-progress .prog-label{font-size:12px;color:#888;font-weight:600;margin-bottom:6px;}
+.sidebar-progress .prog-track{width:100%;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.sidebar-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.sidebar-progress .prog-text{font-size:11px;color:#999;margin-top:4px;text-align:right;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13.5px;font-weight:600;color:#555;text-decoration:none;transition:background .15s,color .15s;border-left:3px solid transparent;}
+.sidebar-nav a:hover{background:var(--cream-2);color:var(--orange-dark);}
+.sidebar-nav a.active{background:var(--cream);color:var(--orange-dark);border-left-color:var(--orange);font-weight:700;}
+.sidebar-nav a .lnum{width:26px;height:26px;border-radius:50%;background:var(--cream-2);color:var(--orange-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.sidebar-nav a.active .lnum{background:var(--orange);color:#fff;}
+.sidebar-nav a.completed .lnum{background:var(--ok);color:#fff;}
+.sidebar-nav a .check{margin-left:auto;font-size:14px;color:var(--ok);display:none;}
+.sidebar-nav a.completed .check{display:inline;}
+.sidebar-close{display:none;position:absolute;top:14px;right:14px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;}
+.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--orange);color:#fff;border:none;width:42px;height:42px;border-radius:10px;font-size:22px;cursor:pointer;box-shadow:0 2px 8px rgba(217,121,63,.3);}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:99;}
+.main{flex:1;margin-left:280px;padding:0 0 80px 0;}
+.top-progress{position:sticky;top:0;z-index:50;background:#fdfaf7ee;backdrop-filter:blur(4px);padding:10px 20px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px;justify-content:center;font-size:13px;color:#666;}
+.top-progress .prog-track{width:220px;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.top-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.lesson{display:none;padding:28px 24px 40px;max-width:880px;margin:0 auto;}
+.lesson.active{display:block;}
+.back-link{display:inline-block;font-size:13.5px;color:var(--orange-dark);text-decoration:none;font-weight:700;margin-bottom:14px;}
+.back-link:hover{text-decoration:underline;}
+.header{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--orange);padding-bottom:14px;margin-bottom:14px;flex-wrap:wrap;}
+.header .logo-icon{font-size:48px;}
+.header .school{font-size:24px;font-weight:800;color:var(--orange-dark);}
+.header .subtitle{font-size:13px;font-style:italic;color:#666;margin-top:2px;}
+.info-bar{display:flex;gap:24px;flex-wrap:wrap;border-bottom:2px solid var(--orange);padding-bottom:14px;margin-bottom:22px;font-size:13.5px;}
+.info-bar label{display:flex;align-items:center;gap:6px;font-weight:600;color:#555;}
+.info-bar input[type=text],.info-bar input[type=date]{border:none;border-bottom:1px solid #999;background:transparent;padding:3px 2px;font-size:13.5px;min-width:150px;font-family:inherit;}
+.info-bar input:focus{outline:none;border-bottom:2px solid var(--orange);}
+h1.title{text-align:center;color:var(--orange-dark);font-size:27px;margin:6px 0 2px 0;}
+.level{text-align:center;font-style:italic;color:#666;font-size:13px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #eee;}
+.level-badge{display:inline-block;background:var(--orange);color:#fff;font-size:12px;font-weight:700;padding:3px 12px;border-radius:20px;font-style:normal;letter-spacing:.3px;}
+.section-title,.section-header{background:var(--orange);color:#fff;font-weight:700;font-size:14.5px;padding:8px 14px;border-radius:5px;margin:28px 0 10px 0;}
+.subheading{font-weight:700;font-size:13.5px;margin:14px 0 6px 0;color:var(--orange-dark);}
+p{margin:8px 0;font-size:14px;}
+.tip{background:var(--cream);border:1px solid var(--border);padding:10px 14px;font-size:13.5px;margin:10px 0;border-radius:6px;}
+.tip::before{content:"💡 ";}
+table{width:100%;border-collapse:collapse;margin:8px 0 18px 0;font-size:13.5px;}
+th{background:var(--orange);color:#fff;text-align:left;padding:8px 12px;}
+td{padding:8px 12px;border-bottom:1px solid #eee;}
+tr:nth-child(even) td{background:var(--cream-2);}
+.example{font-style:italic;color:#555;font-size:13.5px;margin:6px 0 18px 0;padding-left:12px;border-left:3px solid var(--border);}
+.dialog-box,.dialogue-box{background:var(--cream);padding:14px 16px;border-radius:8px;margin:8px 0;}
+.dialogue-box{background:var(--cream-2);border-left:4px solid var(--orange);border-radius:0 6px 6px 0;}
+.dialog-box p,.dialogue-box p{margin:4px 0;font-size:14px;}
+.body-text{margin:4px 0;line-height:1.65;color:var(--ink);font-size:14px;}
+.instruction{margin:6px 0;padding:8px 14px;background:var(--cream);border-left:4px solid var(--orange);border-radius:0 4px 4px 0;color:var(--ink);font-size:13.5px;}
+.numbered-item{margin:8px 0 4px 16px;padding:4px 0;font-size:14px;font-weight:700;color:var(--orange-dark);}
+.letter-item{margin:10px 0 6px 0;padding:4px 0;font-weight:700;font-size:14px;color:var(--orange-dark);}
+.example-line{margin:3px 0 3px 24px;font-style:italic;color:#555;font-size:13.5px;}
+.fill-blank{margin:4px 0 4px 24px;font-size:14px;color:var(--ink);}
+.check-item{margin:4px 0;padding:4px 0;font-size:14px;}
+.gabarito-box{background:#F0FFF0;border:1px solid #4CAF50;border-left:5px solid #4CAF50;border-radius:0 6px 6px 0;padding:16px 20px;margin:18px 0;display:none;}
+.gabarito-box.show{display:block;}
+.gabarito-title{font-weight:700;font-size:14px;color:#2E7D32;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.gabarito-line{margin:3px 0;font-size:13px;color:#333;}
+.ex-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.03);}
+.ex-intro{font-style:italic;color:#666;font-size:13.5px;margin:0 0 12px 0;}
+.fill-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 30px;}
+.fill-item{display:flex;align-items:center;gap:8px;font-size:14px;flex-wrap:wrap;}
+.fill-item input[type=text]{width:80px;padding:5px 8px;border:2px solid #ddd;border-radius:5px;font-size:14px;font-family:inherit;text-align:center;transition:border-color .15s,background .15s;}
+.fill-item input[type=text].longer{width:200px;text-align:left;}
+.fill-item input:focus{outline:none;border-color:var(--orange);}
+.fill-item input.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.fill-item input.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-item{margin:14px 0;font-size:14px;}
+.mc-item .q{font-weight:700;margin-bottom:6px;}
+.mc-options{display:flex;gap:10px;flex-wrap:wrap;}
+.mc-options label{display:flex;align-items:center;gap:6px;border:2px solid #ddd;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:13.5px;transition:border-color .15s,background .15s;}
+.mc-options label:hover{border-color:var(--orange);}
+.mc-options label.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.mc-options label.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-options input{accent-color:var(--orange);}
+.btn{background:var(--orange);color:#fff;border:none;padding:11px 22px;border-radius:7px;font-size:14.5px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;}
+.btn:hover{background:var(--orange-dark);}
+.btn:active{transform:scale(.98);}
+.btn.secondary{background:#fff;color:var(--orange-dark);border:2px solid var(--orange);padding:9px 20px;}
+.btn.secondary:hover{background:var(--cream);}
+.score-badge{display:inline-block;margin-left:14px;font-weight:700;font-size:14.5px;padding:6px 14px;border-radius:20px;background:var(--cream-2);color:var(--orange-dark);}
+.actions{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
+.note-italic{font-size:12px;font-style:italic;color:#777;margin-top:10px;}
+textarea{width:100%;font-family:inherit;font-size:14px;padding:8px 10px;border:2px solid #ddd;border-radius:6px;resize:vertical;min-height:80px;}
+textarea:focus{outline:none;border-color:var(--orange);}
+.footer-note{text-align:center;font-size:11.5px;color:#aaa;margin-top:40px;}
+.vocab-card{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid #eee;border-radius:8px;padding:8px 14px;margin:4px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
+.vocab-card:hover{border-color:var(--orange);}
+.vocab-card .vc-en{font-weight:700;font-size:14px;}
+.vocab-card .vc-pt{font-size:13px;color:var(--ok);display:none;}
+.vocab-card.revealed .vc-pt{display:inline;}
+.vocab-card.revealed{border-color:var(--ok);background:#EAF7EF;}
+.collapse-btn{width:100%;text-align:left;background:var(--cream);border:1px solid var(--border);padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;color:var(--orange-dark);margin:8px 0 0 0;display:flex;align-items:center;gap:8px;}
+.collapse-btn:hover{background:var(--cream-2);}
+.collapse-btn .arrow{transition:transform .2s;font-size:12px;}
+.collapse-btn.open .arrow{transform:rotate(90deg);}
+.collapse-body{display:none;padding:12px 0 4px 0;}
+.collapse-body.open{display:block;}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;box-shadow:0 -2px 8px rgba(0,0,0,.04);z-index:80;padding:6px 0 env(safe-area-inset-bottom,6px);}
+.bottom-nav-inner{display:flex;max-width:480px;margin:0 auto;}
+.bottom-nav .bnav-btn{flex:1;border:none;background:none;padding:10px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:#999;cursor:pointer;font-weight:600;}
+.bottom-nav .bnav-btn .bnav-icon{font-size:20px;}
+.bottom-nav .bnav-btn.active{color:var(--orange-dark);font-weight:700;}
+.bottom-nav .bnav-btn:disabled{color:#ddd;cursor:default;}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);width:280px;}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-close{display:block;}
+  .sidebar-overlay.open{display:block;}
+  .hamburger{display:flex;align-items:center;justify-content:center;}
+  .main{margin-left:0;}
+  .lesson{padding:20px 16px 120px;}
+  .bottom-nav{display:block;}
+  .fill-grid{grid-template-columns:1fr;}
+  .top-progress{padding-left:56px;}
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.lesson.active{animation:fadeIn .3s ease;}
+</style>
+</head>
+<body>
+<div class="wrap" style="max-width:880px;margin:0 auto;padding:28px 20px;">
+<a class="back-link" href="../index.html">&larr; Voltar às Lições</a>
+<div class="header"><span class="logo-icon">🐱</span><div><div class="school">Bobcat Language School</div><div class="subtitle">Aprenda inglês no seu ritmo</div></div></div>
+<div class="info-bar"><label>👤 Aluno: <input type="text" placeholder="Seu nome"></label><label>📅 Data: <input type="date"></label></div>
+<h1 class="title">LIÇÃO 20 — Survival English 🌍</h1>
+<div class="level"><span class="level-badge">Nível A1</span></div>
+
+<div class="section-header">🎯 Objetivo da Lição</div>
+<p class="body-text">• Aprender expressões <strong>essenciais para sobreviver em inglês</strong> em 6 situações reais.</p>
+<p class="body-text">• Conhecer as diferenças entre <strong>American English e British English</strong>.</p>
+<p class="body-text">• Completar o <strong>Projeto Final: A Day in My Life</strong> usando tudo que aprendeu nas Lições 12-20!</p>
+
+<div class="section-header">🔥 Warm-Up: Você saberia se virar?</div>
+<p class="instruction">Imagine que você está em um país de língua inglesa. O que você diria nestas situações?</p>
+<p class="example-line">1. Você está perdido na rua → Excuse me, how do I get to the station?</p>
+<p class="example-line">2. Você não entendeu algo → Could you repeat that, please?</p>
+<p class="example-line">3. Você quer fazer um pedido no restaurante → I'd like a table for two, please.</p>
+<p class="example-line">4. Você precisa de remédio → I have a headache. Do you have any medicine?</p>
+<p class="example-line">5. Você quer saber o preço → How much is this?</p>
+<div class="dialogue-box"><p>💡 Dica: "Excuse me" e "Please" são mágicos em inglês! Sempre os use para ser educado.</p></div>
+
+<!-- 3. DIÁLOGO PRINCIPAL -->
+<div class="section-header">🗣️ Diálogo: A Tourist's First Day in New York</div>
+<div class="dialogue-box">
+  <p><strong>Tourist:</strong> Excuse me! I'm looking for the subway station. How do I get there?</p>
+  <p><strong>Local:</strong> Go straight for two blocks, then turn left. It's on the right.</p>
+  <p><strong>Tourist:</strong> Thank you! Could you speak more slowly, please?</p>
+  <p><strong>Local:</strong> Sure! Go straight... two blocks... turn left. It's on the right.</p>
+  <p><strong>Tourist:</strong> Got it! How far is it?</p>
+  <p><strong>Local:</strong> About 5 minutes. Are you a tourist?</p>
+  <p><strong>Tourist:</strong> Yes, I am! It's my first day in New York. I'm staying at the Grand Hotel.</p>
+  <p><strong>Local:</strong> Welcome! You're going to love it here!</p>
+  <p><strong>Tourist:</strong> Thank you so much! I'm lost, but now I know the way!</p>
+  <p><strong>Local:</strong> No problem! Enjoy your trip!</p>
+</div>
+<div class="instruction">🔁 Repita com atenção: Este diálogo usa várias expressões de sobrevivência que vamos praticar!</div>
+
+<!-- SITUAÇÕES REAIS -->
+<div class="section-header">✈️ Situações Reais de Comunicação</div>
+<p class="body-text">Clique em cada situação para ver os diálogos e expressões essenciais! 👇</p>
+
+<!-- Airport -->
+<button class="collapse-btn" onclick="toggleCollapse(this)">
+  <span class="arrow">▶</span> ✈️ At the Airport (No Aeroporto)
+</button>
+<div class="collapse-body">
+  <div class="dialog-box">
+    <p><strong>You:</strong> Excuse me, where is gate 12?</p>
+    <p><strong>Agent:</strong> Gate 12 is on the second floor. Go straight and turn left.</p>
+    <p><strong>You:</strong> Thank you! And where can I check in?</p>
+    <p><strong>Agent:</strong> The check-in counter is right over there.</p>
+    <p><strong>You:</strong> Can I see your passport, please?</p>
+    <p><strong>Agent:</strong> Here you are.</p>
+  </div>
+  <p class="example">Key: <em>Excuse me, where is...? / Can I check in? / Here you are.</em></p>
+</div>
+
+<!-- Hotel -->
+<button class="collapse-btn" onclick="toggleCollapse(this)">
+  <span class="arrow">▶</span> 🏨 At the Hotel (No Hotel)
+</button>
+<div class="collapse-body">
+  <div class="dialog-box">
+    <p><strong>You:</strong> Hello. I have a reservation. My name is Silva.</p>
+    <p><strong>Receptionist:</strong> Welcome! Can I see your ID, please?</p>
+    <p><strong>You:</strong> Sure. Can I have the Wi-Fi password?</p>
+    <p><strong>Receptionist:</strong> Of course. It's on your key card. What time is breakfast?</p>
+    <p><strong>You:</strong> Breakfast is from 7 to 10 a.m. Enjoy your stay!</p>
+  </div>
+  <p class="example">Key: <em>I have a reservation. / Can I have...? / What time is breakfast?</em></p>
+</div>
+
+<!-- Restaurant -->
+<button class="collapse-btn" onclick="toggleCollapse(this)">
+  <span class="arrow">▶</span> 🍽️ At the Restaurant (No Restaurante)
+</button>
+<div class="collapse-body">
+  <div class="dialog-box">
+    <p><strong>You:</strong> I'd like a table for two, please.</p>
+    <p><strong>Waiter:</strong> Of course. Here is the menu.</p>
+    <p><strong>You:</strong> Can I have the chicken and a glass of water, please?</p>
+    <p><strong>Waiter:</strong> Certainly! Would you like some dessert?</p>
+    <p><strong>You:</strong> No, thank you. Could I have the check, please?</p>
+  </div>
+  <p class="example">Key: <em>I'd like... / Can I have...? / Could I have the check, please?</em></p>
+</div>
+
+<!-- Pharmacy -->
+<button class="collapse-btn" onclick="toggleCollapse(this)">
+  <span class="arrow">▶</span> 💊 At the Pharmacy (Na Farmácia)
+</button>
+<div class="collapse-body">
+  <div class="dialog-box">
+    <p><strong>You:</strong> Excuse me, I have a headache. Do you have any medicine?</p>
+    <p><strong>Pharmacist:</strong> Yes, we have these pills. Take two with water.</p>
+    <p><strong>You:</strong> How much is it?</p>
+    <p><strong>Pharmacist:</strong> It's $5.99.</p>
+    <p><strong>You:</strong> Do I need a prescription?</p>
+    <p><strong>Pharmacist:</strong> No, you don't. This is over-the-counter.</p>
+  </div>
+  <p class="example">Key: <em>I have a headache / Do you have any...? / How much is it? / Do I need a prescription?</em></p>
+</div>
+
+<!-- Supermarket -->
+<button class="collapse-btn" onclick="toggleCollapse(this)">
+  <span class="arrow">▶</span> 🛒 At the Supermarket (No Supermercado)
+</button>
+<div class="collapse-body">
+  <div class="dialog-box">
+    <p><strong>You:</strong> Excuse me, where can I find the milk?</p>
+    <p><strong>Employee:</strong> It's in aisle 3, on the left.</p>
+    <p><strong>You:</strong> Thank you! Can I pay with a credit card?</p>
+    <p><strong>Employee:</strong> Yes, of course.</p>
+    <p><strong>You:</strong> How much are the apples?</p>
+    <p><strong>Employee:</strong> $2.50 a pound.</p>
+  </div>
+  <p class="example">Key: <em>Where can I find...? / Can I pay with...? / How much is/are...?</em></p>
+</div>
+
+<!-- Street -->
+<button class="collapse-btn" onclick="toggleCollapse(this)">
+  <span class="arrow">▶</span> 🚶 On the Street / Asking Directions (Na Rua)
+</button>
+<div class="collapse-body">
+  <div class="dialog-box">
+    <p><strong>You:</strong> Excuse me, how do I get to the train station?</p>
+    <p><strong>Person:</strong> Go straight for two blocks, then turn right.</p>
+    <p><strong>You:</strong> Could you speak more slowly, please?</p>
+    <p><strong>Person:</strong> Sure. Go straight... then turn right. It's on the left.</p>
+    <p><strong>You:</strong> Is it far from here?</p>
+    <p><strong>Person:</strong> No, it's about 5 minutes.</p>
+  </div>
+  <p class="example">Key: <em>How do I get to...? / Could you speak more slowly? / Is it far? / I'm lost.</em></p>
+</div>
+
+<!-- 4. VOCABULÁRIO-CHAVE (for Lesson 20, this is the Essential Expressions) -->
+<div class="section-header">📖 Vocabulário-Chave: Essential Expressions</div>
+<table>
+  <tr><th>Inglês</th><th>Português</th><th>Quando usar</th></tr>
+  <tr><td>Could you help me?</td><td>Poderia me ajudar?</td><td>Pedir ajuda</td></tr>
+  <tr><td>I'm looking for...</td><td>Estou procurando...</td><td>Procurar algo</td></tr>
+  <tr><td>I'd like...</td><td>Eu gostaria...</td><td>Fazer pedido</td></tr>
+  <tr><td>Can I...?</td><td>Posso...?</td><td>Permissão</td></tr>
+  <tr><td>Excuse me.</td><td>Com licença. / Desculpe.</td><td>Chamar atenção</td></tr>
+  <tr><td>I'm sorry.</td><td>Sinto muito. / Desculpe.</td><td>Pedir desculpas</td></tr>
+  <tr><td>No problem.</td><td>Sem problema.</td><td>Responder a desculpa</td></tr>
+  <tr><td>You're welcome.</td><td>De nada.</td><td>Resposta a "thank you"</td></tr>
+  <tr><td>Could you repeat that?</td><td>Poderia repetir?</td><td>Não entendeu</td></tr>
+  <tr><td>Could you speak more slowly?</td><td>Poderia falar mais devagar?</td><td>Fala muito rápida</td></tr>
+  <tr><td>What does that mean?</td><td>O que isso significa?</td><td>Não conhece palavra</td></tr>
+  <tr><td>How do I get to...?</td><td>Como chego ao...?</td><td>Pedir direção</td></tr>
+  <tr><td>I'm lost.</td><td>Estou perdido(a).</td><td>Perdido(a)</td></tr>
+  <tr><td>I don't understand.</td><td>Não entendo.</td><td>Não compreendeu</td></tr>
+  <tr><td>Can you write it down?</td><td>Pode escrever?</td><td>Pedir por escrito</td></tr>
+</table>
+
+<!-- 5. GRAMÁTICA EM AÇÃO (for Lesson 20: American vs British English differences) -->
+<div class="section-header">📘 Gramática em Ação: American English × British English</div>
+<p class="body-text">Algumas palavras são diferentes nos EUA e no Reino Unido. Veja as mais comuns! 🌍</p>
+<table>
+  <tr><th>American 🇺🇸</th><th>British 🇬🇧</th><th>Português</th></tr>
+  <tr><td>apartment</td><td>flat</td><td>apartamento</td></tr>
+  <tr><td>elevator</td><td>lift</td><td>elevador</td></tr>
+  <tr><td>subway</td><td>underground</td><td>metrô</td></tr>
+  <tr><td>pharmacy</td><td>chemist's</td><td>farmácia</td></tr>
+  <tr><td>gas / gasoline</td><td>petrol</td><td>gasolina</td></tr>
+  <tr><td>check (restaurant)</td><td>bill</td><td>conta</td></tr>
+  <tr><td>vacation</td><td>holiday</td><td>férias</td></tr>
+  <tr><td>cookie</td><td>biscuit</td><td>biscoito</td></tr>
+  <tr><td>french fries</td><td>chips</td><td>batata frita</td></tr>
+  <tr><td>sweater</td><td>jumper</td><td>suéter</td></tr>
+  <tr><td>truck</td><td>lorry</td><td>caminhão</td></tr>
+  <tr><td>fall (season)</td><td>autumn</td><td>outono</td></tr>
+</table>
+<div class="tip">Em viagens internacionais, ambas as versões são entendidas! Nos EUA, use a americana. No Reino Unido, use a britânica. 😊</div>
+
+<!-- EXERCISES -->
+<div class="section-header">📝 Exercícios</div>
+
+<div class="letter-item">A. Escolha a expressão correta para cada situação.</div>
+<div class="ex-card">
+  <div class="mc-item"><div class="q">Você não entendeu o que a pessoa disse:</div><div class="mc-options"><label><input type="radio" name="l20mc1" value="I'm sorry"> I'm sorry.</label><label><input type="radio" name="l20mc1" value="Could you repeat that?" class="correct-answer"> Could you repeat that?</label><label><input type="radio" name="l20mc1" value="No problem"> No problem.</label></div></div>
+  <div class="mc-item"><div class="q">Você está perdido na rua:</div><div class="mc-options"><label><input type="radio" name="l20mc2" value="I'm lost" class="correct-answer"> I'm lost.</label><label><input type="radio" name="l20mc2" value="You're welcome"> You're welcome.</label><label><input type="radio" name="l20mc2" value="No problem"> No problem.</label></div></div>
+  <div class="mc-item"><div class="q">Você quer fazer um pedido no restaurante:</div><div class="mc-options"><label><input type="radio" name="l20mc3" value="Can you write it down?"> Can you write it down?</label><label><input type="radio" name="l20mc3" value="I'd like..." class="correct-answer"> I'd like...</label><label><input type="radio" name="l20mc3" value="I'm sorry."> I'm sorry.</label></div></div>
+  <div class="mc-item"><div class="q">Alguém te agradece:</div><div class="mc-options"><label><input type="radio" name="l20mc4" value="Excuse me"> Excuse me.</label><label><input type="radio" name="l20mc4" value="You're welcome" class="correct-answer"> You're welcome.</label><label><input type="radio" name="l20mc4" value="I'm sorry"> I'm sorry.</label></div></div>
+  <div class="mc-item"><div class="q">Você não conhece uma palavra:</div><div class="mc-options"><label><input type="radio" name="l20mc5" value="What does that mean?" class="correct-answer"> What does that mean?</label><label><input type="radio" name="l20mc5" value="No problem"> No problem.</label><label><input type="radio" name="l20mc5" value="I'm lost"> I'm lost.</label></div></div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">B. American ou British? Escolha a versão americana.</div>
+<div class="ex-card">
+  <div class="mc-item"><div class="q">Apartamento (versão americana):</div><div class="mc-options"><label><input type="radio" name="l20mc6" value="flat"> flat</label><label><input type="radio" name="l20mc6" value="apartment" class="correct-answer"> apartment</label></div></div>
+  <div class="mc-item"><div class="q">Elevador (versão americana):</div><div class="mc-options"><label><input type="radio" name="l20mc7" value="lift"> lift</label><label><input type="radio" name="l20mc7" value="elevator" class="correct-answer"> elevator</label></div></div>
+  <div class="mc-item"><div class="q">Biscoito (versão americana):</div><div class="mc-options"><label><input type="radio" name="l20mc8" value="cookie" class="correct-answer"> cookie</label><label><input type="radio" name="l20mc8" value="biscuit"> biscuit</label></div></div>
+  <div class="mc-item"><div class="q">Férias (versão americana):</div><div class="mc-options"><label><input type="radio" name="l20mc9" value="vacation" class="correct-answer"> vacation</label><label><input type="radio" name="l20mc9" value="holiday"> holiday</label></div></div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">C. Complete as expressões essenciais.</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item">___ you help me? → <input type="text" data-answer="Could" placeholder="?"></div>
+    <div class="fill-item">I'm ___ for the bank. → <input type="text" data-answer="looking" placeholder="?"></div>
+    <div class="fill-item">How do I ___ to the station? → <input type="text" data-answer="get" placeholder="?"></div>
+    <div class="fill-item">I don't ___. → <input type="text" data-answer="understand" placeholder="?"></div>
+    <div class="fill-item">___ you speak more slowly? → <input type="text" data-answer="Could" placeholder="?"></div>
+    <div class="fill-item">I'm ___. → <input type="text" data-answer="lost" placeholder="?"></div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">D. Verdadeiro ou Falso?</div>
+<div class="ex-card">
+  <div class="mc-item"><div class="q">"Could you repeat that?" é usado quando não entendeu algo.</div><div class="mc-options"><label><input type="radio" name="l20tf1" value="True" class="correct-answer"> V</label><label><input type="radio" name="l20tf1" value="False"> F</label></div></div>
+  <div class="mc-item"><div class="q">"Biscuit" é a palavra americana para biscoito.</div><div class="mc-options"><label><input type="radio" name="l20tf2" value="True"> V</label><label><input type="radio" name="l20tf2" value="False" class="correct-answer"> F</label></div></div>
+  <div class="mc-item"><div class="q">"I'd like a table for two" é usado em um restaurante.</div><div class="mc-options"><label><input type="radio" name="l20tf3" value="True" class="correct-answer"> V</label><label><input type="radio" name="l20tf3" value="False"> F</label></div></div>
+  <div class="mc-item"><div class="q">"Subway" é britânico e "underground" é americano.</div><div class="mc-options"><label><input type="radio" name="l20tf4" value="True"> V</label><label><input type="radio" name="l20tf4" value="False" class="correct-answer"> F</label></div></div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<!-- PRÁTICA ORAL -->
+<div class="section-header">🎭 Prática Oral / Role-Play</div>
+<p class="instruction">Escolha UMA situação e pratique o diálogo completo com um parceiro!</p>
+<div class="dialogue-box">
+  <p><strong>At the Hotel:</strong></p>
+  <p><strong>You:</strong> Hello. I have a reservation under the name ______.</p>
+  <p><strong>Receptionist:</strong> Let me check. Yes, I found it. Can I see your ID?</p>
+  <p><strong>You:</strong> Here you are. Can I have the Wi-Fi password?</p>
+  <p><strong>Receptionist:</strong> Of course. It's on your key card. What time is breakfast?</p>
+  <p><strong>You:</strong> Breakfast is from 7 to 10. Do you need anything else?</p>
+  <p><strong>Receptionist:</strong> No, that's all. Thank you!</p>
+</div>
+
+<div class="section-header">👅 Trava-língua</div>
+<div class="dialogue-box"><p><strong>Excuse me, can you please repeat that clearly?</strong></p><p>🔁 Repita 3x rápido! Pratique a clareza na pronúncia!</p></div>
+
+<div class="section-header">🌍 Curiosidade Cultural: Tipping Culture</div>
+<p class="body-text">Nos <strong>EUA</strong>, a gorjeta (<strong>tip</strong>) é quase obrigatória! Em restaurantes, espera-se <strong>15-20%</strong> do valor da conta. Garçons dependem de gorjetas para sobreviver — o salário base é muito baixo!</p>
+<p class="body-text">Também se deixa gorjeta para: <strong>taxistas</strong> (10-15%), <strong>cabeleireiros</strong> (15-20%), e <strong>funcionários de hotel</strong> ($1-5 por serviço). No Reino Unido, a gorjeta é menos obrigatória mas apreciada.</p>
+<p class="body-text">No <strong>Brasil</strong>, a gorjeta (10%) geralmente já está incluída na conta. Mas nos EUA, você precisa calcular e adicionar manualmente!</p>
+<div class="dialogue-box"><p>💡 Dica: Para calcular 20% de gorjeta rapidamente, mova a vírgula uma casa e multiplique por 2! Ex: conta $45 → $4.50 × 2 = $9.00 de gorjeta.</p></div>
+
+<div class="section-header">🎨 Atividade Criativa: Survival Kit Card</div>
+<p class="instruction">Crie um cartão "Survival Kit" com as 10 frases mais importantes que você precisaria em uma viagem. Decore e carregue com você!</p>
+
+<div class="section-header">🧠 Desafio Extra</div>
+<p class="fill-blank">1. Como pedir direções em inglês? ____________________</p>
+<p class="fill-blank">2. Qual a diferença entre "bill" (UK) e "check" (US)? ____________________</p>
+<p class="fill-blank">3. Como dizer "Não entendi" em inglês? ____________________</p>
+<p class="fill-blank">4. Traduza: "Você poderia falar mais devagar, por favor?" → ____________________</p>
+<p class="fill-blank">5. Escreva 3 expressões que você usaria em um restaurante: ____________________</p>
+
+<div class="section-header">🔁 Revisão</div>
+<p class="check-item">✅ Sei me comunicar em 6 situações reais: aeroporto, hotel, restaurante, farmácia, supermercado, rua.</p>
+<p class="check-item">✅ Conheço 15 expressões essenciais para sobreviver em inglês.</p>
+<p class="check-item">✅ Sei as diferenças entre American English e British English.</p>
+<p class="check-item">✅ Entendo a cultura de gorjetas nos EUA.</p>
+<p class="check-item">✅ Completei o módulo A1 inteiro! 🎉</p>
+
+<div class="section-header">🏠 Tarefa de Casa</div>
+<p class="body-text">1. Crie um "Survival Kit Card" com as 10 frases mais importantes.</p>
+<p class="body-text">2. Pratique UM diálogo de situação real em voz alta 3 vezes.</p>
+<p class="body-text">3. Escreva a diferença entre 5 pares de palavras americanas vs. britânicas.</p>
+
+<!-- FINAL PROJECT -->
+<div class="section-header">🎯 Projeto Final: A Day in My Life</div>
+<p class="body-text">Escreva <strong>150–200 palavras</strong> sobre você! Use tudo que aprendeu nas Lições 12–20:</p>
+<ul style="margin:8px 0 14px 20px;font-size:14px;">
+  <li>🗣️ Sua rotina (Simple Present + advérbios de frequência)</li>
+  <li>🏠 Sua casa (there is/are + preposições)</li>
+  <li>👨‍👩‍👧 Sua família (some/any, determiners)</li>
+  <li>🎨 Seus hobbies (can/can't)</li>
+  <li>🏃 O que você está fazendo agora (Present Continuous)</li>
+  <li>🛒 Compras e pedidos (polite requests)</li>
+</ul>
+
+<textarea rows="14" placeholder="Write about a day in your life... (150-200 words)"></textarea>
+
+<!-- GABARITO -->
+<button class="btn secondary" onclick="this.nextElementSibling.classList.toggle('show')">📋 Ver Gabarito</button>
+<div class="gabarito-box">
+  <div class="gabarito-title">✅ Gabarito — Lição 20</div>
+  <p class="gabarito-line"><strong>A.</strong> Could you repeat that? | I'm lost. | I'd like... | You're welcome. | What does that mean?</p>
+  <p class="gabarito-line"><strong>B.</strong> apartment | elevator | cookie | vacation</p>
+  <p class="gabarito-line"><strong>C.</strong> Could | looking | get | understand | Could | lost</p>
+  <p class="gabarito-line"><strong>D.</strong> V | F (biscuit is British) | V | F (subway is American)</p>
+  <p class="gabarito-line"><strong>Desafio:</strong> 1. How do I get to...? | 2. Both mean "conta" at a restaurant | 3. I don't understand. / Could you repeat that? | 4. Could you speak more slowly, please?</p>
+</div>
+
+<!-- CONCLUSÃO -->
+<div class="section-header">🏁 Conclusão</div>
+<p class="body-text">🎉🎉🎉 <strong>PARABÉNS!</strong> Você completou todas as 9 lições do Módulo A1 (Lições 12-20)! Agora você sabe falar sobre sua rotina, fazer perguntas, descrever lugares, falar sobre habilidades, ações em andamento, quantidades, escolhas, e até se virar em situações reais de comunicação! Continue praticando e nunca pare de aprender! 🌟</p>
+
+<div class="actions" style="margin-top:24px;">
+  <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
+  <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
+</div>
+<p class="completion-note" style="font-size:12px;font-style:italic;color:#777;margin-top:10px;">Responda os exercícios (preenchimento e múltipla escolha) e clique em "Finalizar" para conferir sua nota. É preciso pelo menos 85% de acerto para concluir a lição.</p>
+<div class="footer-note">Bobcat Language School • Lição 20 — Survival English 🌍</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<script>
+const LESSON_ID = 'licao-20-survival-english';
+let finishing = false;
+
+async function prefillFromProfile() {
+  await initDataLayer();
+  const profile = await getProfile();
+  if (profile && profile.name) {
+    const nameInput = document.querySelector('.info-bar input[type=text]');
+    if (nameInput && !nameInput.value) nameInput.value = profile.name;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const dateInput = document.querySelector('.info-bar input[type=date]');
+  if (dateInput && !dateInput.value) dateInput.value = today;
+}
+document.addEventListener('DOMContentLoaded', prefillFromProfile);
+
+function checkFills(btn) {
+  const card = btn.closest('.ex-card');
+  const inputs = card.querySelectorAll('.fill-item input[type=text]');
+  let correct = 0, total = 0;
+  inputs.forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    inp.classList.remove('correct', 'incorrect');
+    if (cleanVal === cleanAnswer) { inp.classList.add('correct'); correct++; }
+    else { inp.classList.add('incorrect'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  const badge = document.createElement('span');
+  badge.className = 'score-badge';
+  badge.textContent = correct + '/' + total + ' ✅';
+  btn.parentElement.appendChild(badge);
+}
+
+function checkMC(btn) {
+  const card = btn.closest('.ex-card');
+  const items = card.querySelectorAll('.mc-item');
+  let correct = 0, total = 0;
+  items.forEach(item => {
+    const options = item.querySelectorAll('.mc-options label');
+    const selected = item.querySelector('input[type=radio]:checked');
+    options.forEach(l => l.classList.remove('correct', 'incorrect'));
+    if (!selected) return;
+    total++;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) { selected.parentElement.classList.add('correct'); correct++; }
+    else { selected.parentElement.classList.add('incorrect'); if (correctRadio) correctRadio.parentElement.classList.add('correct'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  if (total > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'score-badge';
+    badge.textContent = correct + '/' + total + ' ✅';
+    btn.parentElement.appendChild(badge);
+  }
+}
+
+function toggleCollapse(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+async function finishLesson() {
+  if (finishing) return;
+  finishing = true;
+
+  let correct = 0, total = 0;
+  document.querySelectorAll('input[data-answer]').forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    if (cleanVal === cleanAnswer) correct++;
+  });
+  document.querySelectorAll('.mc-item').forEach(item => {
+    total++;
+    const selected = item.querySelector('input[type=radio]:checked');
+    if (!selected) return;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) correct++;
+  });
+
+  const safeTotal = total || 1;
+  const passed = await handleLessonFinish(LESSON_ID, correct, safeTotal, 'correct');
+  if (!passed) finishing = false;
+}
+</script>
+
+</body>
+</html>

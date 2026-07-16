@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Lesson 18 — Quantities and Choices</title>
+<style>
+:root {
+  --orange: #D9793F;
+  --orange-dark: #C9622A;
+  --cream: #FBEFE6;
+  --cream-2: #F7F1EC;
+  --ink: #2b2b2b;
+  --ok: #2E8B57;
+  --bad: #C0392B;
+  --border: #EBC9AE;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  background:#fdfaf7;
+  line-height:1.55;
+}
+.app-layout{display:flex;min-height:100vh;}
+.sidebar{
+  width:280px;min-height:100vh;position:fixed;top:0;left:0;z-index:100;
+  background:#fff;border-right:2px solid var(--border);
+  display:flex;flex-direction:column;transition:transform .3s ease;
+}
+.sidebar-header{display:flex;align-items:center;gap:12px;padding:18px 20px 14px;border-bottom:3px solid var(--orange);}
+.sidebar-header .logo{font-size:32px;}
+.sidebar-header .brand{font-weight:800;font-size:16px;color:var(--orange-dark);}
+.sidebar-header .brand small{display:block;font-weight:400;font-size:11px;color:#888;font-style:italic;}
+.sidebar-progress{padding:14px 20px 10px;border-bottom:1px solid #eee;}
+.sidebar-progress .prog-label{font-size:12px;color:#888;font-weight:600;margin-bottom:6px;}
+.sidebar-progress .prog-track{width:100%;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.sidebar-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.sidebar-progress .prog-text{font-size:11px;color:#999;margin-top:4px;text-align:right;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13.5px;font-weight:600;color:#555;text-decoration:none;transition:background .15s,color .15s;border-left:3px solid transparent;}
+.sidebar-nav a:hover{background:var(--cream-2);color:var(--orange-dark);}
+.sidebar-nav a.active{background:var(--cream);color:var(--orange-dark);border-left-color:var(--orange);font-weight:700;}
+.sidebar-nav a .lnum{width:26px;height:26px;border-radius:50%;background:var(--cream-2);color:var(--orange-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.sidebar-nav a.active .lnum{background:var(--orange);color:#fff;}
+.sidebar-nav a.completed .lnum{background:var(--ok);color:#fff;}
+.sidebar-nav a .check{margin-left:auto;font-size:14px;color:var(--ok);display:none;}
+.sidebar-nav a.completed .check{display:inline;}
+.sidebar-close{display:none;position:absolute;top:14px;right:14px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;}
+.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--orange);color:#fff;border:none;width:42px;height:42px;border-radius:10px;font-size:22px;cursor:pointer;box-shadow:0 2px 8px rgba(217,121,63,.3);}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:99;}
+.main{flex:1;margin-left:280px;padding:0 0 80px 0;}
+.top-progress{position:sticky;top:0;z-index:50;background:#fdfaf7ee;backdrop-filter:blur(4px);padding:10px 20px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px;justify-content:center;font-size:13px;color:#666;}
+.top-progress .prog-track{width:220px;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.top-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.lesson{display:none;padding:28px 24px 40px;max-width:880px;margin:0 auto;}
+.lesson.active{display:block;}
+.back-link{display:inline-block;font-size:13.5px;color:var(--orange-dark);text-decoration:none;font-weight:700;margin-bottom:14px;}
+.back-link:hover{text-decoration:underline;}
+.header{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--orange);padding-bottom:14px;margin-bottom:14px;flex-wrap:wrap;}
+.header .logo-icon{font-size:48px;}
+.header .school{font-size:24px;font-weight:800;color:var(--orange-dark);}
+.header .subtitle{font-size:13px;font-style:italic;color:#666;margin-top:2px;}
+.info-bar{display:flex;gap:24px;flex-wrap:wrap;border-bottom:2px solid var(--orange);padding-bottom:14px;margin-bottom:22px;font-size:13.5px;}
+.info-bar label{display:flex;align-items:center;gap:6px;font-weight:600;color:#555;}
+.info-bar input[type=text],.info-bar input[type=date]{border:none;border-bottom:1px solid #999;background:transparent;padding:3px 2px;font-size:13.5px;min-width:150px;font-family:inherit;}
+.info-bar input:focus{outline:none;border-bottom:2px solid var(--orange);}
+h1.title{text-align:center;color:var(--orange-dark);font-size:27px;margin:6px 0 2px 0;}
+.level{text-align:center;font-style:italic;color:#666;font-size:13px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #eee;}
+.level-badge{display:inline-block;background:var(--orange);color:#fff;font-size:12px;font-weight:700;padding:3px 12px;border-radius:20px;font-style:normal;letter-spacing:.3px;}
+.section-title,.section-header{background:var(--orange);color:#fff;font-weight:700;font-size:14.5px;padding:8px 14px;border-radius:5px;margin:28px 0 10px 0;}
+.subheading{font-weight:700;font-size:13.5px;margin:14px 0 6px 0;color:var(--orange-dark);}
+p{margin:8px 0;font-size:14px;}
+.tip{background:var(--cream);border:1px solid var(--border);padding:10px 14px;font-size:13.5px;margin:10px 0;border-radius:6px;}
+.tip::before{content:"💡 ";}
+table{width:100%;border-collapse:collapse;margin:8px 0 18px 0;font-size:13.5px;}
+th{background:var(--orange);color:#fff;text-align:left;padding:8px 12px;}
+td{padding:8px 12px;border-bottom:1px solid #eee;}
+tr:nth-child(even) td{background:var(--cream-2);}
+.example{font-style:italic;color:#555;font-size:13.5px;margin:6px 0 18px 0;padding-left:12px;border-left:3px solid var(--border);}
+.dialog-box,.dialogue-box{background:var(--cream);padding:14px 16px;border-radius:8px;margin:8px 0;}
+.dialogue-box{background:var(--cream-2);border-left:4px solid var(--orange);border-radius:0 6px 6px 0;}
+.dialog-box p,.dialogue-box p{margin:4px 0;font-size:14px;}
+.body-text{margin:4px 0;line-height:1.65;color:var(--ink);font-size:14px;}
+.instruction{margin:6px 0;padding:8px 14px;background:var(--cream);border-left:4px solid var(--orange);border-radius:0 4px 4px 0;color:var(--ink);font-size:13.5px;}
+.numbered-item{margin:8px 0 4px 16px;padding:4px 0;font-size:14px;font-weight:700;color:var(--orange-dark);}
+.letter-item{margin:10px 0 6px 0;padding:4px 0;font-weight:700;font-size:14px;color:var(--orange-dark);}
+.example-line{margin:3px 0 3px 24px;font-style:italic;color:#555;font-size:13.5px;}
+.fill-blank{margin:4px 0 4px 24px;font-size:14px;color:var(--ink);}
+.check-item{margin:4px 0;padding:4px 0;font-size:14px;}
+.gabarito-box{background:#F0FFF0;border:1px solid #4CAF50;border-left:5px solid #4CAF50;border-radius:0 6px 6px 0;padding:16px 20px;margin:18px 0;display:none;}
+.gabarito-box.show{display:block;}
+.gabarito-title{font-weight:700;font-size:14px;color:#2E7D32;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.gabarito-line{margin:3px 0;font-size:13px;color:#333;}
+.ex-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.03);}
+.ex-intro{font-style:italic;color:#666;font-size:13.5px;margin:0 0 12px 0;}
+.fill-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 30px;}
+.fill-item{display:flex;align-items:center;gap:8px;font-size:14px;flex-wrap:wrap;}
+.fill-item input[type=text]{width:80px;padding:5px 8px;border:2px solid #ddd;border-radius:5px;font-size:14px;font-family:inherit;text-align:center;transition:border-color .15s,background .15s;}
+.fill-item input[type=text].longer{width:200px;text-align:left;}
+.fill-item input:focus{outline:none;border-color:var(--orange);}
+.fill-item input.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.fill-item input.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-item{margin:14px 0;font-size:14px;}
+.mc-item .q{font-weight:700;margin-bottom:6px;}
+.mc-options{display:flex;gap:10px;flex-wrap:wrap;}
+.mc-options label{display:flex;align-items:center;gap:6px;border:2px solid #ddd;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:13.5px;transition:border-color .15s,background .15s;}
+.mc-options label:hover{border-color:var(--orange);}
+.mc-options label.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.mc-options label.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-options input{accent-color:var(--orange);}
+.btn{background:var(--orange);color:#fff;border:none;padding:11px 22px;border-radius:7px;font-size:14.5px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;}
+.btn:hover{background:var(--orange-dark);}
+.btn:active{transform:scale(.98);}
+.btn.secondary{background:#fff;color:var(--orange-dark);border:2px solid var(--orange);padding:9px 20px;}
+.btn.secondary:hover{background:var(--cream);}
+.score-badge{display:inline-block;margin-left:14px;font-weight:700;font-size:14.5px;padding:6px 14px;border-radius:20px;background:var(--cream-2);color:var(--orange-dark);}
+.actions{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
+.note-italic{font-size:12px;font-style:italic;color:#777;margin-top:10px;}
+textarea{width:100%;font-family:inherit;font-size:14px;padding:8px 10px;border:2px solid #ddd;border-radius:6px;resize:vertical;min-height:80px;}
+textarea:focus{outline:none;border-color:var(--orange);}
+.footer-note{text-align:center;font-size:11.5px;color:#aaa;margin-top:40px;}
+.vocab-card{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid #eee;border-radius:8px;padding:8px 14px;margin:4px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
+.vocab-card:hover{border-color:var(--orange);}
+.vocab-card .vc-en{font-weight:700;font-size:14px;}
+.vocab-card .vc-pt{font-size:13px;color:var(--ok);display:none;}
+.vocab-card.revealed .vc-pt{display:inline;}
+.vocab-card.revealed{border-color:var(--ok);background:#EAF7EF;}
+.collapse-btn{width:100%;text-align:left;background:var(--cream);border:1px solid var(--border);padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;color:var(--orange-dark);margin:8px 0 0 0;display:flex;align-items:center;gap:8px;}
+.collapse-btn:hover{background:var(--cream-2);}
+.collapse-btn .arrow{transition:transform .2s;font-size:12px;}
+.collapse-btn.open .arrow{transform:rotate(90deg);}
+.collapse-body{display:none;padding:12px 0 4px 0;}
+.collapse-body.open{display:block;}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;box-shadow:0 -2px 8px rgba(0,0,0,.04);z-index:80;padding:6px 0 env(safe-area-inset-bottom,6px);}
+.bottom-nav-inner{display:flex;max-width:480px;margin:0 auto;}
+.bottom-nav .bnav-btn{flex:1;border:none;background:none;padding:10px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:#999;cursor:pointer;font-weight:600;}
+.bottom-nav .bnav-btn .bnav-icon{font-size:20px;}
+.bottom-nav .bnav-btn.active{color:var(--orange-dark);font-weight:700;}
+.bottom-nav .bnav-btn:disabled{color:#ddd;cursor:default;}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);width:280px;}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-close{display:block;}
+  .sidebar-overlay.open{display:block;}
+  .hamburger{display:flex;align-items:center;justify-content:center;}
+  .main{margin-left:0;}
+  .lesson{padding:20px 16px 120px;}
+  .bottom-nav{display:block;}
+  .fill-grid{grid-template-columns:1fr;}
+  .top-progress{padding-left:56px;}
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.lesson.active{animation:fadeIn .3s ease;}
+</style>
+</head>
+<body>
+<div class="wrap" style="max-width:880px;margin:0 auto;padding:28px 20px;">
+<a class="back-link" href="../index.html">&larr; Voltar às Lições</a>
+<div class="header"><span class="logo-icon">🐱</span><div><div class="school">Bobcat Language School</div><div class="subtitle">Aprenda inglês no seu ritmo</div></div></div>
+<div class="info-bar"><label>👤 Aluno: <input type="text" placeholder="Seu nome"></label><label>📅 Data: <input type="date"></label></div>
+<h1 class="title">LIÇÃO 18 — Quantities and Choices</h1>
+<div class="level"><span class="level-badge">Nível A1</span></div>
+
+<div class="section-header">🎯 Objetivo da Lição</div>
+<p class="body-text">• Usar <strong>Some</strong> em frases afirmativas e ofertas educadas, e <strong>Any</strong> em negativas e perguntas.</p>
+<p class="body-text">• Aprender determinadores: <strong>every, each, all, both, either, neither</strong>.</p>
+<p class="body-text">• Ampliar vocabulário de família, escola, compras e pessoas.</p>
+
+<div class="section-header">🔥 Warm-Up: Some ou Any?</div>
+<p class="instruction">Complete mentalmente:</p>
+<p class="example-line">1. I have ___ apples. (afirmativo) → some</p>
+<p class="example-line">2. I don't have ___ bananas. (negativo) → any</p>
+<p class="example-line">3. Do you have ___ milk? (pergunta) → any</p>
+<p class="example-line">4. Would you like ___ coffee? (oferta) → some</p>
+<p class="example-line">5. There aren't ___ eggs. (negativo) → any</p>
+<div class="dialogue-box"><p>💡 Dica: "Some" = algum/alguns. "Any" = algum/nenhum (em negativas e perguntas). Mas ofertas usam "some"!</p></div>
+
+<div class="section-header">🗣️ Diálogo: Two Friends Shopping Together</div>
+<div class="dialogue-box">
+  <p><strong>Anna:</strong> Let's go shopping! I need some new clothes.</p>
+  <p><strong>Beth:</strong> OK! Do you need any shoes?</p>
+  <p><strong>Anna:</strong> No, I don't need any shoes. But I want some T-shirts.</p>
+  <p><strong>Beth:</strong> Would you like some help finding them?</p>
+  <p><strong>Anna:</strong> Yes, please! Look — both of these shirts are nice!</p>
+  <p><strong>Beth:</strong> They are! Which one do you prefer? Either the blue or the red?</p>
+  <p><strong>Anna:</strong> I can't decide! Neither is cheap enough. How much are they?</p>
+  <p><strong>Beth:</strong> All the T-shirts are 30% off today!</p>
+  <p><strong>Anna:</strong> Great! I'll take both! Do you have any discount cards?</p>
+  <p><strong>Beth:</strong> No, I don't. But every customer gets a receipt.</p>
+</div>
+<div class="instruction">🔁 Repita com atenção: Observe some/any, both/either/neither, all/every!</div>
+
+<div class="section-header">📖 Vocabulário-Chave</div>
+<p class="subheading">👨‍👩‍👧 Family</p>
+<table><tr><th>Word</th><th>Translation</th><th>Example</th></tr>
+<tr><td>parents</td><td>pais</td><td>Both my parents are teachers.</td></tr>
+<tr><td>siblings</td><td>irmãos</td><td>Do you have any siblings?</td></tr>
+<tr><td>cousins</td><td>primos</td><td>I have some cousins in São Paulo.</td></tr>
+<tr><td>grandparents</td><td>avós</td><td>All my grandparents live nearby.</td></tr>
+<tr><td>uncle</td><td>tio</td><td>Neither uncle could come.</td></tr>
+<tr><td>aunt</td><td>tia</td><td>Each aunt gave me a present.</td></tr>
+<tr><td>nephew</td><td>sobrinho</td><td>My nephew is 5 years old.</td></tr>
+<tr><td>niece</td><td>sobrinha</td><td>I have two nieces.</td></tr>
+</table>
+
+<p class="subheading">🎓 School</p>
+<table><tr><th>Word</th><th>Translation</th><th>Example</th></tr>
+<tr><td>classmate</td><td>colega de classe</td><td>Every classmate has a book.</td></tr>
+<tr><td>homework</td><td>lição de casa</td><td>I don't have any homework.</td></tr>
+<tr><td>exam</td><td>prova</td><td>Both exams were difficult.</td></tr>
+<tr><td>subject</td><td>matéria</td><td>Each subject is important.</td></tr>
+<tr><td>library</td><td>biblioteca</td><td>There are some books in the library.</td></tr>
+<tr><td>principal</td><td>diretor(a)</td><td>All students respect the principal.</td></tr>
+<tr><td>grade</td><td>nota / série</td><td>She got good grades on every exam.</td></tr>
+</table>
+
+<p class="subheading">🛒 Shopping</p>
+<table><tr><th>Word</th><th>Translation</th><th>Example</th></tr>
+<tr><td>price</td><td>preço</td><td>The price is too high.</td></tr>
+<tr><td>discount</td><td>desconto</td><td>Is there any discount?</td></tr>
+<tr><td>receipt</td><td>recibo</td><td>Can I have a receipt?</td></tr>
+<tr><td>change</td><td>troco</td><td>Keep the change!</td></tr>
+<tr><td>wallet</td><td>carteira</td><td>I don't have any money in my wallet.</td></tr>
+<tr><td>cash</td><td>dinheiro (em espécie)</td><td>Do you take cash?</td></tr>
+<tr><td>credit card</td><td>cartão de crédito</td><td>Can I pay with a credit card?</td></tr>
+</table>
+
+<div class="section-header">📘 Gramática em Ação: Some / Any & Determiners</div>
+
+<div class="numbered-item">1. Some vs. Any</div>
+<table><tr><th></th><th>Some</th><th>Any</th></tr>
+<tr><td>Afirmativo</td><td>✅ I have some apples.</td><td>❌</td></tr>
+<tr><td>Negativo</td><td>❌</td><td>✅ I don't have any apples.</td></tr>
+<tr><td>Pergunta</td><td>❌ (geralmente)</td><td>✅ Do you have any apples?</td></tr>
+<tr><td>Oferta educada</td><td>✅ Would you like some coffee?</td><td>❌</td></tr>
+</table>
+<p class="example-line">I need some milk. | She doesn't have any money. | Do you have any questions? | Would you like some tea?</p>
+
+<div class="numbered-item">2. Determinadores</div>
+<p class="body-text">A. <strong>every</strong> (cada/todo): Every student has a book. (cada estudante tem um livro)</p>
+<p class="body-text">B. <strong>each</strong> (cada — individual): Each person gets a prize. (cada pessoa ganha um prêmio)</p>
+<p class="body-text">C. <strong>all</strong> (todos): All the students passed. (todos os estudantes passaram)</p>
+<p class="body-text">D. <strong>both</strong> (ambos): Both options are good. (ambas opções são boas)</p>
+<p class="body-text">E. <strong>either</strong> (qualquer um dos dois): You can take either bus. (você pode pegar qualquer um dos dois ônibus)</p>
+<p class="body-text">F. <strong>neither</strong> (nenhum dos dois): Neither answer is correct. (nenhuma das duas respostas está correta)</p>
+
+<div class="tip">Dica: <strong>Either/Neither</strong> são para 2 opções. <strong>All/None</strong> são para 3+ opções.</div>
+
+<div class="section-header">📝 Exercícios</div>
+
+<div class="letter-item">A. Complete com some ou any.</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item">I have <input type="text" data-answer="some" placeholder="?"> books.</div>
+    <div class="fill-item">She doesn't have <input type="text" data-answer="any" placeholder="?"> money.</div>
+    <div class="fill-item">Would you like <input type="text" data-answer="some" placeholder="?"> coffee?</div>
+    <div class="fill-item">Do you have <input type="text" data-answer="any" placeholder="?"> questions?</div>
+    <div class="fill-item">There are <input type="text" data-answer="some" placeholder="?"> students in the class.</div>
+    <div class="fill-item">I can't find <input type="text" data-answer="any" placeholder="?"> discount.</div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">B. Escolha a opção correta.</div>
+<div class="ex-card">
+  <div class="mc-item"><div class="q">"___ student must do the homework." (cada/todo)</div><div class="mc-options"><label><input type="radio" name="l18mc1" value="Every" class="correct-answer"> Every</label><label><input type="radio" name="l18mc1" value="Both"> Both</label><label><input type="radio" name="l18mc1" value="Neither"> Neither</label></div></div>
+  <div class="mc-item"><div class="q">"___ of my parents are teachers." (ambos)</div><div class="mc-options"><label><input type="radio" name="l18mc2" value="Every"> Every</label><label><input type="radio" name="l18mc2" value="Both" class="correct-answer"> Both</label><label><input type="radio" name="l18mc2" value="Neither"> Neither</label></div></div>
+  <div class="mc-item"><div class="q">"You can take ___ bus — they both go downtown." (qualquer um dos dois)</div><div class="mc-options"><label><input type="radio" name="l18mc3" value="either" class="correct-answer"> either</label><label><input type="radio" name="l18mc3" value="neither"> neither</label><label><input type="radio" name="l18mc3" value="all"> all</label></div></div>
+  <div class="mc-item"><div class="q">"___ answer is correct." (nenhum dos dois)</div><div class="mc-options"><label><input type="radio" name="l18mc4" value="Either"> Either</label><label><input type="radio" name="l18mc4" value="Neither" class="correct-answer"> Neither</label><label><input type="radio" name="l18mc4" value="Both"> Both</label></div></div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">C. Escreva frases usando some/any/both/all.</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item input-long">I have <input type="text" class="longer" data-answer="some cousins in São Paulo" placeholder="some..."></div>
+    <div class="fill-item input-long">I don't have <input type="text" class="longer" data-answer="any siblings" placeholder="any..."></div>
+    <div class="fill-item input-long"><input type="text" class="longer" data-answer="Both my parents are teachers" placeholder="Both..."></div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">D. Verdadeiro ou Falso?</div>
+<div class="ex-card">
+  <div class="mc-item"><div class="q">"Would you like any tea?" — Oferta educada correta.</div><div class="mc-options"><label><input type="radio" name="l18tf1" value="True"> V</label><label><input type="radio" name="l18tf1" value="False" class="correct-answer"> F</label></div></div>
+  <div class="mc-item"><div class="q">"Both" é usado para 2 opções.</div><div class="mc-options"><label><input type="radio" name="l18tf2" value="True" class="correct-answer"> V</label><label><input type="radio" name="l18tf2" value="False"> F</label></div></div>
+  <div class="mc-item"><div class="q">"Neither" significa "qualquer um dos dois".</div><div class="mc-options"><label><input type="radio" name="l18tf3" value="True"> V</label><label><input type="radio" name="l18tf3" value="False" class="correct-answer"> F</label></div></div>
+  <div class="mc-item"><div class="q">"I don't have any money" — Frase correta.</div><div class="mc-options"><label><input type="radio" name="l18tf4" value="True" class="correct-answer"> V</label><label><input type="radio" name="l18tf4" value="False"> F</label></div></div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="section-header">🎭 Prática Oral / Role-Play</div>
+<div class="dialogue-box">
+  <p><strong>A:</strong> I need some new clothes. Do you have any suggestions?</p>
+  <p><strong>B:</strong> Sure! Both of these shirts look great on you.</p>
+  <p><strong>A:</strong> Thanks! But I don't like either color. Do you have any other options?</p>
+  <p><strong>B:</strong> Let me check. Would you like some help?</p>
+  <p><strong>A:</strong> Yes, please! All the clothes here are nice, but I need some that are cheaper.</p>
+  <p><strong>B:</strong> Every item on this rack is 20% off!</p>
+  <p><strong>A:</strong> Neither of the first two was my size. Can I try this one?</p>
+  <p><strong>B:</strong> Of course! Each fitting room is available.</p>
+</div>
+
+<div class="section-header">👅 Trava-língua</div>
+<div class="dialogue-box"><p><strong>Neither nurse nor neighbor needs new knives.</strong></p><p>🔁 Repita 3x rápido! Concentre-se no som "n".</p></div>
+
+<div class="section-header">🌍 Curiosidade Cultural: Shopping in the US</div>
+<p class="body-text">Nos <strong>EUA</strong>, o preço na etiqueta <strong>NÃO inclui imposto</strong>! O <strong>sales tax</strong> (imposto de vendas) é adicionado no caixa — geralmente 5-10% a mais. Isso surpreende muitos estrangeiros!</p>
+<p class="body-text">Outra diferença: nos EUA, <strong>gorgetas (tips)</strong> são quase obrigatórias em restaurantes — 15-20% da conta. Não deixar gorjeta é muito indelicado!</p>
+<div class="dialogue-box"><p>💡 Dica: "Keep the change" significa "fique com o troco" — é comum quando o troco é pequeno.</p></div>
+
+<div class="section-header">🎨 Atividade Criativa: Mini Catalog</div>
+<p class="instruction">Crie um mini catálogo com 5+ produtos, preços e descrições usando some/any/both/all/either/neither!</p>
+
+<div class="section-header">🧠 Desafio Extra</div>
+<p class="fill-blank">1. Complete: "Would you like ___ tea?" (oferta) → ____________________</p>
+<p class="fill-blank">2. Traduza: "Ambos os meus pais são médicos." → ____________________</p>
+<p class="fill-blank">3. Qual a diferença entre either e neither? ____________________</p>
+<p class="fill-blank">4. Complete: "I don't have ___ time." → ____________________</p>
+<p class="fill-blank">5. Escreva sobre sua família usando some/any/both/all: ____________________</p>
+
+<div class="section-header">🔁 Revisão</div>
+<p class="check-item">✅ Sei usar some (afirmativo/ofertas) e any (negativo/perguntas).</p>
+<p class="check-item">✅ Conheço os determinadores: every, each, all, both, either, neither.</p>
+<p class="check-item">✅ Aprendi vocabulário de família, escola e compras.</p>
+
+<div class="section-header">🏠 Tarefa de Casa</div>
+<p class="body-text">1. Escreva sobre sua família usando some/any/both/all (8+ frases).</p>
+<p class="body-text">2. Crie um mini catálogo com 5+ produtos, preços e descrições.</p>
+<p class="body-text">3. Escreva 10 frases usando some, any, both, all, either, neither.</p>
+<textarea rows="6" placeholder="My Family: Write about your family using some/any/both/all..."></textarea>
+
+<button class="btn secondary" onclick="this.nextElementSibling.classList.toggle('show')">📋 Ver Gabarito</button>
+<div class="gabarito-box">
+  <div class="gabarito-title">✅ Gabarito — Lição 18</div>
+  <p class="gabarito-line"><strong>A.</strong> some | any | some | any | some | any</p>
+  <p class="gabarito-line"><strong>B.</strong> Every | Both | either | Neither</p>
+  <p class="gabarito-line"><strong>C.</strong> Respostas variam</p>
+  <p class="gabarito-line"><strong>D.</strong> F (should be some) | V | F (neither = nenhum dos dois) | V</p>
+  <p class="gabarito-line"><strong>Desafio:</strong> 1. some | 2. Both my parents are doctors. | 3. Either = qualquer um dos dois; Neither = nenhum dos dois | 4. any</p>
+</div>
+
+<div class="section-header">🏁 Conclusão</div>
+<p class="body-text">🎉 Excelente! Agora você domina some/any e os determinadores! Na próxima lição, vamos aprender a <strong>perguntar sobre quantidades, distância e tempo</strong>. See you in Lesson 19! 👋</p>
+
+<div class="actions" style="margin-top:24px;">
+  <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
+  <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
+</div>
+<p class="completion-note" style="font-size:12px;font-style:italic;color:#777;margin-top:10px;">Responda os exercícios (preenchimento e múltipla escolha) e clique em "Finalizar" para conferir sua nota. É preciso pelo menos 85% de acerto para concluir a lição.</p>
+<div class="footer-note">Bobcat Language School • Lição 18 — Quantidades e Escolhas</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<script>
+const LESSON_ID = 'licao-18-quantities-choices';
+let finishing = false;
+
+async function prefillFromProfile() {
+  await initDataLayer();
+  const profile = await getProfile();
+  if (profile && profile.name) {
+    const nameInput = document.querySelector('.info-bar input[type=text]');
+    if (nameInput && !nameInput.value) nameInput.value = profile.name;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const dateInput = document.querySelector('.info-bar input[type=date]');
+  if (dateInput && !dateInput.value) dateInput.value = today;
+}
+document.addEventListener('DOMContentLoaded', prefillFromProfile);
+
+function checkFills(btn) {
+  const card = btn.closest('.ex-card');
+  const inputs = card.querySelectorAll('.fill-item input[type=text]');
+  let correct = 0, total = 0;
+  inputs.forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    inp.classList.remove('correct', 'incorrect');
+    if (cleanVal === cleanAnswer) { inp.classList.add('correct'); correct++; }
+    else { inp.classList.add('incorrect'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  const badge = document.createElement('span');
+  badge.className = 'score-badge';
+  badge.textContent = correct + '/' + total + ' ✅';
+  btn.parentElement.appendChild(badge);
+}
+
+function checkMC(btn) {
+  const card = btn.closest('.ex-card');
+  const items = card.querySelectorAll('.mc-item');
+  let correct = 0, total = 0;
+  items.forEach(item => {
+    const options = item.querySelectorAll('.mc-options label');
+    const selected = item.querySelector('input[type=radio]:checked');
+    options.forEach(l => l.classList.remove('correct', 'incorrect'));
+    if (!selected) return;
+    total++;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) { selected.parentElement.classList.add('correct'); correct++; }
+    else { selected.parentElement.classList.add('incorrect'); if (correctRadio) correctRadio.parentElement.classList.add('correct'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  if (total > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'score-badge';
+    badge.textContent = correct + '/' + total + ' ✅';
+    btn.parentElement.appendChild(badge);
+  }
+}
+
+function toggleCollapse(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+async function finishLesson() {
+  if (finishing) return;
+  finishing = true;
+
+  let correct = 0, total = 0;
+  document.querySelectorAll('input[data-answer]').forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    if (cleanVal === cleanAnswer) correct++;
+  });
+  document.querySelectorAll('.mc-item').forEach(item => {
+    total++;
+    const selected = item.querySelector('input[type=radio]:checked');
+    if (!selected) return;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) correct++;
+  });
+
+  const safeTotal = total || 1;
+  const passed = await handleLessonFinish(LESSON_ID, correct, safeTotal, 'correct');
+  if (!passed) finishing = false;
+}
+</script>
+
+</body>
+</html>

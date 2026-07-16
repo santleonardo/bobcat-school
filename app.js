@@ -125,6 +125,87 @@ const LESSONS = [
     description: 'Pronomes objetos, possessivos e mais de 20 verbos',
     url: 'lessons/licao-11-object-possessive-pronouns.html',
     totalQuestions: 14 // preenchimento de exercícios (prática, sem correção automática)
+  },
+  {
+    id: 'licao-12-simple-present-daily-life',
+    name: 'Lição 12 — Simple Present: Rotina e Hábitos Diários',
+    level: 'A1',
+    icon: '🗓️',
+    description: 'Simple Present, advérbios de frequência e a rotina diária',
+    url: 'lessons/licao-12-simple-present-daily-life.html',
+    totalQuestions: 17 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-13-perguntas-simple-present',
+    name: 'Lição 13 — Perguntas Naturais no Simple Present',
+    level: 'A1',
+    icon: '🗣️',
+    description: 'Perguntas e negativas com Do/Does no Simple Present',
+    url: 'lessons/licao-13-perguntas-simple-present.html',
+    totalQuestions: 16 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-14-there-is-there-are',
+    name: 'Lição 14 — There Is / There Are',
+    level: 'A1',
+    icon: '🏠',
+    description: 'Descrevendo lugares e objetos com There is/There are',
+    url: 'lessons/licao-14-there-is-there-are.html',
+    totalQuestions: 17 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-15-can-cant',
+    name: "Lição 15 — Can, Can't e Comunicação do Dia a Dia",
+    level: 'A1',
+    icon: '🙌',
+    description: "Habilidades e permissões com Can/Can't",
+    url: 'lessons/licao-15-can-cant.html',
+    totalQuestions: 18 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-16-present-continuous',
+    name: 'Lição 16 — Present Continuous',
+    level: 'A1',
+    icon: '🏃',
+    description: 'Ações em andamento com o Present Continuous',
+    url: 'lessons/licao-16-present-continuous.html',
+    totalQuestions: 17 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-17-countable-uncountable',
+    name: 'Lição 17 — Substantivos Contáveis e Incontáveis',
+    level: 'A1',
+    icon: '🍎',
+    description: 'Countable/uncountable nouns, some, any e much/many',
+    url: 'lessons/licao-17-countable-uncountable.html',
+    totalQuestions: 21 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-18-quantities-choices',
+    name: 'Lição 18 — Quantidades e Escolhas',
+    level: 'A1',
+    icon: '🛒',
+    description: 'Expressando quantidades e fazendo escolhas em inglês',
+    url: 'lessons/licao-18-quantities-choices.html',
+    totalQuestions: 17 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-19-quantities-distance-time',
+    name: 'Lição 19 — Perguntando Sobre Quantidade, Distância e Tempo',
+    level: 'A1',
+    icon: '📏',
+    description: 'How much/how many, distância e tempo',
+    url: 'lessons/licao-19-quantities-distance-time.html',
+    totalQuestions: 18 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-20-survival-english',
+    name: 'Lição 20 — Survival English 🌍',
+    level: 'A1',
+    icon: '🌍',
+    description: 'Frases essenciais para se virar em situações reais',
+    url: 'lessons/licao-20-survival-english.html',
+    totalQuestions: 19 // exercícios com gabarito (correção automática)
   }
   // próximas lições entram aqui, ex:
   // { id: 'present-simple', name: 'Present Simple', level: 'A1', icon: '📗', url: 'lessons/present-simple.html', totalQuestions: 15 }

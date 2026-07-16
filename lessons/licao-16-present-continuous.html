@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Lesson 16 — Present Continuous</title>
+<style>
+:root {
+  --orange: #D9793F;
+  --orange-dark: #C9622A;
+  --cream: #FBEFE6;
+  --cream-2: #F7F1EC;
+  --ink: #2b2b2b;
+  --ok: #2E8B57;
+  --bad: #C0392B;
+  --border: #EBC9AE;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  background:#fdfaf7;
+  line-height:1.55;
+}
+.app-layout{display:flex;min-height:100vh;}
+.sidebar{
+  width:280px;min-height:100vh;position:fixed;top:0;left:0;z-index:100;
+  background:#fff;border-right:2px solid var(--border);
+  display:flex;flex-direction:column;transition:transform .3s ease;
+}
+.sidebar-header{display:flex;align-items:center;gap:12px;padding:18px 20px 14px;border-bottom:3px solid var(--orange);}
+.sidebar-header .logo{font-size:32px;}
+.sidebar-header .brand{font-weight:800;font-size:16px;color:var(--orange-dark);}
+.sidebar-header .brand small{display:block;font-weight:400;font-size:11px;color:#888;font-style:italic;}
+.sidebar-progress{padding:14px 20px 10px;border-bottom:1px solid #eee;}
+.sidebar-progress .prog-label{font-size:12px;color:#888;font-weight:600;margin-bottom:6px;}
+.sidebar-progress .prog-track{width:100%;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.sidebar-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.sidebar-progress .prog-text{font-size:11px;color:#999;margin-top:4px;text-align:right;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13.5px;font-weight:600;color:#555;text-decoration:none;transition:background .15s,color .15s;border-left:3px solid transparent;}
+.sidebar-nav a:hover{background:var(--cream-2);color:var(--orange-dark);}
+.sidebar-nav a.active{background:var(--cream);color:var(--orange-dark);border-left-color:var(--orange);font-weight:700;}
+.sidebar-nav a .lnum{width:26px;height:26px;border-radius:50%;background:var(--cream-2);color:var(--orange-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.sidebar-nav a.active .lnum{background:var(--orange);color:#fff;}
+.sidebar-nav a.completed .lnum{background:var(--ok);color:#fff;}
+.sidebar-nav a .check{margin-left:auto;font-size:14px;color:var(--ok);display:none;}
+.sidebar-nav a.completed .check{display:inline;}
+.sidebar-close{display:none;position:absolute;top:14px;right:14px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;}
+.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--orange);color:#fff;border:none;width:42px;height:42px;border-radius:10px;font-size:22px;cursor:pointer;box-shadow:0 2px 8px rgba(217,121,63,.3);}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:99;}
+.main{flex:1;margin-left:280px;padding:0 0 80px 0;}
+.top-progress{position:sticky;top:0;z-index:50;background:#fdfaf7ee;backdrop-filter:blur(4px);padding:10px 20px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px;justify-content:center;font-size:13px;color:#666;}
+.top-progress .prog-track{width:220px;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.top-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.lesson{display:none;padding:28px 24px 40px;max-width:880px;margin:0 auto;}
+.lesson.active{display:block;}
+.back-link{display:inline-block;font-size:13.5px;color:var(--orange-dark);text-decoration:none;font-weight:700;margin-bottom:14px;}
+.back-link:hover{text-decoration:underline;}
+.header{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--orange);padding-bottom:14px;margin-bottom:14px;flex-wrap:wrap;}
+.header .logo-icon{font-size:48px;}
+.header .school{font-size:24px;font-weight:800;color:var(--orange-dark);}
+.header .subtitle{font-size:13px;font-style:italic;color:#666;margin-top:2px;}
+.info-bar{display:flex;gap:24px;flex-wrap:wrap;border-bottom:2px solid var(--orange);padding-bottom:14px;margin-bottom:22px;font-size:13.5px;}
+.info-bar label{display:flex;align-items:center;gap:6px;font-weight:600;color:#555;}
+.info-bar input[type=text],.info-bar input[type=date]{border:none;border-bottom:1px solid #999;background:transparent;padding:3px 2px;font-size:13.5px;min-width:150px;font-family:inherit;}
+.info-bar input:focus{outline:none;border-bottom:2px solid var(--orange);}
+h1.title{text-align:center;color:var(--orange-dark);font-size:27px;margin:6px 0 2px 0;}
+.level{text-align:center;font-style:italic;color:#666;font-size:13px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #eee;}
+.level-badge{display:inline-block;background:var(--orange);color:#fff;font-size:12px;font-weight:700;padding:3px 12px;border-radius:20px;font-style:normal;letter-spacing:.3px;}
+.section-title,.section-header{background:var(--orange);color:#fff;font-weight:700;font-size:14.5px;padding:8px 14px;border-radius:5px;margin:28px 0 10px 0;}
+.subheading{font-weight:700;font-size:13.5px;margin:14px 0 6px 0;color:var(--orange-dark);}
+p{margin:8px 0;font-size:14px;}
+.tip{background:var(--cream);border:1px solid var(--border);padding:10px 14px;font-size:13.5px;margin:10px 0;border-radius:6px;}
+.tip::before{content:"💡 ";}
+table{width:100%;border-collapse:collapse;margin:8px 0 18px 0;font-size:13.5px;}
+th{background:var(--orange);color:#fff;text-align:left;padding:8px 12px;}
+td{padding:8px 12px;border-bottom:1px solid #eee;}
+tr:nth-child(even) td{background:var(--cream-2);}
+.example{font-style:italic;color:#555;font-size:13.5px;margin:6px 0 18px 0;padding-left:12px;border-left:3px solid var(--border);}
+.dialog-box,.dialogue-box{background:var(--cream);padding:14px 16px;border-radius:8px;margin:8px 0;}
+.dialogue-box{background:var(--cream-2);border-left:4px solid var(--orange);border-radius:0 6px 6px 0;}
+.dialog-box p,.dialogue-box p{margin:4px 0;font-size:14px;}
+.body-text{margin:4px 0;line-height:1.65;color:var(--ink);font-size:14px;}
+.instruction{margin:6px 0;padding:8px 14px;background:var(--cream);border-left:4px solid var(--orange);border-radius:0 4px 4px 0;color:var(--ink);font-size:13.5px;}
+.numbered-item{margin:8px 0 4px 16px;padding:4px 0;font-size:14px;font-weight:700;color:var(--orange-dark);}
+.letter-item{margin:10px 0 6px 0;padding:4px 0;font-weight:700;font-size:14px;color:var(--orange-dark);}
+.example-line{margin:3px 0 3px 24px;font-style:italic;color:#555;font-size:13.5px;}
+.fill-blank{margin:4px 0 4px 24px;font-size:14px;color:var(--ink);}
+.check-item{margin:4px 0;padding:4px 0;font-size:14px;}
+.gabarito-box{background:#F0FFF0;border:1px solid #4CAF50;border-left:5px solid #4CAF50;border-radius:0 6px 6px 0;padding:16px 20px;margin:18px 0;display:none;}
+.gabarito-box.show{display:block;}
+.gabarito-title{font-weight:700;font-size:14px;color:#2E7D32;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.gabarito-line{margin:3px 0;font-size:13px;color:#333;}
+.ex-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.03);}
+.ex-intro{font-style:italic;color:#666;font-size:13.5px;margin:0 0 12px 0;}
+.fill-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 30px;}
+.fill-item{display:flex;align-items:center;gap:8px;font-size:14px;flex-wrap:wrap;}
+.fill-item input[type=text]{width:80px;padding:5px 8px;border:2px solid #ddd;border-radius:5px;font-size:14px;font-family:inherit;text-align:center;transition:border-color .15s,background .15s;}
+.fill-item input[type=text].longer{width:200px;text-align:left;}
+.fill-item input:focus{outline:none;border-color:var(--orange);}
+.fill-item input.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.fill-item input.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-item{margin:14px 0;font-size:14px;}
+.mc-item .q{font-weight:700;margin-bottom:6px;}
+.mc-options{display:flex;gap:10px;flex-wrap:wrap;}
+.mc-options label{display:flex;align-items:center;gap:6px;border:2px solid #ddd;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:13.5px;transition:border-color .15s,background .15s;}
+.mc-options label:hover{border-color:var(--orange);}
+.mc-options label.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.mc-options label.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-options input{accent-color:var(--orange);}
+.btn{background:var(--orange);color:#fff;border:none;padding:11px 22px;border-radius:7px;font-size:14.5px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;}
+.btn:hover{background:var(--orange-dark);}
+.btn:active{transform:scale(.98);}
+.btn.secondary{background:#fff;color:var(--orange-dark);border:2px solid var(--orange);padding:9px 20px;}
+.btn.secondary:hover{background:var(--cream);}
+.score-badge{display:inline-block;margin-left:14px;font-weight:700;font-size:14.5px;padding:6px 14px;border-radius:20px;background:var(--cream-2);color:var(--orange-dark);}
+.actions{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
+.note-italic{font-size:12px;font-style:italic;color:#777;margin-top:10px;}
+textarea{width:100%;font-family:inherit;font-size:14px;padding:8px 10px;border:2px solid #ddd;border-radius:6px;resize:vertical;min-height:80px;}
+textarea:focus{outline:none;border-color:var(--orange);}
+.footer-note{text-align:center;font-size:11.5px;color:#aaa;margin-top:40px;}
+.vocab-card{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid #eee;border-radius:8px;padding:8px 14px;margin:4px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
+.vocab-card:hover{border-color:var(--orange);}
+.vocab-card .vc-en{font-weight:700;font-size:14px;}
+.vocab-card .vc-pt{font-size:13px;color:var(--ok);display:none;}
+.vocab-card.revealed .vc-pt{display:inline;}
+.vocab-card.revealed{border-color:var(--ok);background:#EAF7EF;}
+.collapse-btn{width:100%;text-align:left;background:var(--cream);border:1px solid var(--border);padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;color:var(--orange-dark);margin:8px 0 0 0;display:flex;align-items:center;gap:8px;}
+.collapse-btn:hover{background:var(--cream-2);}
+.collapse-btn .arrow{transition:transform .2s;font-size:12px;}
+.collapse-btn.open .arrow{transform:rotate(90deg);}
+.collapse-body{display:none;padding:12px 0 4px 0;}
+.collapse-body.open{display:block;}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;box-shadow:0 -2px 8px rgba(0,0,0,.04);z-index:80;padding:6px 0 env(safe-area-inset-bottom,6px);}
+.bottom-nav-inner{display:flex;max-width:480px;margin:0 auto;}
+.bottom-nav .bnav-btn{flex:1;border:none;background:none;padding:10px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:#999;cursor:pointer;font-weight:600;}
+.bottom-nav .bnav-btn .bnav-icon{font-size:20px;}
+.bottom-nav .bnav-btn.active{color:var(--orange-dark);font-weight:700;}
+.bottom-nav .bnav-btn:disabled{color:#ddd;cursor:default;}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);width:280px;}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-close{display:block;}
+  .sidebar-overlay.open{display:block;}
+  .hamburger{display:flex;align-items:center;justify-content:center;}
+  .main{margin-left:0;}
+  .lesson{padding:20px 16px 120px;}
+  .bottom-nav{display:block;}
+  .fill-grid{grid-template-columns:1fr;}
+  .top-progress{padding-left:56px;}
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.lesson.active{animation:fadeIn .3s ease;}
+</style>
+</head>
+<body>
+<div class="wrap" style="max-width:880px;margin:0 auto;padding:28px 20px;">
+<a class="back-link" href="../index.html">&larr; Voltar às Lições</a>
+<div class="header"><span class="logo-icon">🐱</span><div><div class="school">Bobcat Language School</div><div class="subtitle">Aprenda inglês no seu ritmo</div></div></div>
+<div class="info-bar"><label>👤 Aluno: <input type="text" placeholder="Seu nome"></label><label>📅 Data: <input type="date"></label></div>
+<h1 class="title">LIÇÃO 16 — Present Continuous</h1>
+<div class="level"><span class="level-badge">Nível A1</span></div>
+
+<div class="section-header">🎯 Objetivo da Lição</div>
+<p class="body-text">• Usar o <strong>Present Continuous</strong> para falar sobre o que está acontecendo agora: "I am studying."</p>
+<p class="body-text">• Aprender as regras de <strong>spelling do -ing</strong> (make→making, run→running, study→studying).</p>
+<p class="body-text">• Diferenciar <strong>Simple Present × Present Continuous</strong>: hábito vs. acontecimento agora.</p>
+
+<div class="section-header">🔥 Warm-Up: O que você está fazendo agora?</div>
+<p class="instruction">Olhe para si mesmo e para as pessoas ao redor. O que estão fazendo NESTE MOMENTO?</p>
+<p class="example-line">1. I am studying English right now.</p>
+<p class="example-line">2. My mom is cooking dinner.</p>
+<p class="example-line">3. My dog is sleeping on the sofa.</p>
+<p class="example-line">4. It is raining outside.</p>
+<p class="example-line">5. The teacher is talking to the class.</p>
+<div class="dialogue-box"><p>💡 Dica: O Present Continuous é para ações que estão acontecendo AGORA ou ao redor deste momento!</p></div>
+
+<div class="section-header">🗣️ Diálogo: Phone Call — What Are You Doing?</div>
+<div class="dialogue-box">
+  <p><strong>Julia:</strong> Hi, Mark! What are you doing right now?</p>
+  <p><strong>Mark:</strong> I'm watching TV. What about you?</p>
+  <p><strong>Julia:</strong> I'm studying English. I'm doing my homework.</p>
+  <p><strong>Mark:</strong> Oh, sorry! Am I interrupting?</p>
+  <p><strong>Julia:</strong> No, it's fine! I'm also eating a sandwich. Are you working today?</p>
+  <p><strong>Mark:</strong> No, I'm not working today. I'm relaxing at home.</p>
+  <p><strong>Julia:</strong> Is your sister studying too?</p>
+  <p><strong>Mark:</strong> No, she isn't. She's playing video games. She's always playing!</p>
+  <p><strong>Julia:</strong> Haha! Are your parents working?</p>
+  <p><strong>Mark:</strong> Yes, they are. They're working at the office today. Hey, are you coming to the party tonight?</p>
+  <p><strong>Julia:</strong> Yes, I am! I'm meeting Sarah at 8.</p>
+</div>
+<div class="instruction">🔁 Repita com atenção: Observe como o Present Continuous descreve ações em andamento!</div>
+
+<div class="section-header">📖 Vocabulário-Chave</div>
+<p class="subheading">🏃 Actions in Progress</p>
+<table><tr><th>Word</th><th>Translation</th><th>Example</th></tr>
+<tr><td>studying</td><td>estudando</td><td>I'm studying English right now.</td></tr>
+<tr><td>working</td><td>trabalhando</td><td>She's working from home today.</td></tr>
+<tr><td>eating</td><td>comendo</td><td>They're eating lunch.</td></tr>
+<tr><td>sleeping</td><td>dormindo</td><td>The baby is sleeping.</td></tr>
+<tr><td>reading</td><td>lendo</td><td>He's reading a book.</td></tr>
+<tr><td>writing</td><td>escrevendo</td><td>I'm writing an email.</td></tr>
+<tr><td>cooking</td><td>cozinhando</td><td>Mom is cooking dinner.</td></tr>
+<tr><td>playing</td><td>jogando/brincando</td><td>The kids are playing outside.</td></tr>
+<tr><td>running</td><td>correndo</td><td>She's running in the park.</td></tr>
+<tr><td>watching</td><td>assistindo</td><td>We're watching a movie.</td></tr>
+<tr><td>listening</td><td>ouvindo</td><td>I'm listening to music.</td></tr>
+<tr><td>talking</td><td>conversando</td><td>They're talking on the phone.</td></tr>
+</table>
+
+<p class="subheading">⏰ Time Expressions for Present Continuous</p>
+<table><tr><th>Expression</th><th>Translation</th><th>Example</th></tr>
+<tr><td>now</td><td>agora</td><td>I'm studying now.</td></tr>
+<tr><td>right now</td><td>agora mesmo</td><td>She's working right now.</td></tr>
+<tr><td>at the moment</td><td>no momento</td><td>He's sleeping at the moment.</td></tr>
+<tr><td>today</td><td>hoje</td><td>I'm working from home today.</td></tr>
+<tr><td>this week</td><td>esta semana</td><td>We're studying Chapter 5 this week.</td></tr>
+<tr><td>tonight</td><td>hoje à noite</td><td>Are you coming tonight?</td></tr>
+</table>
+
+<div class="section-header">📘 Gramática em Ação: Present Continuous</div>
+
+<div class="numbered-item">1. Afirmativo: am/is/are + verb-ing</div>
+<table><tr><th>Pronome</th><th>Estrutura</th><th>Exemplo</th></tr>
+<tr><td>I</td><td>am + verb-ing</td><td>I am studying. (I'm studying.)</td></tr>
+<tr><td>You</td><td>are + verb-ing</td><td>You are reading. (You're reading.)</td></tr>
+<tr><td>He/She/It</td><td>is + verb-ing</td><td>She is cooking. (She's cooking.)</td></tr>
+<tr><td>We/They</td><td>are + verb-ing</td><td>They are playing. (They're playing.)</td></tr>
+</table>
+
+<div class="numbered-item">2. Regras de Spelling do -ing</div>
+<p class="body-text">A. Verbo normal: + <strong>ing</strong></p>
+<p class="example-line">play → playing | eat → eating | read → reading | study → studying</p>
+<p class="body-text">B. Drop -e: tira o -e e adiciona <strong>-ing</strong></p>
+<p class="example-line">make → making | write → writing | dance → dancing | have → having</p>
+<p class="body-text">C. Consoante-vogal-consoante (CVC): dobra a última consoante + <strong>-ing</strong></p>
+<p class="example-line">run → running | sit → sitting | swim → swimming | stop → stopping</p>
+
+<div class="numbered-item">3. Negativo: am not / isn't / aren't + verb-ing</div>
+<p class="example-line">I'm not sleeping. | She isn't working today. | They aren't studying right now.</p>
+
+<div class="numbered-item">4. Perguntas: Am/Is/Are + sujeito + verb-ing?</div>
+<p class="example-line">Are you studying? | Is she cooking? | Are they playing? | Am I interrupting?</p>
+
+<div class="numbered-item">5. Simple Present × Present Continuous</div>
+<table><tr><th>Simple Present (hábito)</th><th>Present Continuous (agora)</th></tr>
+<tr><td>I study English every day.</td><td>I am studying English right now.</td></tr>
+<tr><td>She works in a hospital.</td><td>She is working from home today.</td></tr>
+<tr><td>They play soccer on Fridays.</td><td>They are playing soccer at the moment.</td></tr>
+</table>
+<div class="tip">Dica: Simple Present = rotina/hábito (always, usually, every day). Present Continuous = agora (now, right now, at the moment).</div>
+
+<div class="section-header">📝 Exercícios</div>
+
+<div class="letter-item">A. Escreva a forma -ing dos verbos.</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item">play → <input type="text" data-answer="playing" placeholder="?"></div>
+    <div class="fill-item">make → <input type="text" data-answer="making" placeholder="?"></div>
+    <div class="fill-item">run → <input type="text" data-answer="running" placeholder="?"></div>
+    <div class="fill-item">write → <input type="text" data-answer="writing" placeholder="?"></div>
+    <div class="fill-item">swim → <input type="text" data-answer="swimming" placeholder="?"></div>
+    <div class="fill-item">dance → <input type="text" data-answer="dancing" placeholder="?"></div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">B. Escolha Simple Present ou Present Continuous.</div>
+<div class="ex-card">
+  <div class="mc-item"><div class="q">"She ___ coffee every morning." (hábito)</div><div class="mc-options"><label><input type="radio" name="l16mc1" value="drinks" class="correct-answer"> drinks</label><label><input type="radio" name="l16mc1" value="is drinking"> is drinking</label></div></div>
+  <div class="mc-item"><div class="q">"She ___ coffee right now." (agora)</div><div class="mc-options"><label><input type="radio" name="l16mc2" value="drinks"> drinks</label><label><input type="radio" name="l16mc2" value="is drinking" class="correct-answer"> is drinking</label></div></div>
+  <div class="mc-item"><div class="q">"I ___ English every day." (rotina)</div><div class="mc-options"><label><input type="radio" name="l16mc3" value="study" class="correct-answer"> study</label><label><input type="radio" name="l16mc3" value="am studying"> am studying</label></div></div>
+  <div class="mc-item"><div class="q">"I ___ English at the moment." (agora)</div><div class="mc-options"><label><input type="radio" name="l16mc4" value="study"> study</label><label><input type="radio" name="l16mc4" value="am studying" class="correct-answer"> am studying</label></div></div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">C. Complete com am/is/are + verb-ing.</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item">I <input type="text" data-answer="am studying" placeholder="?"> (study) right now.</div>
+    <div class="fill-item">She <input type="text" data-answer="is cooking" placeholder="?"> (cook) dinner.</div>
+    <div class="fill-item">They <input type="text" data-answer="are playing" placeholder="?"> (play) soccer.</div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">D. Verdadeiro ou Falso?</div>
+<div class="ex-card">
+  <div class="mc-item"><div class="q">"I am makeing dinner" — Spelling correto.</div><div class="mc-options"><label><input type="radio" name="l16tf1" value="True"> V</label><label><input type="radio" name="l16tf1" value="False" class="correct-answer"> F</label></div></div>
+  <div class="mc-item"><div class="q">"She is runing" — Spelling correto.</div><div class="mc-options"><label><input type="radio" name="l16tf2" value="True"> V</label><label><input type="radio" name="l16tf2" value="False" class="correct-answer"> F</label></div></div>
+  <div class="mc-item"><div class="q">"Are you studying?" — Pergunta correta no Present Continuous.</div><div class="mc-options"><label><input type="radio" name="l16tf3" value="True" class="correct-answer"> V</label><label><input type="radio" name="l16tf3" value="False"> F</label></div></div>
+  <div class="mc-item"><div class="q">"I study English right now" — Frase correta para algo acontecendo agora.</div><div class="mc-options"><label><input type="radio" name="l16tf4" value="True"> V</label><label><input type="radio" name="l16tf4" value="False" class="correct-answer"> F</label></div></div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="section-header">🎭 Prática Oral / Role-Play</div>
+<div class="dialogue-box">
+  <p><strong>A:</strong> Hey! What are you doing right now?</p>
+  <p><strong>B:</strong> I'm studying English. What about you?</p>
+  <p><strong>A:</strong> I'm watching TV. Are you busy?</p>
+  <p><strong>B:</strong> A little. I'm doing my homework.</p>
+  <p><strong>A:</strong> Oh, sorry! Are you coming to the party tonight?</p>
+  <p><strong>B:</strong> Yes, I am! I'm meeting John at 8.</p>
+  <p><strong>A:</strong> Great! Is your brother coming too?</p>
+  <p><strong>B:</strong> No, he isn't. He's working tonight.</p>
+</div>
+
+<div class="section-header">👅 Trava-língua</div>
+<div class="dialogue-box"><p><strong>I'm imagining imaginary images while imaging.</strong></p><p>🔁 Repita 3x rápido!</p></div>
+
+<div class="section-header">🌍 Curiosidade Cultural: Present Continuous for Future</div>
+<p class="body-text">Em inglês, usamos o <strong>Present Continuous para planos futuros confirmados</strong>! "I'm meeting John tomorrow" significa "Vou me encontrar com o John amanhã" — é um plano, não algo acontecendo agora. É muito comum em conversas!</p>
+<p class="body-text">Exemplos: "I'm flying to London next week." | "We're having dinner at 7 tonight." | "She's starting a new job on Monday."</p>
+<div class="dialogue-box"><p>💡 Dica: Quando alguém pergunta "What are you doing tonight?", geralmente quer saber seus planos, não o que você está fazendo neste segundo!</p></div>
+
+<div class="section-header">🎨 Atividade Criativa: Snapshot!</div>
+<p class="instruction">Imagine que tirou uma foto da sua família AGORA. Descreva o que cada pessoa está fazendo!</p>
+<p class="example-line">My mom is cooking dinner. My dad is reading the newspaper. My sister is studying.</p>
+
+<div class="section-header">🧠 Desafio Extra</div>
+<p class="fill-blank">1. Escreva a forma -ing: "sit" → _________ "hop" → _________</p>
+<p class="fill-blank">2. Corrija: "She is makeing a cake." → ____________________</p>
+<p class="fill-blank">3. Diferença: "I study English" vs "I am studying English" → ____________________</p>
+<p class="fill-blank">4. Traduza: "Eles estão jogando futebol agora." → ____________________</p>
+<p class="fill-blank">5. Use Present Continuous para um plano futuro: ____________________</p>
+
+<div class="section-header">🔁 Revisão</div>
+<p class="check-item">✅ Sei formar o Present Continuous: am/is/are + verb-ing.</p>
+<p class="check-item">✅ Conheço as 3 regras de spelling do -ing.</p>
+<p class="check-item">✅ Sei a diferença entre Simple Present (hábito) e Present Continuous (agora).</p>
+<p class="check-item">✅ Sei que o Present Continuous pode expressar planos futuros.</p>
+
+<div class="section-header">🏠 Tarefa de Casa</div>
+<p class="body-text">1. Escreva uma "diary entry" sobre o que você está fazendo "hoje" (10+ frases no Present Continuous).</p>
+<p class="body-text">2. Tire um "snapshot" mental: descreva o que cada pessoa da sua família está fazendo agora.</p>
+<p class="body-text">3. Escreva 5 frases no Present Continuous sobre seus planos para o fim de semana.</p>
+<textarea rows="6" placeholder="Diary entry: What I'm doing today..."></textarea>
+
+<button class="btn secondary" onclick="this.nextElementSibling.classList.toggle('show')">📋 Ver Gabarito</button>
+<div class="gabarito-box">
+  <div class="gabarito-title">✅ Gabarito — Lição 16</div>
+  <p class="gabarito-line"><strong>A.</strong> playing | making | running | writing | swimming | dancing</p>
+  <p class="gabarito-line"><strong>B.</strong> drinks | is drinking | study | am studying</p>
+  <p class="gabarito-line"><strong>C.</strong> am studying | is cooking | are playing</p>
+  <p class="gabarito-line"><strong>D.</strong> F (making) | F (running) | V | F (am studying)</p>
+  <p class="gabarito-line"><strong>Desafio:</strong> 2. She is making a cake. | 3. habitual vs happening now | 4. They are playing soccer now. | 5. I'm visiting my grandma tomorrow.</p>
+</div>
+
+<div class="section-header">🏁 Conclusão</div>
+<p class="body-text">🎉 Fantástico! Agora você sabe descrever ações em andamento e diferenciar hábitos de ações presentes. Na próxima lição: <strong>Countable & Uncountable Nouns</strong>! See you in Lesson 17! 👋</p>
+
+<div class="actions" style="margin-top:24px;">
+  <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
+  <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
+</div>
+<p class="completion-note" style="font-size:12px;font-style:italic;color:#777;margin-top:10px;">Responda os exercícios (preenchimento e múltipla escolha) e clique em "Finalizar" para conferir sua nota. É preciso pelo menos 85% de acerto para concluir a lição.</p>
+<div class="footer-note">Bobcat Language School • Lição 16 — Present Continuous</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<script>
+const LESSON_ID = 'licao-16-present-continuous';
+let finishing = false;
+
+async function prefillFromProfile() {
+  await initDataLayer();
+  const profile = await getProfile();
+  if (profile && profile.name) {
+    const nameInput = document.querySelector('.info-bar input[type=text]');
+    if (nameInput && !nameInput.value) nameInput.value = profile.name;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const dateInput = document.querySelector('.info-bar input[type=date]');
+  if (dateInput && !dateInput.value) dateInput.value = today;
+}
+document.addEventListener('DOMContentLoaded', prefillFromProfile);
+
+function checkFills(btn) {
+  const card = btn.closest('.ex-card');
+  const inputs = card.querySelectorAll('.fill-item input[type=text]');
+  let correct = 0, total = 0;
+  inputs.forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    inp.classList.remove('correct', 'incorrect');
+    if (cleanVal === cleanAnswer) { inp.classList.add('correct'); correct++; }
+    else { inp.classList.add('incorrect'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  const badge = document.createElement('span');
+  badge.className = 'score-badge';
+  badge.textContent = correct + '/' + total + ' ✅';
+  btn.parentElement.appendChild(badge);
+}
+
+function checkMC(btn) {
+  const card = btn.closest('.ex-card');
+  const items = card.querySelectorAll('.mc-item');
+  let correct = 0, total = 0;
+  items.forEach(item => {
+    const options = item.querySelectorAll('.mc-options label');
+    const selected = item.querySelector('input[type=radio]:checked');
+    options.forEach(l => l.classList.remove('correct', 'incorrect'));
+    if (!selected) return;
+    total++;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) { selected.parentElement.classList.add('correct'); correct++; }
+    else { selected.parentElement.classList.add('incorrect'); if (correctRadio) correctRadio.parentElement.classList.add('correct'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  if (total > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'score-badge';
+    badge.textContent = correct + '/' + total + ' ✅';
+    btn.parentElement.appendChild(badge);
+  }
+}
+
+function toggleCollapse(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+async function finishLesson() {
+  if (finishing) return;
+  finishing = true;
+
+  let correct = 0, total = 0;
+  document.querySelectorAll('input[data-answer]').forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    if (cleanVal === cleanAnswer) correct++;
+  });
+  document.querySelectorAll('.mc-item').forEach(item => {
+    total++;
+    const selected = item.querySelector('input[type=radio]:checked');
+    if (!selected) return;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) correct++;
+  });
+
+  const safeTotal = total || 1;
+  const passed = await handleLessonFinish(LESSON_ID, correct, safeTotal, 'correct');
+  if (!passed) finishing = false;
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Lesson 15 — Can, Can't and Everyday Communication</title>
+<style>
+:root {
+  --orange: #D9793F;
+  --orange-dark: #C9622A;
+  --cream: #FBEFE6;
+  --cream-2: #F7F1EC;
+  --ink: #2b2b2b;
+  --ok: #2E8B57;
+  --bad: #C0392B;
+  --border: #EBC9AE;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  background:#fdfaf7;
+  line-height:1.55;
+}
+.app-layout{display:flex;min-height:100vh;}
+.sidebar{
+  width:280px;min-height:100vh;position:fixed;top:0;left:0;z-index:100;
+  background:#fff;border-right:2px solid var(--border);
+  display:flex;flex-direction:column;transition:transform .3s ease;
+}
+.sidebar-header{display:flex;align-items:center;gap:12px;padding:18px 20px 14px;border-bottom:3px solid var(--orange);}
+.sidebar-header .logo{font-size:32px;}
+.sidebar-header .brand{font-weight:800;font-size:16px;color:var(--orange-dark);}
+.sidebar-header .brand small{display:block;font-weight:400;font-size:11px;color:#888;font-style:italic;}
+.sidebar-progress{padding:14px 20px 10px;border-bottom:1px solid #eee;}
+.sidebar-progress .prog-label{font-size:12px;color:#888;font-weight:600;margin-bottom:6px;}
+.sidebar-progress .prog-track{width:100%;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.sidebar-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.sidebar-progress .prog-text{font-size:11px;color:#999;margin-top:4px;text-align:right;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13.5px;font-weight:600;color:#555;text-decoration:none;transition:background .15s,color .15s;border-left:3px solid transparent;}
+.sidebar-nav a:hover{background:var(--cream-2);color:var(--orange-dark);}
+.sidebar-nav a.active{background:var(--cream);color:var(--orange-dark);border-left-color:var(--orange);font-weight:700;}
+.sidebar-nav a .lnum{width:26px;height:26px;border-radius:50%;background:var(--cream-2);color:var(--orange-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.sidebar-nav a.active .lnum{background:var(--orange);color:#fff;}
+.sidebar-nav a.completed .lnum{background:var(--ok);color:#fff;}
+.sidebar-nav a .check{margin-left:auto;font-size:14px;color:var(--ok);display:none;}
+.sidebar-nav a.completed .check{display:inline;}
+.sidebar-close{display:none;position:absolute;top:14px;right:14px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;}
+.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--orange);color:#fff;border:none;width:42px;height:42px;border-radius:10px;font-size:22px;cursor:pointer;box-shadow:0 2px 8px rgba(217,121,63,.3);}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:99;}
+.main{flex:1;margin-left:280px;padding:0 0 80px 0;}
+.top-progress{position:sticky;top:0;z-index:50;background:#fdfaf7ee;backdrop-filter:blur(4px);padding:10px 20px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px;justify-content:center;font-size:13px;color:#666;}
+.top-progress .prog-track{width:220px;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.top-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.lesson{display:none;padding:28px 24px 40px;max-width:880px;margin:0 auto;}
+.lesson.active{display:block;}
+.back-link{display:inline-block;font-size:13.5px;color:var(--orange-dark);text-decoration:none;font-weight:700;margin-bottom:14px;}
+.back-link:hover{text-decoration:underline;}
+.header{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--orange);padding-bottom:14px;margin-bottom:14px;flex-wrap:wrap;}
+.header .logo-icon{font-size:48px;}
+.header .school{font-size:24px;font-weight:800;color:var(--orange-dark);}
+.header .subtitle{font-size:13px;font-style:italic;color:#666;margin-top:2px;}
+.info-bar{display:flex;gap:24px;flex-wrap:wrap;border-bottom:2px solid var(--orange);padding-bottom:14px;margin-bottom:22px;font-size:13.5px;}
+.info-bar label{display:flex;align-items:center;gap:6px;font-weight:600;color:#555;}
+.info-bar input[type=text],.info-bar input[type=date]{border:none;border-bottom:1px solid #999;background:transparent;padding:3px 2px;font-size:13.5px;min-width:150px;font-family:inherit;}
+.info-bar input:focus{outline:none;border-bottom:2px solid var(--orange);}
+h1.title{text-align:center;color:var(--orange-dark);font-size:27px;margin:6px 0 2px 0;}
+.level{text-align:center;font-style:italic;color:#666;font-size:13px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #eee;}
+.level-badge{display:inline-block;background:var(--orange);color:#fff;font-size:12px;font-weight:700;padding:3px 12px;border-radius:20px;font-style:normal;letter-spacing:.3px;}
+.section-title,.section-header{background:var(--orange);color:#fff;font-weight:700;font-size:14.5px;padding:8px 14px;border-radius:5px;margin:28px 0 10px 0;}
+.subheading{font-weight:700;font-size:13.5px;margin:14px 0 6px 0;color:var(--orange-dark);}
+p{margin:8px 0;font-size:14px;}
+.tip{background:var(--cream);border:1px solid var(--border);padding:10px 14px;font-size:13.5px;margin:10px 0;border-radius:6px;}
+.tip::before{content:"💡 ";}
+table{width:100%;border-collapse:collapse;margin:8px 0 18px 0;font-size:13.5px;}
+th{background:var(--orange);color:#fff;text-align:left;padding:8px 12px;}
+td{padding:8px 12px;border-bottom:1px solid #eee;}
+tr:nth-child(even) td{background:var(--cream-2);}
+.example{font-style:italic;color:#555;font-size:13.5px;margin:6px 0 18px 0;padding-left:12px;border-left:3px solid var(--border);}
+.dialog-box,.dialogue-box{background:var(--cream);padding:14px 16px;border-radius:8px;margin:8px 0;}
+.dialogue-box{background:var(--cream-2);border-left:4px solid var(--orange);border-radius:0 6px 6px 0;}
+.dialog-box p,.dialogue-box p{margin:4px 0;font-size:14px;}
+.body-text{margin:4px 0;line-height:1.65;color:var(--ink);font-size:14px;}
+.instruction{margin:6px 0;padding:8px 14px;background:var(--cream);border-left:4px solid var(--orange);border-radius:0 4px 4px 0;color:var(--ink);font-size:13.5px;}
+.numbered-item{margin:8px 0 4px 16px;padding:4px 0;font-size:14px;font-weight:700;color:var(--orange-dark);}
+.letter-item{margin:10px 0 6px 0;padding:4px 0;font-weight:700;font-size:14px;color:var(--orange-dark);}
+.example-line{margin:3px 0 3px 24px;font-style:italic;color:#555;font-size:13.5px;}
+.fill-blank{margin:4px 0 4px 24px;font-size:14px;color:var(--ink);}
+.check-item{margin:4px 0;padding:4px 0;font-size:14px;}
+.gabarito-box{background:#F0FFF0;border:1px solid #4CAF50;border-left:5px solid #4CAF50;border-radius:0 6px 6px 0;padding:16px 20px;margin:18px 0;display:none;}
+.gabarito-box.show{display:block;}
+.gabarito-title{font-weight:700;font-size:14px;color:#2E7D32;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.gabarito-line{margin:3px 0;font-size:13px;color:#333;}
+.ex-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.03);}
+.ex-intro{font-style:italic;color:#666;font-size:13.5px;margin:0 0 12px 0;}
+.fill-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 30px;}
+.fill-item{display:flex;align-items:center;gap:8px;font-size:14px;flex-wrap:wrap;}
+.fill-item input[type=text]{width:80px;padding:5px 8px;border:2px solid #ddd;border-radius:5px;font-size:14px;font-family:inherit;text-align:center;transition:border-color .15s,background .15s;}
+.fill-item input[type=text].longer{width:200px;text-align:left;}
+.fill-item input:focus{outline:none;border-color:var(--orange);}
+.fill-item input.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.fill-item input.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-item{margin:14px 0;font-size:14px;}
+.mc-item .q{font-weight:700;margin-bottom:6px;}
+.mc-options{display:flex;gap:10px;flex-wrap:wrap;}
+.mc-options label{display:flex;align-items:center;gap:6px;border:2px solid #ddd;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:13.5px;transition:border-color .15s,background .15s;}
+.mc-options label:hover{border-color:var(--orange);}
+.mc-options label.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.mc-options label.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-options input{accent-color:var(--orange);}
+.btn{background:var(--orange);color:#fff;border:none;padding:11px 22px;border-radius:7px;font-size:14.5px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;}
+.btn:hover{background:var(--orange-dark);}
+.btn:active{transform:scale(.98);}
+.btn.secondary{background:#fff;color:var(--orange-dark);border:2px solid var(--orange);padding:9px 20px;}
+.btn.secondary:hover{background:var(--cream);}
+.score-badge{display:inline-block;margin-left:14px;font-weight:700;font-size:14.5px;padding:6px 14px;border-radius:20px;background:var(--cream-2);color:var(--orange-dark);}
+.actions{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
+.note-italic{font-size:12px;font-style:italic;color:#777;margin-top:10px;}
+textarea{width:100%;font-family:inherit;font-size:14px;padding:8px 10px;border:2px solid #ddd;border-radius:6px;resize:vertical;min-height:80px;}
+textarea:focus{outline:none;border-color:var(--orange);}
+.footer-note{text-align:center;font-size:11.5px;color:#aaa;margin-top:40px;}
+.vocab-card{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid #eee;border-radius:8px;padding:8px 14px;margin:4px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
+.vocab-card:hover{border-color:var(--orange);}
+.vocab-card .vc-en{font-weight:700;font-size:14px;}
+.vocab-card .vc-pt{font-size:13px;color:var(--ok);display:none;}
+.vocab-card.revealed .vc-pt{display:inline;}
+.vocab-card.revealed{border-color:var(--ok);background:#EAF7EF;}
+.collapse-btn{width:100%;text-align:left;background:var(--cream);border:1px solid var(--border);padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;color:var(--orange-dark);margin:8px 0 0 0;display:flex;align-items:center;gap:8px;}
+.collapse-btn:hover{background:var(--cream-2);}
+.collapse-btn .arrow{transition:transform .2s;font-size:12px;}
+.collapse-btn.open .arrow{transform:rotate(90deg);}
+.collapse-body{display:none;padding:12px 0 4px 0;}
+.collapse-body.open{display:block;}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;box-shadow:0 -2px 8px rgba(0,0,0,.04);z-index:80;padding:6px 0 env(safe-area-inset-bottom,6px);}
+.bottom-nav-inner{display:flex;max-width:480px;margin:0 auto;}
+.bottom-nav .bnav-btn{flex:1;border:none;background:none;padding:10px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:#999;cursor:pointer;font-weight:600;}
+.bottom-nav .bnav-btn .bnav-icon{font-size:20px;}
+.bottom-nav .bnav-btn.active{color:var(--orange-dark);font-weight:700;}
+.bottom-nav .bnav-btn:disabled{color:#ddd;cursor:default;}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);width:280px;}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-close{display:block;}
+  .sidebar-overlay.open{display:block;}
+  .hamburger{display:flex;align-items:center;justify-content:center;}
+  .main{margin-left:0;}
+  .lesson{padding:20px 16px 120px;}
+  .bottom-nav{display:block;}
+  .fill-grid{grid-template-columns:1fr;}
+  .top-progress{padding-left:56px;}
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.lesson.active{animation:fadeIn .3s ease;}
+</style>
+</head>
+<body>
+<div class="wrap" style="max-width:880px;margin:0 auto;padding:28px 20px;">
+<a class="back-link" href="../index.html">&larr; Voltar às Lições</a>
+<div class="header"><span class="logo-icon">🐱</span><div><div class="school">Bobcat Language School</div><div class="subtitle">Aprenda inglês no seu ritmo</div></div></div>
+<div class="info-bar"><label>👤 Aluno: <input type="text" placeholder="Seu nome"></label><label>📅 Data: <input type="date"></label></div>
+<h1 class="title">LIÇÃO 15 — Can, Can't and Everyday Communication</h1>
+<div class="level"><span class="level-badge">Nível A1</span></div>
+
+<div class="section-header">🎯 Objetivo da Lição</div>
+<p class="body-text">• Usar <strong>Can</strong> para falar sobre habilidades: "I can swim."</p>
+<p class="body-text">• Usar <strong>Can't / Cannot</strong> para dizer que não sabe fazer algo: "She can't drive."</p>
+<p class="body-text">• Aprender os 4 usos de <strong>Can</strong>: Ability, Request, Offer, Permission.</p>
+
+<div class="section-header">🔥 Warm-Up: O que você consegue fazer?</div>
+<p class="instruction">Pense em 3 coisas que você sabe fazer e 3 que não sabe:</p>
+<p class="example-line">1. I can swim. / I can't play the piano.</p>
+<p class="example-line">2. I can cook rice. / I can't drive a car.</p>
+<p class="example-line">3. I can speak Portuguese. / I can't speak Japanese.</p>
+<p class="example-line">4. Can you ride a bike?</p>
+<p class="example-line">5. Can you sing well?</p>
+<div class="dialogue-box"><p>💡 Dica: "Can" é um verbo modal — nunca muda! Não dizemos "She cans" — dizemos "She can".</p></div>
+
+<div class="section-header">🗣️ Diálogo: Two Friends Talking About Abilities</div>
+<div class="dialogue-box">
+  <p><strong>Emma:</strong> Hey, Pedro! Can you swim?</p>
+  <p><strong>Pedro:</strong> Yes, I can! I love swimming. Can you?</p>
+  <p><strong>Emma:</strong> I can swim a little, but I can't swim very well. Can you play the guitar?</p>
+  <p><strong>Pedro:</strong> No, I can't. But I can play soccer! Can you play soccer?</p>
+  <p><strong>Emma:</strong> Yes, I can! I play on the school team. Can you drive?</p>
+  <p><strong>Pedro:</strong> No, I can't. I'm only 15! Can you help me with my English homework?</p>
+  <p><strong>Emma:</strong> Of course! Can I use your computer?</p>
+  <p><strong>Pedro:</strong> Sure! Can you come to my house after school?</p>
+  <p><strong>Emma:</strong> Yes! Can I bring my dog?</p>
+  <p><strong>Pedro:</strong> Of course you can! I love dogs!</p>
+</div>
+<div class="instruction">🔁 Repita com atenção: Observe os diferentes usos de CAN no diálogo — ability, request, offer, permission!</div>
+
+<div class="section-header">📖 Vocabulário-Chave</div>
+<p class="subheading">🎯 Skills (Habilidades)</p>
+<table><tr><th>Word</th><th>Translation</th><th>Example</th></tr>
+<tr><td>swim</td><td>nadar</td><td>I can swim very well.</td></tr>
+<tr><td>drive</td><td>dirigir</td><td>She can't drive yet.</td></tr>
+<tr><td>cook</td><td>cozinhar</td><td>Can you cook dinner?</td></tr>
+<tr><td>paint</td><td>pintar</td><td>He can paint beautiful pictures.</td></tr>
+<tr><td>sing</td><td>cantar</td><td>I can't sing very well.</td></tr>
+<tr><td>play guitar</td><td>tocar violão</td><td>Can you play the guitar?</td></tr>
+<tr><td>ride a bike</td><td>andar de bicicleta</td><td>She can ride a bike.</td></tr>
+<tr><td>speak English</td><td>falar inglês</td><td>Can you speak English?</td></tr>
+</table>
+
+<p class="subheading">💼 Jobs (Profissões)</p>
+<table><tr><th>Word</th><th>Translation</th><th>Example</th></tr>
+<tr><td>doctor</td><td>médico(a)</td><td>A doctor can help sick people.</td></tr>
+<tr><td>teacher</td><td>professor(a)</td><td>A teacher can explain things.</td></tr>
+<tr><td>engineer</td><td>engenheiro(a)</td><td>An engineer can build bridges.</td></tr>
+<tr><td>chef</td><td>chef de cozinha</td><td>A chef can cook amazing food.</td></tr>
+<tr><td>pilot</td><td>piloto(a)</td><td>A pilot can fly airplanes.</td></tr>
+<tr><td>nurse</td><td>enfermeiro(a)</td><td>A nurse can take care of patients.</td></tr>
+</table>
+
+<p class="subheading">💻 Technology</p>
+<table><tr><th>Word</th><th>Translation</th><th>Example</th></tr>
+<tr><td>computer</td><td>computador</td><td>Can you use a computer?</td></tr>
+<tr><td>smartphone</td><td>celular</td><td>I can't live without my smartphone.</td></tr>
+<tr><td>internet</td><td>internet</td><td>Can I use the internet?</td></tr>
+<tr><td>email</td><td>e-mail</td><td>I can send you an email.</td></tr>
+<tr><td>app</td><td>aplicativo</td><td>Can you download the app?</td></tr>
+<tr><td>Wi-Fi</td><td>Wi-Fi</td><td>Is there Wi-Fi here?</td></tr>
+</table>
+
+<div class="section-header">📘 Gramática em Ação: Can / Can't</div>
+
+<div class="numbered-item">1. Afirmativo: Can + verbo base</div>
+<p class="example-line">I can swim. (Eu sei nadar.) | She can speak English. (Ela sabe falar inglês.) | They can cook. (Eles sabem cozinhar.)</p>
+
+<div class="numbered-item">2. Negativo: Can't / Cannot + verbo base</div>
+<p class="example-line">I can't drive. (Eu não sei dirigir.) | She can't play the guitar. (Ela não sabe tocar violão.) | He cannot come today. (Ele não pode vir hoje.)</p>
+<p class="body-text">A. <strong>Can't</strong> é informal e falado. <strong>Cannot</strong> é mais formal e escrito.</p>
+
+<div class="numbered-item">3. Perguntas: Can + sujeito + verbo base?</div>
+<p class="example-line">Can you swim? | Can she drive? | Can they come to the party?</p>
+<p class="body-text">B. Short answers:</p>
+<p class="example-line">Can you swim? → Yes, I can. / No, I can't. | Can she cook? → Yes, she can. / No, she can't.</p>
+
+<div class="numbered-item">4. Os 4 usos de CAN</div>
+<p class="body-text">A. <strong>Ability</strong> (habilidade): I can swim. (Eu sei nadar.)</p>
+<p class="body-text">B. <strong>Request</strong> (pedido): Can you help me? (Você pode me ajudar?)</p>
+<p class="body-text">C. <strong>Offer</strong> (oferecer ajuda): Can I help you? (Posso te ajudar?)</p>
+<p class="body-text">D. <strong>Permission</strong> (permissão): Can I open the window? (Posso abrir a janela?)</p>
+
+<div class="tip">Atenção: "Can" NÃO muda com he/she/it! ❌ She cans → ✅ She can.</div>
+
+<div class="section-header">📝 Exercícios</div>
+
+<div class="letter-item">A. Identifique o uso de CAN: (A)bility, (R)equest, (O)ffer, (P)ermission.</div>
+<div class="ex-card">
+  <div class="mc-item"><div class="q">"Can you help me with this bag?"</div><div class="mc-options"><label><input type="radio" name="l15mc1" value="Ability"> Ability</label><label><input type="radio" name="l15mc1" value="Request" class="correct-answer"> Request</label><label><input type="radio" name="l15mc1" value="Permission"> Permission</label></div></div>
+  <div class="mc-item"><div class="q">"I can speak three languages."</div><div class="mc-options"><label><input type="radio" name="l15mc2" value="Ability" class="correct-answer"> Ability</label><label><input type="radio" name="l15mc2" value="Request"> Request</label><label><input type="radio" name="l15mc2" value="Offer"> Offer</label></div></div>
+  <div class="mc-item"><div class="q">"Can I open the window?"</div><div class="mc-options"><label><input type="radio" name="l15mc3" value="Request"> Request</label><label><input type="radio" name="l15mc3" value="Offer"> Offer</label><label><input type="radio" name="l15mc3" value="Permission" class="correct-answer"> Permission</label></div></div>
+  <div class="mc-item"><div class="q">"Can I help you?"</div><div class="mc-options"><label><input type="radio" name="l15mc4" value="Request"> Request</label><label><input type="radio" name="l15mc4" value="Offer" class="correct-answer"> Offer</label><label><input type="radio" name="l15mc4" value="Ability"> Ability</label></div></div>
+  <div class="mc-item"><div class="q">"She can't drive a car."</div><div class="mc-options"><label><input type="radio" name="l15mc5" value="Ability" class="correct-answer"> Ability</label><label><input type="radio" name="l15mc5" value="Permission"> Permission</label><label><input type="radio" name="l15mc5" value="Request"> Request</label></div></div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">B. Complete com can ou can't.</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item">She <input type="text" data-answer="can" placeholder="?"> speak English.</div>
+    <div class="fill-item">I <input type="text" data-answer="can't" placeholder="?"> drive. I'm only 12!</div>
+    <div class="fill-item"><input type="text" data-answer="Can" placeholder="?"> you help me, please?</div>
+    <div class="fill-item">He <input type="text" data-answer="can't" placeholder="?"> play the guitar.</div>
+    <div class="fill-item"><input type="text" data-answer="Can" placeholder="?"> I go to the bathroom?</div>
+    <div class="fill-item">A pilot <input type="text" data-answer="can" placeholder="?"> fly airplanes.</div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">C. Escreva frases sobre suas habilidades.</div>
+<div class="ex-card">
+  <p class="ex-intro">Exemplo: I can cook, but I can't paint.</p>
+  <div class="fill-grid">
+    <div class="fill-item input-long">1 coisa que você sabe fazer: <input type="text" class="longer" data-answer="I can swim" placeholder="I can..."></div>
+    <div class="fill-item input-long">1 coisa que NÃO sabe: <input type="text" class="longer" data-answer="I can't drive" placeholder="I can't..."></div>
+    <div class="fill-item input-long">1 que quer aprender: <input type="text" class="longer" data-answer="I want to learn to play the guitar" placeholder="I want to..."></div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">D. Verdadeiro ou Falso?</div>
+<div class="ex-card">
+  <div class="mc-item"><div class="q">"She cans swim very well" — Frase correta.</div><div class="mc-options"><label><input type="radio" name="l15tf1" value="True"> V</label><label><input type="radio" name="l15tf1" value="False" class="correct-answer"> F</label></div></div>
+  <div class="mc-item"><div class="q">"Can I help you?" é uma oferta de ajuda.</div><div class="mc-options"><label><input type="radio" name="l15tf2" value="True" class="correct-answer"> V</label><label><input type="radio" name="l15tf2" value="False"> F</label></div></div>
+  <div class="mc-item"><div class="q">"Can't" e "Cannot" significam a mesma coisa.</div><div class="mc-options"><label><input type="radio" name="l15tf3" value="True" class="correct-answer"> V</label><label><input type="radio" name="l15tf3" value="False"> F</label></div></div>
+  <div class="mc-item"><div class="q">"Can you open the door?" é um pedido de permissão.</div><div class="mc-options"><label><input type="radio" name="l15tf4" value="True"> V</label><label><input type="radio" name="l15tf4" value="False" class="correct-answer"> F (é um request/pedido)</label></div></div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="section-header">🎭 Prática Oral / Role-Play</div>
+<p class="instruction">Pratique com um parceiro — pergunte sobre habilidades, faça pedidos e ofereça ajuda!</p>
+<div class="dialogue-box">
+  <p><strong>A:</strong> Can you swim?</p>
+  <p><strong>B:</strong> Yes, I can! I love swimming. Can you?</p>
+  <p><strong>A:</strong> I can swim, but I can't dive. Can you help me?</p>
+  <p><strong>B:</strong> Sure! Can I give you lessons on Saturday?</p>
+  <p><strong>A:</strong> That would be great! Can I bring my friend?</p>
+  <p><strong>B:</strong> Of course! Can she swim?</p>
+  <p><strong>A:</strong> Yes, she can. She can swim very well!</p>
+  <p><strong>B:</strong> Perfect! See you on Saturday then!</p>
+</div>
+
+<div class="section-header">👅 Trava-língua</div>
+<div class="dialogue-box"><p><strong>Can you can a can as a canner can can a can?</strong></p><p>🔁 Repita 3x rápido! "Can" aqui tem 3 significados diferentes!</p></div>
+
+<div class="section-header">🌍 Curiosidade Cultural: Politeness in English</div>
+<p class="body-text">Em inglês, ser educado é muito importante! Para pedir algo, podemos usar <strong>"Can you...?"</strong> (informal) ou <strong>"Could you...?"</strong> (mais formal e educado). Por exemplo, "Could you help me?" é mais polido que "Can you help me?".</p>
+<p class="body-text">Em restaurantes e lojas, os americanos e britânicos sempre dizem <strong>"please"</strong> e <strong>"thank you"</strong>. Não dizer "please" pode parecer rude!</p>
+<div class="dialogue-box"><p>💡 Dica: Use <strong>"Could you"</strong> com pessoas que você não conhece bem, e <strong>"Can you"</strong> com amigos e família.</p></div>
+
+<div class="section-header">🎨 Atividade Criativa: Can / Can't Poster</div>
+<p class="instruction">Crie um pôster sobre você! Divida em 3 partes: coisas que você CAN fazer, coisas que CAN'T, e coisas que quer aprender.</p>
+
+<div class="section-header">🧠 Desafio Extra</div>
+<p class="fill-blank">1. Escreva 3 habilidades que um médico precisa ter: ____________________</p>
+<p class="fill-blank">2. Faça um pedido educado usando "Could you": ____________________</p>
+<p class="fill-blank">3. Ofereça ajuda para alguém que parece perdido: ____________________</p>
+<p class="fill-blank">4. Peça permissão para sair mais cedo da aula: ____________________</p>
+<p class="fill-blank">5. Traduza: "Ela não sabe dirigir, mas sabe cozinhar muito bem." → ____________________</p>
+
+<div class="section-header">🔁 Revisão</div>
+<p class="check-item">✅ Sei usar can/can't para falar sobre habilidades.</p>
+<p class="check-item">✅ Conheço os 4 usos: Ability, Request, Offer, Permission.</p>
+<p class="check-item">✅ Sei que "can" NÃO muda com he/she/it.</p>
+<p class="check-item">✅ Aprendi vocabulário de skills, jobs e technology.</p>
+
+<div class="section-header">🏠 Tarefa de Casa</div>
+<p class="body-text">1. Escreva sobre 3 coisas que você can fazer, 3 que can't, e 3 que quer aprender.</p>
+<p class="body-text">2. Crie 4 diálogos curtos, cada um usando um uso diferente de CAN.</p>
+<p class="body-text">3. Faça um "Can/Can't Poster" sobre você mesmo(a).</p>
+<textarea rows="6" placeholder="3 things I can do, 3 I can't, 3 I want to learn..."></textarea>
+
+<button class="btn secondary" onclick="this.nextElementSibling.classList.toggle('show')">📋 Ver Gabarito</button>
+<div class="gabarito-box">
+  <div class="gabarito-title">✅ Gabarito — Lição 15</div>
+  <p class="gabarito-line"><strong>A.</strong> Request | Ability | Permission | Offer | Ability</p>
+  <p class="gabarito-line"><strong>B.</strong> can | can't | Can | can't | Can | can</p>
+  <p class="gabarito-line"><strong>C.</strong> Respostas variam</p>
+  <p class="gabarito-line"><strong>D.</strong> F (She can) | V | V | F (é request)</p>
+  <p class="gabarito-line"><strong>Desafio:</strong> 2. Could you help me? | 3. Can I help you? | 4. Can I leave early? | 5. She can't drive, but she can cook very well.</p>
+</div>
+
+<div class="section-header">🏁 Conclusão</div>
+<p class="body-text">🎉 Ótimo trabalho! Agora você sabe falar sobre habilidades, fazer pedidos, oferecer ajuda e pedir permissão com Can/Can't! Na próxima lição: <strong>Present Continuous</strong> — o que está acontecendo AGORA! See you in Lesson 16! 👋</p>
+
+<div class="actions" style="margin-top:24px;">
+  <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
+  <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
+</div>
+<p class="completion-note" style="font-size:12px;font-style:italic;color:#777;margin-top:10px;">Responda os exercícios (preenchimento e múltipla escolha) e clique em "Finalizar" para conferir sua nota. É preciso pelo menos 85% de acerto para concluir a lição.</p>
+<div class="footer-note">Bobcat Language School • Lição 15 — Can, Can't e Comunicação do Dia a Dia</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<script>
+const LESSON_ID = 'licao-15-can-cant';
+let finishing = false;
+
+async function prefillFromProfile() {
+  await initDataLayer();
+  const profile = await getProfile();
+  if (profile && profile.name) {
+    const nameInput = document.querySelector('.info-bar input[type=text]');
+    if (nameInput && !nameInput.value) nameInput.value = profile.name;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const dateInput = document.querySelector('.info-bar input[type=date]');
+  if (dateInput && !dateInput.value) dateInput.value = today;
+}
+document.addEventListener('DOMContentLoaded', prefillFromProfile);
+
+function checkFills(btn) {
+  const card = btn.closest('.ex-card');
+  const inputs = card.querySelectorAll('.fill-item input[type=text]');
+  let correct = 0, total = 0;
+  inputs.forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    inp.classList.remove('correct', 'incorrect');
+    if (cleanVal === cleanAnswer) { inp.classList.add('correct'); correct++; }
+    else { inp.classList.add('incorrect'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  const badge = document.createElement('span');
+  badge.className = 'score-badge';
+  badge.textContent = correct + '/' + total + ' ✅';
+  btn.parentElement.appendChild(badge);
+}
+
+function checkMC(btn) {
+  const card = btn.closest('.ex-card');
+  const items = card.querySelectorAll('.mc-item');
+  let correct = 0, total = 0;
+  items.forEach(item => {
+    const options = item.querySelectorAll('.mc-options label');
+    const selected = item.querySelector('input[type=radio]:checked');
+    options.forEach(l => l.classList.remove('correct', 'incorrect'));
+    if (!selected) return;
+    total++;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) { selected.parentElement.classList.add('correct'); correct++; }
+    else { selected.parentElement.classList.add('incorrect'); if (correctRadio) correctRadio.parentElement.classList.add('correct'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  if (total > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'score-badge';
+    badge.textContent = correct + '/' + total + ' ✅';
+    btn.parentElement.appendChild(badge);
+  }
+}
+
+function toggleCollapse(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+async function finishLesson() {
+  if (finishing) return;
+  finishing = true;
+
+  let correct = 0, total = 0;
+  document.querySelectorAll('input[data-answer]').forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    if (cleanVal === cleanAnswer) correct++;
+  });
+  document.querySelectorAll('.mc-item').forEach(item => {
+    total++;
+    const selected = item.querySelector('input[type=radio]:checked');
+    if (!selected) return;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) correct++;
+  });
+
+  const safeTotal = total || 1;
+  const passed = await handleLessonFinish(LESSON_ID, correct, safeTotal, 'correct');
+  if (!passed) finishing = false;
+}
+</script>
+
+</body>
+</html>

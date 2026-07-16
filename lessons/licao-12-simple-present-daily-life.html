@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Lesson 12 — Simple Present: Daily Life and Habits</title>
+<style>
+:root {
+  --orange: #D9793F;
+  --orange-dark: #C9622A;
+  --cream: #FBEFE6;
+  --cream-2: #F7F1EC;
+  --ink: #2b2b2b;
+  --ok: #2E8B57;
+  --bad: #C0392B;
+  --border: #EBC9AE;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  background:#fdfaf7;
+  line-height:1.55;
+}
+.app-layout{display:flex;min-height:100vh;}
+.sidebar{
+  width:280px;min-height:100vh;position:fixed;top:0;left:0;z-index:100;
+  background:#fff;border-right:2px solid var(--border);
+  display:flex;flex-direction:column;transition:transform .3s ease;
+}
+.sidebar-header{display:flex;align-items:center;gap:12px;padding:18px 20px 14px;border-bottom:3px solid var(--orange);}
+.sidebar-header .logo{font-size:32px;}
+.sidebar-header .brand{font-weight:800;font-size:16px;color:var(--orange-dark);}
+.sidebar-header .brand small{display:block;font-weight:400;font-size:11px;color:#888;font-style:italic;}
+.sidebar-progress{padding:14px 20px 10px;border-bottom:1px solid #eee;}
+.sidebar-progress .prog-label{font-size:12px;color:#888;font-weight:600;margin-bottom:6px;}
+.sidebar-progress .prog-track{width:100%;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.sidebar-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.sidebar-progress .prog-text{font-size:11px;color:#999;margin-top:4px;text-align:right;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13.5px;font-weight:600;color:#555;text-decoration:none;transition:background .15s,color .15s;border-left:3px solid transparent;}
+.sidebar-nav a:hover{background:var(--cream-2);color:var(--orange-dark);}
+.sidebar-nav a.active{background:var(--cream);color:var(--orange-dark);border-left-color:var(--orange);font-weight:700;}
+.sidebar-nav a .lnum{width:26px;height:26px;border-radius:50%;background:var(--cream-2);color:var(--orange-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.sidebar-nav a.active .lnum{background:var(--orange);color:#fff;}
+.sidebar-nav a.completed .lnum{background:var(--ok);color:#fff;}
+.sidebar-nav a .check{margin-left:auto;font-size:14px;color:var(--ok);display:none;}
+.sidebar-nav a.completed .check{display:inline;}
+.sidebar-close{display:none;position:absolute;top:14px;right:14px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;}
+.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--orange);color:#fff;border:none;width:42px;height:42px;border-radius:10px;font-size:22px;cursor:pointer;box-shadow:0 2px 8px rgba(217,121,63,.3);}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:99;}
+.main{flex:1;margin-left:280px;padding:0 0 80px 0;}
+.top-progress{position:sticky;top:0;z-index:50;background:#fdfaf7ee;backdrop-filter:blur(4px);padding:10px 20px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px;justify-content:center;font-size:13px;color:#666;}
+.top-progress .prog-track{width:220px;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.top-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.lesson{display:none;padding:28px 24px 40px;max-width:880px;margin:0 auto;}
+.lesson.active{display:block;}
+.back-link{display:inline-block;font-size:13.5px;color:var(--orange-dark);text-decoration:none;font-weight:700;margin-bottom:14px;}
+.back-link:hover{text-decoration:underline;}
+.header{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--orange);padding-bottom:14px;margin-bottom:14px;flex-wrap:wrap;}
+.header .logo-icon{font-size:48px;}
+.header .school{font-size:24px;font-weight:800;color:var(--orange-dark);}
+.header .subtitle{font-size:13px;font-style:italic;color:#666;margin-top:2px;}
+.info-bar{display:flex;gap:24px;flex-wrap:wrap;border-bottom:2px solid var(--orange);padding-bottom:14px;margin-bottom:22px;font-size:13.5px;}
+.info-bar label{display:flex;align-items:center;gap:6px;font-weight:600;color:#555;}
+.info-bar input[type=text],.info-bar input[type=date]{border:none;border-bottom:1px solid #999;background:transparent;padding:3px 2px;font-size:13.5px;min-width:150px;font-family:inherit;}
+.info-bar input:focus{outline:none;border-bottom:2px solid var(--orange);}
+h1.title{text-align:center;color:var(--orange-dark);font-size:27px;margin:6px 0 2px 0;}
+.level{text-align:center;font-style:italic;color:#666;font-size:13px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #eee;}
+.level-badge{display:inline-block;background:var(--orange);color:#fff;font-size:12px;font-weight:700;padding:3px 12px;border-radius:20px;font-style:normal;letter-spacing:.3px;}
+.section-title,.section-header{background:var(--orange);color:#fff;font-weight:700;font-size:14.5px;padding:8px 14px;border-radius:5px;margin:28px 0 10px 0;}
+.subheading{font-weight:700;font-size:13.5px;margin:14px 0 6px 0;color:var(--orange-dark);}
+p{margin:8px 0;font-size:14px;}
+.tip{background:var(--cream);border:1px solid var(--border);padding:10px 14px;font-size:13.5px;margin:10px 0;border-radius:6px;}
+.tip::before{content:"💡 ";}
+table{width:100%;border-collapse:collapse;margin:8px 0 18px 0;font-size:13.5px;}
+th{background:var(--orange);color:#fff;text-align:left;padding:8px 12px;}
+td{padding:8px 12px;border-bottom:1px solid #eee;}
+tr:nth-child(even) td{background:var(--cream-2);}
+.example{font-style:italic;color:#555;font-size:13.5px;margin:6px 0 18px 0;padding-left:12px;border-left:3px solid var(--border);}
+.dialog-box,.dialogue-box{background:var(--cream);padding:14px 16px;border-radius:8px;margin:8px 0;}
+.dialogue-box{background:var(--cream-2);border-left:4px solid var(--orange);border-radius:0 6px 6px 0;}
+.dialog-box p,.dialogue-box p{margin:4px 0;font-size:14px;}
+.body-text{margin:4px 0;line-height:1.65;color:var(--ink);font-size:14px;}
+.instruction{margin:6px 0;padding:8px 14px;background:var(--cream);border-left:4px solid var(--orange);border-radius:0 4px 4px 0;color:var(--ink);font-size:13.5px;}
+.numbered-item{margin:8px 0 4px 16px;padding:4px 0;font-size:14px;font-weight:700;color:var(--orange-dark);}
+.letter-item{margin:10px 0 6px 0;padding:4px 0;font-weight:700;font-size:14px;color:var(--orange-dark);}
+.example-line{margin:3px 0 3px 24px;font-style:italic;color:#555;font-size:13.5px;}
+.fill-blank{margin:4px 0 4px 24px;font-size:14px;color:var(--ink);}
+.check-item{margin:4px 0;padding:4px 0;font-size:14px;}
+.gabarito-box{background:#F0FFF0;border:1px solid #4CAF50;border-left:5px solid #4CAF50;border-radius:0 6px 6px 0;padding:16px 20px;margin:18px 0;display:none;}
+.gabarito-box.show{display:block;}
+.gabarito-title{font-weight:700;font-size:14px;color:#2E7D32;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.gabarito-line{margin:3px 0;font-size:13px;color:#333;}
+.ex-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.03);}
+.ex-intro{font-style:italic;color:#666;font-size:13.5px;margin:0 0 12px 0;}
+.fill-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 30px;}
+.fill-item{display:flex;align-items:center;gap:8px;font-size:14px;flex-wrap:wrap;}
+.fill-item input[type=text]{width:80px;padding:5px 8px;border:2px solid #ddd;border-radius:5px;font-size:14px;font-family:inherit;text-align:center;transition:border-color .15s,background .15s;}
+.fill-item input[type=text].longer{width:200px;text-align:left;}
+.fill-item input:focus{outline:none;border-color:var(--orange);}
+.fill-item input.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.fill-item input.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-item{margin:14px 0;font-size:14px;}
+.mc-item .q{font-weight:700;margin-bottom:6px;}
+.mc-options{display:flex;gap:10px;flex-wrap:wrap;}
+.mc-options label{display:flex;align-items:center;gap:6px;border:2px solid #ddd;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:13.5px;transition:border-color .15s,background .15s;}
+.mc-options label:hover{border-color:var(--orange);}
+.mc-options label.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.mc-options label.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-options input{accent-color:var(--orange);}
+.btn{background:var(--orange);color:#fff;border:none;padding:11px 22px;border-radius:7px;font-size:14.5px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;}
+.btn:hover{background:var(--orange-dark);}
+.btn:active{transform:scale(.98);}
+.btn.secondary{background:#fff;color:var(--orange-dark);border:2px solid var(--orange);padding:9px 20px;}
+.btn.secondary:hover{background:var(--cream);}
+.score-badge{display:inline-block;margin-left:14px;font-weight:700;font-size:14.5px;padding:6px 14px;border-radius:20px;background:var(--cream-2);color:var(--orange-dark);}
+.actions{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
+.note-italic{font-size:12px;font-style:italic;color:#777;margin-top:10px;}
+textarea{width:100%;font-family:inherit;font-size:14px;padding:8px 10px;border:2px solid #ddd;border-radius:6px;resize:vertical;min-height:80px;}
+textarea:focus{outline:none;border-color:var(--orange);}
+.footer-note{text-align:center;font-size:11.5px;color:#aaa;margin-top:40px;}
+.vocab-card{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid #eee;border-radius:8px;padding:8px 14px;margin:4px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
+.vocab-card:hover{border-color:var(--orange);}
+.vocab-card .vc-en{font-weight:700;font-size:14px;}
+.vocab-card .vc-pt{font-size:13px;color:var(--ok);display:none;}
+.vocab-card.revealed .vc-pt{display:inline;}
+.vocab-card.revealed{border-color:var(--ok);background:#EAF7EF;}
+.collapse-btn{width:100%;text-align:left;background:var(--cream);border:1px solid var(--border);padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;color:var(--orange-dark);margin:8px 0 0 0;display:flex;align-items:center;gap:8px;}
+.collapse-btn:hover{background:var(--cream-2);}
+.collapse-btn .arrow{transition:transform .2s;font-size:12px;}
+.collapse-btn.open .arrow{transform:rotate(90deg);}
+.collapse-body{display:none;padding:12px 0 4px 0;}
+.collapse-body.open{display:block;}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;box-shadow:0 -2px 8px rgba(0,0,0,.04);z-index:80;padding:6px 0 env(safe-area-inset-bottom,6px);}
+.bottom-nav-inner{display:flex;max-width:480px;margin:0 auto;}
+.bottom-nav .bnav-btn{flex:1;border:none;background:none;padding:10px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:#999;cursor:pointer;font-weight:600;}
+.bottom-nav .bnav-btn .bnav-icon{font-size:20px;}
+.bottom-nav .bnav-btn.active{color:var(--orange-dark);font-weight:700;}
+.bottom-nav .bnav-btn:disabled{color:#ddd;cursor:default;}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);width:280px;}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-close{display:block;}
+  .sidebar-overlay.open{display:block;}
+  .hamburger{display:flex;align-items:center;justify-content:center;}
+  .main{margin-left:0;}
+  .lesson{padding:20px 16px 120px;}
+  .bottom-nav{display:block;}
+  .fill-grid{grid-template-columns:1fr;}
+  .top-progress{padding-left:56px;}
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.lesson.active{animation:fadeIn .3s ease;}
+</style>
+</head>
+<body>
+<div class="wrap" style="max-width:880px;margin:0 auto;padding:28px 20px;">
+<a class="back-link" href="../index.html">&larr; Voltar às Lições</a>
+<div class="header">
+  <span class="logo-icon">🐱</span>
+  <div><div class="school">Bobcat Language School</div><div class="subtitle">Aprenda inglês no seu ritmo</div></div>
+</div>
+<div class="info-bar">
+  <label>👤 Aluno: <input type="text" placeholder="Seu nome"></label>
+  <label>📅 Data: <input type="date"></label>
+</div>
+<h1 class="title">LIÇÃO 12 — Simple Present: Daily Life and Habits</h1>
+<div class="level"><span class="level-badge">Nível A1</span></div>
+
+<!-- 1. OBJETIVO -->
+<div class="section-header">🎯 Objetivo da Lição</div>
+<p class="body-text">• Usar o <strong>Simple Present</strong> para falar sobre rotinas e hábitos diários (afirmativo, 3ª pessoa).</p>
+<p class="body-text">• Aplicar os <strong>advérbios de frequência</strong> (always, usually, often, sometimes, rarely, never) na posição correta.</p>
+<p class="body-text">• Aprender vocabulário de <strong>rotina diária</strong>, dias da semana, meses e partes do dia.</p>
+
+<!-- 2. WARM-UP -->
+<div class="section-header">🔥 Warm-Up: Como é o seu dia?</div>
+<p class="instruction">Pense no seu dia a dia e responda:</p>
+<p class="example-line">1. Que horas você normalmente acorda?</p>
+<p class="example-line">2. O que você faz logo de manhã?</p>
+<p class="example-line">3. Você toma café da manhã todos os dias?</p>
+<p class="example-line">4. O que você faz à noite antes de dormir?</p>
+<p class="example-line">5. Você estuda inglês todos os dias ou só às vezes?</p>
+<div class="dialogue-box"><p>💡 Dica: Agora tente dizer uma dessas respostas em inglês! Mesmo que erre, tente! Ex: "I wake up at 7 o'clock."</p></div>
+
+<!-- 3. DIÁLOGO -->
+<div class="section-header">🗣️ Diálogo: Two Friends Talking About Routines</div>
+<div class="dialogue-box">
+  <p><strong>Anna:</strong> Hi, Lucas! What time do you wake up?</p>
+  <p><strong>Lucas:</strong> I always wake up at 6:30 a.m. And you?</p>
+  <p><strong>Anna:</strong> I usually wake up at 7:00. I take a shower and then I have breakfast.</p>
+  <p><strong>Lucas:</strong> What do you have for breakfast?</p>
+  <p><strong>Anna:</strong> I usually have toast and coffee. What about you?</p>
+  <p><strong>Lucas:</strong> I often have eggs and juice. Then I go to school.</p>
+  <p><strong>Anna:</strong> I go to school at 8:00. I sometimes walk, but my mom usually drives me.</p>
+  <p><strong>Lucas:</strong> I always walk. School is near my house.</p>
+  <p><strong>Anna:</strong> That's nice! And what do you do in the evening?</p>
+  <p><strong>Lucas:</strong> I usually do homework, have dinner, and then I go to bed at 10:00.</p>
+</div>
+<div class="instruction">🔁 Repita com atenção: Leia o diálogo em voz alta, linha por linha. Tente imitar a entonação!</div>
+
+<!-- 4. VOCABULÁRIO-CHAVE -->
+<div class="section-header">📖 Vocabulário-Chave</div>
+
+<p class="subheading">🌅 Daily Routine (Rotina Diária)</p>
+<table>
+  <tr><th>Word</th><th>Translation</th><th>Example</th></tr>
+  <tr><td>wake up</td><td>acordar</td><td>I wake up at 7 a.m.</td></tr>
+  <tr><td>take a shower</td><td>tomar banho</td><td>She takes a shower in the morning.</td></tr>
+  <tr><td>have breakfast</td><td>tomar café da manhã</td><td>We have breakfast at 7:30.</td></tr>
+  <tr><td>go to work</td><td>ir ao trabalho</td><td>He goes to work at 8:00.</td></tr>
+  <tr><td>go to school</td><td>ir à escola</td><td>They go to school by bus.</td></tr>
+  <tr><td>have lunch</td><td>almoçar</td><td>I have lunch at noon.</td></tr>
+  <tr><td>come home</td><td>voltar para casa</td><td>She comes home at 5:00.</td></tr>
+  <tr><td>have dinner</td><td>jantar</td><td>We have dinner at 7:00 p.m.</td></tr>
+  <tr><td>go to bed</td><td>ir para a cama</td><td>He goes to bed at 10:00.</td></tr>
+  <tr><td>brush teeth</td><td>escovar os dentes</td><td>I always brush my teeth before bed.</td></tr>
+  <tr><td>get dressed</td><td>se vestir</td><td>She gets dressed quickly.</td></tr>
+  <tr><td>do homework</td><td>fazer lição de casa</td><td>They do homework in the afternoon.</td></tr>
+  <tr><td>make the bed</td><td>arrumar a cama</td><td>She always makes the bed.</td></tr>
+  <tr><td>do exercise</td><td>fazer exercício</td><td>He does exercise every morning.</td></tr>
+  <tr><td>have a break</td><td>fazer uma pausa</td><td>I have a break at 3:00.</td></tr>
+</table>
+
+<p class="subheading">📅 Days of the Week (Dias da Semana)</p>
+<table>
+  <tr><th>Word</th><th>Translation</th><th>Example</th></tr>
+  <tr><td>Monday</td><td>segunda-feira</td><td>I have English class on Monday.</td></tr>
+  <tr><td>Tuesday</td><td>terça-feira</td><td>She goes to the gym on Tuesday.</td></tr>
+  <tr><td>Wednesday</td><td>quarta-feira</td><td>We study math on Wednesday.</td></tr>
+  <tr><td>Thursday</td><td>quinta-feira</td><td>He plays soccer on Thursday.</td></tr>
+  <tr><td>Friday</td><td>sexta-feira</td><td>They watch movies on Friday.</td></tr>
+  <tr><td>Saturday</td><td>sábado</td><td>I sleep late on Saturday.</td></tr>
+  <tr><td>Sunday</td><td>domingo</td><td>We visit grandma on Sunday.</td></tr>
+</table>
+
+<p class="subheading">🗓️ Months of the Year</p>
+<table>
+  <tr><th>Word</th><th>Translation</th><th>Word</th><th>Translation</th></tr>
+  <tr><td>January</td><td>janeiro</td><td>July</td><td>julho</td></tr>
+  <tr><td>February</td><td>fevereiro</td><td>August</td><td>agosto</td></tr>
+  <tr><td>March</td><td>março</td><td>September</td><td>setembro</td></tr>
+  <tr><td>April</td><td>abril</td><td>October</td><td>outubro</td></tr>
+  <tr><td>May</td><td>maio</td><td>November</td><td>novembro</td></tr>
+  <tr><td>June</td><td>junho</td><td>December</td><td>dezembro</td></tr>
+</table>
+
+<p class="subheading">🌤️ Parts of the Day</p>
+<table>
+  <tr><th>Word</th><th>Translation</th><th>Example</th></tr>
+  <tr><td>morning</td><td>manhã</td><td>I study in the morning.</td></tr>
+  <tr><td>afternoon</td><td>tarde</td><td>She works in the afternoon.</td></tr>
+  <tr><td>evening</td><td>fim de tarde / início da noite</td><td>We watch TV in the evening.</td></tr>
+  <tr><td>night</td><td>noite</td><td>He sleeps at night.</td></tr>
+</table>
+
+<div class="tip">Dica: <strong>In the morning/afternoon/evening</strong>, mas <strong>At night</strong>. Ex: <em>I study in the morning. I sleep at night.</em></div>
+
+<!-- 5. GRAMÁTICA EM AÇÃO -->
+<div class="section-header">📘 Gramática em Ação: Simple Present — Afirmativo</div>
+
+<div class="numbered-item">1. Estrutura do Simple Present (afirmativo)</div>
+<p class="body-text">Usamos o Simple Present para falar sobre <strong>rotinas, hábitos e fatos</strong>.</p>
+<p class="body-text"><strong>Estrutura:</strong> Sujeito + verbo (base form) — para he/she/it, adicionamos <strong>-s</strong> ou <strong>-es</strong>.</p>
+<table>
+  <tr><th>Pronome</th><th>Verbo (work)</th><th>Verbo (study)</th><th>Português</th></tr>
+  <tr><td>I</td><td>work</td><td>study</td><td>eu trabalho / estudo</td></tr>
+  <tr><td>You</td><td>work</td><td>study</td><td>você trabalha / estuda</td></tr>
+  <tr><td>He</td><td>works</td><td>studies</td><td>ele trabalha / estuda</td></tr>
+  <tr><td>She</td><td>works</td><td>studies</td><td>ela trabalha / estuda</td></tr>
+  <tr><td>It</td><td>works</td><td>studies</td><td>isso funciona / estuda</td></tr>
+  <tr><td>We</td><td>work</td><td>study</td><td>nós trabalhamos / estudamos</td></tr>
+  <tr><td>They</td><td>work</td><td>study</td><td>eles trabalham / estudam</td></tr>
+</table>
+
+<div class="numbered-item">2. Regras para a 3ª pessoa (he, she, it)</div>
+<p class="body-text">A. Verbo normal: adiciona <strong>-s</strong></p>
+<p class="example-line">play → plays | eat → eats | drink → drinks | read → reads</p>
+<p class="body-text">B. Verbos terminados em <strong>-sh, -ch, -x, -z, -o</strong>: adiciona <strong>-es</strong></p>
+<p class="example-line">wash → washes | watch → watches | fix → fixes | go → goes | buzz → buzzes</p>
+<p class="body-text">C. Consoante + <strong>y</strong>: tira o y e adiciona <strong>-ies</strong></p>
+<p class="example-line">study → studies | fly → flies | carry → carries | try → tries</p>
+<p class="body-text">D. Vogal + <strong>y</strong>: apenas adiciona <strong>-s</strong></p>
+<p class="example-line">play → plays | say → says | enjoy → enjoys | buy → buys</p>
+
+<div class="numbered-item">3. Advérbios de Frequência</div>
+<p class="body-text">Indicam <strong>com que frequência</strong> algo acontece:</p>
+<table>
+  <tr><th>Inglês</th><th>Português</th><th>%</th><th>Exemplo</th></tr>
+  <tr><td><strong>always</strong></td><td>sempre</td><td>100%</td><td>I always wake up at 7.</td></tr>
+  <tr><td><strong>usually</strong></td><td>geralmente</td><td>80%</td><td>She usually drinks coffee.</td></tr>
+  <tr><td><strong>often</strong></td><td>frequentemente</td><td>60%</td><td>He often reads books.</td></tr>
+  <tr><td><strong>sometimes</strong></td><td>às vezes</td><td>40%</td><td>We sometimes eat pizza.</td></tr>
+  <tr><td><strong>rarely</strong></td><td>raramente</td><td>10%</td><td>They rarely watch TV.</td></tr>
+  <tr><td><strong>never</strong></td><td>nunca</td><td>0%</td><td>I never go to bed late.</td></tr>
+</table>
+
+<p class="body-text">A. Com verbos normais: <strong>Sujeito + advérbio + verbo</strong></p>
+<p class="example-line">I always eat breakfast. | She never drinks soda. | They usually study at night.</p>
+<p class="body-text">B. Com o verbo <strong>to be</strong>: <strong>Sujeito + verbo be + advérbio</strong></p>
+<p class="example-line">She is always happy. | He is often late. | They are never bored.</p>
+
+<div class="tip">Atenção: <strong>never</strong> já tem sentido negativo! Não use "don't never". Diga apenas "I never go".</div>
+
+<!-- 6. EXERCÍCIOS -->
+<div class="section-header">📝 Exercícios</div>
+
+<div class="letter-item">A. Complete com a forma correta do verbo (3ª pessoa: he/she/it).</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item">She <input type="text" data-answer="works" placeholder="?"> (work)</div>
+    <div class="fill-item">He <input type="text" data-answer="watches" placeholder="?"> (watch)</div>
+    <div class="fill-item">Maria <input type="text" data-answer="studies" placeholder="?"> (study)</div>
+    <div class="fill-item">My mom <input type="text" data-answer="cooks" placeholder="?"> (cook)</div>
+    <div class="fill-item">John <input type="text" data-answer="plays" placeholder="?"> (play)</div>
+    <div class="fill-item">The dog <input type="text" data-answer="runs" placeholder="?"> (run)</div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">B. Escolha o advérbio de frequência correto.</div>
+<div class="ex-card">
+  <div class="mc-item">
+    <div class="q">I ___ wake up at 6 a.m. I never sleep late! (100%)</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l12mc1" value="sometimes"> sometimes</label>
+      <label><input type="radio" name="l12mc1" value="always" class="correct-answer"> always</label>
+      <label><input type="radio" name="l12mc1" value="rarely"> rarely</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">She ___ eats fast food. Only once a year. (10%)</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l12mc2" value="always"> always</label>
+      <label><input type="radio" name="l12mc2" value="usually"> usually</label>
+      <label><input type="radio" name="l12mc2" value="rarely" class="correct-answer"> rarely</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">We ___ go to the park on weekends. Not every week, but many. (60%)</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l12mc3" value="never"> never</label>
+      <label><input type="radio" name="l12mc3" value="often" class="correct-answer"> often</label>
+      <label><input type="radio" name="l12mc3" value="always"> always</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">He is ___ late for class. He arrives early every day. (0%)</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l12mc4" value="sometimes"> sometimes</label>
+      <label><input type="radio" name="l12mc4" value="never" class="correct-answer"> never</label>
+      <label><input type="radio" name="l12mc4" value="often"> often</label>
+    </div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">C. Escreva frases completas usando o Simple Present.</div>
+<div class="ex-card">
+  <p class="ex-intro">Exemplo: (I / always / wake up / at 7) → I always wake up at 7.</p>
+  <div class="fill-grid">
+    <div class="fill-item input-long">1. (She / usually / have breakfast / at 8) → <input type="text" class="longer" data-answer="She usually has breakfast at 8" placeholder="..."></div>
+    <div class="fill-item input-long">2. (He / never / go / to bed late) → <input type="text" class="longer" data-answer="He never goes to bed late" placeholder="..."></div>
+    <div class="fill-item input-long">3. (They / often / play / soccer) → <input type="text" class="longer" data-answer="They often play soccer" placeholder="..."></div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">D. Verdadeiro (V) ou Falso (F)?</div>
+<div class="ex-card">
+  <div class="mc-item">
+    <div class="q">"She watches TV every night" — O verbo está na 3ª pessoa correta.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l12tf1" value="True" class="correct-answer"> Verdadeiro</label>
+      <label><input type="radio" name="l12tf1" value="False"> Falso</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"He studys English every day" — O verbo está correto.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l12tf2" value="True"> Verdadeiro</label>
+      <label><input type="radio" name="l12tf2" value="False" class="correct-answer"> Falso</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"I never am late" — O advérbio está na posição correta.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l12tf3" value="True"> Verdadeiro</label>
+      <label><input type="radio" name="l12tf3" value="False" class="correct-answer"> Falso</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"We always have lunch at noon" — Frase correta.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l12tf4" value="True" class="correct-answer"> Verdadeiro</label>
+      <label><input type="radio" name="l12tf4" value="False"> Falso</label>
+    </div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<!-- 7. PRÁTICA ORAL -->
+<div class="section-header">🎭 Prática Oral / Role-Play</div>
+<p class="instruction">Pratique o diálogo com um parceiro ou sozinho(a), alternando os papéis. Depois, substitua pelas SUAS informações!</p>
+<div class="dialogue-box">
+  <p><strong>A:</strong> What time do you wake up?</p>
+  <p><strong>B:</strong> I usually wake up at 6:30. And you?</p>
+  <p><strong>A:</strong> I always wake up at 7:00. I take a shower and have breakfast.</p>
+  <p><strong>B:</strong> What do you have for breakfast?</p>
+  <p><strong>A:</strong> I usually have toast and coffee. What about you?</p>
+  <p><strong>B:</strong> I often have cereal and milk. Then I go to school.</p>
+  <p><strong>A:</strong> I sometimes walk to school. But I usually take the bus.</p>
+  <p><strong>B:</strong> Nice! I always walk. It's only 10 minutes.</p>
+</div>
+
+<!-- 8. TRAVA-LÍNGUA -->
+<div class="section-header">👅 Trava-língua (Tongue Twister)</div>
+<div class="dialogue-box">
+  <p><strong>She sells seashells by the seashore.</strong></p>
+  <p>🔁 Repita 3x rápido! Concentre-se no som "sh" e "s".</p>
+</div>
+
+<!-- 9. CURIOSIDADE CULTURAL -->
+<div class="section-header">🌍 Curiosidade Cultural: Breakfast Around the World</div>
+<p class="body-text">O café da manhã é muito diferente ao redor do mundo! Nos <strong>EUA</strong>, as pessoas costumam comer <strong>pancakes, bacon, eggs e toast</strong>, e beber <strong>orange juice e coffee</strong>. É um café da manhã bem generoso!</p>
+<p class="body-text">No <strong>Reino Unido</strong>, o famoso <strong>"English breakfast"</strong> inclui eggs, bacon, sausage, baked beans, toast, e até black pudding! É uma refeição completa.</p>
+<p class="body-text">Já no <strong>Brasil</strong>, o café da manhã é mais leve: <strong>pão com manteiga, café com leite, frutas, e às vezes queijo ou presunto</strong>.</p>
+<div class="dialogue-box"><p>💡 Dica cultural: Em inglês, dizemos <strong>"have breakfast"</strong> e NÃO "take breakfast". Dizemos <strong>"have lunch"</strong> e <strong>"have dinner"</strong> também!</p></div>
+
+<!-- 10. ATIVIDADE CRIATIVA -->
+<div class="section-header">🎨 Atividade Criativa: My Daily Routine Timeline</div>
+<p class="instruction">Desenhe uma linha do tempo (timeline) do seu dia! Para cada horário, escreva uma frase em inglês.</p>
+<p class="example-line">6:30 a.m. — I wake up at 6:30.</p>
+<p class="example-line">7:00 a.m. — I always have breakfast at 7:00.</p>
+<p class="example-line">8:00 a.m. — I usually go to school at 8:00.</p>
+<div class="tip">Use pelo menos 3 advérbios de frequência diferentes: always, usually, sometimes, often, rarely, never.</div>
+
+<!-- 11. DESAFIO EXTRA -->
+<div class="section-header">🧠 Desafio Extra</div>
+<p class="fill-blank">1. Escreva uma frase com "never" sobre algo que você nunca faz: ____________________</p>
+<p class="fill-blank">2. Corrija o erro: "She go to school every day." → ____________________</p>
+<p class="fill-blank">3. Corrija o erro: "He studys English on Monday." → ____________________</p>
+<p class="fill-blank">4. Traduza: "Eu sempre escovo os dentes antes de dormir." → ____________________</p>
+<p class="fill-blank">5. Escreva 3 coisas que você geralmente faz aos domingos: ____________________</p>
+
+<!-- 12. REVISÃO -->
+<div class="section-header">🔁 Revisão</div>
+<p class="check-item">✅ Sei usar o Simple Present afirmativo com todos os pronomes (incluindo 3ª pessoa com -s/-es/-ies).</p>
+<p class="check-item">✅ Conheço os 6 advérbios de frequência e sei posicioná-los corretamente na frase.</p>
+<p class="check-item">✅ Aprendi vocabulário de rotina diária, dias da semana, meses e partes do dia.</p>
+<p class="check-item">✅ Sei a diferença entre "in the morning" e "at night".</p>
+
+<!-- 13. TAREFA DE CASA -->
+<div class="section-header">🏠 Tarefa de Casa</div>
+<p class="body-text">1. Escreva 8-10 frases sobre a sua rotina diária usando Simple Present e advérbios de frequência. (Projeto: "My Daily Routine")</p>
+<p class="body-text">2. Copie os dias da semana e os meses do ano e pratique a pronúncia.</p>
+<p class="body-text">3. Desenhe a sua timeline completa e escreva uma frase para cada atividade do seu dia.</p>
+<textarea rows="10" placeholder="My Daily Routine: Escreva 8-10 frases sobre sua rotina aqui..."></textarea>
+
+<!-- 14. GABARITO -->
+<button class="btn secondary" onclick="this.nextElementSibling.classList.toggle('show')">📋 Ver Gabarito</button>
+<div class="gabarito-box">
+  <div class="gabarito-title">✅ Gabarito — Lição 12</div>
+  <p class="gabarito-line"><strong>A.</strong> 1. works | 2. watches | 3. studies | 4. cooks | 5. plays | 6. runs</p>
+  <p class="gabarito-line"><strong>B.</strong> 1. always | 2. rarely | 3. often | 4. never</p>
+  <p class="gabarito-line"><strong>C.</strong> 1. She usually has breakfast at 8. | 2. He never goes to bed late. | 3. They often play soccer.</p>
+  <p class="gabarito-line"><strong>D.</strong> 1. V | 2. F (studies) | 3. F (I am never late) | 4. V</p>
+  <p class="gabarito-line"><strong>Desafio:</strong> 2. She goes to school | 3. He studies English | 4. I always brush my teeth before bed.</p>
+</div>
+
+<!-- 15. CONCLUSÃO -->
+<div class="section-header">🏁 Conclusão</div>
+<p class="body-text">🎉 Parabéns! Agora você sabe falar sobre sua rotina diária em inglês usando o Simple Present e advérbios de frequência. Na próxima lição, vamos aprender a <strong>fazer perguntas e negar</strong> no Simple Present! See you in Lesson 13! 👋</p>
+
+<div class="actions" style="margin-top:24px;">
+  <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
+  <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
+</div>
+<p class="completion-note" style="font-size:12px;font-style:italic;color:#777;margin-top:10px;">Responda os exercícios (preenchimento e múltipla escolha) e clique em "Finalizar" para conferir sua nota. É preciso pelo menos 85% de acerto para concluir a lição.</p>
+<div class="footer-note">Bobcat Language School • Lição 12 — Simple Present: Rotina e Hábitos Diários</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<script>
+const LESSON_ID = 'licao-12-simple-present-daily-life';
+let finishing = false;
+
+async function prefillFromProfile() {
+  await initDataLayer();
+  const profile = await getProfile();
+  if (profile && profile.name) {
+    const nameInput = document.querySelector('.info-bar input[type=text]');
+    if (nameInput && !nameInput.value) nameInput.value = profile.name;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const dateInput = document.querySelector('.info-bar input[type=date]');
+  if (dateInput && !dateInput.value) dateInput.value = today;
+}
+document.addEventListener('DOMContentLoaded', prefillFromProfile);
+
+function checkFills(btn) {
+  const card = btn.closest('.ex-card');
+  const inputs = card.querySelectorAll('.fill-item input[type=text]');
+  let correct = 0, total = 0;
+  inputs.forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    inp.classList.remove('correct', 'incorrect');
+    if (cleanVal === cleanAnswer) { inp.classList.add('correct'); correct++; }
+    else { inp.classList.add('incorrect'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  const badge = document.createElement('span');
+  badge.className = 'score-badge';
+  badge.textContent = correct + '/' + total + ' ✅';
+  btn.parentElement.appendChild(badge);
+}
+
+function checkMC(btn) {
+  const card = btn.closest('.ex-card');
+  const items = card.querySelectorAll('.mc-item');
+  let correct = 0, total = 0;
+  items.forEach(item => {
+    const options = item.querySelectorAll('.mc-options label');
+    const selected = item.querySelector('input[type=radio]:checked');
+    options.forEach(l => l.classList.remove('correct', 'incorrect'));
+    if (!selected) return;
+    total++;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) { selected.parentElement.classList.add('correct'); correct++; }
+    else { selected.parentElement.classList.add('incorrect'); if (correctRadio) correctRadio.parentElement.classList.add('correct'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  if (total > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'score-badge';
+    badge.textContent = correct + '/' + total + ' ✅';
+    btn.parentElement.appendChild(badge);
+  }
+}
+
+function toggleCollapse(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+async function finishLesson() {
+  if (finishing) return;
+  finishing = true;
+
+  let correct = 0, total = 0;
+  document.querySelectorAll('input[data-answer]').forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    if (cleanVal === cleanAnswer) correct++;
+  });
+  document.querySelectorAll('.mc-item').forEach(item => {
+    total++;
+    const selected = item.querySelector('input[type=radio]:checked');
+    if (!selected) return;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) correct++;
+  });
+
+  const safeTotal = total || 1;
+  const passed = await handleLessonFinish(LESSON_ID, correct, safeTotal, 'correct');
+  if (!passed) finishing = false;
+}
+</script>
+
+</body>
+</html>
