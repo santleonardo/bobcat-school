@@ -121,8 +121,8 @@
   <div id="test-container"></div>
 
   <div class="btn-row">
-    <button class="btn" id="btn-submit" onclick="submitTest()">Enviar Respostas</button>
-    <button class="btn secondary" id="btn-reset" onclick="resetTest()">Refazer Teste</button>
+    <button class="btn" id="btn-submit" onclick="confirmSubmit()">Enviar Respostas</button>
+    <button class="btn secondary" id="btn-retake" onclick="resetTest()" style="display:none;">Refazer Teste</button>
   </div>
 
   <div class="results-panel" id="results-panel"></div>
@@ -200,6 +200,17 @@ var currentVarIndex = -1;
 var currentVar = null;
 var answers = {};
 var isSubmitted = false;
+var attemptCount = 0; // tracks how many times the test has been submitted
+var MAX_ATTEMPTS = 2; // original + 1 retake
+
+var ATTEMPT_KEY = 'bobcat_nivelamento_attempts';
+
+function getAttemptCount() {
+  try { var v = localStorage.getItem(ATTEMPT_KEY); return v ? parseInt(v, 10) : 0; } catch(e) { return 0; }
+}
+function setAttemptCount(n) {
+  try { localStorage.setItem(ATTEMPT_KEY, String(n)); } catch(e) {}
+}
 
 // ═══════════════════════════════════════════════════════════════
 // RENDER
@@ -252,6 +263,15 @@ function renderVariation3() {
 }
 
 function renderTest() {
+  attemptCount = getAttemptCount();
+  // Block retake if max attempts reached
+  if (attemptCount >= MAX_ATTEMPTS) {
+    document.getElementById('test-container').innerHTML = '<div class="info-box" style="text-align:center;"><strong>Você já utilizou todas as suas tentativas.</strong><br>Seu resultado está disponível na aba Testes do app.</div>';
+    document.getElementById('btn-submit').style.display = 'none';
+    document.getElementById('btn-retake').style.display = 'none';
+    document.getElementById('var-indicator').textContent = '';
+    return;
+  }
   currentVarIndex = pickVariation();
   currentVar = VARIATIONS[currentVarIndex];
   answers = {};
@@ -260,7 +280,9 @@ function renderTest() {
   document.getElementById('results-panel').classList.remove('show');
   document.getElementById('results-panel').innerHTML = '';
   document.getElementById('finishMessage').style.display = 'none';
+  document.getElementById('btn-submit').style.display = '';
   document.getElementById('btn-submit').disabled = false;
+  document.getElementById('btn-retake').style.display = 'none';
   var container = document.getElementById('test-container');
   if (currentVarIndex === 0) container.innerHTML = renderVariation1();
   else if (currentVarIndex === 1) container.innerHTML = renderVariation2();
@@ -300,12 +322,26 @@ function estimateLevel(score, total) {
   return 'C2';
 }
 
+function confirmSubmit() {
+  if (isSubmitted) return;
+  var total = currentVar.totalQ, answered = Object.keys(answers).length;
+  var unanswered = total - answered;
+  var msg;
+  if (unanswered > 0) {
+    msg = 'Você respondeu ' + answered + ' de ' + total + ' questões (' + unanswered + ' sem resposta).\n\nTem certeza que deseja terminar o teste?';
+  } else {
+    msg = 'Tem certeza que deseja terminar o teste?';
+  }
+  if (!confirm(msg)) return;
+  submitTest();
+}
+
 async function submitTest() {
   if (isSubmitted) return;
-  var correctMap = getCorrectMap(), total = currentVar.totalQ, answered = Object.keys(answers).length;
-  if (answered < total) { if (!confirm('Você respondeu ' + answered + ' de ' + total + ' questões. Deseja enviar mesmo assim?')) return; }
   isSubmitted = true;
   document.getElementById('btn-submit').disabled = true;
+  document.getElementById('btn-submit').style.display = 'none';
+  var correctMap = getCorrectMap(), total = currentVar.totalQ;
   var score = 0;
   for (var qStr in answers) {
     var qNum = parseInt(qStr), userAns = answers[qStr], correctAns = correctMap[qNum];
@@ -318,22 +354,105 @@ async function submitTest() {
     });
     if (userAns === correctAns) score++;
   }
+  // Increment attempt count
+  attemptCount = getAttemptCount() + 1;
+  setAttemptCount(attemptCount);
   var level = estimateLevel(score, total), info = LEVELS[level], pct = Math.round((score / total) * 100);
+  // Build per-level breakdown
+  var breakdownHTML = buildLevelBreakdown(score);
   var panel = document.getElementById('results-panel');
-  panel.innerHTML = '<div class="big-score">' + score + ' / ' + total + '</div><p style="font-size:14px;color:#888;">' + pct + '% de acertos</p><div class="est-level">Nível estimado: <span class="lvl-badge ' + level + '" style="font-size:14px;padding:4px 14px;">' + level + ' — ' + info.name + '</span></div><p style="margin-top:8px;font-size:12px;color:#999;">Respostas corretas destacadas em verde.</p>';
+  panel.innerHTML = '<div class="big-score">' + score + ' / ' + total + '</div>' +
+    '<p style="font-size:14px;color:#888;">' + pct + '% de acertos</p>' +
+    '<div class="est-level">Nível estimado: <span class="lvl-badge ' + level + '" style="font-size:14px;padding:4px 14px;">' + level + ' — ' + info.name + '</span></div>' +
+    breakdownHTML +
+    '<p style="margin-top:8px;font-size:12px;color:#999;">Respostas corretas destacadas em verde.</p>' +
+    '<p style="margin-top:4px;font-size:12px;color:#999;">Tentativa ' + attemptCount + ' de ' + MAX_ATTEMPTS + '</p>';
   panel.classList.add('show');
   panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // Save result with detailed data
   try {
     await initDataLayer();
     await saveLessonProgressData('nivelamento', score, total);
-    var msg = document.getElementById('finishMessage');
-    msg.style.display = 'block';
-    if (pct >= 85) { msg.style.color = '#1e6b40'; msg.textContent = '🎉 Teste concluído! Voltando ao app...'; setTimeout(function() { window.location.href = '../index.html'; }, 2800); }
-    else { msg.style.color = '#888'; msg.textContent = '📌 Resultado salvo. Clique em "Refazer Teste" para tentar uma variação diferente!'; }
+    // Also save detailed result to localStorage for the Testes tab
+    var detailKey = 'bobcat_nivelamento_detail';
+    var detail = { score: score, total: total, pct: pct, level: level, levelName: info.name, attempt: attemptCount, maxAttempts: MAX_ATTEMPTS, variation: currentVar.name, timestamp: new Date().toISOString() };
+    try { localStorage.setItem(detailKey, JSON.stringify(detail)); } catch(e) {}
   } catch(e) { console.log('Progress save skipped:', e); }
+  var msg = document.getElementById('finishMessage');
+  msg.style.display = 'block';
+  // Show retake button only if attempts remain
+  if (attemptCount < MAX_ATTEMPTS) {
+    msg.style.color = '#888';
+    msg.textContent = '📌 Resultado salvo. Você pode refazer o teste mais uma vez.';
+    document.getElementById('btn-retake').style.display = '';
+  } else {
+    msg.style.color = '#888';
+    msg.textContent = '📌 Resultado salvo. Você utilizou todas as suas tentativas. Veja o detalhe na aba Testes.';
+    document.getElementById('btn-retake').style.display = 'none';
+  }
 }
 
-function resetTest() { renderTest(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+function buildLevelBreakdown(score) {
+  // Count correct answers per level
+  var correctMap = getCorrectMap();
+  var levelCorrect = {};
+  var levelTotal = {};
+  var qNum = 1;
+  if (currentVarIndex === 0) {
+    for (var li = 0; li < LEVEL_LIST.length; li++) {
+      var lv = LEVEL_LIST[li];
+      levelCorrect[lv] = 0; levelTotal[lv] = V1.data[lv].length;
+      for (var i = 0; i < V1.data[lv].length; i++) {
+        if (answers[qNum] === correctMap[qNum]) levelCorrect[lv]++;
+        qNum++;
+      }
+    }
+  } else if (currentVarIndex === 1) {
+    for (var li = 0; li < LEVEL_LIST.length; li++) {
+      var lv = LEVEL_LIST[li];
+      levelCorrect[lv] = 0; levelTotal[lv] = V2.data[lv].questions.length;
+      for (var i = 0; i < V2.data[lv].questions.length; i++) {
+        if (answers[qNum] === correctMap[qNum]) levelCorrect[lv]++;
+        qNum++;
+      }
+    }
+  } else {
+    for (var li = 0; li < LEVEL_LIST.length; li++) {
+      var lv = LEVEL_LIST[li];
+      levelCorrect[lv] = 0; levelTotal[lv] = V3.data[lv].grammar.length + V3.data[lv].vocabulary.length;
+      for (var i = 0; i < V3.data[lv].grammar.length; i++) {
+        if (answers[qNum] === correctMap[qNum]) levelCorrect[lv]++;
+        qNum++;
+      }
+      for (var i = 0; i < V3.data[lv].vocabulary.length; i++) {
+        if (answers[qNum] === correctMap[qNum]) levelCorrect[lv]++;
+        qNum++;
+      }
+    }
+  }
+  var html = '<div style="margin-top:14px;text-align:left;">';
+  html += '<div style="font-size:13px;font-weight:700;margin-bottom:6px;color:#C9622A;">Desempenho por nível:</div>';
+  for (var li = 0; li < LEVEL_LIST.length; li++) {
+    var lv = LEVEL_LIST[li];
+    var lPct = levelTotal[lv] > 0 ? Math.round((levelCorrect[lv] / levelTotal[lv]) * 100) : 0;
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:12px;">';
+    html += '<span class="lvl-badge ' + lv + '" style="min-width:28px;text-align:center;">' + lv + '</span>';
+    html += '<div style="flex:1;background:#eee;border-radius:4px;height:14px;overflow:hidden;"><div style="height:100%;border-radius:4px;background:' + (lPct >= 80 ? '#2E8B57' : lPct >= 50 ? '#ffa726' : '#C0392B') + ';width:' + lPct + '%;"></div></div>';
+    html += '<span style="min-width:50px;text-align:right;">' + levelCorrect[lv] + '/' + levelTotal[lv] + ' (' + lPct + '%)</span>';
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+function resetTest() {
+  if (attemptCount >= MAX_ATTEMPTS) {
+    alert('Você já utilizou todas as suas tentativas.');
+    return;
+  }
+  renderTest();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
 // ═══════════════════════════════════════════════════════════════
 // INIT
@@ -341,6 +460,7 @@ function resetTest() { renderTest(); window.scrollTo({ top: 0, behavior: 'smooth
 
 document.addEventListener('DOMContentLoaded', function() {
   try { initDataLayer(); } catch(e) {}
+  attemptCount = getAttemptCount();
   renderTest();
 });
 </script>
