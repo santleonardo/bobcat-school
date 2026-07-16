@@ -5,16 +5,19 @@
 
 // Catálogo de lições. Para adicionar uma nova lição, basta
 // incluir um novo objeto aqui e criar o arquivo em /lessons.
-const LESSONS = [
+// Catálogo de testes de nivelamento (exibidos na aba "Testes")
+const TESTS = [
   {
     id: 'nivelamento',
     name: 'Teste de Nivelamento',
-    level: 'Introdutório',
     icon: '🎯',
-    description: 'Descubra seu nível de inglês (A1–C2) com teste adaptativo — diferente a cada tentativa',
+    description: 'Descubra seu nível de inglês (A1–C2) — diferente a cada tentativa!',
     url: 'lessons/nivelamento.html',
     totalQuestions: 30
-  },
+  }
+];
+
+const LESSONS = [
   {
     id: 'pronuncia-essencial',
     name: 'Pronúncia Essencial do Inglês',
@@ -140,6 +143,7 @@ function showScreen(id) {
   if (navBtn) navBtn.classList.add('active');
 
   if (id === 'home') renderHome();
+  if (id === 'tests') renderTests();
   if (id === 'profile-view') renderProfileView();
 }
 
@@ -384,6 +388,37 @@ function setupProfileViewScreen() {
   });
 }
 
+// ---------- Tela Testes ----------
+
+async function renderTests() {
+  const progress = await getProgress();
+  const list = document.getElementById('tests-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  TESTS.forEach(test => {
+    const p = progress[test.id];
+    const pct = p && p.total > 0 ? Math.round((p.correct / p.total) * 100) : 0;
+    const done = p && p.completed;
+    const attempts = p ? (done ? 'Concluído' : pct + '%') : 'Não iniciado';
+
+    const card = document.createElement('div');
+    card.className = 'lesson-card';
+    card.innerHTML = `
+      <div class="icon">${test.icon}</div>
+      <div class="info">
+        <div class="name">${test.name}</div>
+        <div class="level">${test.description}</div>
+        <div class="progress-track"><div class="progress-fill" style="width:${pct}%;"></div></div>
+      </div>
+      <div class="badge ${done ? 'done' : ''}">${done ? '✓ ' + pct + '%' : attempts}</div>
+      <div class="chevron">›</div>
+    `;
+    card.addEventListener('click', () => { window.location.href = test.url; });
+    list.appendChild(card);
+  });
+}
+
 // ---------- Tela Home / lista de lições ----------
 
 async function renderHome() {
@@ -461,9 +496,7 @@ function computeLockStatus(progress) {
   const locked = {};
   LESSONS.forEach((lesson, idx) => {
     if (idx === 0) { locked[lesson.id] = false; return; }
-    // O teste de nivelamento (id: nivelamento) não bloqueia a próxima lição
     const prev = LESSONS[idx - 1];
-    if (prev.id === 'nivelamento') { locked[lesson.id] = false; return; }
     const prevProgress = progress[prev.id];
     locked[lesson.id] = !(prevProgress && prevProgress.completed);
   });
