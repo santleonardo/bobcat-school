@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Teste de Nivelamento</title>
+<style>
+  :root {
+    --orange: #D9793F;
+    --orange-dark: #C9622A;
+    --cream: #FBEFE6;
+    --cream-2: #F7F1EC;
+    --ink: #2b2b2b;
+    --ok: #2E8B57;
+    --bad: #C0392B;
+    --border: #EBC9AE;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink); background: #fdfaf7; margin: 0; padding: 0 0 60px 0; line-height: 1.55;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 28px 20px; }
+
+  .back-link { display: inline-block; font-size: 13.5px; color: var(--orange-dark); text-decoration: none; font-weight: 700; margin-bottom: 14px; }
+  .back-link:hover { text-decoration: underline; }
+
+  .header { display: flex; align-items: center; gap: 14px; border-bottom: 3px solid var(--orange); padding-bottom: 14px; margin-bottom: 14px; flex-wrap: wrap; }
+  .header img { height: 56px; }
+  .header .school { font-size: 24px; font-weight: 800; color: var(--orange-dark); }
+  .header .subtitle { font-size: 13px; font-style: italic; color: #666; margin-top: 2px; }
+
+  h1.title { text-align: center; color: var(--orange-dark); font-size: 24px; margin: 6px 0 2px 0; }
+  .level { text-align: center; font-style: italic; color: #666; font-size: 13px; margin-bottom: 18px; }
+
+  .info-box { background: var(--cream); border-left: 4px solid var(--orange); padding: 10px 14px; border-radius: 6px; margin-bottom: 18px; font-size: 13px; }
+
+  .section-title { background: var(--orange); color: #fff; font-weight: 700; font-size: 14.5px; padding: 8px 14px; border-radius: 6px; margin: 22px 0 12px 0; }
+
+  /* Level group */
+  .level-group { margin-bottom: 14px; }
+  .level-header { display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: #fff; border: 1px solid #eee; border-radius: 8px; cursor: pointer; margin-bottom: 6px; }
+  .level-header:hover { box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  .level-header.open .chevron { transform: rotate(90deg); }
+  .chevron { font-size: 12px; color: #999; transition: transform .2s; margin-left: auto; }
+  .level-body { display: none; padding-left: 6px; }
+  .level-body.open { display: block; }
+
+  .lvl-badge { display: inline-block; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 700; letter-spacing: .5px; }
+  .lvl-badge.A1 { background: #4caf50; } .lvl-badge.A2 { background: #66bb6a; }
+  .lvl-badge.B1 { background: #ffa726; } .lvl-badge.B2 { background: #fb8c00; }
+  .lvl-badge.C1 { background: #ef5350; } .lvl-badge.C2 { background: #c62828; }
+
+  /* Question */
+  .question { margin-bottom: 12px; }
+  .q-text { font-weight: 600; margin-bottom: 4px; font-size: 14px; }
+  .q-text .lvl-badge { margin-right: 4px; vertical-align: middle; }
+
+  /* MC options */
+  .mc-options { list-style: none; padding: 0; margin: 0; }
+  .mc-options li {
+    padding: 7px 10px; margin-bottom: 3px; border-radius: 6px; cursor: pointer;
+    border: 1.5px solid transparent; font-size: 13.5px; transition: .12s;
+  }
+  .mc-options li:hover { background: var(--cream); }
+  .mc-options li.selected { background: #e0d4f5; border-color: #7c4dff; }
+  .mc-options li.correct { background: #c8e6c9; border-color: var(--ok); }
+  .mc-options li.wrong { background: #ffcdd2; border-color: var(--bad); }
+  .mc-options li.disabled { cursor: default; }
+
+  /* Passage */
+  .passage-toggle { background: var(--orange); color: #fff; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 12.5px; font-weight: 700; margin-bottom: 6px; }
+  .passage-box { background: #f5f5f5; border: 1px solid #ddd; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; font-size: 13.5px; line-height: 1.7; display: none; }
+  .passage-box.show { display: block; }
+
+  /* Writing */
+  .writing-prompt { background: var(--cream); padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; font-size: 13.5px; }
+  .writing-area { width: 100%; min-height: 100px; border: 1.5px solid #ddd; border-radius: 8px; padding: 8px; font-family: inherit; font-size: 13.5px; resize: vertical; }
+  .writing-area:focus { outline: none; border-color: var(--orange); }
+
+  /* Buttons */
+  .btn { background: var(--orange); color: #fff; border: none; padding: 12px 22px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background .15s, transform .1s; }
+  .btn:hover { background: var(--orange-dark); }
+  .btn:active { transform: scale(0.98); }
+  .btn.secondary { background: #fff; color: var(--orange-dark); border: 2px solid var(--orange); padding: 10px 16px; font-size: 13.5px; }
+  .btn-row { text-align: center; margin: 24px 0; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  /* Results */
+  .results-panel { display: none; background: #fff; border: 2px solid var(--orange); border-radius: 12px; padding: 20px; margin-top: 16px; text-align: center; }
+  .results-panel.show { display: block; }
+  .results-panel .big-score { font-size: 36px; font-weight: 800; color: var(--orange-dark); }
+  .results-panel .est-level { font-size: 16px; margin-top: 6px; }
+
+  /* Variation label */
+  .var-label { display: inline-block; background: var(--cream); border: 1px solid var(--border); padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; color: var(--orange-dark); margin-bottom: 10px; }
+
+  #finishMessage { display: none; text-align: center; font-size: 14px; font-weight: 600; margin-top: 14px; padding: 10px; border-radius: 8px; }
+
+  @media (max-width: 600px) {
+    .wrap { padding: 16px 12px; }
+    h1.title { font-size: 20px; }
+    .header .school { font-size: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a href="../index.html" class="back-link">← Voltar ao app</a>
+
+  <div class="header">
+    <img src="../icons/icon-192.png" alt="Bobcat">
+    <div>
+      <div class="school">Bobcat Language School</div>
+      <div class="subtitle">Aprenda inglês no seu ritmo</div>
+    </div>
+  </div>
+
+  <h1 class="title">Teste de Nivelamento — Língua Inglesa</h1>
+  <div class="level">A1 a C2 — Quadro Europeu Comum de Referência para Línguas (CEFR)</div>
+
+  <div class="info-box">
+    <strong>Instruções:</strong> Responda todas as questões. Não há penalização por respostas incorretas.
+    Se encontrar questões que não consegue compreender, isso indica o seu nível estimado de proficiência.
+    Não utilize dicionários ou tradutores. O teste será diferente a cada tentativa.
+  </div>
+
+  <div id="var-indicator" class="var-label"></div>
+  <div id="test-container"></div>
+
+  <div class="btn-row">
+    <button class="btn" id="btn-submit" onclick="submitTest()">Enviar Respostas</button>
+    <button class="btn secondary" id="btn-reset" onclick="resetTest()">Refazer Teste</button>
+  </div>
+
+  <div class="results-panel" id="results-panel"></div>
+  <div id="finishMessage"></div>
+
+</div>
+
+<script src="../db-client.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════════════
+// VARIATION DATA (3 variations)
+// ═══════════════════════════════════════════════════════════════
+
+const LEVELS = {
+  A1: {name:'Iniciante', color:'#4caf50'},
+  A2: {name:'Elementar', color:'#66bb6a'},
+  B1: {name:'Intermediário', color:'#ffa726'},
+  B2: {name:'Intermediário Superior', color:'#fb8c00'},
+  C1: {name:'Avançado', color:'#ef5350'},
+  C2: {name:'Mestre', color:'#c62828'}
+};
+
+const LEVEL_LIST = ['A1','A2','B1','B2','C1','C2'];
+
+// ─── VARIATION 1: Grammar & Vocabulary ──────────────────────
+const V1 = {
+  name: 'Variação 1 — Gramática e Vocabulário',
+  type: 'mc',
+  totalQ: 30,
+  data: {
+    A1: [
+      {q:'She ___ a student.', o:['am','is','are','be'], a:1},
+      {q:'What is the plural of "child"?', o:['childs','childes','children','childrens'], a:2},
+      {q:'I ___ coffee every morning.', o:['drinks','drink','drinking','dranked'], a:1},
+      {q:'Which word means the opposite of "big"?', o:['tall','small','long','wide'], a:1},
+      {q:'___ apple a day keeps the doctor away.', o:['A','An','The','No article'], a:1},
+    ],
+    A2: [
+      {q:'Last weekend, we ___ to the beach.', o:['go','goed','went','gone'], a:2},
+      {q:'There aren\'t ___ books on the shelf.', o:['some','much','any','no'], a:2},
+      {q:'Which sentence is correct?', o:['She can speaks English.','She can speak English.','She cans speak English.','She can speaking English.'], a:1},
+      {q:'I usually wake up ___ 7 o\'clock.', o:['in','on','at','by'], a:2},
+      {q:'What does "look forward to" mean?', o:['To regret something','To anticipate with pleasure','To search for something','To ignore something'], a:1},
+    ],
+    B1: [
+      {q:'If I ___ rich, I would travel the world.', o:['am','was','were','be'], a:2},
+      {q:'She has been living here ___ 2015.', o:['for','since','from','during'], a:1},
+      {q:'Which sentence uses the passive voice correctly?', o:['The book was wrote by him.','The book was written by him.','The book is writing by him.','The book has write by him.'], a:1},
+      {q:'I wish I ___ harder for the exam.', o:['study','studied','had studied','would study'], a:2},
+      {q:'We need to ___ the meeting until next week.', o:['put off','put on','put up','put in'], a:0},
+    ],
+    B2: [
+      {q:'Not until he arrived home ___ that he had forgotten his keys.', o:['he realized','did he realize','he did realize','realized he'], a:1},
+      {q:'The report, ___ findings were inconclusive, was submitted yesterday.', o:['that','which','whose','its'], a:2},
+      {q:'The politician\'s speech was deliberately ___ to avoid answering the question.', o:['evasive','invasive','pervasive','abrasive'], a:0},
+      {q:'Had she known about the delay, she ___ left earlier.', o:['would have','will have','should','must have'], a:0},
+      {q:'Rarely ___ such a breathtaking performance.', o:['I have seen','have I seen','I saw','did I saw'], a:1},
+    ],
+    C1: [
+      {q:'The evidence ___ to suggest that the hypothesis may be flawed.', o:['tends','inclines','leans','points'], a:0},
+      {q:'Which uses the subjunctive mood correctly?', o:['It is essential that he attends the meeting.','It is essential that he attend the meeting.','It is essential that he attended the meeting.','It is essential that he would attend the meeting.'], a:1},
+      {q:'The author\'s ___ style makes the text accessible to a wide audience.', o:['lucid','lurid','limpid','turgid'], a:0},
+      {q:'___ the economic downturn, the company managed to post record profits.', o:['Despite of','In spite of','Although','Even'], a:1},
+      {q:'Rewrite: "It is alleged that the minister accepted bribes."', o:['The minister is alleged to accept bribes.','The minister is alleged to have accepted bribes.','The minister alleged to have accepted bribes.','The minister was alleged accepting bribes.'], a:1},
+    ],
+    C2: [
+      {q:'The sheer ___ of the undertaking became apparent only in retrospect.', o:['temerity','audacity','magnitude','chutzpah'], a:2},
+      {q:'Which exemplifies chiasmus?', o:['Ask not what your country can do for you; ask what you can do for your country.','To be or not to be, that is the question.','I came, I saw, I conquered.','The pen is mightier than the sword.'], a:0},
+      {q:'The diplomat\'s response was characteristically ___, revealing nothing while appearing to say much.', o:['laconic','obfuscatory','sycophantic','perfunctory'], a:1},
+      {q:'Were it not for the ___ nature of the contract, the dispute would have been settled amicably.', o:['equivocal','univocal','vociferous','magniloquent'], a:0},
+      {q:'Identify the sentence with anacoluthon:', o:['I was going to say, but never mind.','The more things change, the more they stay the same.','Neither a borrower nor a lender be.','To thine own self be true.'], a:0},
+    ]
+  }
+};
+
+// ─── VARIATION 2: Reading Comprehension ─────────────────────
+const V2 = {
+  name: 'Variação 2 — Compreensão Leitora e Uso da Língua',
+  type: 'reading',
+  totalQ: 30,
+  data: {
+    A1: {
+      passage: 'My name is Anna. I am 25 years old. I live in a small apartment in London. I work in a shop near my house. I like reading books and watching TV. On weekends, I usually visit my parents. They live in a village outside London. I have a cat named Whiskers. He is very playful.',
+      questions: [
+        {q:'Where does Anna live?', o:['In a house in London','In an apartment in London','In a village','In a hotel'], a:1},
+        {q:'What does Anna do?', o:['She is a teacher','She works in a shop','She is a student','She works in a hospital'], a:1},
+        {q:'What is the name of Anna\'s cat?', o:['Tom','Whiskers','Mimi','Fluffy'], a:1},
+        {q:'When does Anna visit her parents?', o:['Every day','On weekdays','On weekends','On holidays'], a:2},
+        {q:'How old is Anna?', o:['20','22','25','30'], a:2},
+      ]
+    },
+    A2: {
+      passage: 'Dear Maria, Thank you for your email! I was so happy to hear from you. I\'m writing to tell you about my new job. I started working at a restaurant last month. The work is busy but I enjoy it. I meet lots of interesting people every day. The only problem is that I have to work on Saturday evenings, so I can\'t go to the cinema with my friends anymore. But the salary is good, so I\'m saving money for a holiday in Greece next summer. Have you ever been to Greece? I\'ve heard the beaches are wonderful. Please write back soon! Best wishes, Emma.',
+      questions: [
+        {q:'Why did Emma write the email?', o:['To invite Maria to Greece','To tell Maria about her new job','To ask for money','To complain about her boss'], a:1},
+        {q:'What does Emma dislike about her job?', o:['The salary is low','She works on Saturday evenings','The people are boring','The restaurant is far'], a:1},
+        {q:'What is Emma saving money for?', o:['A new car','A holiday in Greece','A cinema ticket','A new apartment'], a:1},
+        {q:'"I\'ve heard the beaches are wonderful." This sentence is in the:', o:['Simple Past','Present Perfect','Present Continuous','Future Simple'], a:1},
+        {q:'"Emma ___ (work) at the restaurant since last month."', o:['works','has worked','worked','is working'], a:1},
+      ]
+    },
+    B1: {
+      passage: 'The trend of working remotely has gained significant momentum over the past decade, accelerated dramatically by the global pandemic of 2020. While many employees appreciate the flexibility and time saved by not commuting, remote work also presents challenges. Feelings of isolation, difficulty in separating work from personal life, and reduced opportunities for spontaneous collaboration are commonly reported drawbacks. Employers, on the other hand, have noted both benefits and concerns: reduced overhead costs are offset by challenges in maintaining corporate culture and monitoring productivity. Hybrid models, which combine days in the office with days at home, have emerged as a popular compromise, though they too require careful planning to be effective.',
+      questions: [
+        {q:'What accelerated the trend of remote work?', o:['Technological advances','The 2020 pandemic','Employee demands','Reduced office costs'], a:1},
+        {q:'Which is NOT mentioned as a drawback of remote work?', o:['Feelings of isolation','Difficulty separating work and personal life','Lower salary','Reduced spontaneous collaboration'], a:2},
+        {q:'What does "offset" mean in this context?', o:['Eliminated','Compensated for','Increased','Ignored'], a:1},
+        {q:'"If companies ___ (adopt) hybrid models, they ___ (need) careful planning."', o:['adopt / would need','adopted / will need','adopt / need','had adopted / would have needed'], a:2},
+        {q:'Rewrite in passive voice: "Employers have noted both benefits and concerns."', o:['Both benefits and concerns have been noted by employers.','Both benefits and concerns was noted by employers.','Both benefits and concerns have being noted by employers.','Both benefits and concerns are noting by employers.'], a:0},
+      ]
+    },
+    B2: {
+      passage: 'The concept of "cultural intelligence" (CQ) has emerged as a critical competency in an increasingly globalized workforce. Unlike emotional intelligence, which focuses on interpersonal awareness within a single cultural framework, cultural intelligence requires the ability to function effectively across diverse cultural contexts. Research by Earley and Ang (2003) identifies four dimensions of CQ: metacognitive (strategic thinking about cultural differences), cognitive (knowledge of cultural norms), motivational (interest and confidence in cross-cultural engagement), and behavioral (ability to adapt verbal and nonverbal actions). Studies suggest that individuals with high CQ are more effective in multicultural negotiations, demonstrate greater adaptability in expatriate assignments, and achieve higher performance ratings in diverse teams. Nevertheless, critics argue that CQ frameworks may oversimplify cultural complexity by treating cultures as monolithic entities rather than dynamic, overlapping systems of meaning.',
+      questions: [
+        {q:'How does cultural intelligence differ from emotional intelligence?', o:['CQ focuses on self-awareness; EI on cultural contexts','CQ operates across cultural frameworks; EI within one','CQ is about emotions; EI is about behavior','There is no significant difference'], a:1},
+        {q:'Which dimension of CQ involves strategic thinking?', o:['Cognitive','Motivational','Metacognitive','Behavioral'], a:2},
+        {q:'What criticism of CQ frameworks is mentioned?', o:['They are too difficult to measure','They may oversimplify cultural complexity','They focus too much on behavior','They ignore emotional aspects'], a:1},
+        {q:'Transform to reported speech: "Studies suggest that individuals with high CQ are more effective."', o:['Studies suggested that individuals with high CQ were more effective.','Studies have suggested that individuals with high CQ are more effective.','Studies suggest that individuals with high CQ were being more effective.','Studies suggested that individuals with high CQ have been more effective.'], a:1},
+        {q:'"If the framework ___ (not/oversimplify) cultural complexity, it ___ (be) more widely accepted."', o:['didn\'t oversimplify / would be','doesn\'t oversimplify / will be','had not oversimplified / would have been','would not oversimplify / was'], a:2},
+      ]
+    },
+    C1: {
+      passage: 'The philosophical underpinnings of postmodern thought have exerted a profound influence on contemporary discourse across the humanities. Characterized by a skeptical stance toward grand narratives (what Lyotard termed "metanarratives"), postmodernism challenges the notion that universal truths can be objectively ascertained. Instead, it privileges plurality, fragmentation, and the contextual nature of knowledge. This epistemological shift has far-reaching implications: if knowledge is inevitably situated within power structures, as Foucault contended, then claims to objectivity are themselves acts of discursive power. Critics of postmodernism, however, accuse it of fostering intellectual relativism that undermines the possibility of meaningful social critique. If all truth claims are equally contingent, the argument goes, then the basis for condemning injustice becomes precarious. Defenders counter that acknowledging contingency does not preclude ethical commitment; rather, it demands a more reflexive and accountable form of intellectual engagement.',
+      questions: [
+        {q:'What does "metanarrative" refer to in Lyotard\'s usage?', o:['Small-scale personal stories','Comprehensive explanatory frameworks claiming universal validity','Narratives about narrative theory','Postmodern literary techniques'], a:1},
+        {q:'According to Foucault\'s view, what is the relationship between knowledge and power?', o:['Knowledge is independent of power','Power structures shape what is accepted as knowledge','Knowledge determines power structures','There is no relationship between them'], a:1},
+        {q:'What is the central criticism of postmodernism mentioned?', o:['It is too difficult to understand','It undermines the basis for social critique through relativism','It relies too heavily on empirical evidence','It fails to acknowledge cultural differences'], a:1},
+        {q:'Rewrite using inversion: "The implications of this epistemological shift are far-reaching."', o:['Far-reaching are the implications of this epistemological shift.','So far-reaching are the implications of this epistemological shift.','Far-reaching though the implications of this epistemological shift are.','Only far-reaching are the implications of this epistemological shift.'], a:1},
+        {q:'"___ acknowledging contingency not preclude ethical commitment, it ___ demand a more reflexive engagement."', o:['Does / would','Does / does','Can / can','May / may'], a:0},
+      ]
+    },
+    C2: {
+      passage: 'The semiotic landscape of late capitalism, as Baudrillard theorized, constitutes a hyperreal order of simulation in which the referent has been entirely superseded by its sign. In this regime, signs no longer denote an external reality but instead circulate in an autonomous logic of self-referentiality, generating what Baudrillard termed "simulacra" — copies without originals. The implications for subjectivity are profound: if identity is constituted through symbolic exchange within a system of floating signifiers, then the very notion of an authentic self becomes suspect. This condition of "depthlessness," which Jameson identifies as the cultural logic of late capitalism, manifests aesthetically in pastiche — the neutral imitation of styles without satirical impulse — and theoretically in a waning of affect that corresponds to the fragmentation of the subject under post-Fordist conditions of production. Yet one might ask whether the very articulation of this critique does not itself depend on the modernist categories it seeks to transcend, thereby performing the very totalization it disavows.',
+      questions: [
+        {q:'What does Baudrillard mean by "simulacra"?', o:['Faithful copies of reality','Copies without originals in a system of self-referential signs','Satirical imitations of cultural products','Authentic representations of lived experience'], a:1},
+        {q:'How does Jameson characterize the cultural logic of late capitalism?', o:['As a return to Romanticism','As depthlessness manifesting in pastiche and waning of affect','As a resurgence of political commitment in art','As an embrace of technological determinism'], a:1},
+        {q:'What paradox does the final sentence identify?', o:['Postmodernism is too complex to understand','The critique depends on the modernist categories it seeks to transcend','Capitalism and culture are incompatible','Simulacra are more real than reality itself'], a:1},
+        {q:'Transform using nominalization: "Baudrillard theorized that the referent has been superseded by its sign."', o:['Baudrillard\'s theorization concerns the supersession of the referent by its sign.','Baudrillard theorized the referent\'s sign supersession.','The sign superseded the referent according to Baudrillard.','That the referent was superseded was Baudrillard\'s theory.'], a:0},
+        {q:'Which rhetorical strategy does "thereby performing the very totalization it disavows" employ?', o:['Litotes','Irony through performative contradiction','Meiosis','Synecdoche'], a:1},
+      ]
+    }
+  }
+};
+
+// ─── VARIATION 3: Mixed Skills ──────────────────────────────
+const V3 = {
+  name: 'Variação 3 — Habilidades Mistas',
+  type: 'mixed',
+  totalQ: 24,
+  data: {
+    A1: {
+      grammar: [
+        {q:'This is ___ book.', o:['a','an','the','-'], a:0},
+        {q:'They ___ to school every day.', o:['go','goes','going','gone'], a:0},
+      ],
+      vocabulary: [
+        {q:'"Apple" is a:', o:['fruit','vegetable','drink','animal'], a:0},
+        {q:'What season comes after winter?', o:['Summer','Spring','Autumn','Winter'], a:1},
+      ],
+      writing: 'Write 3–5 sentences introducing yourself. Include your name, age, where you live, and what you like to do in your free time.'
+    },
+    A2: {
+      grammar: [
+        {q:'I ___ (not/see) Mary last week.', o:['didn\'t see','don\'t see','haven\'t seen','won\'t see'], a:0},
+        {q:'This exercise is ___ than the last one.', o:['more easy','easier','more easier','most easy'], a:1},
+      ],
+      vocabulary: [
+        {q:'A place where you buy medicine:', o:['Bakery','Pharmacy','Library','Butcher'], a:1},
+        {q:'She is interested ___ art.', o:['on','at','in','for'], a:2},
+      ],
+      writing: 'Write a short email (40–60 words) to a friend telling them about your last holiday. Include where you went, what you did, and whether you enjoyed it.'
+    },
+    B1: {
+      grammar: [
+        {q:'By the time we arrived, the film ___ (already/start).', o:['already started','has already started','had already started','would already start'], a:2},
+        {q:'Rewrite using a relative clause: "The woman is my neighbor. She won the lottery."', o:['The woman who won the lottery is my neighbor.','The woman which won the lottery is my neighbor.','The woman, she won the lottery, is my neighbor.','The woman won the lottery is my neighbor.'], a:0},
+      ],
+      vocabulary: [
+        {q:'The company decided to ___ the project due to lack of funds.', o:['abandon','accomplish','absorb','accelerate'], a:0},
+        {q:'"To take something for granted" means:', o:['To refuse something','To not appreciate something because it seems certain','To accept a gift','To return something borrowed'], a:1},
+      ],
+      writing: 'Write a paragraph (80–120 words) expressing your opinion: "Should university education be free for all students?" Give at least two reasons.'
+    },
+    B2: {
+      grammar: [
+        {q:'If I ___ (know) about the traffic, I ___ (leave) earlier.', o:['knew / would leave','had known / would have left','know / will leave','have known / would leave'], a:1},
+        {q:'Rewrite using inversion: "I had never seen such a beautiful landscape."', o:['Never had I seen such a beautiful landscape.','Never I had seen such a beautiful landscape.','Had I never seen such a beautiful landscape.','Such a beautiful landscape never had I seen.'], a:0},
+      ],
+      vocabulary: [
+        {q:'The scientist\'s findings were ___ by subsequent research.', o:['corroborated','fabricated','delineated','amalgamated'], a:0},
+        {q:'"To be on the fence" means:', o:['To be undecided','To be in danger','To be aggressive','To be successful'], a:0},
+      ],
+      writing: 'Write an essay (150–200 words) discussing the advantages and disadvantages of social media for young people. Include an introduction, body paragraphs, and a conclusion.'
+    },
+    C1: {
+      grammar: [
+        {q:'It is imperative that the report ___ (submit) by Friday.', o:['be submitted','is submitted','will be submitted','would be submitted'], a:0},
+        {q:'Rewrite using a participle clause: "Because she was exhausted from the journey, she fell asleep immediately."', o:['Being exhausted from the journey, she fell asleep immediately.','Exhausted being from the journey, she fell asleep immediately.','Having exhausting from the journey, she fell asleep immediately.','She falling asleep immediately, exhausted from the journey.'], a:0},
+      ],
+      vocabulary: [
+        {q:'The professor\'s lecture was so ___ that many students struggled to stay awake.', o:['erudite','recondite','soporific','ephemeral'], a:2},
+        {q:'Which sentence uses "beg the question" correctly?', o:['His argument begs the question of whether free will exists.','The child begged the question to his mother.','I beg the question that you help me.','The question was begged by the committee.'], a:0},
+      ],
+      writing: 'Write a critical analysis (200–250 words) of: "Technology has made us more connected but less communicative." Discuss the validity of this claim with examples and counterarguments.'
+    },
+    C2: {
+      grammar: [
+        {q:'___ the complexities inherent in cross-cultural communication, one must navigate not merely linguistic differences but deeply ingrained conceptual frameworks.', o:['Given','Giving','Being given','Having given'], a:0},
+        {q:'Rewrite using an absolute construction: "The weather being favorable, we proceeded with the outdoor ceremony."', o:['Weather favorable, we proceeded with the outdoor ceremony.','The weather favorable, we proceeded with the outdoor ceremony.','Favorable weather being, we proceeded with the outdoor ceremony.','We proceeded, the weather being favorable, with the outdoor ceremony.'], a:1},
+      ],
+      vocabulary: [
+        {q:'The politician\'s rhetoric was designed to ___ rather than illuminate.', o:['obfuscate','elucidate','disseminate','reverberate'], a:0},
+        {q:'Rhetorical device in: "One cannot help but admire the sheer audacity of claiming that audacity itself is a virtue."', o:['Antimetabole','Chiasmus','Tautology','Zeugma'], a:2},
+      ],
+      writing: 'Write an academic essay (250–300 words) critically evaluating: "The privileging of STEM disciplines over the humanities reflects not pragmatic wisdom but a reductive understanding of what constitutes knowledge."'
+    }
+  }
+};
+
+const VARIATIONS = [V1, V2, V3];
+
+// ═══════════════════════════════════════════════════════════════
+// RANDOM VARIATION SELECTION (cycles — different each time)
+// ═══════════════════════════════════════════════════════════════
+
+const VAR_HISTORY_KEY = 'bobcat_nivelamento_history';
+
+function pickVariation() {
+  let history = [];
+  try {
+    const raw = localStorage.getItem(VAR_HISTORY_KEY);
+    if (raw) history = JSON.parse(raw);
+  } catch(e) {}
+
+  // Find variations not yet used in this cycle
+  const all = [0, 1, 2];
+  const unused = all.filter(v => !history.includes(v));
+
+  let pick;
+  if (unused.length > 0) {
+    // Randomly pick from unused variations
+    pick = unused[Math.floor(Math.random() * unused.length)];
+    history.push(pick);
+  } else {
+    // All 3 used — reset cycle and start fresh
+    history = [];
+    pick = Math.floor(Math.random() * 3);
+    history.push(pick);
+  }
+
+  try { localStorage.setItem(VAR_HISTORY_KEY, JSON.stringify(history)); } catch(e) {}
+  return pick;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════
+
+let currentVarIndex = -1;
+let currentVar = null;
+let answers = {};
+let isSubmitted = false;
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════
+
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function renderMCQ(qNum, level, item) {
+  let h = '<div class="question" id="q' + qNum + '">'
+    + '<p class="q-text"><span class="lvl-badge ' + level + '">' + level + '</span> '
+    + qNum + '. ' + esc(item.q) + '</p><ul class="mc-options">';
+  for (let i = 0; i < item.o.length; i++) {
+    h += '<li data-q="' + qNum + '" data-o="' + i + '" onclick="selectOption(' + qNum + ',' + i + ',this)">'
+      + 'abcd'[i] + ') ' + esc(item.o[i]) + '</li>';
+  }
+  h += '</ul></div>';
+  return h;
+}
+
+function renderVariation1() {
+  let html = '';
+  let qNum = 1;
+  for (const level of LEVEL_LIST) {
+    html += '<div class="level-group">'
+      + '<div class="level-header open" onclick="toggleLevel(this)">'
+      + '<span class="lvl-badge ' + level + '">' + level + '</span> '
+      + '<strong>' + level + ' — ' + LEVELS[level].name + '</strong> '
+      + '<span class="chevron">&#9654;</span></div>'
+      + '<div class="level-body open">';
+    for (const item of V1.data[level]) {
+      html += renderMCQ(qNum++, level, item);
+    }
+    html += '</div></div>';
+  }
+  return html;
+}
+
+function renderVariation2() {
+  let html = '';
+  let qNum = 1;
+  for (const level of LEVEL_LIST) {
+    const d = V2.data[level];
+    html += '<div class="level-group">'
+      + '<div class="level-header open" onclick="toggleLevel(this)">'
+      + '<span class="lvl-badge ' + level + '">' + level + '</span> '
+      + '<strong>' + level + ' — ' + LEVELS[level].name + '</strong> '
+      + '<span class="chevron">&#9654;</span></div>'
+      + '<div class="level-body open">'
+      + '<button class="passage-toggle" onclick="togglePassage(this)">&#128214; Mostrar / Ocultar Texto</button>'
+      + '<div class="passage-box show">' + esc(d.passage) + '</div>';
+    for (const item of d.questions) {
+      html += renderMCQ(qNum++, level, item);
+    }
+    html += '</div></div>';
+  }
+  return html;
+}
+
+function renderVariation3() {
+  let html = '';
+  let qNum = 1;
+  for (const level of LEVEL_LIST) {
+    const d = V3.data[level];
+    html += '<div class="level-group">'
+      + '<div class="level-header open" onclick="toggleLevel(this)">'
+      + '<span class="lvl-badge ' + level + '">' + level + '</span> '
+      + '<strong>' + level + ' — ' + LEVELS[level].name + '</strong> '
+      + '<span class="chevron">&#9654;</span></div>'
+      + '<div class="level-body open">'
+      + '<div class="section-title" style="margin-top:0">Parte A — Gramática</div>';
+    for (const item of d.grammar) {
+      html += renderMCQ(qNum++, level, item);
+    }
+    html += '<div class="section-title">Parte B — Vocabulário</div>';
+    for (const item of d.vocabulary) {
+      html += renderMCQ(qNum++, level, item);
+    }
+    html += '<div class="section-title">Parte C — Produção Escrita</div>'
+      + '<div class="writing-prompt"><strong>Prompt:</strong> ' + esc(d.writing) + '</div>'
+      + '<textarea class="writing-area" placeholder="Escreva sua resposta aqui..."></textarea>';
+    html += '</div></div>';
+  }
+  return html;
+}
+
+function renderTest() {
+  currentVarIndex = pickVariation();
+  currentVar = VARIATIONS[currentVarIndex];
+  answers = {};
+  isSubmitted = false;
+
+  document.getElementById('var-indicator').textContent = currentVar.name;
+  document.getElementById('results-panel').classList.remove('show');
+  document.getElementById('results-panel').innerHTML = '';
+  document.getElementById('finishMessage').style.display = 'none';
+  document.getElementById('btn-submit').disabled = false;
+
+  const container = document.getElementById('test-container');
+  if (currentVarIndex === 0) container.innerHTML = renderVariation1();
+  else if (currentVarIndex === 1) container.innerHTML = renderVariation2();
+  else container.innerHTML = renderVariation3();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INTERACTIONS
+// ═══════════════════════════════════════════════════════════════
+
+function toggleLevel(header) {
+  header.classList.toggle('open');
+  header.nextElementSibling.classList.toggle('open');
+}
+
+function togglePassage(btn) {
+  btn.nextElementSibling.classList.toggle('show');
+}
+
+function selectOption(qNum, opt, el) {
+  if (isSubmitted) return;
+  const parent = el.closest('.mc-options');
+  parent.querySelectorAll('li').forEach(function(li) { li.classList.remove('selected'); });
+  el.classList.add('selected');
+  answers[qNum] = opt;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SCORING
+// ═══════════════════════════════════════════════════════════════
+
+function getCorrectMap() {
+  const correct = {};
+  let qNum = 1;
+  if (currentVarIndex === 0) {
+    for (const level of LEVEL_LIST) {
+      for (const item of V1.data[level]) { correct[qNum++] = item.a; }
+    }
+  } else if (currentVarIndex === 1) {
+    for (const level of LEVEL_LIST) {
+      for (const item of V2.data[level].questions) { correct[qNum++] = item.a; }
+    }
+  } else {
+    for (const level of LEVEL_LIST) {
+      for (const item of V3.data[level].grammar) { correct[qNum++] = item.a; }
+      for (const item of V3.data[level].vocabulary) { correct[qNum++] = item.a; }
+    }
+  }
+  return correct;
+}
+
+function estimateLevel(score, total) {
+  const ranges = currentVarIndex === 2
+    ? [[4,'A1'],[8,'A2'],[12,'B1'],[16,'B2'],[20,'C1'],[24,'C2']]
+    : [[5,'A1'],[10,'A2'],[15,'B1'],[20,'B2'],[25,'C1'],[30,'C2']];
+  for (const [threshold, level] of ranges) {
+    if (score <= threshold) return level;
+  }
+  return 'C2';
+}
+
+async function submitTest() {
+  if (isSubmitted) return;
+  const correctMap = getCorrectMap();
+  const total = currentVar.totalQ;
+  const answered = Object.keys(answers).length;
+
+  if (answered < total) {
+    if (!confirm('Você respondeu ' + answered + ' de ' + total + ' questões. Deseja enviar mesmo assim?')) return;
+  }
+
+  isSubmitted = true;
+  document.getElementById('btn-submit').disabled = true;
+
+  let score = 0;
+  for (const [qStr, userAns] of Object.entries(answers)) {
+    const qNum = parseInt(qStr);
+    const correctAns = correctMap[qNum];
+    const options = document.querySelectorAll('#q' + qNum + ' .mc-options li');
+    options.forEach(function(li) {
+      const liOpt = parseInt(li.dataset.o);
+      li.classList.add('disabled');
+      if (liOpt === correctAns) li.classList.add('correct');
+      if (liOpt === userAns && userAns !== correctAns) li.classList.add('wrong');
+    });
+    if (userAns === correctAns) score++;
+  }
+
+  const level = estimateLevel(score, total);
+  const info = LEVELS[level];
+  const pct = Math.round((score / total) * 100);
+
+  const panel = document.getElementById('results-panel');
+  panel.innerHTML = '<div class="big-score">' + score + ' / ' + total + '</div>'
+    + '<p style="font-size:14px;color:#888;">' + pct + '% de acertos</p>'
+    + '<div class="est-level">Nível estimado: <span class="lvl-badge ' + level + '" style="font-size:14px;padding:4px 14px;">'
+    + level + ' — ' + info.name + '</span></div>'
+    + '<p style="margin-top:8px;font-size:12px;color:#999;">As respostas corretas estão destacadas em verde.</p>';
+  panel.classList.add('show');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  // Save progress using db-client
+  try {
+    await initDataLayer();
+    await saveLessonProgressData('nivelamento', score, total);
+    const msg = document.getElementById('finishMessage');
+    msg.style.display = 'block';
+    const completed = pct >= 85;
+    if (completed) {
+      msg.style.color = '#1e6b40';
+      msg.textContent = '🎉 Teste concluído! Voltando ao app...';
+      setTimeout(function() { window.location.href = '../index.html'; }, 2800);
+    } else {
+      msg.style.color = '#888';
+      msg.textContent = '📌 Resultado salvo. Clique em "Refazer Teste" para tentar uma variação diferente!';
+    }
+  } catch(e) {
+    console.log('Progress save skipped:', e);
+  }
+}
+
+function resetTest() {
+  renderTest();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', function() {
+  try { initDataLayer(); } catch(e) {}
+  renderTest();
+});
+</script>
+</body>
+</html>

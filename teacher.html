@@ -149,8 +149,6 @@ async function loadData() {
       name: profile ? profile.name : '(perfil não encontrado)',
       avatar: profile ? profile.avatar : '❓',
       level: profile ? profile.level : '-',
-      testScore: profile && profile.level_test_score !== null && profile.level_test_score !== undefined ? profile.level_test_score : null,
-      testTotal: profile && profile.level_test_total ? profile.level_test_total : null,
       lesson: LESSON_NAMES[g.lesson_id] || g.lesson_id,
       correct: g.correct,
       total: g.total,
@@ -163,30 +161,22 @@ async function loadData() {
   profiles.forEach(p => {
     const hasAny = (progress || []).some(g => g.user_id === p.id);
     if (!hasAny) {
-      rows.push({
-        name: p.name, avatar: p.avatar, level: p.level,
-        testScore: p.level_test_score !== null && p.level_test_score !== undefined ? p.level_test_score : null,
-        testTotal: p.level_test_total ? p.level_test_total : null,
-        lesson: '(nenhuma lição iniciada)', correct: 0, total: 0, completed: false, lastAttempt: null
-      });
+      rows.push({ name: p.name, avatar: p.avatar, level: p.level, lesson: '(nenhuma lição iniciada)', correct: 0, total: 0, completed: false, lastAttempt: null });
     }
   });
 
   rows.sort((a, b) => a.name.localeCompare(b.name));
 
-  let html = '<table><tr><th>Aluno</th><th>Nível (teste)</th><th>Lição</th><th>Pontuação</th><th>Status</th><th>Última tentativa</th></tr>';
+  let html = '<table><tr><th>Aluno</th><th>Nível</th><th>Lição</th><th>Pontuação</th><th>Status</th><th>Última tentativa</th></tr>';
   rows.forEach(r => {
     const pct = r.total > 0 ? Math.round((r.correct / r.total) * 100) : null;
     const pctLabel = pct === null ? '—' : (r.correct + '/' + r.total + ' (' + pct + '%)');
     const pctCls = pct === null ? '' : pctClass(pct);
     const statusLabel = r.completed ? '✓ Concluída' : (r.total > 0 ? 'Em andamento' : '—');
     const dateLabel = r.lastAttempt ? new Date(r.lastAttempt).toLocaleString('pt-BR') : '—';
-    const levelCell = r.testScore !== null
-      ? r.level + ' <span style="font-size:11px; color:#999;">(' + r.testScore + '/' + (r.testTotal || 46) + ')</span>'
-      : r.level;
     html += `<tr>
       <td>${r.avatar} ${r.name}</td>
-      <td>${levelCell}</td>
+      <td>${r.level}</td>
       <td>${r.lesson}</td>
       <td>${pct !== null ? '<span class="pct-pill ' + pctCls + '">' + pctLabel + '</span>' : '—'}</td>
       <td>${statusLabel}</td>
