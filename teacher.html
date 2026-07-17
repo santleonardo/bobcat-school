@@ -41,6 +41,35 @@
   .summary-box { flex:1; min-width:140px; background:#fff; border:1px solid #eee; border-radius:10px; padding:12px; text-align:center; }
   .summary-box .num { font-size:20px; font-weight:800; color:var(--orange-dark); }
   .summary-box .label { font-size:11px; color:#777; }
+
+  .tabs { display:flex; gap:6px; margin-bottom:18px; border-bottom: 2px solid #f0e2d6; }
+  .tab-btn {
+    background:none; border:none; cursor:pointer; padding:10px 16px; font-size:14px; font-weight:700;
+    color:#a08672; border-bottom:3px solid transparent; margin-bottom:-2px;
+  }
+  .tab-btn.active { color: var(--orange-dark); border-bottom-color: var(--orange); }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
+  .lesson-list-meta { font-size:12.5px; color:#888; margin-bottom:14px; }
+  .level-group { margin-bottom: 22px; }
+  .level-title {
+    font-size: 12.5px; font-weight:800; color:#fff; background:var(--orange);
+    display:inline-block; padding:3px 12px; border-radius:20px; margin-bottom:10px;
+  }
+  .lesson-card-list { display:flex; flex-direction:column; gap:8px; }
+  .lesson-item {
+    display:flex; align-items:center; gap:12px; background:#fff; border:1px solid #eee;
+    border-radius:10px; padding:10px 14px;
+  }
+  .lesson-item .icon { font-size:22px; }
+  .lesson-item .info { flex:1; min-width:0; }
+  .lesson-item .name { font-weight:700; font-size:13.5px; }
+  .lesson-item .desc { font-size:12px; color:#888; margin-top:2px; }
+  .lesson-item .qcount {
+    font-size:11.5px; font-weight:700; color:var(--orange-dark); background: var(--cream);
+    border-radius:20px; padding:4px 10px; white-space:nowrap;
+  }
 </style>
 </head>
 <body>
@@ -53,17 +82,29 @@
     </div>
   </div>
 
-  <div id="notice-slot"></div>
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-btn-progress" onclick="switchTab('progress')">📊 Progresso da turma</button>
+    <button class="tab-btn" id="tab-btn-lessons" onclick="switchTab('lessons')">📚 Todas as lições</button>
+  </div>
 
-  <div id="content" style="display:none;">
-    <div class="summary-row" id="summary-row"></div>
+  <div id="panel-progress" class="tab-panel active">
+    <div id="notice-slot"></div>
 
-    <div class="actions">
-      <button class="btn" onclick="loadData()">🔄 Atualizar dados</button>
+    <div id="content" style="display:none;">
+      <div class="summary-row" id="summary-row"></div>
+
+      <div class="actions">
+        <button class="btn" onclick="loadData()">🔄 Atualizar dados</button>
+      </div>
+
+      <h2>Progresso por aluno e lição</h2>
+      <div id="table-slot"></div>
     </div>
+  </div>
 
-    <h2>Progresso por aluno e lição</h2>
-    <div id="table-slot"></div>
+  <div id="panel-lessons" class="tab-panel">
+    <div class="lesson-list-meta" id="lessons-meta"></div>
+    <div id="lessons-slot"></div>
   </div>
 </div>
 
@@ -71,6 +112,92 @@
 const LESSON_NAMES = {
   'verb-to-be': 'Verb To Be'
 };
+
+// Catálogo espelhado de app.js (LESSONS/TESTS), usado apenas para exibição
+// nesta aba. Se o catálogo mudar em app.js, atualize aqui também.
+const TESTS_CATALOG = [
+  { id: 'nivelamento', name: 'Teste de Nivelamento', level: 'Teste', icon: '🎯', description: 'Descubra seu nível de inglês (A1–C2) — diferente a cada tentativa!', totalQuestions: 30 }
+];
+
+const LESSONS_CATALOG = [
+  { id: 'pronuncia-essencial', name: 'Pronúncia Essencial do Inglês', level: 'Introdutório', icon: '🔤', description: 'Comece por aqui: alfabeto, vogais, consoantes e combinações mais comuns', totalQuestions: 15 },
+  { id: 'verb-to-be', name: 'Verb To Be', level: 'A1', icon: '📘', description: 'am, is, are — afirmativas, negativas e perguntas', totalQuestions: 21 },
+  { id: 'saudacoes-apresentacoes', name: 'Saudações e Apresentações', level: 'A1', icon: '👋', description: 'Greetings, introductions e diálogos com áudio', totalQuestions: 17 },
+  { id: 'licao-2-perguntas-artigos', name: 'Lição 2 — Fazendo Perguntas e Apresentando Coisas', level: 'A1', icon: '❓', description: 'Perguntas com Wh- words e o uso de a, an, the', totalQuestions: 5 },
+  { id: 'licao-3-revisao-perguntas', name: 'Lição 3 — Revisando e Praticando: Quem é Você? O Que é Isso?', level: 'A1', icon: '🔁', description: 'Revisão das lições 1 e 2 com prática de diálogos', totalQuestions: 11 },
+  { id: 'licao-4-preposicoes', name: 'Lição 4 — Preposições em Ação: Onde? Com Quem? Como?', level: 'A1', icon: '📍', description: 'Preposições: onde, com quem e como', totalQuestions: 7 },
+  { id: 'licao-5-posse', name: 'Lição 5 — O Que É Isso? De Quem É?', level: 'A1', icon: '🎒', description: 'O que é isso e de quem é: posse em inglês', totalQuestions: 12 },
+  { id: 'licao-6-here-there', name: 'Lição 6 — Aqui e Ali: Localização e Posição', level: 'A1', icon: '📌', description: 'Localização, posição e phrasal verbs básicos', totalQuestions: 7 },
+  { id: 'licao-8-to-be-passado', name: 'Lição 8 — Verbo To Be no Passado: Como Era e Onde Estava?', level: 'A1', icon: '⏳', description: 'O verbo to be no passado: was e were', totalQuestions: 8 },
+  { id: 'licao-9-revisao-completa', name: 'Lição 9 — Revisão Completa: Tudo que Aprendemos Até Aqui!', level: 'A1', icon: '📚', description: 'Revisão completa das lições anteriores', totalQuestions: 26 },
+  { id: 'licao-10-do-does-to-for', name: 'Lição 10 — Verbos Essenciais, Perguntas com DO/DOES, e o Uso de TO e FOR', level: 'A1', icon: '🔧', description: 'Verbos essenciais, DO/DOES, TO e FOR', totalQuestions: 20 },
+  { id: 'licao-11-object-possessive-pronouns', name: 'Lesson 11 — People, Objects and Possession', level: 'A1', icon: '👥', description: 'Pronomes objetos, possessivos e mais de 20 verbos', totalQuestions: 14 },
+  { id: 'licao-12-simple-present-daily-life', name: 'Lição 12 — Simple Present: Rotina e Hábitos Diários', level: 'A1', icon: '🗓️', description: 'Simple Present, advérbios de frequência e a rotina diária', totalQuestions: 17 },
+  { id: 'licao-13-perguntas-simple-present', name: 'Lição 13 — Perguntas Naturais no Simple Present', level: 'A1', icon: '🗣️', description: 'Perguntas e negativas com Do/Does no Simple Present', totalQuestions: 16 },
+  { id: 'licao-14-there-is-there-are', name: 'Lição 14 — There Is / There Are', level: 'A1', icon: '🏠', description: 'Descrevendo lugares e objetos com There is/There are', totalQuestions: 17 },
+  { id: 'licao-15-can-cant', name: "Lição 15 — Can, Can't e Comunicação do Dia a Dia", level: 'A1', icon: '🙌', description: "Habilidades e permissões com Can/Can't", totalQuestions: 18 },
+  { id: 'licao-16-present-continuous', name: 'Lição 16 — Present Continuous', level: 'A1', icon: '🏃', description: 'Ações em andamento com o Present Continuous', totalQuestions: 17 },
+  { id: 'licao-17-countable-uncountable', name: 'Lição 17 — Substantivos Contáveis e Incontáveis', level: 'A1', icon: '🍎', description: 'Countable/uncountable nouns, some, any e much/many', totalQuestions: 21 },
+  { id: 'licao-18-quantities-choices', name: 'Lição 18 — Quantidades e Escolhas', level: 'A1', icon: '🛒', description: 'Expressando quantidades e fazendo escolhas em inglês', totalQuestions: 17 },
+  { id: 'licao-19-quantities-distance-time', name: 'Lição 19 — Perguntando Sobre Quantidade, Distância e Tempo', level: 'A1', icon: '📏', description: 'How much/how many, distância e tempo', totalQuestions: 18 },
+  { id: 'licao-20-survival-english', name: 'Lição 20 — Survival English 🌍', level: 'A1', icon: '🌍', description: 'Frases essenciais para se virar em situações reais', totalQuestions: 19 },
+  { id: 'licao-21-simple-past-regular', name: 'Lição 21 — Simple Past: Verbos Regulares', level: 'A1', icon: '⏮️', description: 'Formação e uso do Simple Past com verbos regulares', totalQuestions: 17 },
+  { id: 'licao-22-simple-past-irregular', name: 'Lição 22 — Simple Past: Verbos Irregulares', level: 'A1', icon: '📖', description: 'Verbos irregulares mais comuns no Simple Past', totalQuestions: 17 },
+  { id: 'licao-23-talking-about-the-past', name: 'Lição 23 — Falando Sobre o Passado', level: 'A1', icon: '🕰️', description: 'Perguntas, negativas e expressões de tempo no passado', totalQuestions: 13 },
+  { id: 'licao-24-future-going-to', name: 'Lição 24 — Futuro com Going To', level: 'A1', icon: '🎯', description: 'Planos e intenções futuras com Going To', totalQuestions: 17 },
+  { id: 'licao-25-future-will', name: 'Lição 25 — Futuro com Will', level: 'A1', icon: '🔮', description: 'Previsões, decisões espontâneas e promessas com Will', totalQuestions: 17 },
+  { id: 'licao-26-comparatives-superlatives', name: 'Lição 26 — Comparativos e Superlativos', level: 'A1', icon: '⚖️', description: 'Comparando pessoas e coisas em inglês', totalQuestions: 17 },
+  { id: 'licao-27-present-perfect', name: 'Lição 27 — Present Perfect (Introdução)', level: 'A1', icon: '✅', description: 'Introdução ao Present Perfect: have/has + particípio', totalQuestions: 17 },
+  { id: 'licao-28-modal-verbs', name: 'Lição 28 — Verbos Modais', level: 'A1', icon: '🔑', description: 'Can, could, must, should e outros verbos modais', totalQuestions: 17 },
+  { id: 'licao-29-phrasal-verbs', name: 'Lição 29 — Phrasal Verbs Essenciais', level: 'A1', icon: '🧩', description: 'Phrasal verbs mais usados no inglês do dia a dia', totalQuestions: 17 },
+  { id: 'licao-30-revisao-semestre-2', name: 'Lição 30 — Revisão Geral do Semestre 2 🎓', level: 'A1', icon: '🎓', description: 'Revisão completa de todo o conteúdo do Semestre 2', totalQuestions: 50 }
+];
+
+function switchTab(tab) {
+  document.getElementById('panel-progress').classList.toggle('active', tab === 'progress');
+  document.getElementById('panel-lessons').classList.toggle('active', tab === 'lessons');
+  document.getElementById('tab-btn-progress').classList.toggle('active', tab === 'progress');
+  document.getElementById('tab-btn-lessons').classList.toggle('active', tab === 'lessons');
+  if (tab === 'lessons') renderLessonsTab();
+}
+
+function renderLessonsTab() {
+  const all = [...TESTS_CATALOG, ...LESSONS_CATALOG];
+  const totalQuestions = all.reduce((sum, l) => sum + (l.totalQuestions || 0), 0);
+  document.getElementById('lessons-meta').textContent =
+    LESSONS_CATALOG.length + ' lições + ' + TESTS_CATALOG.length + ' teste, totalizando ' + totalQuestions + ' questões.';
+
+  // agrupa mantendo a ordem de aparição (Teste, Introdutório, A1, ...)
+  const groups = [];
+  const groupIndex = {};
+  all.forEach(item => {
+    if (!(item.level in groupIndex)) {
+      groupIndex[item.level] = groups.length;
+      groups.push({ level: item.level, items: [] });
+    }
+    groups[groupIndex[item.level]].items.push(item);
+  });
+
+  let html = '';
+  groups.forEach(g => {
+    html += '<div class="level-group">';
+    html += '<div class="level-title">' + g.level + '</div>';
+    html += '<div class="lesson-card-list">';
+    g.items.forEach(item => {
+      html += `<div class="lesson-item">
+        <div class="icon">${item.icon}</div>
+        <div class="info">
+          <div class="name">${item.name}</div>
+          <div class="desc">${item.description}</div>
+        </div>
+        <div class="qcount">${item.totalQuestions} questões</div>
+      </div>`;
+    });
+    html += '</div></div>';
+  });
+
+  document.getElementById('lessons-slot').innerHTML = html;
+}
 
 async function ensureClient() {
   const cfg = window.SUPABASE_CONFIG;
