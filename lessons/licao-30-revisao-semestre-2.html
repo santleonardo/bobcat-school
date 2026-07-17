@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Lesson 30 — Revisão Geral do Semestre 2</title>
+<style>
+:root {
+  --orange: #D9793F;
+  --orange-dark: #C9622A;
+  --cream: #FBEFE6;
+  --cream-2: #F7F1EC;
+  --ink: #2b2b2b;
+  --ok: #2E8B57;
+  --bad: #C0392B;
+  --border: #EBC9AE;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  background:#fdfaf7;
+  line-height:1.55;
+}
+.app-layout{display:flex;min-height:100vh;}
+.sidebar{
+  width:280px;min-height:100vh;position:fixed;top:0;left:0;z-index:100;
+  background:#fff;border-right:2px solid var(--border);
+  display:flex;flex-direction:column;transition:transform .3s ease;
+}
+.sidebar-header{display:flex;align-items:center;gap:12px;padding:18px 20px 14px;border-bottom:3px solid var(--orange);}
+.sidebar-header .logo{font-size:32px;}
+.sidebar-header .brand{font-weight:800;font-size:16px;color:var(--orange-dark);}
+.sidebar-header .brand small{display:block;font-weight:400;font-size:11px;color:#888;font-style:italic;}
+.sidebar-progress{padding:14px 20px 10px;border-bottom:1px solid #eee;}
+.sidebar-progress .prog-label{font-size:12px;color:#888;font-weight:600;margin-bottom:6px;}
+.sidebar-progress .prog-track{width:100%;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.sidebar-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.sidebar-progress .prog-text{font-size:11px;color:#999;margin-top:4px;text-align:right;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13.5px;font-weight:600;color:#555;text-decoration:none;transition:background .15s,color .15s;border-left:3px solid transparent;}
+.sidebar-nav a:hover{background:var(--cream-2);color:var(--orange-dark);}
+.sidebar-nav a.active{background:var(--cream);color:var(--orange-dark);border-left-color:var(--orange);font-weight:700;}
+.sidebar-nav a .lnum{width:26px;height:26px;border-radius:50%;background:var(--cream-2);color:var(--orange-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.sidebar-nav a.active .lnum{background:var(--orange);color:#fff;}
+.sidebar-nav a.completed .lnum{background:var(--ok);color:#fff;}
+.sidebar-nav a .check{margin-left:auto;font-size:14px;color:var(--ok);display:none;}
+.sidebar-nav a.completed .check{display:inline;}
+.sidebar-close{display:none;position:absolute;top:14px;right:14px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;}
+.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--orange);color:#fff;border:none;width:42px;height:42px;border-radius:10px;font-size:22px;cursor:pointer;box-shadow:0 2px 8px rgba(217,121,63,.3);}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:99;}
+.main{flex:1;margin-left:280px;padding:0 0 80px 0;}
+.top-progress{position:sticky;top:0;z-index:50;background:#fdfaf7ee;backdrop-filter:blur(4px);padding:10px 20px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px;justify-content:center;font-size:13px;color:#666;}
+.top-progress .prog-track{width:220px;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.top-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.lesson{display:none;padding:28px 24px 40px;max-width:880px;margin:0 auto;}
+.lesson.active{display:block;}
+.back-link{display:inline-block;font-size:13.5px;color:var(--orange-dark);text-decoration:none;font-weight:700;margin-bottom:14px;}
+.back-link:hover{text-decoration:underline;}
+.header{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--orange);padding-bottom:14px;margin-bottom:14px;flex-wrap:wrap;}
+.header .logo-icon{font-size:48px;}
+.header .school{font-size:24px;font-weight:800;color:var(--orange-dark);}
+.header .subtitle{font-size:13px;font-style:italic;color:#666;margin-top:2px;}
+.info-bar{display:flex;gap:24px;flex-wrap:wrap;border-bottom:2px solid var(--orange);padding-bottom:14px;margin-bottom:22px;font-size:13.5px;}
+.info-bar label{display:flex;align-items:center;gap:6px;font-weight:600;color:#555;}
+.info-bar input[type=text],.info-bar input[type=date]{border:none;border-bottom:1px solid #999;background:transparent;padding:3px 2px;font-size:13.5px;min-width:150px;font-family:inherit;}
+.info-bar input:focus{outline:none;border-bottom:2px solid var(--orange);}
+h1.title{text-align:center;color:var(--orange-dark);font-size:27px;margin:6px 0 2px 0;}
+.level{text-align:center;font-style:italic;color:#666;font-size:13px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #eee;}
+.level-badge{display:inline-block;background:var(--orange);color:#fff;font-size:12px;font-weight:700;padding:3px 12px;border-radius:20px;font-style:normal;letter-spacing:.3px;}
+.section-title,.section-header{background:var(--orange);color:#fff;font-weight:700;font-size:14.5px;padding:8px 14px;border-radius:5px;margin:28px 0 10px 0;}
+.subheading{font-weight:700;font-size:13.5px;margin:14px 0 6px 0;color:var(--orange-dark);}
+p{margin:8px 0;font-size:14px;}
+.tip{background:var(--cream);border:1px solid var(--border);padding:10px 14px;font-size:13.5px;margin:10px 0;border-radius:6px;}
+.tip::before{content:"💡 ";}
+table{width:100%;border-collapse:collapse;margin:8px 0 18px 0;font-size:13.5px;}
+th{background:var(--orange);color:#fff;text-align:left;padding:8px 12px;}
+td{padding:8px 12px;border-bottom:1px solid #eee;}
+tr:nth-child(even) td{background:var(--cream-2);}
+.example{font-style:italic;color:#555;font-size:13.5px;margin:6px 0 18px 0;padding-left:12px;border-left:3px solid var(--border);}
+.dialog-box,.dialogue-box{background:var(--cream);padding:14px 16px;border-radius:8px;margin:8px 0;}
+.dialogue-box{background:var(--cream-2);border-left:4px solid var(--orange);border-radius:0 6px 6px 0;}
+.dialog-box p,.dialogue-box p{margin:4px 0;font-size:14px;}
+.body-text{margin:4px 0;line-height:1.65;color:var(--ink);font-size:14px;}
+.instruction{margin:6px 0;padding:8px 14px;background:var(--cream);border-left:4px solid var(--orange);border-radius:0 4px 4px 0;color:var(--ink);font-size:13.5px;}
+.numbered-item{margin:8px 0 4px 16px;padding:4px 0;font-size:14px;font-weight:700;color:var(--orange-dark);}
+.letter-item{margin:10px 0 6px 0;padding:4px 0;font-weight:700;font-size:14px;color:var(--orange-dark);}
+.example-line{margin:3px 0 3px 24px;font-style:italic;color:#555;font-size:13.5px;}
+.fill-blank{margin:4px 0 4px 24px;font-size:14px;color:var(--ink);}
+.check-item{margin:4px 0;padding:4px 0;font-size:14px;}
+.gabarito-box{background:#F0FFF0;border:1px solid #4CAF50;border-left:5px solid #4CAF50;border-radius:0 6px 6px 0;padding:16px 20px;margin:18px 0;display:none;}
+.gabarito-box.show{display:block;}
+.gabarito-title{font-weight:700;font-size:14px;color:#2E7D32;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.gabarito-line{margin:3px 0;font-size:13px;color:#333;}
+.ex-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.03);}
+.ex-intro{font-style:italic;color:#666;font-size:13.5px;margin:0 0 12px 0;}
+.fill-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 30px;}
+.fill-item{display:flex;align-items:center;gap:8px;font-size:14px;flex-wrap:wrap;}
+.fill-item input[type=text]{width:80px;padding:5px 8px;border:2px solid #ddd;border-radius:5px;font-size:14px;font-family:inherit;text-align:center;transition:border-color .15s,background .15s;}
+.fill-item input[type=text].longer{width:200px;text-align:left;}
+.fill-item input:focus{outline:none;border-color:var(--orange);}
+.fill-item input.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.fill-item input.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-item{margin:14px 0;font-size:14px;}
+.mc-item .q{font-weight:700;margin-bottom:6px;}
+.mc-options{display:flex;gap:10px;flex-wrap:wrap;}
+.mc-options label{display:flex;align-items:center;gap:6px;border:2px solid #ddd;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:13.5px;transition:border-color .15s,background .15s;}
+.mc-options label:hover{border-color:var(--orange);}
+.mc-options label.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.mc-options label.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-options input{accent-color:var(--orange);}
+.btn{background:var(--orange);color:#fff;border:none;padding:11px 22px;border-radius:7px;font-size:14.5px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;}
+.btn:hover{background:var(--orange-dark);}
+.btn:active{transform:scale(.98);}
+.btn.secondary{background:#fff;color:var(--orange-dark);border:2px solid var(--orange);padding:9px 20px;}
+.btn.secondary:hover{background:var(--cream);}
+.score-badge{display:inline-block;margin-left:14px;font-weight:700;font-size:14.5px;padding:6px 14px;border-radius:20px;background:var(--cream-2);color:var(--orange-dark);}
+.actions{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
+.note-italic{font-size:12px;font-style:italic;color:#777;margin-top:10px;}
+textarea{width:100%;font-family:inherit;font-size:14px;padding:8px 10px;border:2px solid #ddd;border-radius:6px;resize:vertical;min-height:80px;}
+textarea:focus{outline:none;border-color:var(--orange);}
+.footer-note{text-align:center;font-size:11.5px;color:#aaa;margin-top:40px;}
+.vocab-card{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid #eee;border-radius:8px;padding:8px 14px;margin:4px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
+.vocab-card:hover{border-color:var(--orange);}
+.vocab-card .vc-en{font-weight:700;font-size:14px;}
+.vocab-card .vc-pt{font-size:13px;color:var(--ok);display:none;}
+.vocab-card.revealed .vc-pt{display:inline;}
+.vocab-card.revealed{border-color:var(--ok);background:#EAF7EF;}
+.collapse-btn{width:100%;text-align:left;background:var(--cream);border:1px solid var(--border);padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;color:var(--orange-dark);margin:8px 0 0 0;display:flex;align-items:center;gap:8px;}
+.collapse-btn:hover{background:var(--cream-2);}
+.collapse-btn .arrow{transition:transform .2s;font-size:12px;}
+.collapse-btn.open .arrow{transform:rotate(90deg);}
+.collapse-body{display:none;padding:12px 0 4px 0;}
+.collapse-body.open{display:block;}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;box-shadow:0 -2px 8px rgba(0,0,0,.04);z-index:80;padding:6px 0 env(safe-area-inset-bottom,6px);}
+.bottom-nav-inner{display:flex;max-width:480px;margin:0 auto;}
+.bottom-nav .bnav-btn{flex:1;border:none;background:none;padding:10px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:#999;cursor:pointer;font-weight:600;}
+.bottom-nav .bnav-btn .bnav-icon{font-size:20px;}
+.bottom-nav .bnav-btn.active{color:var(--orange-dark);font-weight:700;}
+.bottom-nav .bnav-btn:disabled{color:#ddd;cursor:default;}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);width:280px;}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-close{display:block;}
+  .sidebar-overlay.open{display:block;}
+  .hamburger{display:flex;align-items:center;justify-content:center;}
+  .main{margin-left:0;}
+  .lesson{padding:20px 16px 120px;}
+  .bottom-nav{display:block;}
+  .fill-grid{grid-template-columns:1fr;}
+  .top-progress{padding-left:56px;}
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.lesson.active{animation:fadeIn .3s ease;}
+</style>
+</head>
+<body>
+<div class="wrap" style="max-width:880px;margin:0 auto;padding:28px 20px;">
+<a class="back-link" href="../index.html">&larr; Voltar às Lições</a>
+<div class="header"><span class="logo-icon">🐱</span><div><div class="school">Bobcat Language School</div><div class="subtitle">Aprenda inglês no seu ritmo</div></div></div>
+<div class="info-bar"><label>👤 Aluno: <input type="text" placeholder="Seu nome"></label><label>📅 Data: <input type="date"></label></div>
+<h1 class="title">LIÇÃO 30 — Revisão Geral do Semestre 2 🎓</h1>
+<div class="level"><span class="level-badge">Nível A1/A2</span></div>
+
+<div class="section-header">🎯 Objetivo da Lição</div>
+<p class="body-text">• <strong>Revisar todos os conteúdos</strong> do Semestre 2: Simple Past, Going To, Will, Comparatives, Superlatives, Present Perfect, Modal Verbs, Phrasal Verbs.</p>
+<p class="body-text">• Ler uma <strong>história integrada</strong> que utiliza praticamente todos os conteúdos do semestre.</p>
+<p class="body-text">• Completar <strong>exercícios abrangentes</strong> e um <strong>projeto final</strong>.</p>
+
+<div class="section-header">📖 História Integrada: A Year of Changes</div>
+<p class="body-text">Leia a história abaixo com atenção. Ela contém exemplos de <strong>todos os tópicos</strong> estudados neste semestre!</p>
+
+<div class="dialogue-box">
+<p><strong>Part 1: The Past</strong></p>
+<p>Last year, my life changed completely. First, I <strong>lived</strong> (Simple Past — regular) in a small town called Campinas. I <strong>worked</strong> at a local store and <strong>studied</strong> English at night. Then, I <strong>went</strong> (irregular) to São Paulo for a job interview. I <strong>was</strong> very nervous, but I <strong>did</strong> my best. I <strong>met</strong> new people and <strong>saw</strong> amazing places. I <strong>ate</strong> at wonderful restaurants and <strong>bought</strong> souvenirs for my family. I <strong>didn't know</strong> (negativa) that São Paulo was so big! I <strong>thought</strong> it was scary, but it <strong>wasn't</strong>. After that visit, I <strong>made</strong> a big decision.</p>
+
+<p><strong>Part 2: The Move</strong></p>
+<p>I <strong>was going to</strong> move to São Paulo (Going To — plano). I <strong>was going to</strong> start a new life there. My parents said I <strong>should</strong> (Modal — conselho) think carefully. "You <strong>must</strong> (Modal — obrigação) save money first," my dad said. "You <strong>have to</strong> (Modal — obrigação externa) find an apartment before you go," my mom added. I <strong>shouldn't</strong> rush, but I was excited!</p>
+
+<p><strong>Part 3: The Future</strong></p>
+<p>"I'll call you every day!" I promised (Will — promessa). "I won't forget you!" My sister said, "I'll visit you on weekends!" (Will — promessa). My best friend said, "I might come too!" (Might — possibilidade). The day I left, I said, "I'll be fine!" (Will — certeza). When I arrived in São Paulo, it was raining. "It'll be sunny tomorrow," I thought (Will — previsão).</p>
+
+<p><strong>Part 4: Comparing</strong></p>
+<p>São Paulo is <strong>bigger</strong> than Campinas (Comparative). It's <strong>more expensive</strong> too! But Campinas is <strong>more peaceful</strong>. The traffic in São Paulo is <strong>worse</strong> than in Campinas. However, São Paulo has <strong>the best</strong> restaurants (Superlative) and <strong>the most interesting</strong> cultural events. My apartment is <strong>smaller</strong> than my old house, but it's <strong>as comfortable as</strong> home (as...as). It's <strong>not as quiet as</strong> Campinas, though!</p>
+
+<p><strong>Part 5: Experiences</strong></p>
+<p>I <strong>have lived</strong> in São Paulo for six months now (Present Perfect). I <strong>have met</strong> wonderful people. I <strong>have already visited</strong> three museums. I <strong>have just started</strong> a new course. I <strong>have never eaten</strong> such good pizza! But I <strong>haven't found</strong> a good bakery yet. <strong>Have you ever been</strong> to São Paulo? It's an amazing city!</p>
+
+<p><strong>Part 6: Daily Life</strong></p>
+<p>Every morning, I <strong>wake up</strong> early and <strong>get up</strong> at 6 a.m. I <strong>put on</strong> my clothes and <strong>turn on</strong> the radio. I <strong>look for</strong> my keys (they're always lost!). I <strong>pick up</strong> my bag and <strong>go out</strong>. After work, I <strong>come in</strong>, <strong>take off</strong> my shoes, <strong>sit down</strong> and relax. I <strong>turn off</strong> the TV and <strong>hang up</strong> the phone. Sometimes I <strong>find out</strong> interesting things about the city. I always <strong>give back</strong> books to the library on time!</p>
+
+<p><strong>Part 7: Reflections</strong></p>
+<p>Looking back, I <strong>was</strong> afraid of change. I <strong>thought</strong> I <strong>couldn't</strong> do it (Could — passado). But I <strong>should have</strong> trusted myself! Life in the big city <strong>has been</strong> an adventure. First, I was scared. Then, I adapted. After that, I started to love it. <strong>Finally</strong>, I can say: this was the best decision I <strong>have ever made</strong>! In the end, change is good. I <strong>'m going to</strong> keep learning and growing. I <strong>'ll</strong> never stop!</p>
+</div>
+
+<div class="section-header">📚 Glossário — ~150 Palavras do Semestre 2</div>
+
+<button class="collapse-btn" onclick="toggleCollapse(this)"><span class="arrow">▶</span> 📝 Verbos (50+ palavras)</button>
+<div class="collapse-body">
+<table>
+  <tr><th>English</th><th>Português</th></tr>
+  <tr><td>work / worked</td><td>trabalhar / trabalhou</td></tr>
+  <tr><td>study / studied</td><td>estudar / estudou</td></tr>
+  <tr><td>visit / visited</td><td>visitar / visitou</td></tr>
+  <tr><td>go / went</td><td>ir / foi</td></tr>
+  <tr><td>have / had</td><td>ter / teve</td></tr>
+  <tr><td>see / saw</td><td>ver / viu</td></tr>
+  <tr><td>eat / ate</td><td>comer / comeu</td></tr>
+  <tr><td>come / came</td><td>vir / veio</td></tr>
+  <tr><td>take / took</td><td>pegar / pegou</td></tr>
+  <tr><td>make / made</td><td>fazer / fez</td></tr>
+  <tr><td>buy / bought</td><td>comprar / comprou</td></tr>
+  <tr><td>think / thought</td><td>pensar / pensou</td></tr>
+  <tr><td>know / knew</td><td>saber / soube</td></tr>
+  <tr><td>find / found</td><td>encontrar / encontrou</td></tr>
+  <tr><td>tell / told</td><td>contar / contou</td></tr>
+  <tr><td>say / said</td><td>dizer / disse</td></tr>
+  <tr><td>leave / left</td><td>sair / saiu</td></tr>
+  <tr><td>feel / felt</td><td>sentir / sentiu</td></tr>
+  <tr><td>write / wrote</td><td>escrever / escreveu</td></tr>
+  <tr><td>read / read</td><td>ler / leu</td></tr>
+  <tr><td>run / ran</td><td>correr / correu</td></tr>
+  <tr><td>sleep / slept</td><td>dormir / dormiu</td></tr>
+  <tr><td>speak / spoke</td><td>falar / falou</td></tr>
+  <tr><td>meet / met</td><td>conhecer / conheceu</td></tr>
+  <tr><td>win / won</td><td>ganhar / ganhou</td></tr>
+  <tr><td>lose / lost</td><td>perder / perdeu</td></tr>
+  <tr><td>travel</td><td>viajar</td></tr>
+  <tr><td>improve</td><td>melhorar</td></tr>
+  <tr><td>save</td><td>economizar / salvar</td></tr>
+  <tr><td>promise</td><td>prometer</td></tr>
+  <tr><td>climb</td><td>escalar</td></tr>
+</table>
+</div>
+
+<button class="collapse-btn" onclick="toggleCollapse(this)"><span class="arrow">▶</span> 📦 Substantivos (30+ palavras)</button>
+<div class="collapse-body">
+<table>
+  <tr><th>English</th><th>Português</th></tr>
+  <tr><td>goal</td><td>meta</td></tr>
+  <tr><td>resolution</td><td>resolução</td></tr>
+  <tr><td>experience</td><td>experiência</td></tr>
+  <tr><td>childhood</td><td>infância</td></tr>
+  <tr><td>vacation</td><td>férias</td></tr>
+  <tr><td>biography</td><td>biografia</td></tr>
+  <tr><td>seatbelt</td><td>cinto de segurança</td></tr>
+  <tr><td>license</td><td>habilitação / licença</td></tr>
+  <tr><td>weather</td><td>clima / tempo</td></tr>
+  <tr><td>prediction</td><td>previsão</td></tr>
+  <tr><td>apartment</td><td>apartamento</td></tr>
+  <tr><td>traffic</td><td>trânsito</td></tr>
+  <tr><td>bakery</td><td>padaria</td></tr>
+  <tr><td>museum</td><td>museu</td></tr>
+  <tr><td>adventure</td><td>aventura</td></tr>
+  <tr><td>decision</td><td>decisão</td></tr>
+  <tr><td>interview</td><td>entrevista</td></tr>
+  <tr><td>souvenir</td><td>lembrancinha</td></tr>
+  <tr><td>library</td><td>biblioteca</td></tr>
+  <tr><td>bucket list</td><td>lista de desejos</td></tr>
+</table>
+</div>
+
+<button class="collapse-btn" onclick="toggleCollapse(this)"><span class="arrow">▶</span> 🎨 Adjetivos (30+ palavras)</button>
+<div class="collapse-body">
+<table>
+  <tr><th>English</th><th>Português</th></tr>
+  <tr><td>bigger / biggest</td><td>maior / o maior</td></tr>
+  <tr><td>smaller / smallest</td><td>menor / o menor</td></tr>
+  <tr><td>faster / fastest</td><td>mais rápido / o mais rápido</td></tr>
+  <tr><td>better / best</td><td>melhor / o melhor</td></tr>
+  <tr><td>worse / worst</td><td>pior / o pior</td></tr>
+  <tr><td>more expensive</td><td>mais caro</td></tr>
+  <tr><td>more beautiful</td><td>mais bonito</td></tr>
+  <tr><td>more peaceful</td><td>mais pacífico</td></tr>
+  <tr><td>more interesting</td><td>mais interessante</td></tr>
+  <tr><td>more dangerous</td><td>mais perigoso</td></tr>
+  <tr><td>excited</td><td>empolgado</td></tr>
+  <tr><td>surprised</td><td>surpreso</td></tr>
+  <tr><td>scared</td><td>com medo</td></tr>
+  <tr><td>proud</td><td>orgulhoso</td></tr>
+  <tr><td>nervous</td><td>nervoso</td></tr>
+  <tr><td>sunny / cloudy / rainy</td><td>ensolarado / nublado / chuvoso</td></tr>
+  <tr><td>comfortable</td><td>confortável</td></tr>
+  <tr><td>peaceful</td><td>pacífico</td></tr>
+  <tr><td>amazing</td><td>incrível</td></tr>
+  <tr><td>delicious</td><td>delicioso</td></tr>
+</table>
+</div>
+
+<button class="collapse-btn" onclick="toggleCollapse(this)"><span class="arrow">▶</span> ⏰ Advérbios & Expressões (20+ palavras)</button>
+<div class="collapse-body">
+<table>
+  <tr><th>English</th><th>Português</th></tr>
+  <tr><td>yesterday / last week / ago</td><td>ontem / semana passada / atrás</td></tr>
+  <tr><td>tomorrow / next week / soon</td><td>amanhã / semana que vem / em breve</td></tr>
+  <tr><td>first / then / after that / finally</td><td>primeiro / então / depois / finalmente</td></tr>
+  <tr><td>ever / never / just / already / yet</td><td>já / nunca / acabou de / já / ainda</td></tr>
+  <tr><td>should / must / have to</td><td>deveria / deve / ter que</td></tr>
+  <tr><td>may / might / could</td><td>pode / talvez / poderia</td></tr>
+  <tr><td>abroad</td><td>no exterior</td></tr>
+  <tr><td>abroad</td><td>no exterior</td></tr>
+  <tr><td>on time</td><td>na hora</td></tr>
+  <tr><td>in the end</td><td>no final</td></tr>
+  <tr><td>at least</td><td>pelo menos</td></tr>
+  <tr><td>of course</td><td>claro</td></tr>
+</table>
+</div>
+
+<button class="collapse-btn" onclick="toggleCollapse(this)"><span class="arrow">▶</span> 🔗 Phrasal Verbs (15)</button>
+<div class="collapse-body">
+<table>
+  <tr><th>Phrasal Verb</th><th>Português</th></tr>
+  <tr><td>wake up</td><td>acordar</td></tr>
+  <tr><td>get up</td><td>levantantar-se</td></tr>
+  <tr><td>sit down</td><td>sentar-se</td></tr>
+  <tr><td>stand up</td><td>levantantar-se</td></tr>
+  <tr><td>turn on</td><td>ligar</td></tr>
+  <tr><td>turn off</td><td>desligar</td></tr>
+  <tr><td>put on</td><td>vestir / colocar</td></tr>
+  <tr><td>take off</td><td>tirar / decolar</td></tr>
+  <tr><td>look for</td><td>procurar</td></tr>
+  <tr><td>find out</td><td>descobrir</td></tr>
+  <tr><td>pick up</td><td>pegar / buscar</td></tr>
+  <tr><td>give back</td><td>devolver</td></tr>
+  <tr><td>come in</td><td>entrar</td></tr>
+  <tr><td>go out</td><td>sair</td></tr>
+  <tr><td>hang up</td><td>desligar (tel.)</td></tr>
+</table>
+</div>
+
+<div class="section-header">📝 Exercícios de Revisão</div>
+
+<div class="letter-item">A. Múltipla Escolha — 25 questões</div>
+<div class="ex-card">
+  <div class="mc-item"><div class="q">1. She ___ to school yesterday. (ir)</div><div class="mc-options"><label><input type="radio" name="l30mc1" value="a"> go</label><label><input type="radio" name="l30mc1" value="b" class="correct-answer"> went</label><label><input type="radio" name="l30mc1" value="c"> goes</label></div></div>
+  <div class="mc-item"><div class="q">2. I ___ going to study tonight.</div><div class="mc-options"><label><input type="radio" name="l30mc2" value="a"> is</label><label><input type="radio" name="l30mc2" value="b" class="correct-answer"> am</label><label><input type="radio" name="l30mc3" value="c"> are</label></div></div>
+  <div class="mc-item"><div class="q">3. The phone is ringing! I ___ answer it!</div><div class="mc-options"><label><input type="radio" name="l30mc3" value="a"> 'm going to</label><label><input type="radio" name="l30mc3" value="b" class="correct-answer"> 'll</label><label><input type="radio" name="l30mc3" value="c"> was</label></div></div>
+  <div class="mc-item"><div class="q">4. São Paulo is ___ than Campinas.</div><div class="mc-options"><label><input type="radio" name="l30mc4" value="a" class="correct-answer"> bigger</label><label><input type="radio" name="l30mc4" value="b"> more big</label><label><input type="radio" name="l30mc4" value="c"> biggest</label></div></div>
+  <div class="mc-item"><div class="q">5. I have ___ visited Paris. (nunca)</div><div class="mc-options"><label><input type="radio" name="l30mc5" value="a"> ever</label><label><input type="radio" name="l30mc5" value="b" class="correct-answer"> never</label><label><input type="radio" name="l30mc5" value="c"> already</label></div></div>
+  <div class="mc-item"><div class="q">6. You ___ wear a seatbelt. (obrigação)</div><div class="mc-options"><label><input type="radio" name="l30mc6" value="a" class="correct-answer"> must</label><label><input type="radio" name="l30mc6" value="b"> might</label><label><input type="radio" name="l30mc6" value="c"> should</label></div></div>
+  <div class="mc-item"><div class="q">7. ___ the TV, please. (desligar)</div><div class="mc-options"><label><input type="radio" name="l30mc7" value="a"> Turn on</label><label><input type="radio" name="l30mc7" value="b" class="correct-answer"> Turn off</label><label><input type="radio" name="l30mc7" value="c"> Take off</label></div></div>
+  <div class="mc-item"><div class="q">8. ___ you ever ___ sushi?</div><div class="mc-options"><label><input type="radio" name="l30mc8" value="a" class="correct-answer"> Have / eaten</label><label><input type="radio" name="l30mc8" value="b"> Did / eat</label><label><input type="radio" name="l30mc8" value="c"> Do / eat</label></div></div>
+  <div class="mc-item"><div class="q">9. She ___ her coat and went out.</div><div class="mc-options"><label><input type="radio" name="l30mc9" value="a" class="correct-answer"> put on</label><label><input type="radio" name="l30mc9" value="b"> turned on</label><label><input type="radio" name="l30mc9" value="c"> woke up</label></div></div>
+  <div class="mc-item"><div class="q">10. This is the ___ movie I've ever seen!</div><div class="mc-options"><label><input type="radio" name="l30mc10" value="a" class="correct-answer"> best</label><label><input type="radio" name="l30mc10" value="b"> better</label><label><input type="radio" name="l30mc10" value="c"> goodest</label></div></div>
+  <div class="mc-item"><div class="q">11. I didn't ___ to the party. (ir)</div><div class="mc-options"><label><input type="radio" name="l30mc11" value="a" class="correct-answer"> go</label><label><input type="radio" name="l30mc11" value="b"> went</label><label><input type="radio" name="l30mc11" value="c"> goes</label></div></div>
+  <div class="mc-item"><div class="q">12. ___ she going to travel?</div><div class="mc-options"><label><input type="radio" name="l30mc12" value="a"> Do</label><label><input type="radio" name="l30mc12" value="b" class="correct-answer"> Is</label><label><input type="radio" name="l30mc12" value="c"> Will</label></div></div>
+  <div class="mc-item"><div class="q">13. I promise I ___ be late!</div><div class="mc-options"><label><input type="radio" name="l30mc13" value="a" class="correct-answer"> won't</label><label><input type="radio" name="l30mc13" value="b"> don't</label><label><input type="radio" name="l30mc13" value="c"> isn't</label></div></div>
+  <div class="mc-item"><div class="q">14. English is ___ than Chinese. (fácil)</div><div class="mc-options"><label><input type="radio" name="l30mc14" value="a"> more easy</label><label><input type="radio" name="l30mc14" value="b" class="correct-answer"> easier</label><label><input type="radio" name="l30mc14" value="c"> easyer</label></div></div>
+  <div class="mc-item"><div class="q">15. She has ___ arrived. (acabou de)</div><div class="mc-options"><label><input type="radio" name="l30mc15" value="a" class="correct-answer"> just</label><label><input type="radio" name="l30mc15" value="b"> yet</label><label><input type="radio" name="l30mc15" value="c"> already</label></div></div>
+  <div class="mc-item"><div class="q">16. You ___ eat more vegetables. (conselho)</div><div class="mc-options"><label><input type="radio" name="l30mc16" value="a" class="correct-answer"> should</label><label><input type="radio" name="l30mc16" value="b"> must</label><label><input type="radio" name="l30mc16" value="c"> have to</label></div></div>
+  <div class="mc-item"><div class="q">17. I'm ___ my keys. (procurar)</div><div class="mc-options"><label><input type="radio" name="l30mc17" value="a"> looking at</label><label><input type="radio" name="l30mc17" value="b" class="correct-answer"> looking for</label><label><input type="radio" name="l30mc17" value="c"> finding out</label></div></div>
+  <div class="mc-item"><div class="q">18. He ___ the book yesterday. (ler)</div><div class="mc-options"><label><input type="radio" name="l30mc18" value="a" class="correct-answer"> read</label><label><input type="radio" name="l30mc18" value="b"> readed</label><label><input type="radio" name="l30mc18" value="c"> reads</label></div></div>
+  <div class="mc-item"><div class="q">19. It ___ rain later. (possibilidade)</div><div class="mc-options"><label><input type="radio" name="l30mc19" value="a"> must</label><label><input type="radio" name="l30mc19" value="b" class="correct-answer"> might</label><label><input type="radio" name="l30mc19" value="c"> should</label></div></div>
+  <div class="mc-item"><div class="q">20. She is ___ tall ___ her brother.</div><div class="mc-options"><label><input type="radio" name="l30mc20" value="a" class="correct-answer"> as / as</label><label><input type="radio" name="l30mc20" value="b"> more / than</label><label><input type="radio" name="l30mc20" value="c"> most / in</label></div></div>
+  <div class="mc-item"><div class="q">21. I haven't finished ___. (ainda)</div><div class="mc-options"><label><input type="radio" name="l30mc21" value="a"> already</label><label><input type="radio" name="l30mc21" value="b" class="correct-answer"> yet</label><label><input type="radio" name="l30mc21" value="c"> just</label></div></div>
+  <div class="mc-item"><div class="q">22. ___ you help me, please?</div><div class="mc-options"><label><input type="radio" name="l30mc22" value="a"> Must</label><label><input type="radio" name="l30mc22" value="b" class="correct-answer"> Could</label><label><input type="radio" name="l30mc22" value="c"> Should</label></div></div>
+  <div class="mc-item"><div class="q">23. They ___ to the beach last weekend.</div><div class="mc-options"><label><input type="radio" name="l30mc23" value="a" class="correct-answer"> went</label><label><input type="radio" name="l30mc23" value="b"> go</label><label><input type="radio" name="l30mc23" value="c"> are going</label></div></div>
+  <div class="mc-item"><div class="q">24. ___ I sit here? (permissão formal)</div><div class="mc-options"><label><input type="radio" name="l30mc24" value="a" class="correct-answer"> May</label><label><input type="radio" name="l30mc24" value="b"> Must</label><label><input type="radio" name="l30mc24" value="c"> Will</label></div></div>
+  <div class="mc-item"><div class="q">25. ___ your shoes before entering.</div><div class="mc-options"><label><input type="radio" name="l30mc25" value="a"> Put on</label><label><input type="radio" name="l30mc25" value="b" class="correct-answer"> Take off</label><label><input type="radio" name="l30mc25" value="c"> Turn off</label></div></div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">B. Complete as frases — 15 exercícios</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item">She <input type="text" data-answer="went" placeholder="?"> to Paris last year. (go/past)</div>
+    <div class="fill-item">I'm <input type="text" data-answer="going to" placeholder="?"> study tonight. (future plan)</div>
+    <div class="fill-item">I'll <input type="text" data-answer="help" placeholder="?"> you! (will + verb)</div>
+    <div class="fill-item">Brazil is <input type="text" data-answer="bigger" placeholder="?"> than Uruguay. (comparative)</div>
+    <div class="fill-item">I have <input type="text" data-answer="never" placeholder="?"> eaten frog. (never)</div>
+    <div class="fill-item">You <input type="text" data-answer="should" placeholder="?"> sleep more. (advice)</div>
+    <div class="fill-item"><input type="text" data-answer="Turn on" placeholder="?"> the lights, please. (phrasal)</div>
+    <div class="fill-item">She has <input type="text" data-answer="already" placeholder="?"> finished. (already)</div>
+    <div class="fill-item">It <input type="text" data-answer="might" placeholder="?"> rain tomorrow. (possibility)</div>
+    <div class="fill-item">He <input type="text" data-answer="didn't" placeholder="?"> go to school. (neg past)</div>
+    <div class="fill-item">This is the <input type="text" data-answer="worst" placeholder="?"> movie. (superlative bad)</div>
+    <div class="fill-item">I'm <input type="text" data-answer="looking for" placeholder="?"> my keys. (phrasal)</div>
+    <div class="fill-item">She has <input type="text" data-answer="just" placeholder="?"> arrived. (just)</div>
+    <div class="fill-item">You <input type="text" data-answer="mustn't" placeholder="?"> park here. (prohibition)</div>
+    <div class="fill-item"><input type="text" data-answer="Could" placeholder="?"> you open the door? (polite)</div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">C. Traduções — 10 exercícios (PT → EN)</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item input-long">1. Eu fui à escola ontem. → <input type="text" class="longer" data-answer="I went to school yesterday" placeholder="..."></div>
+    <div class="fill-item input-long">2. Eu vou viajar amanhã. → <input type="text" class="longer" data-answer="I'm going to travel tomorrow" placeholder="..."></div>
+    <div class="fill-item input-long">3. Eu vou te ajudar! → <input type="text" class="longer" data-answer="I'll help you" placeholder="..."></div>
+    <div class="fill-item input-long">4. São Paulo é maior que Campinas. → <input type="text" class="longer" data-answer="São Paulo is bigger than Campinas" placeholder="..."></div>
+    <div class="fill-item input-long">5. Eu nunca comi sushi. → <input type="text" class="longer" data-answer="I've never eaten sushi" placeholder="..."></div>
+    <div class="fill-item input-long">6. Você deveria descansar. → <input type="text" class="longer" data-answer="You should rest" placeholder="..."></div>
+    <div class="fill-item input-long">7. Ligue a TV, por favor. → <input type="text" class="longer" data-answer="Turn on the TV please" placeholder="..."></div>
+    <div class="fill-item input-long">8. Ela acabou de chegar. → <input type="text" class="longer" data-answer="She has just arrived" placeholder="..."></div>
+    <div class="fill-item input-long">9. Talvez chova amanhã. → <input type="text" class="longer" data-answer="It might rain tomorrow" placeholder="..."></div>
+    <div class="fill-item input-long">10. Este é o melhor restaurante. → <input type="text" class="longer" data-answer="This is the best restaurant" placeholder="..."></div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">D. Listening Activities — 5 atividades (autoestudo)</div>
+<div class="ex-card">
+  <p class="ex-intro">Instruções para prática de escuta. Use vídeos, podcasts ou músicas em inglês!</p>
+  <p class="instruction">1. Ouça uma música em inglês e anote todos os phrasal verbs que conseguir identificar.</p>
+  <p class="instruction">2. Assista a um vídeo curto (2-3 min) e anote todos os verbos no passado que ouvir.</p>
+  <p class="instruction">3. Ouça um podcast e identifique ao menos 3 comparativos ou superlativos.</p>
+  <p class="instruction">4. Assista a uma cena de filme e anote todos os modais (should, must, could, may, might).</p>
+  <p class="instruction">5. Ouça uma entrevista e anote exemplos de Present Perfect (have/has + particípio).</p>
+  <textarea rows="4" placeholder="Suas anotações de listening..."></textarea>
+</div>
+
+<div class="letter-item">E. Speaking Activities — 5 atividades</div>
+<div class="ex-card">
+  <p class="ex-intro">Pratique falando! Grave-se se possível.</p>
+  <p class="instruction">1. Conte a história das suas últimas férias em 2 minutos usando Simple Past e sequenciadores.</p>
+  <p class="instruction">2. Descreva seus planos para o próximo ano usando going to e will.</p>
+  <p class="instruction">3. Compare duas cidades que você conhece usando comparativos e superlativos.</p>
+  <p class="instruction">4. Dê 5 conselhos para alguém aprendendo inglês usando should/shouldn't.</p>
+  <p class="instruction">5. Descreva sua rotina matinal usando pelo menos 5 phrasal verbs.</p>
+  <textarea rows="4" placeholder="Suas anotações de speaking..."></textarea>
+</div>
+
+<div class="letter-item">F. Redação — 200-250 palavras</div>
+<div class="ex-card">
+  <p class="ex-intro">Escreva um texto sobre "My English Learning Journey" usando conteúdos do semestre inteiro.</p>
+  <p class="instruction">Use: Simple Past (o que você fez), Going To (planos), Will (promessas), Comparatives (antes e depois), Present Perfect (experiências), Modal Verbs (conselhos), Phrasal Verbs (rotina de estudos).</p>
+  <textarea rows="12" placeholder="My English Learning Journey: Write 200-250 words here..."></textarea>
+</div>
+
+<div class="letter-item">G. Projeto Final: My English Learning Presentation</div>
+<div class="ex-card">
+  <p class="ex-intro">Crie uma apresentação sobre sua jornada de aprendizado de inglês!</p>
+  <p class="instruction">Inclua: 1) Uma timeline do que você aprendeu; 2) Seus objetivos futuros (going to / will); 3) Conselhos para outros estudantes (should); 4) Uma rotina de estudos usando phrasal verbs; 5) Comparação entre seu inglês antes e agora (comparatives/superlatives); 6) Experiências que você teve com o inglês (Present Perfect).</p>
+  <textarea rows="10" placeholder="My Final Project: Planeje sua apresentação aqui..."></textarea>
+</div>
+
+<button class="btn secondary" onclick="this.nextElementSibling.classList.toggle('show')">📋 Ver Gabarito</button>
+<div class="gabarito-box">
+  <div class="gabarito-title">✅ Gabarito — Lição 30</div>
+  <p class="gabarito-line"><strong>A. Múltipla Escolha:</strong> 1-B(went) 2-B(am) 3-B('ll) 4-A(bigger) 5-B(never) 6-A(must) 7-B(Turn off) 8-A(Have/eaten) 9-A(put on) 10-A(best) 11-A(go) 12-B(Is) 13-A(won't) 14-B(easier) 15-A(just) 16-A(should) 17-B(looking for) 18-A(read) 19-B(might) 20-A(as/as) 21-B(yet) 22-B(Could) 23-A(went) 24-A(May) 25-B(Take off)</p>
+  <p class="gabarito-line"><strong>B. Completar:</strong> went | going to | help | bigger | never | should | Turn on | already | might | didn't | worst | looking for | just | mustn't | Could</p>
+  <p class="gabarito-line"><strong>C. Traduções:</strong> I went to school yesterday. | I'm going to travel tomorrow. | I'll help you! | São Paulo is bigger than Campinas. | I've never eaten sushi. | You should rest. | Turn on the TV please. | She has just arrived. | It might rain tomorrow. | This is the best restaurant.</p>
+</div>
+
+<div class="section-header">🏁 Conclusão</div>
+<p class="body-text">🎉🎉🎉 <strong>PARABÉNS!</strong> Você completou todas as 10 lições do Módulo Semestre 2 (Lições 21-30)! Agora você sabe falar sobre o passado, planejar o futuro, comparar coisas, falar de experiências, dar conselhos e usar phrasal verbs no dia a dia! Este é um marco incrível na sua jornada de aprendizado de inglês! Continue praticando, nunca pare de aprender e lembre-se: <strong>every expert was once a beginner</strong>! 🌟</p>
+
+<div class="actions" style="margin-top:24px;">
+  <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
+  <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
+</div>
+<p class="completion-note" style="font-size:12px;font-style:italic;color:#777;margin-top:10px;">Responda os exercícios (preenchimento e múltipla escolha) e clique em "Finalizar" para conferir sua nota. É preciso pelo menos 85% de acerto para concluir a lição.</p>
+<div class="footer-note">Bobcat Language School • Lição 30 — Revisão Geral do Semestre 2 🎓</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<script>
+const LESSON_ID = 'licao-30-revisao-semestre-2';
+let finishing = false;
+
+async function prefillFromProfile() {
+  await initDataLayer();
+  const profile = await getProfile();
+  if (profile && profile.name) {
+    const nameInput = document.querySelector('.info-bar input[type=text]');
+    if (nameInput && !nameInput.value) nameInput.value = profile.name;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const dateInput = document.querySelector('.info-bar input[type=date]');
+  if (dateInput && !dateInput.value) dateInput.value = today;
+}
+document.addEventListener('DOMContentLoaded', prefillFromProfile);
+
+function checkFills(btn) {
+  const card = btn.closest('.ex-card');
+  const inputs = card.querySelectorAll('.fill-item input[type=text]');
+  let correct = 0, total = 0;
+  inputs.forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    inp.classList.remove('correct', 'incorrect');
+    if (cleanVal === cleanAnswer) { inp.classList.add('correct'); correct++; }
+    else { inp.classList.add('incorrect'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  const badge = document.createElement('span');
+  badge.className = 'score-badge';
+  badge.textContent = correct + '/' + total + ' ✅';
+  btn.parentElement.appendChild(badge);
+}
+
+function checkMC(btn) {
+  const card = btn.closest('.ex-card');
+  const items = card.querySelectorAll('.mc-item');
+  let correct = 0, total = 0;
+  items.forEach(item => {
+    const options = item.querySelectorAll('.mc-options label');
+    const selected = item.querySelector('input[type=radio]:checked');
+    options.forEach(l => l.classList.remove('correct', 'incorrect'));
+    if (!selected) return;
+    total++;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) { selected.parentElement.classList.add('correct'); correct++; }
+    else { selected.parentElement.classList.add('incorrect'); if (correctRadio) correctRadio.parentElement.classList.add('correct'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  if (total > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'score-badge';
+    badge.textContent = correct + '/' + total + ' ✅';
+    btn.parentElement.appendChild(badge);
+  }
+}
+
+function toggleCollapse(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+async function finishLesson() {
+  if (finishing) return;
+  finishing = true;
+
+  let correct = 0, total = 0;
+  document.querySelectorAll('input[data-answer]').forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    if (cleanVal === cleanAnswer) correct++;
+  });
+  document.querySelectorAll('.mc-item').forEach(item => {
+    total++;
+    const selected = item.querySelector('input[type=radio]:checked');
+    if (!selected) return;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) correct++;
+  });
+
+  const safeTotal = total || 1;
+  const passed = await handleLessonFinish(LESSON_ID, correct, safeTotal, 'correct');
+  if (!passed) finishing = false;
+}
+</script>
+
+</body>
+</html>

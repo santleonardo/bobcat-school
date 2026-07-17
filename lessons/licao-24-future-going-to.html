@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Lesson 24 — Future with Going To</title>
+<style>
+:root {
+  --orange: #D9793F;
+  --orange-dark: #C9622A;
+  --cream: #FBEFE6;
+  --cream-2: #F7F1EC;
+  --ink: #2b2b2b;
+  --ok: #2E8B57;
+  --bad: #C0392B;
+  --border: #EBC9AE;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  background:#fdfaf7;
+  line-height:1.55;
+}
+.app-layout{display:flex;min-height:100vh;}
+.sidebar{
+  width:280px;min-height:100vh;position:fixed;top:0;left:0;z-index:100;
+  background:#fff;border-right:2px solid var(--border);
+  display:flex;flex-direction:column;transition:transform .3s ease;
+}
+.sidebar-header{display:flex;align-items:center;gap:12px;padding:18px 20px 14px;border-bottom:3px solid var(--orange);}
+.sidebar-header .logo{font-size:32px;}
+.sidebar-header .brand{font-weight:800;font-size:16px;color:var(--orange-dark);}
+.sidebar-header .brand small{display:block;font-weight:400;font-size:11px;color:#888;font-style:italic;}
+.sidebar-progress{padding:14px 20px 10px;border-bottom:1px solid #eee;}
+.sidebar-progress .prog-label{font-size:12px;color:#888;font-weight:600;margin-bottom:6px;}
+.sidebar-progress .prog-track{width:100%;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.sidebar-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.sidebar-progress .prog-text{font-size:11px;color:#999;margin-top:4px;text-align:right;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13.5px;font-weight:600;color:#555;text-decoration:none;transition:background .15s,color .15s;border-left:3px solid transparent;}
+.sidebar-nav a:hover{background:var(--cream-2);color:var(--orange-dark);}
+.sidebar-nav a.active{background:var(--cream);color:var(--orange-dark);border-left-color:var(--orange);font-weight:700;}
+.sidebar-nav a .lnum{width:26px;height:26px;border-radius:50%;background:var(--cream-2);color:var(--orange-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.sidebar-nav a.active .lnum{background:var(--orange);color:#fff;}
+.sidebar-nav a.completed .lnum{background:var(--ok);color:#fff;}
+.sidebar-nav a .check{margin-left:auto;font-size:14px;color:var(--ok);display:none;}
+.sidebar-nav a.completed .check{display:inline;}
+.sidebar-close{display:none;position:absolute;top:14px;right:14px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;}
+.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--orange);color:#fff;border:none;width:42px;height:42px;border-radius:10px;font-size:22px;cursor:pointer;box-shadow:0 2px 8px rgba(217,121,63,.3);}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:99;}
+.main{flex:1;margin-left:280px;padding:0 0 80px 0;}
+.top-progress{position:sticky;top:0;z-index:50;background:#fdfaf7ee;backdrop-filter:blur(4px);padding:10px 20px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px;justify-content:center;font-size:13px;color:#666;}
+.top-progress .prog-track{width:220px;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.top-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.lesson{display:none;padding:28px 24px 40px;max-width:880px;margin:0 auto;}
+.lesson.active{display:block;}
+.back-link{display:inline-block;font-size:13.5px;color:var(--orange-dark);text-decoration:none;font-weight:700;margin-bottom:14px;}
+.back-link:hover{text-decoration:underline;}
+.header{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--orange);padding-bottom:14px;margin-bottom:14px;flex-wrap:wrap;}
+.header .logo-icon{font-size:48px;}
+.header .school{font-size:24px;font-weight:800;color:var(--orange-dark);}
+.header .subtitle{font-size:13px;font-style:italic;color:#666;margin-top:2px;}
+.info-bar{display:flex;gap:24px;flex-wrap:wrap;border-bottom:2px solid var(--orange);padding-bottom:14px;margin-bottom:22px;font-size:13.5px;}
+.info-bar label{display:flex;align-items:center;gap:6px;font-weight:600;color:#555;}
+.info-bar input[type=text],.info-bar input[type=date]{border:none;border-bottom:1px solid #999;background:transparent;padding:3px 2px;font-size:13.5px;min-width:150px;font-family:inherit;}
+.info-bar input:focus{outline:none;border-bottom:2px solid var(--orange);}
+h1.title{text-align:center;color:var(--orange-dark);font-size:27px;margin:6px 0 2px 0;}
+.level{text-align:center;font-style:italic;color:#666;font-size:13px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #eee;}
+.level-badge{display:inline-block;background:var(--orange);color:#fff;font-size:12px;font-weight:700;padding:3px 12px;border-radius:20px;font-style:normal;letter-spacing:.3px;}
+.section-title,.section-header{background:var(--orange);color:#fff;font-weight:700;font-size:14.5px;padding:8px 14px;border-radius:5px;margin:28px 0 10px 0;}
+.subheading{font-weight:700;font-size:13.5px;margin:14px 0 6px 0;color:var(--orange-dark);}
+p{margin:8px 0;font-size:14px;}
+.tip{background:var(--cream);border:1px solid var(--border);padding:10px 14px;font-size:13.5px;margin:10px 0;border-radius:6px;}
+.tip::before{content:"💡 ";}
+table{width:100%;border-collapse:collapse;margin:8px 0 18px 0;font-size:13.5px;}
+th{background:var(--orange);color:#fff;text-align:left;padding:8px 12px;}
+td{padding:8px 12px;border-bottom:1px solid #eee;}
+tr:nth-child(even) td{background:var(--cream-2);}
+.example{font-style:italic;color:#555;font-size:13.5px;margin:6px 0 18px 0;padding-left:12px;border-left:3px solid var(--border);}
+.dialog-box,.dialogue-box{background:var(--cream);padding:14px 16px;border-radius:8px;margin:8px 0;}
+.dialogue-box{background:var(--cream-2);border-left:4px solid var(--orange);border-radius:0 6px 6px 0;}
+.dialog-box p,.dialogue-box p{margin:4px 0;font-size:14px;}
+.body-text{margin:4px 0;line-height:1.65;color:var(--ink);font-size:14px;}
+.instruction{margin:6px 0;padding:8px 14px;background:var(--cream);border-left:4px solid var(--orange);border-radius:0 4px 4px 0;color:var(--ink);font-size:13.5px;}
+.numbered-item{margin:8px 0 4px 16px;padding:4px 0;font-size:14px;font-weight:700;color:var(--orange-dark);}
+.letter-item{margin:10px 0 6px 0;padding:4px 0;font-weight:700;font-size:14px;color:var(--orange-dark);}
+.example-line{margin:3px 0 3px 24px;font-style:italic;color:#555;font-size:13.5px;}
+.fill-blank{margin:4px 0 4px 24px;font-size:14px;color:var(--ink);}
+.check-item{margin:4px 0;padding:4px 0;font-size:14px;}
+.gabarito-box{background:#F0FFF0;border:1px solid #4CAF50;border-left:5px solid #4CAF50;border-radius:0 6px 6px 0;padding:16px 20px;margin:18px 0;display:none;}
+.gabarito-box.show{display:block;}
+.gabarito-title{font-weight:700;font-size:14px;color:#2E7D32;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.gabarito-line{margin:3px 0;font-size:13px;color:#333;}
+.ex-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.03);}
+.ex-intro{font-style:italic;color:#666;font-size:13.5px;margin:0 0 12px 0;}
+.fill-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 30px;}
+.fill-item{display:flex;align-items:center;gap:8px;font-size:14px;flex-wrap:wrap;}
+.fill-item input[type=text]{width:80px;padding:5px 8px;border:2px solid #ddd;border-radius:5px;font-size:14px;font-family:inherit;text-align:center;transition:border-color .15s,background .15s;}
+.fill-item input[type=text].longer{width:200px;text-align:left;}
+.fill-item input:focus{outline:none;border-color:var(--orange);}
+.fill-item input.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.fill-item input.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-item{margin:14px 0;font-size:14px;}
+.mc-item .q{font-weight:700;margin-bottom:6px;}
+.mc-options{display:flex;gap:10px;flex-wrap:wrap;}
+.mc-options label{display:flex;align-items:center;gap:6px;border:2px solid #ddd;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:13.5px;transition:border-color .15s,background .15s;}
+.mc-options label:hover{border-color:var(--orange);}
+.mc-options label.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.mc-options label.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-options input{accent-color:var(--orange);}
+.btn{background:var(--orange);color:#fff;border:none;padding:11px 22px;border-radius:7px;font-size:14.5px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;}
+.btn:hover{background:var(--orange-dark);}
+.btn:active{transform:scale(.98);}
+.btn.secondary{background:#fff;color:var(--orange-dark);border:2px solid var(--orange);padding:9px 20px;}
+.btn.secondary:hover{background:var(--cream);}
+.score-badge{display:inline-block;margin-left:14px;font-weight:700;font-size:14.5px;padding:6px 14px;border-radius:20px;background:var(--cream-2);color:var(--orange-dark);}
+.actions{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
+.note-italic{font-size:12px;font-style:italic;color:#777;margin-top:10px;}
+textarea{width:100%;font-family:inherit;font-size:14px;padding:8px 10px;border:2px solid #ddd;border-radius:6px;resize:vertical;min-height:80px;}
+textarea:focus{outline:none;border-color:var(--orange);}
+.footer-note{text-align:center;font-size:11.5px;color:#aaa;margin-top:40px;}
+.vocab-card{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid #eee;border-radius:8px;padding:8px 14px;margin:4px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
+.vocab-card:hover{border-color:var(--orange);}
+.vocab-card .vc-en{font-weight:700;font-size:14px;}
+.vocab-card .vc-pt{font-size:13px;color:var(--ok);display:none;}
+.vocab-card.revealed .vc-pt{display:inline;}
+.vocab-card.revealed{border-color:var(--ok);background:#EAF7EF;}
+.collapse-btn{width:100%;text-align:left;background:var(--cream);border:1px solid var(--border);padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;color:var(--orange-dark);margin:8px 0 0 0;display:flex;align-items:center;gap:8px;}
+.collapse-btn:hover{background:var(--cream-2);}
+.collapse-btn .arrow{transition:transform .2s;font-size:12px;}
+.collapse-btn.open .arrow{transform:rotate(90deg);}
+.collapse-body{display:none;padding:12px 0 4px 0;}
+.collapse-body.open{display:block;}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;box-shadow:0 -2px 8px rgba(0,0,0,.04);z-index:80;padding:6px 0 env(safe-area-inset-bottom,6px);}
+.bottom-nav-inner{display:flex;max-width:480px;margin:0 auto;}
+.bottom-nav .bnav-btn{flex:1;border:none;background:none;padding:10px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:#999;cursor:pointer;font-weight:600;}
+.bottom-nav .bnav-btn .bnav-icon{font-size:20px;}
+.bottom-nav .bnav-btn.active{color:var(--orange-dark);font-weight:700;}
+.bottom-nav .bnav-btn:disabled{color:#ddd;cursor:default;}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);width:280px;}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-close{display:block;}
+  .sidebar-overlay.open{display:block;}
+  .hamburger{display:flex;align-items:center;justify-content:center;}
+  .main{margin-left:0;}
+  .lesson{padding:20px 16px 120px;}
+  .bottom-nav{display:block;}
+  .fill-grid{grid-template-columns:1fr;}
+  .top-progress{padding-left:56px;}
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.lesson.active{animation:fadeIn .3s ease;}
+</style>
+</head>
+<body>
+<div class="wrap" style="max-width:880px;margin:0 auto;padding:28px 20px;">
+<a class="back-link" href="../index.html">&larr; Voltar às Lições</a>
+<div class="header"><span class="logo-icon">🐱</span><div><div class="school">Bobcat Language School</div><div class="subtitle">Aprenda inglês no seu ritmo</div></div></div>
+<div class="info-bar"><label>👤 Aluno: <input type="text" placeholder="Seu nome"></label><label>📅 Data: <input type="date"></label></div>
+<h1 class="title">LIÇÃO 24 — Future with Going To</h1>
+<div class="level"><span class="level-badge">Nível A1/A2</span></div>
+
+<div class="section-header">🎯 Objetivo da Lição</div>
+<p class="body-text">• Usar <strong>going to</strong> para falar sobre <strong>planos, intenções e metas</strong> futuras.</p>
+<p class="body-text">• Formar <strong>perguntas</strong> (Are you going to...?) e <strong>negativas</strong> (I'm not going to...).</p>
+<p class="body-text">• Aprender vocabulário de <strong>férias, projetos pessoais e planos</strong>.</p>
+
+<div class="section-header">🔥 Warm-Up: O que você vai fazer?</div>
+<p class="instruction">Pense nos seus planos e tente dizer em inglês:</p>
+<p class="example-line">1. O que você vai fazer neste fim de semana?</p>
+<p class="example-line">2. Você vai viajar nas próximas férias?</p>
+<p class="example-line">3. Qual meta você vai alcançar este ano?</p>
+<p class="example-line">4. Você vai estudar algo novo?</p>
+<p class="example-line">5. O que você vai fazer amanhã?</p>
+<div class="dialogue-box"><p>💡 Dica: Para falar de planos, usamos <strong>"going to"</strong>! Ex: "I'm going to study tonight." (Eu vou estudar hoje à noite.)</p></div>
+
+<div class="section-header">🗣️ Diálogo: Planning the Weekend</div>
+<div class="dialogue-box">
+  <p><strong>Mariana:</strong> Hey, what are you going to do this weekend?</p>
+  <p><strong>Thiago:</strong> I'm going to visit my grandparents on Saturday. And on Sunday, I'm going to study for the test.</p>
+  <p><strong>Mariana:</strong> Are you going to study all day?</p>
+  <p><strong>Thiago:</strong> No, I'm not! I'm going to play soccer with my friends in the morning.</p>
+  <p><strong>Mariana:</strong> That sounds fun! I'm going to go to the beach with my family.</p>
+  <p><strong>Thiago:</strong> Really? Is your sister going to go too?</p>
+  <p><strong>Mariana:</strong> Yes, she is! She's going to bring her new camera. She's going to take lots of photos!</p>
+  <p><strong>Thiago:</strong> Nice! I'm not going to travel, but I'm going to have a good time anyway!</p>
+  <p><strong>Mariana:</strong> That's the spirit! We're going to tell each other everything on Monday!</p>
+  <p><strong>Thiago:</strong> Deal! See you on Monday!</p>
+</div>
+<div class="instruction">🔁 Repita com atenção: Leia o diálogo em voz alta. Observe o uso de going to para planos!</div>
+
+<div class="section-header">📖 Vocabulário-Chave</div>
+<p class="subheading">📅 Future Time Expressions</p>
+<table>
+  <tr><th>Expression</th><th>Translation</th><th>Example</th></tr>
+  <tr><td>tomorrow</td><td>amanhã</td><td>I'm going to study tomorrow.</td></tr>
+  <tr><td>next week</td><td>semana que vem</td><td>She's going to travel next week.</td></tr>
+  <tr><td>next month</td><td>mês que vem</td><td>We're going to move next month.</td></tr>
+  <tr><td>next year</td><td>ano que vem</td><td>They're going to visit Paris next year.</td></tr>
+  <tr><td>soon</td><td>em breve</td><td>He's going to start soon.</td></tr>
+  <tr><td>this weekend</td><td>neste fim de semana</td><td>Are you going to study this weekend?</td></tr>
+  <tr><td>tonight</td><td>hoje à noite</td><td>I'm going to watch TV tonight.</td></tr>
+</table>
+
+<p class="subheading">🏖️ Vacation & Goals</p>
+<table>
+  <tr><th>Word</th><th>Translation</th><th>Example</th></tr>
+  <tr><td>travel</td><td>viajar</td><td>I'm going to travel to Brazil.</td></tr>
+  <tr><td>pack</td><td>fazer mala</td><td>She's going to pack tonight.</td></tr>
+  <tr><td>book</td><td>reservar</td><td>We're going to book a hotel.</td></tr>
+  <tr><td>save money</td><td>economizar</td><td>He's going to save money.</td></tr>
+  <tr><td>lose weight</td><td>emagrecer</td><td>She's going to lose weight.</td></tr>
+  <tr><td>learn</td><td>aprender</td><td>I'm going to learn Spanish.</td></tr>
+  <tr><td>start</td><td>começar</td><td>They're going to start a project.</td></tr>
+  <tr><td>improve</td><td>melhorar</td><td>I'm going to improve my English.</td></tr>
+  <tr><td>goal</td><td>meta</td><td>My goal is to pass the exam.</td></tr>
+  <tr><td>resolution</td><td>resolução</td><td>My New Year's resolution is to exercise.</td></tr>
+</table>
+
+<div class="section-header">📘 Gramática em Ação: Future with Going To</div>
+
+<div class="numbered-item">1. Estrutura Afirmativa</div>
+<p class="body-text"><strong>Estrutura:</strong> Sujeito + am/is/are + going to + verbo (base form)</p>
+<table>
+  <tr><th>Pronome</th><th>Forma Completa</th><th>Contração</th><th>Exemplo</th></tr>
+  <tr><td>I</td><td>I am going to study</td><td>I'm going to study</td><td>I'm going to study tonight.</td></tr>
+  <tr><td>You</td><td>You are going to travel</td><td>You're going to travel</td><td>You're going to travel soon.</td></tr>
+  <tr><td>He</td><td>He is going to work</td><td>He's going to work</td><td>He's going to work tomorrow.</td></tr>
+  <tr><td>She</td><td>She is going to cook</td><td>She's going to cook</td><td>She's going to cook dinner.</td></tr>
+  <tr><td>We</td><td>We are going to play</td><td>We're going to play</td><td>We're going to play soccer.</td></tr>
+  <tr><td>They</td><td>They are going to visit</td><td>They're going to visit</td><td>They're going to visit us.</td></tr>
+</table>
+
+<div class="numbered-item">2. Perguntas com Going To</div>
+<p class="body-text"><strong>Estrutura:</strong> Am/Is/Are + sujeito + going to + verbo?</p>
+<p class="example-line">Are you going to study? | Is she going to travel? | Are they going to come?</p>
+
+<div class="numbered-item">3. Negativas com Going To</div>
+<p class="body-text"><strong>Estrutura:</strong> Sujeito + am not / isn't / aren't + going to + verbo</p>
+<p class="example-line">I'm not going to go. | She isn't going to study. | They aren't going to travel.</p>
+
+<div class="numbered-item">4. Short Answers</div>
+<table>
+  <tr><th>Pergunta</th><th>Afirmativa</th><th>Negativa</th></tr>
+  <tr><td>Are you going to study?</td><td>Yes, I am.</td><td>No, I'm not.</td></tr>
+  <tr><td>Is she going to travel?</td><td>Yes, she is.</td><td>No, she isn't.</td></tr>
+  <tr><td>Are they going to come?</td><td>Yes, they are.</td><td>No, they aren't.</td></tr>
+</table>
+<div class="tip">Dica: Use <strong>going to</strong> para planos já decididos! Se você já decidiu fazer algo, use going to. Ex: "I'm going to study tonight" = já decidiu estudar.</div>
+
+<div class="section-header">📝 Exercícios</div>
+
+<div class="letter-item">A. Complete com am/is/are going to.</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item">She <input type="text" data-answer="is going to" placeholder="?"> travel.</div>
+    <div class="fill-item">I <input type="text" data-answer="am going to" placeholder="?"> study.</div>
+    <div class="fill-item">They <input type="text" data-answer="are going to" placeholder="?"> visit us.</div>
+    <div class="fill-item">He <input type="text" data-answer="is going to" placeholder="?"> cook.</div>
+    <div class="fill-item">We <input type="text" data-answer="are going to" placeholder="?"> play.</div>
+    <div class="fill-item">You <input type="text" data-answer="are going to" placeholder="?"> learn.</div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">B. Escolha a frase correta.</div>
+<div class="ex-card">
+  <div class="mc-item">
+    <div class="q">"She's going to travels" está correto?</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l24mc1" value="a"> Sim</label>
+      <label><input type="radio" name="l24mc1" value="b" class="correct-answer"> Não (She's going to travel)</label>
+      <label><input type="radio" name="l24mc1" value="c"> Não (She's going to traveling)</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">Como perguntar: "Ela vai viajar?"</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l24mc2" value="a"> Does she going to travel?</label>
+      <label><input type="radio" name="l24mc2" value="b" class="correct-answer"> Is she going to travel?</label>
+      <label><input type="radio" name="l24mc2" value="c"> She is going to travel?</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"I'm not going to go" é uma negativa correta?</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l24mc3" value="a" class="correct-answer"> Sim</label>
+      <label><input type="radio" name="l24mc3" value="b"> Não</label>
+      <label><input type="radio" name="l24mc3" value="c"> Depende</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"Are they going to study?" — Short answer positivo:</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l24mc4" value="a"> Yes, they do.</label>
+      <label><input type="radio" name="l24mc4" value="b" class="correct-answer"> Yes, they are.</label>
+      <label><input type="radio" name="l24mc4" value="c"> Yes, they will.</label>
+    </div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">C. Escreva frases com going to.</div>
+<div class="ex-card">
+  <p class="ex-intro">Exemplo: (I / study / tonight) → I'm going to study tonight.</p>
+  <div class="fill-grid">
+    <div class="fill-item input-long">1. (She / travel / next month) → <input type="text" class="longer" data-answer="She's going to travel next month" placeholder="..."></div>
+    <div class="fill-item input-long">2. (We / visit / our friends) → <input type="text" class="longer" data-answer="We're going to visit our friends" placeholder="..."></div>
+    <div class="fill-item input-long">3. (He / not / go / to the party) → <input type="text" class="longer" data-answer="He isn't going to go to the party" placeholder="..."></div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">D. Verdadeiro ou Falso?</div>
+<div class="ex-card">
+  <div class="mc-item">
+    <div class="q">"Going to" é usado para planos e intenções.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l24tf1" value="True" class="correct-answer"> V</label>
+      <label><input type="radio" name="l24tf1" value="False"> F</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"She's going to travels" está correto.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l24tf2" value="True"> V</label>
+      <label><input type="radio" name="l24tf2" value="False" class="correct-answer"> F</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"Are you going to study?" é uma pergunta correta.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l24tf3" value="True" class="correct-answer"> V</label>
+      <label><input type="radio" name="l24tf3" value="False"> F</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"I amn't going to go" é a negativa correta.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l24tf4" value="True"> V</label>
+      <label><input type="radio" name="l24tf4" value="False" class="correct-answer"> F</label>
+    </div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="section-header">🎭 Prática Oral / Role-Play</div>
+<div class="dialogue-box">
+  <p><strong>A:</strong> What are you going to do this weekend?</p>
+  <p><strong>B:</strong> I'm going to visit my friend. And you?</p>
+  <p><strong>A:</strong> I'm going to stay home. I'm going to study English!</p>
+  <p><strong>B:</strong> Are you going to study all weekend?</p>
+  <p><strong>A:</strong> No, I'm not! I'm going to watch a movie on Saturday night.</p>
+  <p><strong>B:</strong> Nice! I'm not going to study, but I'm going to help my mom.</p>
+  <p><strong>A:</strong> Is your sister going to help too?</p>
+  <p><strong>B:</strong> Yes, she is! We're going to clean the house together.</p>
+</div>
+
+<div class="section-header">👅 Trava-língua</div>
+<div class="dialogue-box"><p><strong>I'm going to get a goal, and the goal is going to be great!</strong></p><p>🔁 Repita 3x rápido! Concentre-se no som de "going to".</p></div>
+
+<div class="section-header">🌍 Curiosidade Cultural: New Year's Resolutions</div>
+<p class="body-text">Nos países de língua inglesa, existe uma tradição muito popular chamada <strong>"New Year's resolutions"</strong> (resoluções de Ano Novo). No dia 1° de janeiro, as pessoas fazem uma lista de metas para o novo ano usando <strong>going to</strong>: "I'm going to exercise more", "I'm going to eat healthier", "I'm going to learn a new language".</p>
+<p class="body-text">Pesquisas mostram que cerca de <strong>80% das pessoas desistem</strong> das resoluções até fevereiro! Mas a tradição continua forte. Nos <strong>EUA</strong>, as resoluções mais populares são: perder peso, economizar dinheiro e ser mais organizado.</p>
+<div class="dialogue-box"><p>💡 Dica cultural: Em inglês, dizemos <strong>"I'm going to..."</strong> para planos, e NÃO "I will..." quando já decidimos. "Will" é mais para decisões do momento!</p></div>
+
+<div class="section-header">🎨 Atividade Criativa: My Future Plans Poster</div>
+<p class="instruction">Crie um "cartaz de planos" com 5 coisas que você vai fazer este ano!</p>
+<p class="example-line">1. I'm going to improve my English.</p>
+<p class="example-line">2. I'm going to travel to a new place.</p>
+<p class="example-line">3. I'm going to read more books.</p>
+<p class="example-line">4. I'm going to learn to cook.</p>
+<p class="example-line">5. I'm going to exercise three times a week.</p>
+
+<div class="section-header">🧠 Desafio Extra</div>
+<p class="fill-blank">1. Pergunta: "Você vai estudar inglês?" → ____________________</p>
+<p class="fill-blank">2. Negativa: "Ela não vai viajar." → ____________________</p>
+<p class="fill-blank">3. Corrija: "I'm going to studying now." → ____________________</p>
+<p class="fill-blank">4. Traduza: "Nós vamos visitar nossos avós amanhã." → ____________________</p>
+<p class="fill-blank">5. Escreva 3 metas para este ano usando going to: ____________________</p>
+
+<div class="section-header">🔁 Revisão</div>
+<p class="check-item">✅ Sei usar going to para planos e intenções: I'm going to + verbo.</p>
+<p class="check-item">✅ Sei formar perguntas: Is/Are + sujeito + going to + verbo?</p>
+<p class="check-item">✅ Sei formar negativas: sujeito + isn't/aren't + going to + verbo.</p>
+<p class="check-item">✅ Going to é para planos já decididos, não para decisões do momento.</p>
+
+<div class="section-header">🏠 Tarefa de Casa</div>
+<p class="body-text">1. Escreva 8 frases sobre seus planos para o próximo mês usando going to.</p>
+<p class="body-text">2. Crie 3 perguntas com going to para um amigo e escreva respostas.</p>
+<p class="body-text">3. Escreva sua "New Year's Resolution" com 5 metas para este ano.</p>
+<textarea rows="10" placeholder="My Plans / My Resolutions: Escreva aqui..."></textarea>
+
+<button class="btn secondary" onclick="this.nextElementSibling.classList.toggle('show')">📋 Ver Gabarito</button>
+<div class="gabarito-box">
+  <div class="gabarito-title">✅ Gabarito — Lição 24</div>
+  <p class="gabarito-line"><strong>A.</strong> is going to | am going to | are going to | is going to | are going to | are going to</p>
+  <p class="gabarito-line"><strong>B.</strong> Não (She's going to travel) | Is she going to travel? | Sim | Yes, they are.</p>
+  <p class="gabarito-line"><strong>C.</strong> She's going to travel next month. | We're going to visit our friends. | He isn't going to go to the party.</p>
+  <p class="gabarito-line"><strong>D.</strong> V | F | V | F (I'm not going to go)</p>
+  <p class="gabarito-line"><strong>Desafio:</strong> Are you going to study English? | She isn't going to travel. | I'm going to study now. | We're going to visit our grandparents tomorrow.</p>
+</div>
+
+<div class="section-header">🏁 Conclusão</div>
+<p class="body-text">🎉 Excelente! Agora você sabe falar sobre planos e intenções usando going to! Pode falar sobre suas férias, metas e projetos pessoais! Na próxima lição: <strong>Future with Will</strong> — para decisões espontâneas e promessas! See you in Lesson 25! 👋</p>
+
+<div class="actions" style="margin-top:24px;">
+  <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
+  <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
+</div>
+<p class="completion-note" style="font-size:12px;font-style:italic;color:#777;margin-top:10px;">Responda os exercícios (preenchimento e múltipla escolha) e clique em "Finalizar" para conferir sua nota. É preciso pelo menos 85% de acerto para concluir a lição.</p>
+<div class="footer-note">Bobcat Language School • Lição 24 — Futuro com Going To</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<script>
+const LESSON_ID = 'licao-24-future-going-to';
+let finishing = false;
+
+async function prefillFromProfile() {
+  await initDataLayer();
+  const profile = await getProfile();
+  if (profile && profile.name) {
+    const nameInput = document.querySelector('.info-bar input[type=text]');
+    if (nameInput && !nameInput.value) nameInput.value = profile.name;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const dateInput = document.querySelector('.info-bar input[type=date]');
+  if (dateInput && !dateInput.value) dateInput.value = today;
+}
+document.addEventListener('DOMContentLoaded', prefillFromProfile);
+
+function checkFills(btn) {
+  const card = btn.closest('.ex-card');
+  const inputs = card.querySelectorAll('.fill-item input[type=text]');
+  let correct = 0, total = 0;
+  inputs.forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    inp.classList.remove('correct', 'incorrect');
+    if (cleanVal === cleanAnswer) { inp.classList.add('correct'); correct++; }
+    else { inp.classList.add('incorrect'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  const badge = document.createElement('span');
+  badge.className = 'score-badge';
+  badge.textContent = correct + '/' + total + ' ✅';
+  btn.parentElement.appendChild(badge);
+}
+
+function checkMC(btn) {
+  const card = btn.closest('.ex-card');
+  const items = card.querySelectorAll('.mc-item');
+  let correct = 0, total = 0;
+  items.forEach(item => {
+    const options = item.querySelectorAll('.mc-options label');
+    const selected = item.querySelector('input[type=radio]:checked');
+    options.forEach(l => l.classList.remove('correct', 'incorrect'));
+    if (!selected) return;
+    total++;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) { selected.parentElement.classList.add('correct'); correct++; }
+    else { selected.parentElement.classList.add('incorrect'); if (correctRadio) correctRadio.parentElement.classList.add('correct'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  if (total > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'score-badge';
+    badge.textContent = correct + '/' + total + ' ✅';
+    btn.parentElement.appendChild(badge);
+  }
+}
+
+function toggleCollapse(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+async function finishLesson() {
+  if (finishing) return;
+  finishing = true;
+
+  let correct = 0, total = 0;
+  document.querySelectorAll('input[data-answer]').forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    if (cleanVal === cleanAnswer) correct++;
+  });
+  document.querySelectorAll('.mc-item').forEach(item => {
+    total++;
+    const selected = item.querySelector('input[type=radio]:checked');
+    if (!selected) return;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) correct++;
+  });
+
+  const safeTotal = total || 1;
+  const passed = await handleLessonFinish(LESSON_ID, correct, safeTotal, 'correct');
+  if (!passed) finishing = false;
+}
+</script>
+
+</body>
+</html>

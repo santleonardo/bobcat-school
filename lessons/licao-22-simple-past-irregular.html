@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Lesson 22 — Simple Past: Irregular Verbs</title>
+<style>
+:root {
+  --orange: #D9793F;
+  --orange-dark: #C9622A;
+  --cream: #FBEFE6;
+  --cream-2: #F7F1EC;
+  --ink: #2b2b2b;
+  --ok: #2E8B57;
+  --bad: #C0392B;
+  --border: #EBC9AE;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  background:#fdfaf7;
+  line-height:1.55;
+}
+.app-layout{display:flex;min-height:100vh;}
+.sidebar{
+  width:280px;min-height:100vh;position:fixed;top:0;left:0;z-index:100;
+  background:#fff;border-right:2px solid var(--border);
+  display:flex;flex-direction:column;transition:transform .3s ease;
+}
+.sidebar-header{display:flex;align-items:center;gap:12px;padding:18px 20px 14px;border-bottom:3px solid var(--orange);}
+.sidebar-header .logo{font-size:32px;}
+.sidebar-header .brand{font-weight:800;font-size:16px;color:var(--orange-dark);}
+.sidebar-header .brand small{display:block;font-weight:400;font-size:11px;color:#888;font-style:italic;}
+.sidebar-progress{padding:14px 20px 10px;border-bottom:1px solid #eee;}
+.sidebar-progress .prog-label{font-size:12px;color:#888;font-weight:600;margin-bottom:6px;}
+.sidebar-progress .prog-track{width:100%;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.sidebar-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.sidebar-progress .prog-text{font-size:11px;color:#999;margin-top:4px;text-align:right;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13.5px;font-weight:600;color:#555;text-decoration:none;transition:background .15s,color .15s;border-left:3px solid transparent;}
+.sidebar-nav a:hover{background:var(--cream-2);color:var(--orange-dark);}
+.sidebar-nav a.active{background:var(--cream);color:var(--orange-dark);border-left-color:var(--orange);font-weight:700;}
+.sidebar-nav a .lnum{width:26px;height:26px;border-radius:50%;background:var(--cream-2);color:var(--orange-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.sidebar-nav a.active .lnum{background:var(--orange);color:#fff;}
+.sidebar-nav a.completed .lnum{background:var(--ok);color:#fff;}
+.sidebar-nav a .check{margin-left:auto;font-size:14px;color:var(--ok);display:none;}
+.sidebar-nav a.completed .check{display:inline;}
+.sidebar-close{display:none;position:absolute;top:14px;right:14px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;}
+.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--orange);color:#fff;border:none;width:42px;height:42px;border-radius:10px;font-size:22px;cursor:pointer;box-shadow:0 2px 8px rgba(217,121,63,.3);}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:99;}
+.main{flex:1;margin-left:280px;padding:0 0 80px 0;}
+.top-progress{position:sticky;top:0;z-index:50;background:#fdfaf7ee;backdrop-filter:blur(4px);padding:10px 20px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px;justify-content:center;font-size:13px;color:#666;}
+.top-progress .prog-track{width:220px;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.top-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.lesson{display:none;padding:28px 24px 40px;max-width:880px;margin:0 auto;}
+.lesson.active{display:block;}
+.back-link{display:inline-block;font-size:13.5px;color:var(--orange-dark);text-decoration:none;font-weight:700;margin-bottom:14px;}
+.back-link:hover{text-decoration:underline;}
+.header{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--orange);padding-bottom:14px;margin-bottom:14px;flex-wrap:wrap;}
+.header .logo-icon{font-size:48px;}
+.header .school{font-size:24px;font-weight:800;color:var(--orange-dark);}
+.header .subtitle{font-size:13px;font-style:italic;color:#666;margin-top:2px;}
+.info-bar{display:flex;gap:24px;flex-wrap:wrap;border-bottom:2px solid var(--orange);padding-bottom:14px;margin-bottom:22px;font-size:13.5px;}
+.info-bar label{display:flex;align-items:center;gap:6px;font-weight:600;color:#555;}
+.info-bar input[type=text],.info-bar input[type=date]{border:none;border-bottom:1px solid #999;background:transparent;padding:3px 2px;font-size:13.5px;min-width:150px;font-family:inherit;}
+.info-bar input:focus{outline:none;border-bottom:2px solid var(--orange);}
+h1.title{text-align:center;color:var(--orange-dark);font-size:27px;margin:6px 0 2px 0;}
+.level{text-align:center;font-style:italic;color:#666;font-size:13px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #eee;}
+.level-badge{display:inline-block;background:var(--orange);color:#fff;font-size:12px;font-weight:700;padding:3px 12px;border-radius:20px;font-style:normal;letter-spacing:.3px;}
+.section-title,.section-header{background:var(--orange);color:#fff;font-weight:700;font-size:14.5px;padding:8px 14px;border-radius:5px;margin:28px 0 10px 0;}
+.subheading{font-weight:700;font-size:13.5px;margin:14px 0 6px 0;color:var(--orange-dark);}
+p{margin:8px 0;font-size:14px;}
+.tip{background:var(--cream);border:1px solid var(--border);padding:10px 14px;font-size:13.5px;margin:10px 0;border-radius:6px;}
+.tip::before{content:"💡 ";}
+table{width:100%;border-collapse:collapse;margin:8px 0 18px 0;font-size:13.5px;}
+th{background:var(--orange);color:#fff;text-align:left;padding:8px 12px;}
+td{padding:8px 12px;border-bottom:1px solid #eee;}
+tr:nth-child(even) td{background:var(--cream-2);}
+.example{font-style:italic;color:#555;font-size:13.5px;margin:6px 0 18px 0;padding-left:12px;border-left:3px solid var(--border);}
+.dialog-box,.dialogue-box{background:var(--cream);padding:14px 16px;border-radius:8px;margin:8px 0;}
+.dialogue-box{background:var(--cream-2);border-left:4px solid var(--orange);border-radius:0 6px 6px 0;}
+.dialog-box p,.dialogue-box p{margin:4px 0;font-size:14px;}
+.body-text{margin:4px 0;line-height:1.65;color:var(--ink);font-size:14px;}
+.instruction{margin:6px 0;padding:8px 14px;background:var(--cream);border-left:4px solid var(--orange);border-radius:0 4px 4px 0;color:var(--ink);font-size:13.5px;}
+.numbered-item{margin:8px 0 4px 16px;padding:4px 0;font-size:14px;font-weight:700;color:var(--orange-dark);}
+.letter-item{margin:10px 0 6px 0;padding:4px 0;font-weight:700;font-size:14px;color:var(--orange-dark);}
+.example-line{margin:3px 0 3px 24px;font-style:italic;color:#555;font-size:13.5px;}
+.fill-blank{margin:4px 0 4px 24px;font-size:14px;color:var(--ink);}
+.check-item{margin:4px 0;padding:4px 0;font-size:14px;}
+.gabarito-box{background:#F0FFF0;border:1px solid #4CAF50;border-left:5px solid #4CAF50;border-radius:0 6px 6px 0;padding:16px 20px;margin:18px 0;display:none;}
+.gabarito-box.show{display:block;}
+.gabarito-title{font-weight:700;font-size:14px;color:#2E7D32;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.gabarito-line{margin:3px 0;font-size:13px;color:#333;}
+.ex-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.03);}
+.ex-intro{font-style:italic;color:#666;font-size:13.5px;margin:0 0 12px 0;}
+.fill-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 30px;}
+.fill-item{display:flex;align-items:center;gap:8px;font-size:14px;flex-wrap:wrap;}
+.fill-item input[type=text]{width:80px;padding:5px 8px;border:2px solid #ddd;border-radius:5px;font-size:14px;font-family:inherit;text-align:center;transition:border-color .15s,background .15s;}
+.fill-item input[type=text].longer{width:200px;text-align:left;}
+.fill-item input:focus{outline:none;border-color:var(--orange);}
+.fill-item input.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.fill-item input.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-item{margin:14px 0;font-size:14px;}
+.mc-item .q{font-weight:700;margin-bottom:6px;}
+.mc-options{display:flex;gap:10px;flex-wrap:wrap;}
+.mc-options label{display:flex;align-items:center;gap:6px;border:2px solid #ddd;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:13.5px;transition:border-color .15s,background .15s;}
+.mc-options label:hover{border-color:var(--orange);}
+.mc-options label.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.mc-options label.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-options input{accent-color:var(--orange);}
+.btn{background:var(--orange);color:#fff;border:none;padding:11px 22px;border-radius:7px;font-size:14.5px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;}
+.btn:hover{background:var(--orange-dark);}
+.btn:active{transform:scale(.98);}
+.btn.secondary{background:#fff;color:var(--orange-dark);border:2px solid var(--orange);padding:9px 20px;}
+.btn.secondary:hover{background:var(--cream);}
+.score-badge{display:inline-block;margin-left:14px;font-weight:700;font-size:14.5px;padding:6px 14px;border-radius:20px;background:var(--cream-2);color:var(--orange-dark);}
+.actions{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
+.note-italic{font-size:12px;font-style:italic;color:#777;margin-top:10px;}
+textarea{width:100%;font-family:inherit;font-size:14px;padding:8px 10px;border:2px solid #ddd;border-radius:6px;resize:vertical;min-height:80px;}
+textarea:focus{outline:none;border-color:var(--orange);}
+.footer-note{text-align:center;font-size:11.5px;color:#aaa;margin-top:40px;}
+.vocab-card{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid #eee;border-radius:8px;padding:8px 14px;margin:4px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
+.vocab-card:hover{border-color:var(--orange);}
+.vocab-card .vc-en{font-weight:700;font-size:14px;}
+.vocab-card .vc-pt{font-size:13px;color:var(--ok);display:none;}
+.vocab-card.revealed .vc-pt{display:inline;}
+.vocab-card.revealed{border-color:var(--ok);background:#EAF7EF;}
+.collapse-btn{width:100%;text-align:left;background:var(--cream);border:1px solid var(--border);padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;color:var(--orange-dark);margin:8px 0 0 0;display:flex;align-items:center;gap:8px;}
+.collapse-btn:hover{background:var(--cream-2);}
+.collapse-btn .arrow{transition:transform .2s;font-size:12px;}
+.collapse-btn.open .arrow{transform:rotate(90deg);}
+.collapse-body{display:none;padding:12px 0 4px 0;}
+.collapse-body.open{display:block;}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;box-shadow:0 -2px 8px rgba(0,0,0,.04);z-index:80;padding:6px 0 env(safe-area-inset-bottom,6px);}
+.bottom-nav-inner{display:flex;max-width:480px;margin:0 auto;}
+.bottom-nav .bnav-btn{flex:1;border:none;background:none;padding:10px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:#999;cursor:pointer;font-weight:600;}
+.bottom-nav .bnav-btn .bnav-icon{font-size:20px;}
+.bottom-nav .bnav-btn.active{color:var(--orange-dark);font-weight:700;}
+.bottom-nav .bnav-btn:disabled{color:#ddd;cursor:default;}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);width:280px;}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-close{display:block;}
+  .sidebar-overlay.open{display:block;}
+  .hamburger{display:flex;align-items:center;justify-content:center;}
+  .main{margin-left:0;}
+  .lesson{padding:20px 16px 120px;}
+  .bottom-nav{display:block;}
+  .fill-grid{grid-template-columns:1fr;}
+  .top-progress{padding-left:56px;}
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.lesson.active{animation:fadeIn .3s ease;}
+</style>
+</head>
+<body>
+<div class="wrap" style="max-width:880px;margin:0 auto;padding:28px 20px;">
+<a class="back-link" href="../index.html">&larr; Voltar às Lições</a>
+<div class="header"><span class="logo-icon">🐱</span><div><div class="school">Bobcat Language School</div><div class="subtitle">Aprenda inglês no seu ritmo</div></div></div>
+<div class="info-bar"><label>👤 Aluno: <input type="text" placeholder="Seu nome"></label><label>📅 Data: <input type="date"></label></div>
+<h1 class="title">LIÇÃO 22 — Simple Past: Irregular Verbs</h1>
+<div class="level"><span class="level-badge">Nível A1/A2</span></div>
+
+<div class="section-header">🎯 Objetivo da Lição</div>
+<p class="body-text">• Conhecer os <strong>verbos irregulares mais frequentes</strong> no Simple Past.</p>
+<p class="body-text">• Fazer <strong>perguntas com Did</strong> e formar <strong>negativas com Didn't</strong>.</p>
+<p class="body-text">• Narrar <strong>sequências de acontecimentos</strong> no passado usando verbos irregulares.</p>
+
+<div class="section-header">🔥 Warm-Up: Verbos diferentes no passado</div>
+<p class="instruction">Alguns verbos mudam completamente no passado! Tente adivinhar:</p>
+<p class="example-line">1. go → ??? (fui)</p>
+<p class="example-line">2. have → ??? (tive)</p>
+<p class="example-line">3. see → ??? (vi)</p>
+<p class="example-line">4. eat → ??? (comi)</p>
+<p class="example-line">5. come → ??? (vim)</p>
+<div class="dialogue-box"><p>💡 Dica: Esses verbos NÃO recebem -ed! Eles têm formas especiais que precisam ser memorizadas.</p></div>
+
+<div class="section-header">🗣️ Diálogo: A Vacation to Remember</div>
+<div class="dialogue-box">
+  <p><strong>Pedro:</strong> Hey, Ana! How was your vacation?</p>
+  <p><strong>Ana:</strong> It was amazing! I went to Rio de Janeiro.</p>
+  <p><strong>Pedro:</strong> Wow! Did you go to the beach?</p>
+  <p><strong>Ana:</strong> Yes, I did! I saw beautiful beaches and ate delicious food.</p>
+  <p><strong>Pedro:</strong> Did you stay in a hotel?</p>
+  <p><strong>Ana:</strong> No, I didn't. I stayed at my aunt's house.</p>
+  <p><strong>Pedro:</strong> What else did you do?</p>
+  <p><strong>Ana:</strong> I took lots of photos, bought souvenirs, and made new friends!</p>
+  <p><strong>Pedro:</strong> That sounds wonderful! I didn't go anywhere... I stayed home.</p>
+  <p><strong>Ana:</strong> Next time, come with me!</p>
+</div>
+<div class="instruction">🔁 Repita com atenção: Leia o diálogo em voz alta. Observe os verbos irregulares e as perguntas com Did!</div>
+
+<div class="section-header">📖 Vocabulário-Chave</div>
+<p class="subheading">⚡ Most Common Irregular Verbs</p>
+<table>
+  <tr><th>Base</th><th>Past</th><th>Translation</th><th>Example</th></tr>
+  <tr><td>go</td><td>went</td><td>ir</td><td>I went to school.</td></tr>
+  <tr><td>have</td><td>had</td><td>ter</td><td>She had a great time.</td></tr>
+  <tr><td>be</td><td>was/were</td><td>ser/estar</td><td>They were happy.</td></tr>
+  <tr><td>do</td><td>did</td><td>fazer</td><td>He did his homework.</td></tr>
+  <tr><td>see</td><td>saw</td><td>ver</td><td>We saw a movie.</td></tr>
+  <tr><td>eat</td><td>ate</td><td>comer</td><td>I ate pizza last night.</td></tr>
+  <tr><td>come</td><td>came</td><td>vir</td><td>She came home late.</td></tr>
+  <tr><td>take</td><td>took</td><td>pegar/levar</td><td>He took a taxi.</td></tr>
+  <tr><td>make</td><td>made</td><td>fazer</td><td>I made a cake.</td></tr>
+  <tr><td>give</td><td>gave</td><td>dar</td><td>She gave me a gift.</td></tr>
+  <tr><td>get</td><td>got</td><td>conseguir</td><td>I got a new job.</td></tr>
+  <tr><td>buy</td><td>bought</td><td>comprar</td><td>He bought a car.</td></tr>
+  <tr><td>think</td><td>thought</td><td>pensar</td><td>I thought about you.</td></tr>
+  <tr><td>know</td><td>knew</td><td>saber</td><td>She knew the answer.</td></tr>
+  <tr><td>find</td><td>found</td><td>encontrar</td><td>I found my keys!</td></tr>
+  <tr><td>tell</td><td>told</td><td>contar/dizer</td><td>He told a story.</td></tr>
+  <tr><td>say</td><td>said</td><td>dizer</td><td>She said hello.</td></tr>
+  <tr><td>leave</td><td>left</td><td>sair/partir</td><td>We left at 8 a.m.</td></tr>
+  <tr><td>feel</td><td>felt</td><td>sentir</td><td>I felt tired.</td></tr>
+  <tr><td>write</td><td>wrote</td><td>escrever</td><td>She wrote a letter.</td></tr>
+  <tr><td>read</td><td>read</td><td>ler</td><td>I read a book. (pronuncia /rɛd/)</td></tr>
+  <tr><td>run</td><td>ran</td><td>correr</td><td>He ran fast.</td></tr>
+  <tr><td>sit</td><td>sat</td><td>sentar</td><td>She sat on the chair.</td></tr>
+  <tr><td>sleep</td><td>slept</td><td>dormir</td><td>I slept 8 hours.</td></tr>
+  <tr><td>speak</td><td>spoke</td><td>falar</td><td>He spoke English.</td></tr>
+  <tr><td>meet</td><td>met</td><td>conhecer/encontrar</td><td>We met at the park.</td></tr>
+  <tr><td>win</td><td>won</td><td>ganhar/vencer</td><td>They won the game!</td></tr>
+  <tr><td>lose</td><td>lost</td><td>perder</td><td>I lost my phone.</td></tr>
+</table>
+
+<p class="subheading">🔗 Verbos Irregulares por Padrão de Mudança</p>
+<table>
+  <tr><th>Padrão</th><th>Exemplos</th></tr>
+  <tr><td>A → A (mesma forma)</td><td>put → put, cut → cut, read → read, let → let</td></tr>
+  <tr><td>A → B (muda vogal)</td><td>go → went, see → saw, do → did, come → came</td></tr>
+  <tr><td>A → B (i → a)</td><td>sit → sat, give → gave, drink → drank, sing → sang</td></tr>
+  <tr><td>A → B (ought/aught)</td><td>buy → bought, think → thought, bring → brought, catch → caught</td></tr>
+</table>
+
+<div class="section-header">📘 Gramática em Ação: Irregular Verbs, Questions & Negatives</div>
+
+<div class="numbered-item">1. Verbos irregulares no Simple Past (afirmativo)</div>
+<p class="body-text">Verbos irregulares <strong>NÃO seguem a regra do -ed</strong>. Você precisa memorizar a forma do passado!</p>
+<p class="body-text"><strong>Estrutura:</strong> Sujeito + verbo irregular (forma do passado)</p>
+<p class="example-line">I went to school. | She ate breakfast. | They saw the movie. | We had a test.</p>
+
+<div class="numbered-item">2. Perguntas com Did</div>
+<p class="body-text"><strong>Estrutura:</strong> Did + sujeito + verbo (base form — sem -ed, sem mudança!) + ?</p>
+<p class="example-line">Did you go to school? | Did she eat breakfast? | Did they see the movie?</p>
+<div class="tip">Atenção: Com <strong>Did</strong>, o verbo volta à <strong>forma base</strong>! ❌ Did she went → ✅ Did she go</div>
+
+<div class="numbered-item">3. Negativas com Didn't</div>
+<p class="body-text"><strong>Estrutura:</strong> Sujeito + didn't + verbo (base form)</p>
+<p class="example-line">I didn't go to school. | She didn't eat breakfast. | They didn't see the movie.</p>
+<p class="body-text">❌ She didn't went → ✅ She didn't go | ❌ He didn't ate → ✅ He didn't eat</p>
+
+<div class="numbered-item">4. Short Answers</div>
+<table>
+  <tr><th>Pergunta</th><th>Afirmativa</th><th>Negativa</th></tr>
+  <tr><td>Did you go?</td><td>Yes, I did.</td><td>No, I didn't.</td></tr>
+  <tr><td>Did she see it?</td><td>Yes, she did.</td><td>No, she didn't.</td></tr>
+  <tr><td>Did they eat?</td><td>Yes, they did.</td><td>No, they didn't.</td></tr>
+</table>
+
+<div class="section-header">📝 Exercícios</div>
+
+<div class="letter-item">A. Complete com o passado irregular.</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item">She <input type="text" data-answer="went" placeholder="?"> (go)</div>
+    <div class="fill-item">He <input type="text" data-answer="ate" placeholder="?"> (eat)</div>
+    <div class="fill-item">They <input type="text" data-answer="saw" placeholder="?"> (see)</div>
+    <div class="fill-item">I <input type="text" data-answer="had" placeholder="?"> (have)</div>
+    <div class="fill-item">We <input type="text" data-answer="came" placeholder="?"> (come)</div>
+    <div class="fill-item">She <input type="text" data-answer="bought" placeholder="?"> (buy)</div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">B. Escolha a frase correta.</div>
+<div class="ex-card">
+  <div class="mc-item">
+    <div class="q">Qual é a pergunta correta?</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l22mc1" value="a"> Did she went home?</label>
+      <label><input type="radio" name="l22mc1" value="b" class="correct-answer"> Did she go home?</label>
+      <label><input type="radio" name="l22mc1" value="c"> Did she goes home?</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">Qual é a negativa correta?</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l22mc2" value="a"> He didn't ate lunch.</label>
+      <label><input type="radio" name="l22mc2" value="b" class="correct-answer"> He didn't eat lunch.</label>
+      <label><input type="radio" name="l22mc2" value="c"> He not ate lunch.</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">Qual frase está correta?</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l22mc3" value="a"> They didn't came.</label>
+      <label><input type="radio" name="l22mc3" value="b" class="correct-answer"> They didn't come.</label>
+      <label><input type="radio" name="l22mc3" value="c"> They not came.</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">Qual pergunta está correta?</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l22mc4" value="a"> Did you saw that?</label>
+      <label><input type="radio" name="l22mc4" value="b"> Did you see that?</label>
+      <label><input type="radio" name="l22mc4" value="c" class="correct-answer"> Did you see that?</label>
+    </div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">C. Escreva perguntas com Did.</div>
+<div class="ex-card">
+  <p class="ex-intro">Exemplo: (you / go / to the park) → Did you go to the park?</p>
+  <div class="fill-grid">
+    <div class="fill-item input-long">1. (she / eat / breakfast) → <input type="text" class="longer" data-answer="Did she eat breakfast" placeholder="..."></div>
+    <div class="fill-item input-long">2. (they / have / a test) → <input type="text" class="longer" data-answer="Did they have a test" placeholder="..."></div>
+    <div class="fill-item input-long">3. (he / buy / a car) → <input type="text" class="longer" data-answer="Did he buy a car" placeholder="..."></div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">D. Verdadeiro ou Falso?</div>
+<div class="ex-card">
+  <div class="mc-item">
+    <div class="q">"She went to school" — Passado de go está correto.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l22tf1" value="True" class="correct-answer"> V</label>
+      <label><input type="radio" name="l22tf1" value="False"> F</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"Did she went home?" — Pergunta correta.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l22tf2" value="True"> V</label>
+      <label><input type="radio" name="l22tf2" value="False" class="correct-answer"> F</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"He didn't eat lunch" — Negativa correta.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l22tf3" value="True" class="correct-answer"> V</label>
+      <label><input type="radio" name="l22tf3" value="False"> F</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"I buyed a new phone" — Passado correto.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l22tf4" value="True"> V</label>
+      <label><input type="radio" name="l22tf4" value="False" class="correct-answer"> F</label>
+    </div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="section-header">🎭 Prática Oral / Role-Play</div>
+<div class="dialogue-box">
+  <p><strong>A:</strong> Where did you go last summer?</p>
+  <p><strong>B:</strong> I went to the beach with my family.</p>
+  <p><strong>A:</strong> Did you have fun?</p>
+  <p><strong>B:</strong> Yes, I did! I ate a lot of seafood and swam every day.</p>
+  <p><strong>A:</strong> Did you take photos?</p>
+  <p><strong>B:</strong> Of course! I took hundreds of photos!</p>
+  <p><strong>A:</strong> I didn't go anywhere. I stayed home.</p>
+  <p><strong>B:</strong> That's okay. Next time, come with us!</p>
+</div>
+
+<div class="section-header">👅 Trava-língua</div>
+<div class="dialogue-box"><p><strong>She saw the sea, she ate the meat, she went and came and bought and brought.</strong></p><p>🔁 Repita 3x rápido!</p></div>
+
+<div class="section-header">🌍 Curiosidade Cultural: Why Are English Verbs So Irregular?</div>
+<p class="body-text">Os verbos irregulares do inglês vêm do <strong>Inglês Antigo (Old English)</strong>, falado há mais de 1.000 anos! Naquela época, os verbos mudavam de vogal interna para indicar o tempo — isso se chama <strong>ablaut</strong>. Com o tempo, a maioria dos verbos adotou o sufixo -ed, mas os verbos mais comuns (go, have, be, do, see, eat) mantiveram suas formas antigas porque eram usados com tanta frequência que as pessoas não queriam mudá-los!</p>
+<p class="body-text">Curiosamente, o mesmo fenômeno acontece em português! Verbos muito comuns como "ir" (fui), "ter" (tive), "ser" (fui) também são irregulares pelas mesmas razões.</p>
+<div class="dialogue-box"><p>💡 Dica: Não tente memorizar todos de uma vez! Aprenda os 20 mais comuns primeiro e use-os em frases todos os dias.</p></div>
+
+<div class="section-header">🎨 Atividade Criativa: My Vacation Story</div>
+<p class="instruction">Escreva uma história curta sobre suas últimas férias usando pelo menos 8 verbos irregulares no passado.</p>
+<p class="example-line">Last summer, I went to the beach. I had an amazing time. I ate fresh fish...</p>
+<div class="tip">Use: went, had, saw, ate, came, took, bought, made, met, found.</div>
+
+<div class="section-header">🧠 Desafio Extra</div>
+<p class="fill-blank">1. Passado de "think": ____________________</p>
+<p class="fill-blank">2. Corrija: "Did she went to school?" → ____________________</p>
+<p class="fill-blank">3. Corrija: "He didn't ate dinner." → ____________________</p>
+<p class="fill-blank">4. Traduza: "Eles compraram uma casa ano passado." → ____________________</p>
+<p class="fill-blank">5. Escreva uma pergunta com Did sobre o fim de semana: ____________________</p>
+
+<div class="section-header">🔁 Revisão</div>
+<p class="check-item">✅ Conheço os verbos irregulares mais frequentes no Simple Past.</p>
+<p class="check-item">✅ Sei fazer perguntas com Did + verbo base (NÃO passado!).</p>
+<p class="check-item">✅ Sei formar negativas com Didn't + verbo base.</p>
+<p class="check-item">✅ Sei dar short answers: Yes, I did / No, I didn't.</p>
+<p class="check-item">✅ Com Did/Didn't, o verbo principal volta à forma base!</p>
+
+<div class="section-header">🏠 Tarefa de Casa</div>
+<p class="body-text">1. Memorize os 20 verbos irregulares mais comuns e escreva frases com cada um.</p>
+<p class="body-text">2. Escreva 5 perguntas com Did e 5 negativas com Didn't.</p>
+<p class="body-text">3. Conte a história do seu último fim de semana em 8-10 frases (misture regulares e irregulares).</p>
+<textarea rows="10" placeholder="My Last Weekend Story: Escreva aqui..."></textarea>
+
+<button class="btn secondary" onclick="this.nextElementSibling.classList.toggle('show')">📋 Ver Gabarito</button>
+<div class="gabarito-box">
+  <div class="gabarito-title">✅ Gabarito — Lição 22</div>
+  <p class="gabarito-line"><strong>A.</strong> went | ate | saw | had | came | bought</p>
+  <p class="gabarito-line"><strong>B.</strong> Did she go home? | He didn't eat lunch. | They didn't come. | Did you see that?</p>
+  <p class="gabarito-line"><strong>C.</strong> Did she eat breakfast? | Did they have a test? | Did he buy a car?</p>
+  <p class="gabarito-line"><strong>D.</strong> V | F (Did she go) | V | F (bought)</p>
+  <p class="gabarito-line"><strong>Desafio:</strong> thought | Did she go to school? | He didn't eat dinner. | They bought a house last year.</p>
+</div>
+
+<div class="section-header">🏁 Conclusão</div>
+<p class="body-text">🎉 Excelente! Agora você conhece os verbos irregulares mais comuns e sabe fazer perguntas e negativas no Simple Past! Na próxima lição, vamos <strong>contar histórias no passado</strong> usando sequenciadores! See you in Lesson 23! 👋</p>
+
+<div class="actions" style="margin-top:24px;">
+  <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
+  <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
+</div>
+<p class="completion-note" style="font-size:12px;font-style:italic;color:#777;margin-top:10px;">Responda os exercícios (preenchimento e múltipla escolha) e clique em "Finalizar" para conferir sua nota. É preciso pelo menos 85% de acerto para concluir a lição.</p>
+<div class="footer-note">Bobcat Language School • Lição 22 — Simple Past: Verbos Irregulares</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<script>
+const LESSON_ID = 'licao-22-simple-past-irregular';
+let finishing = false;
+
+async function prefillFromProfile() {
+  await initDataLayer();
+  const profile = await getProfile();
+  if (profile && profile.name) {
+    const nameInput = document.querySelector('.info-bar input[type=text]');
+    if (nameInput && !nameInput.value) nameInput.value = profile.name;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const dateInput = document.querySelector('.info-bar input[type=date]');
+  if (dateInput && !dateInput.value) dateInput.value = today;
+}
+document.addEventListener('DOMContentLoaded', prefillFromProfile);
+
+function checkFills(btn) {
+  const card = btn.closest('.ex-card');
+  const inputs = card.querySelectorAll('.fill-item input[type=text]');
+  let correct = 0, total = 0;
+  inputs.forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    inp.classList.remove('correct', 'incorrect');
+    if (cleanVal === cleanAnswer) { inp.classList.add('correct'); correct++; }
+    else { inp.classList.add('incorrect'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  const badge = document.createElement('span');
+  badge.className = 'score-badge';
+  badge.textContent = correct + '/' + total + ' ✅';
+  btn.parentElement.appendChild(badge);
+}
+
+function checkMC(btn) {
+  const card = btn.closest('.ex-card');
+  const items = card.querySelectorAll('.mc-item');
+  let correct = 0, total = 0;
+  items.forEach(item => {
+    const options = item.querySelectorAll('.mc-options label');
+    const selected = item.querySelector('input[type=radio]:checked');
+    options.forEach(l => l.classList.remove('correct', 'incorrect'));
+    if (!selected) return;
+    total++;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) { selected.parentElement.classList.add('correct'); correct++; }
+    else { selected.parentElement.classList.add('incorrect'); if (correctRadio) correctRadio.parentElement.classList.add('correct'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  if (total > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'score-badge';
+    badge.textContent = correct + '/' + total + ' ✅';
+    btn.parentElement.appendChild(badge);
+  }
+}
+
+function toggleCollapse(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+async function finishLesson() {
+  if (finishing) return;
+  finishing = true;
+
+  let correct = 0, total = 0;
+  document.querySelectorAll('input[data-answer]').forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    if (cleanVal === cleanAnswer) correct++;
+  });
+  document.querySelectorAll('.mc-item').forEach(item => {
+    total++;
+    const selected = item.querySelector('input[type=radio]:checked');
+    if (!selected) return;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) correct++;
+  });
+
+  const safeTotal = total || 1;
+  const passed = await handleLessonFinish(LESSON_ID, correct, safeTotal, 'correct');
+  if (!passed) finishing = false;
+}
+</script>
+
+</body>
+</html>

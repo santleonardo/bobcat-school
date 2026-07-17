@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Lesson 26 — Comparative & Superlative Adjectives</title>
+<style>
+:root {
+  --orange: #D9793F;
+  --orange-dark: #C9622A;
+  --cream: #FBEFE6;
+  --cream-2: #F7F1EC;
+  --ink: #2b2b2b;
+  --ok: #2E8B57;
+  --bad: #C0392B;
+  --border: #EBC9AE;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  background:#fdfaf7;
+  line-height:1.55;
+}
+.app-layout{display:flex;min-height:100vh;}
+.sidebar{
+  width:280px;min-height:100vh;position:fixed;top:0;left:0;z-index:100;
+  background:#fff;border-right:2px solid var(--border);
+  display:flex;flex-direction:column;transition:transform .3s ease;
+}
+.sidebar-header{display:flex;align-items:center;gap:12px;padding:18px 20px 14px;border-bottom:3px solid var(--orange);}
+.sidebar-header .logo{font-size:32px;}
+.sidebar-header .brand{font-weight:800;font-size:16px;color:var(--orange-dark);}
+.sidebar-header .brand small{display:block;font-weight:400;font-size:11px;color:#888;font-style:italic;}
+.sidebar-progress{padding:14px 20px 10px;border-bottom:1px solid #eee;}
+.sidebar-progress .prog-label{font-size:12px;color:#888;font-weight:600;margin-bottom:6px;}
+.sidebar-progress .prog-track{width:100%;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.sidebar-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.sidebar-progress .prog-text{font-size:11px;color:#999;margin-top:4px;text-align:right;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13.5px;font-weight:600;color:#555;text-decoration:none;transition:background .15s,color .15s;border-left:3px solid transparent;}
+.sidebar-nav a:hover{background:var(--cream-2);color:var(--orange-dark);}
+.sidebar-nav a.active{background:var(--cream);color:var(--orange-dark);border-left-color:var(--orange);font-weight:700;}
+.sidebar-nav a .lnum{width:26px;height:26px;border-radius:50%;background:var(--cream-2);color:var(--orange-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.sidebar-nav a.active .lnum{background:var(--orange);color:#fff;}
+.sidebar-nav a.completed .lnum{background:var(--ok);color:#fff;}
+.sidebar-nav a .check{margin-left:auto;font-size:14px;color:var(--ok);display:none;}
+.sidebar-nav a.completed .check{display:inline;}
+.sidebar-close{display:none;position:absolute;top:14px;right:14px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;}
+.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--orange);color:#fff;border:none;width:42px;height:42px;border-radius:10px;font-size:22px;cursor:pointer;box-shadow:0 2px 8px rgba(217,121,63,.3);}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:99;}
+.main{flex:1;margin-left:280px;padding:0 0 80px 0;}
+.top-progress{position:sticky;top:0;z-index:50;background:#fdfaf7ee;backdrop-filter:blur(4px);padding:10px 20px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px;justify-content:center;font-size:13px;color:#666;}
+.top-progress .prog-track{width:220px;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.top-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.lesson{display:none;padding:28px 24px 40px;max-width:880px;margin:0 auto;}
+.lesson.active{display:block;}
+.back-link{display:inline-block;font-size:13.5px;color:var(--orange-dark);text-decoration:none;font-weight:700;margin-bottom:14px;}
+.back-link:hover{text-decoration:underline;}
+.header{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--orange);padding-bottom:14px;margin-bottom:14px;flex-wrap:wrap;}
+.header .logo-icon{font-size:48px;}
+.header .school{font-size:24px;font-weight:800;color:var(--orange-dark);}
+.header .subtitle{font-size:13px;font-style:italic;color:#666;margin-top:2px;}
+.info-bar{display:flex;gap:24px;flex-wrap:wrap;border-bottom:2px solid var(--orange);padding-bottom:14px;margin-bottom:22px;font-size:13.5px;}
+.info-bar label{display:flex;align-items:center;gap:6px;font-weight:600;color:#555;}
+.info-bar input[type=text],.info-bar input[type=date]{border:none;border-bottom:1px solid #999;background:transparent;padding:3px 2px;font-size:13.5px;min-width:150px;font-family:inherit;}
+.info-bar input:focus{outline:none;border-bottom:2px solid var(--orange);}
+h1.title{text-align:center;color:var(--orange-dark);font-size:27px;margin:6px 0 2px 0;}
+.level{text-align:center;font-style:italic;color:#666;font-size:13px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #eee;}
+.level-badge{display:inline-block;background:var(--orange);color:#fff;font-size:12px;font-weight:700;padding:3px 12px;border-radius:20px;font-style:normal;letter-spacing:.3px;}
+.section-title,.section-header{background:var(--orange);color:#fff;font-weight:700;font-size:14.5px;padding:8px 14px;border-radius:5px;margin:28px 0 10px 0;}
+.subheading{font-weight:700;font-size:13.5px;margin:14px 0 6px 0;color:var(--orange-dark);}
+p{margin:8px 0;font-size:14px;}
+.tip{background:var(--cream);border:1px solid var(--border);padding:10px 14px;font-size:13.5px;margin:10px 0;border-radius:6px;}
+.tip::before{content:"💡 ";}
+table{width:100%;border-collapse:collapse;margin:8px 0 18px 0;font-size:13.5px;}
+th{background:var(--orange);color:#fff;text-align:left;padding:8px 12px;}
+td{padding:8px 12px;border-bottom:1px solid #eee;}
+tr:nth-child(even) td{background:var(--cream-2);}
+.example{font-style:italic;color:#555;font-size:13.5px;margin:6px 0 18px 0;padding-left:12px;border-left:3px solid var(--border);}
+.dialog-box,.dialogue-box{background:var(--cream);padding:14px 16px;border-radius:8px;margin:8px 0;}
+.dialogue-box{background:var(--cream-2);border-left:4px solid var(--orange);border-radius:0 6px 6px 0;}
+.dialog-box p,.dialogue-box p{margin:4px 0;font-size:14px;}
+.body-text{margin:4px 0;line-height:1.65;color:var(--ink);font-size:14px;}
+.instruction{margin:6px 0;padding:8px 14px;background:var(--cream);border-left:4px solid var(--orange);border-radius:0 4px 4px 0;color:var(--ink);font-size:13.5px;}
+.numbered-item{margin:8px 0 4px 16px;padding:4px 0;font-size:14px;font-weight:700;color:var(--orange-dark);}
+.letter-item{margin:10px 0 6px 0;padding:4px 0;font-weight:700;font-size:14px;color:var(--orange-dark);}
+.example-line{margin:3px 0 3px 24px;font-style:italic;color:#555;font-size:13.5px;}
+.fill-blank{margin:4px 0 4px 24px;font-size:14px;color:var(--ink);}
+.check-item{margin:4px 0;padding:4px 0;font-size:14px;}
+.gabarito-box{background:#F0FFF0;border:1px solid #4CAF50;border-left:5px solid #4CAF50;border-radius:0 6px 6px 0;padding:16px 20px;margin:18px 0;display:none;}
+.gabarito-box.show{display:block;}
+.gabarito-title{font-weight:700;font-size:14px;color:#2E7D32;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.gabarito-line{margin:3px 0;font-size:13px;color:#333;}
+.ex-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.03);}
+.ex-intro{font-style:italic;color:#666;font-size:13.5px;margin:0 0 12px 0;}
+.fill-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 30px;}
+.fill-item{display:flex;align-items:center;gap:8px;font-size:14px;flex-wrap:wrap;}
+.fill-item input[type=text]{width:80px;padding:5px 8px;border:2px solid #ddd;border-radius:5px;font-size:14px;font-family:inherit;text-align:center;transition:border-color .15s,background .15s;}
+.fill-item input[type=text].longer{width:200px;text-align:left;}
+.fill-item input:focus{outline:none;border-color:var(--orange);}
+.fill-item input.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.fill-item input.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-item{margin:14px 0;font-size:14px;}
+.mc-item .q{font-weight:700;margin-bottom:6px;}
+.mc-options{display:flex;gap:10px;flex-wrap:wrap;}
+.mc-options label{display:flex;align-items:center;gap:6px;border:2px solid #ddd;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:13.5px;transition:border-color .15s,background .15s;}
+.mc-options label:hover{border-color:var(--orange);}
+.mc-options label.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.mc-options label.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-options input{accent-color:var(--orange);}
+.btn{background:var(--orange);color:#fff;border:none;padding:11px 22px;border-radius:7px;font-size:14.5px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;}
+.btn:hover{background:var(--orange-dark);}
+.btn:active{transform:scale(.98);}
+.btn.secondary{background:#fff;color:var(--orange-dark);border:2px solid var(--orange);padding:9px 20px;}
+.btn.secondary:hover{background:var(--cream);}
+.score-badge{display:inline-block;margin-left:14px;font-weight:700;font-size:14.5px;padding:6px 14px;border-radius:20px;background:var(--cream-2);color:var(--orange-dark);}
+.actions{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
+.note-italic{font-size:12px;font-style:italic;color:#777;margin-top:10px;}
+textarea{width:100%;font-family:inherit;font-size:14px;padding:8px 10px;border:2px solid #ddd;border-radius:6px;resize:vertical;min-height:80px;}
+textarea:focus{outline:none;border-color:var(--orange);}
+.footer-note{text-align:center;font-size:11.5px;color:#aaa;margin-top:40px;}
+.vocab-card{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid #eee;border-radius:8px;padding:8px 14px;margin:4px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
+.vocab-card:hover{border-color:var(--orange);}
+.vocab-card .vc-en{font-weight:700;font-size:14px;}
+.vocab-card .vc-pt{font-size:13px;color:var(--ok);display:none;}
+.vocab-card.revealed .vc-pt{display:inline;}
+.vocab-card.revealed{border-color:var(--ok);background:#EAF7EF;}
+.collapse-btn{width:100%;text-align:left;background:var(--cream);border:1px solid var(--border);padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;color:var(--orange-dark);margin:8px 0 0 0;display:flex;align-items:center;gap:8px;}
+.collapse-btn:hover{background:var(--cream-2);}
+.collapse-btn .arrow{transition:transform .2s;font-size:12px;}
+.collapse-btn.open .arrow{transform:rotate(90deg);}
+.collapse-body{display:none;padding:12px 0 4px 0;}
+.collapse-body.open{display:block;}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;box-shadow:0 -2px 8px rgba(0,0,0,.04);z-index:80;padding:6px 0 env(safe-area-inset-bottom,6px);}
+.bottom-nav-inner{display:flex;max-width:480px;margin:0 auto;}
+.bottom-nav .bnav-btn{flex:1;border:none;background:none;padding:10px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:#999;cursor:pointer;font-weight:600;}
+.bottom-nav .bnav-btn .bnav-icon{font-size:20px;}
+.bottom-nav .bnav-btn.active{color:var(--orange-dark);font-weight:700;}
+.bottom-nav .bnav-btn:disabled{color:#ddd;cursor:default;}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);width:280px;}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-close{display:block;}
+  .sidebar-overlay.open{display:block;}
+  .hamburger{display:flex;align-items:center;justify-content:center;}
+  .main{margin-left:0;}
+  .lesson{padding:20px 16px 120px;}
+  .bottom-nav{display:block;}
+  .fill-grid{grid-template-columns:1fr;}
+  .top-progress{padding-left:56px;}
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.lesson.active{animation:fadeIn .3s ease;}
+</style>
+</head>
+<body>
+<div class="wrap" style="max-width:880px;margin:0 auto;padding:28px 20px;">
+<a class="back-link" href="../index.html">&larr; Voltar às Lições</a>
+<div class="header"><span class="logo-icon">🐱</span><div><div class="school">Bobcat Language School</div><div class="subtitle">Aprenda inglês no seu ritmo</div></div></div>
+<div class="info-bar"><label>👤 Aluno: <input type="text" placeholder="Seu nome"></label><label>📅 Data: <input type="date"></label></div>
+<h1 class="title">LIÇÃO 26 — Comparative & Superlative Adjectives</h1>
+<div class="level"><span class="level-badge">Nível A1/A2</span></div>
+
+<div class="section-header">🎯 Objetivo da Lição</div>
+<p class="body-text">• Usar <strong>comparativos</strong> (bigger, more expensive, better) para comparar duas coisas.</p>
+<p class="body-text">• Usar <strong>superlativos</strong> (the biggest, the most expensive, the best) para destacar uma entre todas.</p>
+<p class="body-text">• Entender <strong>as...as</strong> e <strong>not as...as</strong> para comparações de igualdade/desigualdade.</p>
+
+<div class="section-header">🔥 Warm-Up: Compare duas coisas!</div>
+<p class="instruction">Pense em duas coisas e tente compará-las em inglês:</p>
+<p class="example-line">1. Brazil é maior ou menor que Argentina?</p>
+<p class="example-line">2. Um elefante é mais pesado que um cachorro?</p>
+<p class="example-line">3. Qual é o esporte mais popular no Brasil?</p>
+<p class="example-line">4. São Paulo é tão grande quanto Rio de Janeiro?</p>
+<p class="example-line">5. Qual é a melhor comida brasileira?</p>
+<div class="dialogue-box"><p>💡 Dica: Para comparar duas coisas, usamos o <strong>comparativo</strong>! Ex: "Brazil is bigger than Argentina."</p></div>
+
+<div class="section-header">🗣️ Diálogo: Comparing Two Cities</div>
+<div class="dialogue-box">
+  <p><strong>Lucas:</strong> I think São Paulo is the best city in Brazil!</p>
+  <p><strong>Ana:</strong> Really? I think Rio de Janeiro is more beautiful than São Paulo.</p>
+  <p><strong>Lucas:</strong> But São Paulo is bigger and has more restaurants.</p>
+  <p><strong>Ana:</strong> True, but Rio has the most beautiful beaches!</p>
+  <p><strong>Lucas:</strong> São Paulo is more expensive than Rio, though.</p>
+  <p><strong>Ana:</strong> Hmm, I'm not sure. Is the cost of living higher?</p>
+  <p><strong>Lucas:</strong> Yes, it is. But salaries are higher too.</p>
+  <p><strong>Ana:</strong> Rio is as fun as São Paulo, but it's warmer!</p>
+  <p><strong>Lucas:</strong> OK, both cities are great. But my pizza is the best!</p>
+  <p><strong>Ana:</strong> (laughing) Not as good as Rio's seafood!</p>
+</div>
+<div class="instruction">🔁 Repita com atenção: Leia o diálogo em voz alta. Preste atenção nos comparativos e superlativos!</div>
+
+<div class="section-header">📖 Vocabulário-Chave</div>
+<p class="subheading">📏 Descriptive Adjectives</p>
+<table>
+  <tr><th>Adjective</th><th>Translation</th><th>Comparative</th><th>Superlative</th></tr>
+  <tr><td>big</td><td>grande</td><td>bigger</td><td>the biggest</td></tr>
+  <tr><td>small</td><td>pequeno</td><td>smaller</td><td>the smallest</td></tr>
+  <tr><td>fast</td><td>rápido</td><td>faster</td><td>the fastest</td></tr>
+  <tr><td>slow</td><td>lento</td><td>slower</td><td>the slowest</td></tr>
+  <tr><td>tall</td><td>alto</td><td>taller</td><td>the tallest</td></tr>
+  <tr><td>short</td><td>baixo</td><td>shorter</td><td>the shortest</td></tr>
+  <tr><td>old</td><td>velho</td><td>older</td><td>the oldest</td></tr>
+  <tr><td>young</td><td>jovem</td><td>younger</td><td>the youngest</td></tr>
+  <tr><td>hot</td><td>quente</td><td>hotter</td><td>the hottest</td></tr>
+  <tr><td>cold</td><td>frio</td><td>colder</td><td>the coldest</td></tr>
+  <tr><td>easy</td><td>fácil</td><td>easier</td><td>the easiest</td></tr>
+  <tr><td>expensive</td><td>caro</td><td>more expensive</td><td>the most expensive</td></tr>
+  <tr><td>beautiful</td><td>bonito</td><td>more beautiful</td><td>the most beautiful</td></tr>
+  <tr><td>interesting</td><td>interessante</td><td>more interesting</td><td>the most interesting</td></tr>
+  <tr><td>dangerous</td><td>perigoso</td><td>more dangerous</td><td>the most dangerous</td></tr>
+</table>
+
+<p class="subheading">⭐ Irregular Comparatives & Superlatives</p>
+<table>
+  <tr><th>Adjective</th><th>Comparative</th><th>Superlative</th><th>Examples</th></tr>
+  <tr><td>good</td><td>better</td><td>the best</td><td>This pizza is better. It's the best!</td></tr>
+  <tr><td>bad</td><td>worse</td><td>the worst</td><td>That movie is worse. It's the worst!</td></tr>
+  <tr><td>far</td><td>farther</td><td>the farthest</td><td>My house is farther. It's the farthest!</td></tr>
+</table>
+
+<div class="section-header">📘 Gramática em Ação: Comparatives & Superlatives</div>
+
+<div class="numbered-item">1. Comparativos — Comparando duas coisas</div>
+<p class="body-text"><strong>Regra curta</strong> (1-2 sílabas): adjetivo + <strong>-er</strong> + than</p>
+<p class="example-line">big → bigger than | fast → faster than | tall → taller than | hot → hotter than</p>
+<p class="body-text"><strong>Regra longa</strong> (3+ sílabas): <strong>more</strong> + adjetivo + than</p>
+<p class="example-line">expensive → more expensive than | beautiful → more beautiful than | interesting → more interesting than</p>
+<p class="body-text"><strong>Regra -y</strong> (2 sílabas terminando em -y): tira y + <strong>-ier</strong> + than</p>
+<p class="example-line">easy → easier than | happy → happier than | funny → funnier than</p>
+
+<div class="numbered-item">2. Superlativos — Destacando entre todas</div>
+<p class="body-text"><strong>Regra curta:</strong> the + adjetivo + <strong>-est</strong></p>
+<p class="example-line">big → the biggest | fast → the fastest | tall → the tallest</p>
+<p class="body-text"><strong>Regra longa:</strong> the <strong>most</strong> + adjetivo</p>
+<p class="example-line">expensive → the most expensive | beautiful → the most beautiful</p>
+
+<div class="numbered-item">3. As...as / Not as...as</div>
+<p class="body-text"><strong>as + adjetivo + as</strong> = tão...quanto (igualdade)</p>
+<p class="example-line">São Paulo is as big as Buenos Aires. | She is as tall as her brother.</p>
+<p class="body-text"><strong>not as + adjetivo + as</strong> = não tão...quanto (desigualdade)</p>
+<p class="example-line">Rio is not as big as São Paulo. | This test is not as easy as the last one.</p>
+<div class="tip">Dica: Com <strong>as...as</strong>, o adjetivo NÃO muda! Não diz "as bigger as" — diz "as big as".</div>
+
+<div class="section-header">📝 Exercícios</div>
+
+<div class="letter-item">A. Escreva a forma comparativa.</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item">big → <input type="text" data-answer="bigger" placeholder="?"></div>
+    <div class="fill-item">expensive → <input type="text" data-answer="more expensive" placeholder="?"></div>
+    <div class="fill-item">easy → <input type="text" data-answer="easier" placeholder="?"></div>
+    <div class="fill-item">good → <input type="text" data-answer="better" placeholder="?"></div>
+    <div class="fill-item">hot → <input type="text" data-answer="hotter" placeholder="?"></div>
+    <div class="fill-item">beautiful → <input type="text" data-answer="more beautiful" placeholder="?"></div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">B. Escolha a forma correta.</div>
+<div class="ex-card">
+  <div class="mc-item">
+    <div class="q">"Brazil is _____ than Argentina." (grande)</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l26mc1" value="a" class="correct-answer"> bigger</label>
+      <label><input type="radio" name="l26mc1" value="b"> more big</label>
+      <label><input type="radio" name="l26mc1" value="c"> biggest</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"This is _____ movie I've ever seen!" (bom)</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l26mc2" value="a"> the better</label>
+      <label><input type="radio" name="l26mc2" value="b" class="correct-answer"> the best</label>
+      <label><input type="radio" name="l26mc2" value="c"> the goodest</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"English is _____ than Chinese." (fácil)</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l26mc3" value="a"> more easy</label>
+      <label><input type="radio" name="l26mc3" value="b" class="correct-answer"> easier</label>
+      <label><input type="radio" name="l26mc3" value="c"> easyer</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"She is _____ student in the class." (inteligente)</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l26mc4" value="a"> the smartest</label>
+      <label><input type="radio" name="l26mc4" value="b" class="correct-answer"> the most intelligent</label>
+      <label><input type="radio" name="l26mc4" value="c"> the intelligentest</label>
+    </div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">C. Escreva frases comparativas.</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item input-long">1. (São Paulo / big / Rio) → <input type="text" class="longer" data-answer="São Paulo is bigger than Rio" placeholder="..."></div>
+    <div class="fill-item input-long">2. (English / easy / math) → <input type="text" class="longer" data-answer="English is easier than math" placeholder="..."></div>
+    <div class="fill-item input-long">3. (This pizza / good / that one) → <input type="text" class="longer" data-answer="This pizza is better than that one" placeholder="..."></div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">D. Verdadeiro ou Falso?</div>
+<div class="ex-card">
+  <div class="mc-item">
+    <div class="q">"More big" é o comparativo correto de "big".</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l26tf1" value="True"> V</label>
+      <label><input type="radio" name="l26tf1" value="False" class="correct-answer"> F</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"She is as tall as her sister" está correto.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l26tf2" value="True" class="correct-answer"> V</label>
+      <label><input type="radio" name="l26tf2" value="False"> F</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"The worst" é o superlativo de "bad".</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l26tf3" value="True" class="correct-answer"> V</label>
+      <label><input type="radio" name="l26tf3" value="False"> F</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"Expensiver" é o comparativo de "expensive".</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l26tf4" value="True"> V</label>
+      <label><input type="radio" name="l26tf4" value="False" class="correct-answer"> F</label>
+    </div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="section-header">🎭 Prática Oral / Role-Play</div>
+<div class="dialogue-box">
+  <p><strong>A:</strong> Which is bigger, São Paulo or Rio?</p>
+  <p><strong>B:</strong> São Paulo is bigger than Rio.</p>
+  <p><strong>A:</strong> And which is more beautiful?</p>
+  <p><strong>B:</strong> I think Rio is more beautiful. It has the best beaches!</p>
+  <p><strong>A:</strong> Is Rio as expensive as São Paulo?</p>
+  <p><strong>B:</strong> No, Rio is not as expensive as São Paulo.</p>
+  <p><strong>A:</strong> What's the best thing about São Paulo?</p>
+  <p><strong>B:</strong> The food! São Paulo has the most delicious restaurants!</p>
+</div>
+
+<div class="section-header">👅 Trava-língua</div>
+<div class="dialogue-box"><p><strong>The bigger the better, the faster the better, but the best is yet to come!</strong></p><p>🔁 Repita 3x rápido!</p></div>
+
+<div class="section-header">🌍 Curiosidade Cultural: Guinness World Records</div>
+<p class="body-text">O <strong>Guinness World Records</strong> (Livro dos Recordes) é uma publicação britânica que contém os <strong>superlativos</strong> mais incríveis do mundo! Foi criado em 1955 e já vendeu mais de 143 milhões de cópias. Lá você encontra: "the tallest man in the world" (o homem mais alto), "the most expensive car" (o carro mais caro), "the oldest person" (a pessoa mais velha).</p>
+<p class="body-text">Os superlativos são uma parte essencial da cultura anglófona — nos <strong>EUA</strong>, tudo é "the biggest", "the best", "the greatest"! Esse otimismo se reflete na linguagem do dia a dia.</p>
+
+<div class="section-header">🎨 Atividade Criativa: My Superlative Awards</div>
+<p class="instruction">Crie prêmios superlativos para seus amigos e familiares!</p>
+<p class="example-line">Dad — the funniest person in the family!</p>
+<p class="example-line">Mom — the best cook!</p>
+<p class="example-line">My sister — the most talkative!</p>
+
+<div class="section-header">🧠 Desafio Extra</div>
+<p class="fill-blank">1. Comparativo de "bad": ____________________</p>
+<p class="fill-blank">2. Superlativo de "beautiful": ____________________</p>
+<p class="fill-blank">3. Complete: "She is not ___ smart ___ her brother." → ____________________</p>
+<p class="fill-blank">4. Traduza: "Este é o melhor restaurante da cidade." → ____________________</p>
+<p class="fill-blank">5. Corrija: "He is more tall than me." → ____________________</p>
+
+<div class="section-header">🔁 Revisão</div>
+<p class="check-item">✅ Sei formar comparativos: short (-er), long (more), -y (-ier), irregular.</p>
+<p class="check-item">✅ Sei formar superlativos: short (-est), long (most), -y (-iest), irregular.</p>
+<p class="check-item">✅ Conheço os irregulares: good→better→best, bad→worse→worst, far→farther→farthest.</p>
+<p class="check-item">✅ Sei usar as...as e not as...as para igualdade/desigualdade.</p>
+
+<div class="section-header">🏠 Tarefa de Casa</div>
+<p class="body-text">1. Escreva 5 frases comparativas e 5 frases superlativas sobre sua cidade.</p>
+<p class="body-text">2. Compare 3 pares de coisas (carros, cidades, comidas) usando as...as.</p>
+<p class="body-text">3. Crie 5 "Superlative Awards" para pessoas que você conhece.</p>
+<textarea rows="10" placeholder="Comparações e Superlativos: Escreva aqui..."></textarea>
+
+<button class="btn secondary" onclick="this.nextElementSibling.classList.toggle('show')">📋 Ver Gabarito</button>
+<div class="gabarito-box">
+  <div class="gabarito-title">✅ Gabarito — Lição 26</div>
+  <p class="gabarito-line"><strong>A.</strong> bigger | more expensive | easier | better | hotter | more beautiful</p>
+  <p class="gabarito-line"><strong>B.</strong> bigger | the best | easier | the most intelligent</p>
+  <p class="gabarito-line"><strong>C.</strong> São Paulo is bigger than Rio. | English is easier than math. | This pizza is better than that one.</p>
+  <p class="gabarito-line"><strong>D.</strong> F (bigger) | V | V | F (more expensive)</p>
+  <p class="gabarito-line"><strong>Desafio:</strong> worse | the most beautiful | as...as | This is the best restaurant in the city. | He is taller than me.</p>
+</div>
+
+<div class="section-header">🏁 Conclusão</div>
+<p class="body-text">🎉 Parabéns! Agora você sabe comparar coisas usando comparativos e superlativos! Pode dizer que algo é maior, melhor, o maior, o melhor! Na próxima lição: <strong>Present Perfect</strong>! See you in Lesson 27! 👋</p>
+
+<div class="actions" style="margin-top:24px;">
+  <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
+  <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
+</div>
+<p class="completion-note" style="font-size:12px;font-style:italic;color:#777;margin-top:10px;">Responda os exercícios (preenchimento e múltipla escolha) e clique em "Finalizar" para conferir sua nota. É preciso pelo menos 85% de acerto para concluir a lição.</p>
+<div class="footer-note">Bobcat Language School • Lição 26 — Comparativos e Superlativos</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<script>
+const LESSON_ID = 'licao-26-comparatives-superlatives';
+let finishing = false;
+
+async function prefillFromProfile() {
+  await initDataLayer();
+  const profile = await getProfile();
+  if (profile && profile.name) {
+    const nameInput = document.querySelector('.info-bar input[type=text]');
+    if (nameInput && !nameInput.value) nameInput.value = profile.name;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const dateInput = document.querySelector('.info-bar input[type=date]');
+  if (dateInput && !dateInput.value) dateInput.value = today;
+}
+document.addEventListener('DOMContentLoaded', prefillFromProfile);
+
+function checkFills(btn) {
+  const card = btn.closest('.ex-card');
+  const inputs = card.querySelectorAll('.fill-item input[type=text]');
+  let correct = 0, total = 0;
+  inputs.forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    inp.classList.remove('correct', 'incorrect');
+    if (cleanVal === cleanAnswer) { inp.classList.add('correct'); correct++; }
+    else { inp.classList.add('incorrect'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  const badge = document.createElement('span');
+  badge.className = 'score-badge';
+  badge.textContent = correct + '/' + total + ' ✅';
+  btn.parentElement.appendChild(badge);
+}
+
+function checkMC(btn) {
+  const card = btn.closest('.ex-card');
+  const items = card.querySelectorAll('.mc-item');
+  let correct = 0, total = 0;
+  items.forEach(item => {
+    const options = item.querySelectorAll('.mc-options label');
+    const selected = item.querySelector('input[type=radio]:checked');
+    options.forEach(l => l.classList.remove('correct', 'incorrect'));
+    if (!selected) return;
+    total++;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) { selected.parentElement.classList.add('correct'); correct++; }
+    else { selected.parentElement.classList.add('incorrect'); if (correctRadio) correctRadio.parentElement.classList.add('correct'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  if (total > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'score-badge';
+    badge.textContent = correct + '/' + total + ' ✅';
+    btn.parentElement.appendChild(badge);
+  }
+}
+
+function toggleCollapse(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+async function finishLesson() {
+  if (finishing) return;
+  finishing = true;
+
+  let correct = 0, total = 0;
+  document.querySelectorAll('input[data-answer]').forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    if (cleanVal === cleanAnswer) correct++;
+  });
+  document.querySelectorAll('.mc-item').forEach(item => {
+    total++;
+    const selected = item.querySelector('input[type=radio]:checked');
+    if (!selected) return;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) correct++;
+  });
+
+  const safeTotal = total || 1;
+  const passed = await handleLessonFinish(LESSON_ID, correct, safeTotal, 'correct');
+  if (!passed) finishing = false;
+}
+</script>
+
+</body>
+</html>

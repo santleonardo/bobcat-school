@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Lesson 25 — Future with Will</title>
+<style>
+:root {
+  --orange: #D9793F;
+  --orange-dark: #C9622A;
+  --cream: #FBEFE6;
+  --cream-2: #F7F1EC;
+  --ink: #2b2b2b;
+  --ok: #2E8B57;
+  --bad: #C0392B;
+  --border: #EBC9AE;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  background:#fdfaf7;
+  line-height:1.55;
+}
+.app-layout{display:flex;min-height:100vh;}
+.sidebar{
+  width:280px;min-height:100vh;position:fixed;top:0;left:0;z-index:100;
+  background:#fff;border-right:2px solid var(--border);
+  display:flex;flex-direction:column;transition:transform .3s ease;
+}
+.sidebar-header{display:flex;align-items:center;gap:12px;padding:18px 20px 14px;border-bottom:3px solid var(--orange);}
+.sidebar-header .logo{font-size:32px;}
+.sidebar-header .brand{font-weight:800;font-size:16px;color:var(--orange-dark);}
+.sidebar-header .brand small{display:block;font-weight:400;font-size:11px;color:#888;font-style:italic;}
+.sidebar-progress{padding:14px 20px 10px;border-bottom:1px solid #eee;}
+.sidebar-progress .prog-label{font-size:12px;color:#888;font-weight:600;margin-bottom:6px;}
+.sidebar-progress .prog-track{width:100%;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.sidebar-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.sidebar-progress .prog-text{font-size:11px;color:#999;margin-top:4px;text-align:right;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13.5px;font-weight:600;color:#555;text-decoration:none;transition:background .15s,color .15s;border-left:3px solid transparent;}
+.sidebar-nav a:hover{background:var(--cream-2);color:var(--orange-dark);}
+.sidebar-nav a.active{background:var(--cream);color:var(--orange-dark);border-left-color:var(--orange);font-weight:700;}
+.sidebar-nav a .lnum{width:26px;height:26px;border-radius:50%;background:var(--cream-2);color:var(--orange-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.sidebar-nav a.active .lnum{background:var(--orange);color:#fff;}
+.sidebar-nav a.completed .lnum{background:var(--ok);color:#fff;}
+.sidebar-nav a .check{margin-left:auto;font-size:14px;color:var(--ok);display:none;}
+.sidebar-nav a.completed .check{display:inline;}
+.sidebar-close{display:none;position:absolute;top:14px;right:14px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;}
+.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--orange);color:#fff;border:none;width:42px;height:42px;border-radius:10px;font-size:22px;cursor:pointer;box-shadow:0 2px 8px rgba(217,121,63,.3);}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:99;}
+.main{flex:1;margin-left:280px;padding:0 0 80px 0;}
+.top-progress{position:sticky;top:0;z-index:50;background:#fdfaf7ee;backdrop-filter:blur(4px);padding:10px 20px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px;justify-content:center;font-size:13px;color:#666;}
+.top-progress .prog-track{width:220px;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.top-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.lesson{display:none;padding:28px 24px 40px;max-width:880px;margin:0 auto;}
+.lesson.active{display:block;}
+.back-link{display:inline-block;font-size:13.5px;color:var(--orange-dark);text-decoration:none;font-weight:700;margin-bottom:14px;}
+.back-link:hover{text-decoration:underline;}
+.header{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--orange);padding-bottom:14px;margin-bottom:14px;flex-wrap:wrap;}
+.header .logo-icon{font-size:48px;}
+.header .school{font-size:24px;font-weight:800;color:var(--orange-dark);}
+.header .subtitle{font-size:13px;font-style:italic;color:#666;margin-top:2px;}
+.info-bar{display:flex;gap:24px;flex-wrap:wrap;border-bottom:2px solid var(--orange);padding-bottom:14px;margin-bottom:22px;font-size:13.5px;}
+.info-bar label{display:flex;align-items:center;gap:6px;font-weight:600;color:#555;}
+.info-bar input[type=text],.info-bar input[type=date]{border:none;border-bottom:1px solid #999;background:transparent;padding:3px 2px;font-size:13.5px;min-width:150px;font-family:inherit;}
+.info-bar input:focus{outline:none;border-bottom:2px solid var(--orange);}
+h1.title{text-align:center;color:var(--orange-dark);font-size:27px;margin:6px 0 2px 0;}
+.level{text-align:center;font-style:italic;color:#666;font-size:13px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #eee;}
+.level-badge{display:inline-block;background:var(--orange);color:#fff;font-size:12px;font-weight:700;padding:3px 12px;border-radius:20px;font-style:normal;letter-spacing:.3px;}
+.section-title,.section-header{background:var(--orange);color:#fff;font-weight:700;font-size:14.5px;padding:8px 14px;border-radius:5px;margin:28px 0 10px 0;}
+.subheading{font-weight:700;font-size:13.5px;margin:14px 0 6px 0;color:var(--orange-dark);}
+p{margin:8px 0;font-size:14px;}
+.tip{background:var(--cream);border:1px solid var(--border);padding:10px 14px;font-size:13.5px;margin:10px 0;border-radius:6px;}
+.tip::before{content:"💡 ";}
+table{width:100%;border-collapse:collapse;margin:8px 0 18px 0;font-size:13.5px;}
+th{background:var(--orange);color:#fff;text-align:left;padding:8px 12px;}
+td{padding:8px 12px;border-bottom:1px solid #eee;}
+tr:nth-child(even) td{background:var(--cream-2);}
+.example{font-style:italic;color:#555;font-size:13.5px;margin:6px 0 18px 0;padding-left:12px;border-left:3px solid var(--border);}
+.dialog-box,.dialogue-box{background:var(--cream);padding:14px 16px;border-radius:8px;margin:8px 0;}
+.dialogue-box{background:var(--cream-2);border-left:4px solid var(--orange);border-radius:0 6px 6px 0;}
+.dialog-box p,.dialogue-box p{margin:4px 0;font-size:14px;}
+.body-text{margin:4px 0;line-height:1.65;color:var(--ink);font-size:14px;}
+.instruction{margin:6px 0;padding:8px 14px;background:var(--cream);border-left:4px solid var(--orange);border-radius:0 4px 4px 0;color:var(--ink);font-size:13.5px;}
+.numbered-item{margin:8px 0 4px 16px;padding:4px 0;font-size:14px;font-weight:700;color:var(--orange-dark);}
+.letter-item{margin:10px 0 6px 0;padding:4px 0;font-weight:700;font-size:14px;color:var(--orange-dark);}
+.example-line{margin:3px 0 3px 24px;font-style:italic;color:#555;font-size:13.5px;}
+.fill-blank{margin:4px 0 4px 24px;font-size:14px;color:var(--ink);}
+.check-item{margin:4px 0;padding:4px 0;font-size:14px;}
+.gabarito-box{background:#F0FFF0;border:1px solid #4CAF50;border-left:5px solid #4CAF50;border-radius:0 6px 6px 0;padding:16px 20px;margin:18px 0;display:none;}
+.gabarito-box.show{display:block;}
+.gabarito-title{font-weight:700;font-size:14px;color:#2E7D32;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.gabarito-line{margin:3px 0;font-size:13px;color:#333;}
+.ex-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.03);}
+.ex-intro{font-style:italic;color:#666;font-size:13.5px;margin:0 0 12px 0;}
+.fill-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 30px;}
+.fill-item{display:flex;align-items:center;gap:8px;font-size:14px;flex-wrap:wrap;}
+.fill-item input[type=text]{width:80px;padding:5px 8px;border:2px solid #ddd;border-radius:5px;font-size:14px;font-family:inherit;text-align:center;transition:border-color .15s,background .15s;}
+.fill-item input[type=text].longer{width:200px;text-align:left;}
+.fill-item input:focus{outline:none;border-color:var(--orange);}
+.fill-item input.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.fill-item input.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-item{margin:14px 0;font-size:14px;}
+.mc-item .q{font-weight:700;margin-bottom:6px;}
+.mc-options{display:flex;gap:10px;flex-wrap:wrap;}
+.mc-options label{display:flex;align-items:center;gap:6px;border:2px solid #ddd;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:13.5px;transition:border-color .15s,background .15s;}
+.mc-options label:hover{border-color:var(--orange);}
+.mc-options label.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.mc-options label.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-options input{accent-color:var(--orange);}
+.btn{background:var(--orange);color:#fff;border:none;padding:11px 22px;border-radius:7px;font-size:14.5px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;}
+.btn:hover{background:var(--orange-dark);}
+.btn:active{transform:scale(.98);}
+.btn.secondary{background:#fff;color:var(--orange-dark);border:2px solid var(--orange);padding:9px 20px;}
+.btn.secondary:hover{background:var(--cream);}
+.score-badge{display:inline-block;margin-left:14px;font-weight:700;font-size:14.5px;padding:6px 14px;border-radius:20px;background:var(--cream-2);color:var(--orange-dark);}
+.actions{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
+.note-italic{font-size:12px;font-style:italic;color:#777;margin-top:10px;}
+textarea{width:100%;font-family:inherit;font-size:14px;padding:8px 10px;border:2px solid #ddd;border-radius:6px;resize:vertical;min-height:80px;}
+textarea:focus{outline:none;border-color:var(--orange);}
+.footer-note{text-align:center;font-size:11.5px;color:#aaa;margin-top:40px;}
+.vocab-card{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid #eee;border-radius:8px;padding:8px 14px;margin:4px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
+.vocab-card:hover{border-color:var(--orange);}
+.vocab-card .vc-en{font-weight:700;font-size:14px;}
+.vocab-card .vc-pt{font-size:13px;color:var(--ok);display:none;}
+.vocab-card.revealed .vc-pt{display:inline;}
+.vocab-card.revealed{border-color:var(--ok);background:#EAF7EF;}
+.collapse-btn{width:100%;text-align:left;background:var(--cream);border:1px solid var(--border);padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;color:var(--orange-dark);margin:8px 0 0 0;display:flex;align-items:center;gap:8px;}
+.collapse-btn:hover{background:var(--cream-2);}
+.collapse-btn .arrow{transition:transform .2s;font-size:12px;}
+.collapse-btn.open .arrow{transform:rotate(90deg);}
+.collapse-body{display:none;padding:12px 0 4px 0;}
+.collapse-body.open{display:block;}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;box-shadow:0 -2px 8px rgba(0,0,0,.04);z-index:80;padding:6px 0 env(safe-area-inset-bottom,6px);}
+.bottom-nav-inner{display:flex;max-width:480px;margin:0 auto;}
+.bottom-nav .bnav-btn{flex:1;border:none;background:none;padding:10px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:#999;cursor:pointer;font-weight:600;}
+.bottom-nav .bnav-btn .bnav-icon{font-size:20px;}
+.bottom-nav .bnav-btn.active{color:var(--orange-dark);font-weight:700;}
+.bottom-nav .bnav-btn:disabled{color:#ddd;cursor:default;}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);width:280px;}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-close{display:block;}
+  .sidebar-overlay.open{display:block;}
+  .hamburger{display:flex;align-items:center;justify-content:center;}
+  .main{margin-left:0;}
+  .lesson{padding:20px 16px 120px;}
+  .bottom-nav{display:block;}
+  .fill-grid{grid-template-columns:1fr;}
+  .top-progress{padding-left:56px;}
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.lesson.active{animation:fadeIn .3s ease;}
+</style>
+</head>
+<body>
+<div class="wrap" style="max-width:880px;margin:0 auto;padding:28px 20px;">
+<a class="back-link" href="../index.html">&larr; Voltar às Lições</a>
+<div class="header"><span class="logo-icon">🐱</span><div><div class="school">Bobcat Language School</div><div class="subtitle">Aprenda inglês no seu ritmo</div></div></div>
+<div class="info-bar"><label>👤 Aluno: <input type="text" placeholder="Seu nome"></label><label>📅 Data: <input type="date"></label></div>
+<h1 class="title">LIÇÃO 25 — Future with Will</h1>
+<div class="level"><span class="level-badge">Nível A1/A2</span></div>
+
+<div class="section-header">🎯 Objetivo da Lição</div>
+<p class="body-text">• Usar <strong>will</strong> para <strong>decisões espontâneas, promessas, ofertas e previsões</strong>.</p>
+<p class="body-text">• Entender a <strong>diferença entre will e going to</strong>.</p>
+<p class="body-text">• Formar <strong>perguntas</strong> (Will you...?) e <strong>negativas</strong> (I won't...).</p>
+
+<div class="section-header">🔥 Warm-Up: Decisões do momento</div>
+<p class="instruction">Imagine que alguém pede sua ajuda. O que você diz?</p>
+<p class="example-line">1. "I can't carry this box!" → "I'll help you!"</p>
+<p class="example-line">2. "I'm hungry." → "I'll make a sandwich!"</p>
+<p class="example-line">3. "It's raining!" → "I'll bring an umbrella!"</p>
+<p class="example-line">4. "I forgot my pen." → "I'll lend you mine!"</p>
+<p class="example-line">5. "I don't understand this." → "I'll explain it!"</p>
+<div class="dialogue-box"><p>💡 Dica: Quando você decide algo <strong>na hora</strong>, usa <strong>will</strong> (contração: 'll)! "I'll help you!" = Decidi agora te ajudar!</p></div>
+
+<div class="section-header">🗣️ Diálogo: Making Decisions on the Spot</div>
+<div class="dialogue-box">
+  <p><strong>Waiter:</strong> Are you ready to order?</p>
+  <p><strong>Customer:</strong> Hmm... I'll have the pasta, please.</p>
+  <p><strong>Waiter:</strong> And to drink?</p>
+  <p><strong>Customer:</strong> I'll have a glass of water, please.</p>
+  <p><strong>Waiter:</strong> Great! I'll bring it right away.</p>
+  <p><strong>Customer:</strong> Thank you! Oh wait, I'll also order a salad.</p>
+  <p><strong>Waiter:</strong> No problem! Will that be all?</p>
+  <p><strong>Customer:</strong> Yes, that's all. I promise I won't change my mind again!</p>
+  <p><strong>Waiter:</strong> (smiling) I'll be right back with your order!</p>
+</div>
+<div class="instruction">🔁 Repita com atenção: Leia o diálogo em voz alta. Perceba como "I'll" é usado para decisões do momento!</div>
+
+<div class="section-header">📖 Vocabulário-Chave</div>
+<p class="subheading">🤝 Offers, Promises & Predictions</p>
+<table>
+  <tr><th>Category</th><th>Word/Phrase</th><th>Translation</th><th>Example</th></tr>
+  <tr><td>Offer</td><td>I'll help</td><td>Eu vou ajudar</td><td>I'll help you with that!</td></tr>
+  <tr><td>Offer</td><td>I'll carry</td><td>Eu vou carregar</td><td>I'll carry your bags.</td></tr>
+  <tr><td>Offer</td><td>I'll make</td><td>Eu vou fazer</td><td>I'll make some coffee.</td></tr>
+  <tr><td>Promise</td><td>I'll call</td><td>Eu vou ligar</td><td>I'll call you tomorrow.</td></tr>
+  <tr><td>Promise</td><td>I'll be there</td><td>Eu vou estar lá</td><td>I'll be there on time.</td></tr>
+  <tr><td>Promise</td><td>I won't forget</td><td>Não vou esquecer</td><td>I won't forget your birthday!</td></tr>
+  <tr><td>Prediction</td><td>It will rain</td><td>Vai chover</td><td>I think it will rain tomorrow.</td></tr>
+  <tr><td>Prediction</td><td>She will pass</td><td>Ela vai passar</td><td>I'm sure she will pass the test.</td></tr>
+  <tr><td>Decision</td><td>I'll have</td><td>Eu vou querer</td><td>I'll have the chicken, please.</td></tr>
+  <tr><td>Decision</td><td>I'll take</td><td>Eu vou pegar</td><td>I'll take the blue one.</td></tr>
+</table>
+
+<p class="subheading">🌤️ Weather & Predictions</p>
+<table>
+  <tr><th>Word</th><th>Translation</th><th>Example</th></tr>
+  <tr><td>sunny</td><td>ensolarado</td><td>It will be sunny tomorrow.</td></tr>
+  <tr><td>cloudy</td><td>nublado</td><td>It will be cloudy this afternoon.</td></tr>
+  <tr><td>rainy</td><td>chuvoso</td><td>It will be rainy on the weekend.</td></tr>
+  <tr><td>cold</td><td>frio</td><td>It will be cold tonight.</td></tr>
+  <tr><td>hot</td><td>quente</td><td>It will be hot next week.</td></tr>
+  <tr><td>windy</td><td>ventoso</td><td>It will be windy at the beach.</td></tr>
+</table>
+
+<div class="section-header">📘 Gramática em Ação: Future with Will</div>
+
+<div class="numbered-item">1. Estrutura Afirmativa</div>
+<p class="body-text"><strong>Estrutura:</strong> Sujeito + will + verbo (base form)</p>
+<p class="body-text">Contração: I will → <strong>I'll</strong> | She will → <strong>She'll</strong> | They will → <strong>They'll</strong></p>
+<p class="example-line">I'll help you. | She'll be there. | We'll see you tomorrow. | It'll be fine.</p>
+
+<div class="numbered-item">2. Estrutura Negativa</div>
+<p class="body-text"><strong>Estrutura:</strong> Sujeito + will not + verbo = <strong>won't</strong> + verbo</p>
+<p class="example-line">I won't be late. | She won't forget. | They won't come. | It won't rain.</p>
+
+<div class="numbered-item">3. Perguntas com Will</div>
+<p class="body-text"><strong>Estrutura:</strong> Will + sujeito + verbo?</p>
+<p class="example-line">Will you help me? | Will she come? | Will it rain tomorrow? | Will they win?</p>
+<table>
+  <tr><th>Pergunta</th><th>Afirmativa</th><th>Negativa</th></tr>
+  <tr><td>Will you come?</td><td>Yes, I will.</td><td>No, I won't.</td></tr>
+  <tr><td>Will she call?</td><td>Yes, she will.</td><td>No, she won't.</td></tr>
+  <tr><td>Will it rain?</td><td>Yes, it will.</td><td>No, it won't.</td></tr>
+</table>
+
+<div class="numbered-item">4. Will vs. Going To — Qual usar?</div>
+<table>
+  <tr><th>Going To</th><th>Will</th></tr>
+  <tr><td>Plano já decidido</td><td>Decisão do momento</td></tr>
+  <tr><td>I'm going to study tonight. (já planejei)</td><td>I'll help you! (decidi agora)</td></tr>
+  <tr><td>Intenção</td><td>Promessa</td></tr>
+  <tr><td>She's going to learn French. (intenção)</td><td>I'll call you tomorrow. (promessa)</td></tr>
+  <tr><td>Evidência forte</td><td>Previsão sem evidência</td></tr>
+  <tr><td>Look at those clouds! It's going to rain. (evidência)</td><td>I think it will rain tomorrow. (opinião)</td></tr>
+</table>
+<div class="tip">Dica: Se você <strong>já decidiu</strong> antes, use <strong>going to</strong>. Se decide <strong>na hora</strong>, use <strong>will</strong>! "I'll help!" = decisão agora. "I'm going to help tomorrow" = plano anterior.</div>
+
+<div class="section-header">📝 Exercícios</div>
+
+<div class="letter-item">A. Complete com will ou won't + verbo.</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item">I <input type="text" data-answer="will help" placeholder="?"> you! (help)</div>
+    <div class="fill-item">She <input type="text" data-answer="will call" placeholder="?"> you. (call)</div>
+    <div class="fill-item">They <input type="text" data-answer="won't forget" placeholder="?"> your birthday. (forget - neg)</div>
+    <div class="fill-item">It <input type="text" data-answer="will rain" placeholder="?"> tomorrow. (rain)</div>
+    <div class="fill-item">I <input type="text" data-answer="won't be" placeholder="?"> late. (be - neg)</div>
+    <div class="fill-item">He <input type="text" data-answer="will come" placeholder="?"> to the party. (come)</div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">B. Escolha: going to ou will?</div>
+<div class="ex-card">
+  <div class="mc-item">
+    <div class="q">"The phone is ringing! I'll answer it!" — Decisão do momento →</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l25mc1" value="will" class="correct-answer"> will ✓</label>
+      <label><input type="radio" name="l25mc1" value="going to"> going to</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"I'm going to travel next month." — Plano anterior →</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l25mc2" value="will"> will</label>
+      <label><input type="radio" name="l25mc2" value="going to" class="correct-answer"> going to ✓</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"I promise I won't be late!" — Promessa →</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l25mc3" value="will" class="correct-answer"> will ✓</label>
+      <label><input type="radio" name="l25mc3" value="going to"> going to</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"Look at those dark clouds! It's going to rain!" — Evidência →</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l25mc4" value="will"> will</label>
+      <label><input type="radio" name="l25mc4" value="going to" class="correct-answer"> going to ✓</label>
+    </div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">C. Escreva promessas e ofertas com will.</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item input-long">1. (I / help / you) → <input type="text" class="longer" data-answer="I'll help you" placeholder="..."></div>
+    <div class="fill-item input-long">2. (I / call / tomorrow) → <input type="text" class="longer" data-answer="I'll call you tomorrow" placeholder="..."></div>
+    <div class="fill-item input-long">3. (I / not / forget) → <input type="text" class="longer" data-answer="I won't forget" placeholder="..."></div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">D. Verdadeiro ou Falso?</div>
+<div class="ex-card">
+  <div class="mc-item">
+    <div class="q">"Will" é usado para decisões espontâneas.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l25tf1" value="True" class="correct-answer"> V</label>
+      <label><input type="radio" name="l25tf1" value="False"> F</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"I'll helps you" está correto.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l25tf2" value="True"> V</label>
+      <label><input type="radio" name="l25tf2" value="False" class="correct-answer"> F</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"Won't" é a contração de "will not".</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l25tf3" value="True" class="correct-answer"> V</label>
+      <label><input type="radio" name="l25tf3" value="False"> F</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">Para planos já decididos, usamos "will".</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l25tf4" value="True"> V</label>
+      <label><input type="radio" name="l25tf4" value="False" class="correct-answer"> F</label>
+    </div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="section-header">🎭 Prática Oral / Role-Play</div>
+<div class="dialogue-box">
+  <p><strong>A:</strong> I can't open this jar!</p>
+  <p><strong>B:</strong> I'll help you! There!</p>
+  <p><strong>A:</strong> Thanks! Are you going to the party tonight?</p>
+  <p><strong>B:</strong> Yes, I'm going to go. Will you come?</p>
+  <p><strong>A:</strong> I think I will! I'll bring some snacks.</p>
+  <p><strong>B:</strong> That's great! I promise I won't be late this time!</p>
+  <p><strong>A:</strong> Haha! I'll believe it when I see it!</p>
+  <p><strong>B:</strong> I'll be there at 8. I won't let you down!</p>
+</div>
+
+<div class="section-header">👅 Trava-língua</div>
+<div class="dialogue-box"><p><strong>I will, you will, we will, they will — she'll and he'll, it'll and I'll!</strong></p><p>🔁 Repita 3x rápido! Concentre-se nas contrações.</p></div>
+
+<div class="section-header">🌍 Curiosidade Cultural: Promises in English</div>
+<p class="body-text">Em inglês, fazer promessas é levado muito a sério! A expressão <strong>"I promise"</strong> carrega muito peso. Dizer "I'll call you" e não ligar é considerado rude. Nos <strong>EUA</strong>, existe até a expressão <strong>"empty promise"</strong> (promessa vazia) para quando alguém promete algo que não vai cumprir.</p>
+<p class="body-text">No <strong>Reino Unido</strong>, os britânicos são conhecidos por serem mais discretos com promessas — eles dizem <strong>"I'll try"</strong> (eu vou tentar) em vez de "I'll do it" quando não têm certeza de poder cumprir. É uma forma de ser polido!</p>
+<div class="dialogue-box"><p>💡 Dica: Se não tem certeza, diga <strong>"I'll try"</strong> em vez de <strong>"I will"</strong>. Isso é mais honesto e educado!</p></div>
+
+<div class="section-header">🎨 Atividade Criativa: My Promise List</div>
+<p class="instruction">Faça uma lista de 5 promessas para si mesmo usando will/won't!</p>
+<p class="example-line">1. I'll study English every day.</p>
+<p class="example-line">2. I won't give up when things are difficult.</p>
+<p class="example-line">3. I'll be kind to everyone.</p>
+
+<div class="section-header">🧠 Desafio Extra</div>
+<p class="fill-blank">1. Escreva uma oferta: "Eu vou te ajudar!" → ____________________</p>
+<p class="fill-blank">2. Escreva uma promessa: "Eu vou ligar amanhã!" → ____________________</p>
+<p class="fill-blank">3. Going to ou will? "I decided last week. I ___ travel." → ____________________</p>
+<p class="fill-blank">4. Going to ou will? "The phone! I ___ answer!" → ____________________</p>
+<p class="fill-blank">5. Traduza: "Eu não vou esquecer seu aniversário!" → ____________________</p>
+
+<div class="section-header">🔁 Revisão</div>
+<p class="check-item">✅ Sei usar will para decisões espontâneas, promessas, ofertas e previsões.</p>
+<p class="check-item">✅ Sei a diferença: going to = plano; will = decisão do momento / promessa.</p>
+<p class="check-item">✅ Sei formar negativas com won't.</p>
+<p class="check-item">✅ Sei fazer perguntas com Will + sujeito + verbo?</p>
+
+<div class="section-header">🏠 Tarefa de Casa</div>
+<p class="body-text">1. Escreva 5 promessas para si mesmo usando will/won't.</p>
+<p class="body-text">2. Crie 3 diálogos curtos usando will (oferta, decisão, promessa).</p>
+<p class="body-text">3. Escreva 5 frases com going to e 5 frases com will — explique a diferença.</p>
+<textarea rows="10" placeholder="My Promises / Dialogues: Escreva aqui..."></textarea>
+
+<button class="btn secondary" onclick="this.nextElementSibling.classList.toggle('show')">📋 Ver Gabarito</button>
+<div class="gabarito-box">
+  <div class="gabarito-title">✅ Gabarito — Lição 25</div>
+  <p class="gabarito-line"><strong>A.</strong> will help | will call | won't forget | will rain | won't be | will come</p>
+  <p class="gabarito-line"><strong>B.</strong> will | going to | will | going to</p>
+  <p class="gabarito-line"><strong>C.</strong> I'll help you. | I'll call you tomorrow. | I won't forget.</p>
+  <p class="gabarito-line"><strong>D.</strong> V | F (I'll help) | V | F (going to)</p>
+  <p class="gabarito-line"><strong>Desafio:</strong> I'll help you! | I'll call you tomorrow! | going to | will | I won't forget your birthday!</p>
+</div>
+
+<div class="section-header">🏁 Conclusão</div>
+<p class="body-text">🎉 Parabéns! Agora você sabe usar will para decisões espontâneas, promessas, ofertas e previsões! E sabe a diferença entre will e going to! Na próxima lição: <strong>Comparative and Superlative Adjectives</strong>! See you in Lesson 26! 👋</p>
+
+<div class="actions" style="margin-top:24px;">
+  <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
+  <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
+</div>
+<p class="completion-note" style="font-size:12px;font-style:italic;color:#777;margin-top:10px;">Responda os exercícios (preenchimento e múltipla escolha) e clique em "Finalizar" para conferir sua nota. É preciso pelo menos 85% de acerto para concluir a lição.</p>
+<div class="footer-note">Bobcat Language School • Lição 25 — Futuro com Will</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<script>
+const LESSON_ID = 'licao-25-future-will';
+let finishing = false;
+
+async function prefillFromProfile() {
+  await initDataLayer();
+  const profile = await getProfile();
+  if (profile && profile.name) {
+    const nameInput = document.querySelector('.info-bar input[type=text]');
+    if (nameInput && !nameInput.value) nameInput.value = profile.name;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const dateInput = document.querySelector('.info-bar input[type=date]');
+  if (dateInput && !dateInput.value) dateInput.value = today;
+}
+document.addEventListener('DOMContentLoaded', prefillFromProfile);
+
+function checkFills(btn) {
+  const card = btn.closest('.ex-card');
+  const inputs = card.querySelectorAll('.fill-item input[type=text]');
+  let correct = 0, total = 0;
+  inputs.forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    inp.classList.remove('correct', 'incorrect');
+    if (cleanVal === cleanAnswer) { inp.classList.add('correct'); correct++; }
+    else { inp.classList.add('incorrect'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  const badge = document.createElement('span');
+  badge.className = 'score-badge';
+  badge.textContent = correct + '/' + total + ' ✅';
+  btn.parentElement.appendChild(badge);
+}
+
+function checkMC(btn) {
+  const card = btn.closest('.ex-card');
+  const items = card.querySelectorAll('.mc-item');
+  let correct = 0, total = 0;
+  items.forEach(item => {
+    const options = item.querySelectorAll('.mc-options label');
+    const selected = item.querySelector('input[type=radio]:checked');
+    options.forEach(l => l.classList.remove('correct', 'incorrect'));
+    if (!selected) return;
+    total++;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) { selected.parentElement.classList.add('correct'); correct++; }
+    else { selected.parentElement.classList.add('incorrect'); if (correctRadio) correctRadio.parentElement.classList.add('correct'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  if (total > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'score-badge';
+    badge.textContent = correct + '/' + total + ' ✅';
+    btn.parentElement.appendChild(badge);
+  }
+}
+
+function toggleCollapse(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+async function finishLesson() {
+  if (finishing) return;
+  finishing = true;
+
+  let correct = 0, total = 0;
+  document.querySelectorAll('input[data-answer]').forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    if (cleanVal === cleanAnswer) correct++;
+  });
+  document.querySelectorAll('.mc-item').forEach(item => {
+    total++;
+    const selected = item.querySelector('input[type=radio]:checked');
+    if (!selected) return;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) correct++;
+  });
+
+  const safeTotal = total || 1;
+  const passed = await handleLessonFinish(LESSON_ID, correct, safeTotal, 'correct');
+  if (!passed) finishing = false;
+}
+</script>
+
+</body>
+</html>
