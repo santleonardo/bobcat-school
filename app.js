@@ -210,7 +210,7 @@ const LESSONS = [
   {
     id: 'licao-21-simple-past-regular',
     name: 'Lição 21 — Simple Past: Verbos Regulares',
-    level: 'A2',
+    level: 'A1',
     icon: '⏮️',
     description: 'Formação e uso do Simple Past com verbos regulares',
     url: 'lessons/licao-21-simple-past-regular.html',
@@ -219,7 +219,7 @@ const LESSONS = [
   {
     id: 'licao-22-simple-past-irregular',
     name: 'Lição 22 — Simple Past: Verbos Irregulares',
-    level: 'A2',
+    level: 'A1',
     icon: '📖',
     description: 'Verbos irregulares mais comuns no Simple Past',
     url: 'lessons/licao-22-simple-past-irregular.html',
@@ -228,7 +228,7 @@ const LESSONS = [
   {
     id: 'licao-23-talking-about-the-past',
     name: 'Lição 23 — Falando Sobre o Passado',
-    level: 'A2',
+    level: 'A1',
     icon: '🕰️',
     description: 'Perguntas, negativas e expressões de tempo no passado',
     url: 'lessons/licao-23-talking-about-the-past.html',
@@ -237,7 +237,7 @@ const LESSONS = [
   {
     id: 'licao-24-future-going-to',
     name: 'Lição 24 — Futuro com Going To',
-    level: 'A2',
+    level: 'A1',
     icon: '🎯',
     description: 'Planos e intenções futuras com Going To',
     url: 'lessons/licao-24-future-going-to.html',
@@ -246,7 +246,7 @@ const LESSONS = [
   {
     id: 'licao-25-future-will',
     name: 'Lição 25 — Futuro com Will',
-    level: 'A2',
+    level: 'A1',
     icon: '🔮',
     description: 'Previsões, decisões espontâneas e promessas com Will',
     url: 'lessons/licao-25-future-will.html',
@@ -255,7 +255,7 @@ const LESSONS = [
   {
     id: 'licao-26-comparatives-superlatives',
     name: 'Lição 26 — Comparativos e Superlativos',
-    level: 'A2',
+    level: 'A1',
     icon: '⚖️',
     description: 'Comparando pessoas e coisas em inglês',
     url: 'lessons/licao-26-comparatives-superlatives.html',
@@ -264,7 +264,7 @@ const LESSONS = [
   {
     id: 'licao-27-present-perfect',
     name: 'Lição 27 — Present Perfect (Introdução)',
-    level: 'A2',
+    level: 'A1',
     icon: '✅',
     description: 'Introdução ao Present Perfect: have/has + particípio',
     url: 'lessons/licao-27-present-perfect.html',
@@ -273,7 +273,7 @@ const LESSONS = [
   {
     id: 'licao-28-modal-verbs',
     name: 'Lição 28 — Verbos Modais',
-    level: 'A2',
+    level: 'A1',
     icon: '🔑',
     description: 'Can, could, must, should e outros verbos modais',
     url: 'lessons/licao-28-modal-verbs.html',
@@ -282,7 +282,7 @@ const LESSONS = [
   {
     id: 'licao-29-phrasal-verbs',
     name: 'Lição 29 — Phrasal Verbs Essenciais',
-    level: 'A2',
+    level: 'A1',
     icon: '🧩',
     description: 'Phrasal verbs mais usados no inglês do dia a dia',
     url: 'lessons/licao-29-phrasal-verbs.html',
@@ -291,7 +291,7 @@ const LESSONS = [
   {
     id: 'licao-30-revisao-semestre-2',
     name: 'Lição 30 — Revisão Geral do Semestre 2 🎓',
-    level: 'A2',
+    level: 'A1',
     icon: '🎓',
     description: 'Revisão completa de todo o conteúdo do Semestre 2',
     url: 'lessons/licao-30-revisao-semestre-2.html',
