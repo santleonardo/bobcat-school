@@ -17,6 +17,18 @@ const TESTS = [
   }
 ];
 
+// Catálogo de matérias extras (aba "Extra"). Diferente das lições de inglês,
+// aqui não há bloqueio nem pré-requisito: todo aluno pode acessar direto.
+const EXTRAS = [
+  {
+    id: 'manual-portugues',
+    name: 'Manual Prático de Língua Portuguesa',
+    icon: '📘',
+    description: 'Morfologia, sintaxe, concordância, crase, pontuação e mais — com exercícios',
+    url: 'lessons/manual-portugues.html'
+  }
+];
+
 const LESSONS = [
   {
     id: 'pronuncia-essencial',
@@ -315,6 +327,7 @@ function showScreen(id) {
 
   if (id === 'home') renderHome();
   if (id === 'tests') renderTests();
+  if (id === 'extra') renderExtras();
   if (id === 'profile-view') renderProfileView();
 }
 
@@ -628,6 +641,31 @@ async function renderTests() {
     }
 
     card.addEventListener('click', () => { window.location.href = test.url; });
+    list.appendChild(card);
+  });
+}
+
+// ---------- Tela Extra (matérias bônus, sem requisito de acesso) ----------
+
+function renderExtras() {
+  const list = document.getElementById('extra-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  EXTRAS.forEach(extra => {
+    const card = document.createElement('div');
+    card.className = 'lesson-card';
+    card.innerHTML = `
+      <div class="icon">${extra.icon}</div>
+      <div class="info">
+        <div class="name">${extra.name}</div>
+        <div class="level">${extra.description}</div>
+      </div>
+      <div class="badge">Aberto</div>
+      <div class="chevron">›</div>
+    `;
+    // Sem verificação de bloqueio: matéria extra é sempre acessível.
+    card.addEventListener('click', () => { window.location.href = extra.url; });
     list.appendChild(card);
   });
 }
