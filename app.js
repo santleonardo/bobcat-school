@@ -912,6 +912,21 @@ async function boot() {
     btn.addEventListener('click', () => showScreen(btn.dataset.screen));
   });
 
+  const topbarHomeLink = document.getElementById('topbar-home-link');
+  if (topbarHomeLink) {
+    const goHome = () => {
+      // só navega se o app já foi iniciado (aluno logado / perfil criado);
+      // nas telas de login e criação de perfil, o clique não faz nada.
+      if (document.getElementById('bottom-nav').style.display !== 'none') {
+        showScreen('menu');
+      }
+    };
+    topbarHomeLink.addEventListener('click', goHome);
+    topbarHomeLink.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goHome(); }
+    });
+  }
+
   showLoadingState(false);
 
   if (isUsingCloud() && !isLoggedIn()) {

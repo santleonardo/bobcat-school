@@ -36,7 +36,10 @@ html, body {
   gap: 10px;
   padding: 16px 18px 12px 18px;
   border-bottom: 3px solid var(--orange);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
+.topbar:active { opacity: 0.7; }
 .topbar img { height: 40px; }
 .topbar .brand { font-weight: 800; font-size: 18px; color: var(--orange-dark); }
 .topbar .brand small { display:block; font-weight: 400; font-size: 11px; color: #777; font-style: italic; }
