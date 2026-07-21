@@ -268,6 +268,20 @@
     </button>
   </div>
 
+  <!-- MODAL: senha para zerar progresso -->
+  <div class="modal-overlay hidden" id="reset-password-modal">
+    <div class="modal-card">
+      <h3>🔒 Confirmar com senha</h3>
+      <p>Zerar o progresso apaga o resultado de todas as lições. Digite a senha para confirmar.</p>
+      <input type="password" id="reset-password-input" placeholder="Senha" autocomplete="off">
+      <p class="modal-error hidden" id="reset-password-error">Senha incorreta.</p>
+      <div class="modal-actions">
+        <button class="btn secondary" id="reset-password-cancel">Cancelar</button>
+        <button class="btn" id="reset-password-confirm">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

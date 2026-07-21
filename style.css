@@ -456,3 +456,38 @@ body.on-auth-screen .topbar { display: none; }
   border-radius: 16px;
 }
 .menu-btn-label { font-size: 14.5px; font-weight: 700; color: var(--ink); }
+
+/* ── MODAL DE SENHA (zerar progresso) ────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 500;
+}
+.modal-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 22px 20px;
+  width: 100%;
+  max-width: 320px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+}
+.modal-card h3 { margin: 0 0 8px 0; font-size: 16.5px; color: var(--ink); }
+.modal-card p { margin: 0 0 14px 0; font-size: 13px; color: #777; line-height: 1.5; }
+.modal-card input[type=password] {
+  width: 100%;
+  padding: 11px 12px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+.modal-card input[type=password]:focus { outline: none; border-color: var(--orange); }
+.modal-error { color: var(--bad, #C0392B); font-size: 12.5px; margin: 8px 0 0 0 !important; }
+.modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+.modal-actions .btn { margin-top: 0; }

@@ -583,6 +583,59 @@ async function renderMessages() {
   thread.scrollTop = thread.scrollHeight;
 }
 
+// ---------- Modal de senha: zerar progresso das lições ----------
+
+function openResetPasswordModal() {
+  const modal = document.getElementById('reset-password-modal');
+  const input = document.getElementById('reset-password-input');
+  const error = document.getElementById('reset-password-error');
+  input.value = '';
+  error.classList.add('hidden');
+  modal.classList.remove('hidden');
+  input.focus();
+}
+
+function closeResetPasswordModal() {
+  document.getElementById('reset-password-modal').classList.add('hidden');
+}
+
+async function confirmResetPassword() {
+  const input = document.getElementById('reset-password-input');
+  const error = document.getElementById('reset-password-error');
+  const configuredPassword = (window.APP_CONFIG && window.APP_CONFIG.resetProgressPassword) || '';
+
+  if (!configuredPassword) {
+    error.textContent = 'Nenhuma senha configurada em config.js (resetProgressPassword).';
+    error.classList.remove('hidden');
+    return;
+  }
+
+  if (input.value !== configuredPassword) {
+    error.textContent = 'Senha incorreta.';
+    error.classList.remove('hidden');
+    input.value = '';
+    input.focus();
+    return;
+  }
+
+  closeResetPasswordModal();
+  await resetAllProgress();
+  await renderProfileView();
+  alert('Progresso zerado.');
+}
+
+function setupResetPasswordModal() {
+  document.getElementById('reset-password-cancel').addEventListener('click', closeResetPasswordModal);
+  document.getElementById('reset-password-confirm').addEventListener('click', confirmResetPassword);
+  document.getElementById('reset-password-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'reset-password-modal') closeResetPasswordModal();
+  });
+  document.getElementById('reset-password-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); confirmResetPassword(); }
+    if (e.key === 'Escape') closeResetPasswordModal();
+  });
+}
+
 function setupProfileViewScreen() {
   initAvatarPicker('avatar-picker-edit', (avatar) => { selectedAvatarEdit = avatar; });
 
@@ -610,13 +663,7 @@ function setupProfileViewScreen() {
     showScreen('home');
   });
 
-  document.getElementById('btn-reset-progress').addEventListener('click', async () => {
-    if (confirm('Isso vai apagar o progresso de todas as lições. Tem certeza?')) {
-      await resetAllProgress();
-      await renderProfileView();
-      alert('Progresso zerado.');
-    }
-  });
+  document.getElementById('btn-reset-progress').addEventListener('click', openResetPasswordModal);
 
   document.getElementById('btn-logout').addEventListener('click', async () => {
     if (!confirm('Sair da conta? Você vai precisar do usuário e senha para entrar de novo.')) return;
@@ -903,6 +950,7 @@ async function boot() {
   setupAuthScreen();
   setupProfileScreen();
   setupProfileViewScreen();
+  setupResetPasswordModal();
 
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => showScreen(btn.dataset.screen));
