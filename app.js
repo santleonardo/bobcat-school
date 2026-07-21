@@ -585,6 +585,17 @@ async function renderMessages() {
 function setupProfileViewScreen() {
   initAvatarPicker('avatar-picker-edit', (avatar) => { selectedAvatarEdit = avatar; });
 
+  document.getElementById('chat-toggle').addEventListener('click', () => {
+    const panel = document.getElementById('chat-panel');
+    const toggle = document.getElementById('chat-toggle');
+    const nowOpen = panel.classList.toggle('hidden') === false;
+    toggle.classList.toggle('open', nowOpen);
+    if (nowOpen) {
+      const thread = document.getElementById('chat-thread');
+      thread.scrollTop = thread.scrollHeight;
+    }
+  });
+
   document.getElementById('btn-update-profile').addEventListener('click', async () => {
     const name = document.getElementById('edit-name').value.trim();
     if (!name) return;

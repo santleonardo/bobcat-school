@@ -341,13 +341,35 @@ body.on-auth-screen .topbar { display: none; }
 }
 
 /* ── CHAT COM O PROFESSOR ────────────────────── */
+.chat-box {
+  background: var(--cream-2);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.chat-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  padding: 14px 16px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--orange-dark);
+  cursor: pointer;
+  font-family: inherit;
+}
+.chat-toggle-icon { font-size: 13px; color: #999; transition: transform 0.2s ease; }
+.chat-toggle.open .chat-toggle-icon { transform: rotate(180deg); }
+.chat-panel { padding: 0 12px 12px 12px; }
 .chat-thread {
   max-height: 320px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  background: var(--cream-2);
+  background: #fff;
   border-radius: 12px;
   padding: 12px;
   margin-bottom: 10px;

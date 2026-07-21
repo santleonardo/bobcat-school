@@ -144,12 +144,19 @@
   <div class="screen hidden" id="screen-profile-view">
     <h2 class="screen-title">Meu perfil</h2>
 
-    <h2 class="screen-title" style="font-size:16px; margin:0 0 10px 0;">💬 Fale com o professor</h2>
-    <div id="messages-notice"></div>
-    <div class="chat-thread" id="chat-thread"></div>
-    <div class="chat-input-row">
-      <textarea id="chat-input" rows="2" placeholder="Escreva sua dúvida ou mensagem para o professor..."></textarea>
-      <button class="btn" id="btn-send-message" style="width:auto; padding:0 18px;">Enviar</button>
+    <div class="chat-box" id="chat-box">
+      <button class="chat-toggle" id="chat-toggle">
+        <span>💬 Fale com o professor</span>
+        <span class="chat-toggle-icon" id="chat-toggle-icon">▾</span>
+      </button>
+      <div class="chat-panel hidden" id="chat-panel">
+        <div id="messages-notice"></div>
+        <div class="chat-thread" id="chat-thread"></div>
+        <div class="chat-input-row">
+          <textarea id="chat-input" rows="2" placeholder="Escreva sua dúvida ou mensagem para o professor..."></textarea>
+          <button class="btn" id="btn-send-message" style="width:auto; padding:0 18px;">Enviar</button>
+        </div>
+      </div>
     </div>
 
     <div class="hello-card" style="margin-top:24px;">
