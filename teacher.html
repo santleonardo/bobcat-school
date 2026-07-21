@@ -10,6 +10,7 @@
 <style>
   :root { --orange: #D9793F; --orange-dark: #C9622A; --cream: #FBEFE6; --cream-2: #F7F1EC; --ok:#2E8B57; --bad:#C0392B; }
   * { box-sizing: border-box; }
+  .hidden { display: none !important; }
   body { font-family: "Segoe UI", Arial, sans-serif; background: #fdfaf7; margin: 0; color: #2b2b2b; }
   .wrap { max-width: 960px; margin: 0 auto; padding: 24px 20px 60px 20px; }
   .topbar { display:flex; align-items:center; gap:10px; border-bottom:3px solid var(--orange); padding-bottom:14px; margin-bottom:18px; }
@@ -70,6 +71,51 @@
     font-size:11.5px; font-weight:700; color:var(--orange-dark); background: var(--cream);
     border-radius:20px; padding:4px 10px; white-space:nowrap;
   }
+
+  /* ── MENSAGENS ────────────────────────────── */
+  .unread-dot {
+    display:inline-block; width:8px; height:8px; border-radius:50%;
+    background:var(--bad); margin-left:6px; vertical-align:middle;
+  }
+  .msg-layout { display:flex; gap:16px; align-items:flex-start; }
+  .msg-conv-list {
+    width: 280px; flex-shrink:0; background:#fff; border:1px solid #eee; border-radius:10px;
+    overflow:hidden; max-height: 560px; overflow-y:auto;
+  }
+  .conv-item {
+    display:flex; align-items:center; gap:10px; padding:12px 14px; cursor:pointer;
+    border-bottom:1px solid #f2ede8;
+  }
+  .conv-item:hover { background: var(--cream-2); }
+  .conv-item.active { background: var(--cream); }
+  .conv-item .avatar { font-size:22px; }
+  .conv-item .info { flex:1; min-width:0; }
+  .conv-item .name { font-weight:700; font-size:13px; }
+  .conv-item .preview { font-size:11.5px; color:#888; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .conv-item .dot { width:9px; height:9px; border-radius:50%; background:var(--bad); flex-shrink:0; }
+
+  .msg-thread-panel {
+    flex:1; background:#fff; border:1px solid #eee; border-radius:10px;
+    display:flex; flex-direction:column; min-height: 560px; max-height:560px;
+  }
+  .thread-header { padding:14px 16px; border-bottom:1px solid #eee; font-weight:800; color:var(--orange-dark); display:flex; align-items:center; gap:10px; }
+  .thread-body { flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:8px; background: var(--cream-2); }
+  .bubble { max-width:75%; padding:9px 12px; border-radius:14px; font-size:13.5px; line-height:1.45; word-wrap:break-word; }
+  .bubble .meta { display:block; font-size:10px; font-weight:700; opacity:.65; margin-bottom:3px; }
+  .bubble.student { align-self:flex-start; background:#fff; border:1px solid #eee; border-bottom-left-radius:4px; }
+  .bubble.teacher { align-self:flex-end; background:var(--orange); color:#fff; border-bottom-right-radius:4px; }
+  .thread-input-row { display:flex; gap:8px; padding:12px; border-top:1px solid #eee; }
+  .thread-input-row textarea {
+    flex:1; resize:none; border:1px solid #ddd; border-radius:8px; padding:9px 11px; font-size:13.5px; font-family:inherit;
+  }
+  .thread-input-row textarea:focus { outline:none; border-color: var(--orange); }
+  .thread-input-row .btn { padding:0 16px; }
+
+  @media (max-width: 720px) {
+    .msg-layout { flex-direction:column; }
+    .msg-conv-list { width:100%; max-height:220px; }
+    .msg-thread-panel { width:100%; }
+  }
 </style>
 </head>
 <body>
@@ -85,6 +131,7 @@
   <div class="tabs">
     <button class="tab-btn active" id="tab-btn-progress" onclick="switchTab('progress')">📊 Progresso da turma</button>
     <button class="tab-btn" id="tab-btn-lessons" onclick="switchTab('lessons')">📚 Todas as lições</button>
+    <button class="tab-btn" id="tab-btn-messages" onclick="switchTab('messages')">💬 Mensagens<span id="unread-dot" class="unread-dot hidden"></span></button>
   </div>
 
   <div id="panel-progress" class="tab-panel active">
@@ -105,6 +152,18 @@
   <div id="panel-lessons" class="tab-panel">
     <div class="lesson-list-meta" id="lessons-meta"></div>
     <div id="lessons-slot"></div>
+  </div>
+
+  <div id="panel-messages" class="tab-panel">
+    <div id="messages-notice-slot"></div>
+    <div id="messages-content" style="display:none;">
+      <div class="msg-layout">
+        <div class="msg-conv-list" id="conv-list"></div>
+        <div class="msg-thread-panel" id="thread-panel">
+          <div class="empty" style="padding:60px 20px;">Selecione um aluno na lista ao lado para ver a conversa.</div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -156,9 +215,12 @@ const LESSONS_CATALOG = [
 function switchTab(tab) {
   document.getElementById('panel-progress').classList.toggle('active', tab === 'progress');
   document.getElementById('panel-lessons').classList.toggle('active', tab === 'lessons');
+  document.getElementById('panel-messages').classList.toggle('active', tab === 'messages');
   document.getElementById('tab-btn-progress').classList.toggle('active', tab === 'progress');
   document.getElementById('tab-btn-lessons').classList.toggle('active', tab === 'lessons');
+  document.getElementById('tab-btn-messages').classList.toggle('active', tab === 'messages');
   if (tab === 'lessons') renderLessonsTab();
+  if (tab === 'messages') loadMessages();
 }
 
 function renderLessonsTab() {
@@ -202,8 +264,8 @@ function renderLessonsTab() {
 async function ensureClient() {
   const cfg = window.SUPABASE_CONFIG;
   const configured = cfg && cfg.url && cfg.anonKey && !cfg.url.includes('SEU-PROJETO');
-  if (!configured) {
-    showNotice('⚠️ O Supabase ainda não foi configurado em <code>config.js</code>. Sem isso, este painel não tem de onde puxar os dados da turma — ele só funciona com Supabase (não existe versão "local" do painel do professor, já que o objetivo aqui é ver todos os alunos juntos).', true);
+  if (!configured || !window.supabase) {
+    showNotice('⚠️ O Supabase ainda não foi configurado em <code>config.js</code> (ou a biblioteca não carregou — verifique sua conexão). Sem isso, este painel não tem de onde puxar os dados da turma — ele só funciona com Supabase (não existe versão "local" do painel do professor, já que o objetivo aqui é ver todos os alunos juntos).', true);
     return null;
   }
   const client = window.supabase.createClient(cfg.url, cfg.anonKey);
@@ -314,7 +376,167 @@ async function loadData() {
   document.getElementById('table-slot').innerHTML = html;
 }
 
-document.addEventListener('DOMContentLoaded', loadData);
+document.addEventListener('DOMContentLoaded', () => { loadData(); checkUnreadMessages(); });
+
+// ---------- Mensagens (canal de comunicação com os alunos) ----------
+
+const LAST_SEEN_KEY = 'bobcat_teacher_last_seen'; // { [studentId]: isoTimestamp }, salvo neste navegador
+let activeConvId = null;
+let allMessagesCache = [];
+let profilesCache = [];
+
+function getLastSeenMap() {
+  try { return JSON.parse(localStorage.getItem(LAST_SEEN_KEY)) || {}; } catch (e) { return {}; }
+}
+function markSeen(studentId) {
+  const map = getLastSeenMap();
+  map[studentId] = new Date().toISOString();
+  localStorage.setItem(LAST_SEEN_KEY, JSON.stringify(map));
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : str;
+  return div.innerHTML;
+}
+
+async function checkUnreadMessages() {
+  const client = await ensureClient();
+  if (!client) return;
+  const { data: messages } = await client.from('messages').select('user_id, sender, created_at').eq('sender', 'student');
+  const dot = document.getElementById('unread-dot');
+  if (!messages || messages.length === 0) { dot.classList.add('hidden'); return; }
+  const lastSeen = getLastSeenMap();
+  const hasUnread = messages.some(m => !lastSeen[m.user_id] || new Date(m.created_at) > new Date(lastSeen[m.user_id]));
+  dot.classList.toggle('hidden', !hasUnread);
+}
+
+async function loadMessages() {
+  const client = await ensureClient();
+  const slot = document.getElementById('messages-notice-slot');
+  if (!client) {
+    slot.innerHTML = '<div class="notice error">⚠️ O Supabase ainda não foi configurado — o canal de mensagens não funciona sem ele.</div>';
+    document.getElementById('messages-content').style.display = 'none';
+    return;
+  }
+
+  const { data: profiles, error: pErr } = await client.from('profiles').select('*');
+  const { data: messages, error: mErr } = await client.from('messages').select('*').order('created_at', { ascending: true });
+
+  if (pErr || mErr) {
+    slot.innerHTML = '<div class="notice error">⚠️ Erro ao consultar o Supabase: ' + ((pErr && pErr.message) || (mErr && mErr.message)) + '</div>';
+    return;
+  }
+
+  slot.innerHTML = '';
+  document.getElementById('messages-content').style.display = 'block';
+  profilesCache = profiles || [];
+  allMessagesCache = messages || [];
+
+  renderConvList();
+  if (activeConvId) renderThread(activeConvId);
+  checkUnreadMessages();
+}
+
+function renderConvList() {
+  const lastSeen = getLastSeenMap();
+  const byStudent = {};
+  allMessagesCache.forEach(m => {
+    if (!byStudent[m.user_id]) byStudent[m.user_id] = [];
+    byStudent[m.user_id].push(m);
+  });
+
+  // uma conversa por aluno com perfil — mesmo quem ainda não mandou nada,
+  // para o professor poder puxar assunto primeiro.
+  const convs = profilesCache.map(p => {
+    const msgs = byStudent[p.id] || [];
+    const last = msgs[msgs.length - 1];
+    const unread = msgs.some(m => m.sender === 'student' && (!lastSeen[p.id] || new Date(m.created_at) > new Date(lastSeen[p.id])));
+    return { profile: p, lastMsg: last, unread, hasMessages: msgs.length > 0 };
+  });
+
+  convs.sort((a, b) => {
+    if (a.unread !== b.unread) return a.unread ? -1 : 1;
+    const at = a.lastMsg ? new Date(a.lastMsg.created_at).getTime() : 0;
+    const bt = b.lastMsg ? new Date(b.lastMsg.created_at).getTime() : 0;
+    if (at !== bt) return bt - at;
+    return a.profile.name.localeCompare(b.profile.name);
+  });
+
+  const list = document.getElementById('conv-list');
+  if (convs.length === 0) {
+    list.innerHTML = '<div class="empty" style="padding:30px 14px;">Nenhum aluno com perfil criado ainda.</div>';
+    return;
+  }
+
+  list.innerHTML = convs.map(c => {
+    const preview = c.lastMsg
+      ? (c.lastMsg.sender === 'teacher' ? 'Você: ' : '') + c.lastMsg.body
+      : 'Nenhuma mensagem ainda';
+    return `<div class="conv-item ${c.profile.id === activeConvId ? 'active' : ''}" onclick="openConversation('${c.profile.id}')">
+      <div class="avatar">${c.profile.avatar}</div>
+      <div class="info">
+        <div class="name">${escapeHtml(c.profile.name)}</div>
+        <div class="preview">${escapeHtml(preview)}</div>
+      </div>
+      ${c.unread ? '<div class="dot"></div>' : ''}
+    </div>`;
+  }).join('');
+}
+
+function openConversation(studentId) {
+  activeConvId = studentId;
+  markSeen(studentId);
+  renderConvList();
+  renderThread(studentId);
+  checkUnreadMessages();
+}
+
+function renderThread(studentId) {
+  const profile = profilesCache.find(p => p.id === studentId);
+  const msgs = allMessagesCache.filter(m => m.user_id === studentId);
+  const panel = document.getElementById('thread-panel');
+  if (!profile) { panel.innerHTML = '<div class="empty" style="padding:60px 20px;">Aluno não encontrado.</div>'; return; }
+
+  const bodyHtml = msgs.length === 0
+    ? '<div class="empty" style="padding:30px 10px;">Nenhuma mensagem ainda. Mande um "oi" para puxar assunto! 👋</div>'
+    : msgs.map(m => {
+        const who = m.sender === 'teacher' ? 'Você' : profile.name;
+        const date = new Date(m.created_at).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+        return `<div class="bubble ${m.sender}"><span class="meta">${escapeHtml(who)} · ${date}</span>${escapeHtml(m.body)}</div>`;
+      }).join('');
+
+  panel.innerHTML = `
+    <div class="thread-header">${profile.avatar} ${escapeHtml(profile.name)} <span style="font-weight:400;color:#999;font-size:12px;">· nível ${profile.level}</span></div>
+    <div class="thread-body" id="thread-body">${bodyHtml}</div>
+    <div class="thread-input-row">
+      <textarea id="thread-input" rows="1" placeholder="Escreva uma resposta..."></textarea>
+      <button class="btn" id="thread-send-btn" onclick="sendTeacherReply('${studentId}')">Enviar</button>
+    </div>
+  `;
+  const body = document.getElementById('thread-body');
+  body.scrollTop = body.scrollHeight;
+  document.getElementById('thread-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendTeacherReply(studentId); }
+  });
+}
+
+async function sendTeacherReply(studentId) {
+  const input = document.getElementById('thread-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const btn = document.getElementById('thread-send-btn');
+  btn.disabled = true;
+
+  const client = await ensureClient();
+  const { error } = await client.from('messages').insert({ user_id: studentId, sender: 'teacher', body: text });
+  btn.disabled = false;
+  if (error) { alert('Não foi possível enviar: ' + error.message); return; }
+
+  input.value = '';
+  await loadMessages();
+  openConversation(studentId);
+}
 </script>
 </body>
 </html>

@@ -537,6 +537,49 @@ async function renderProfileView() {
 
   const logoutBtn = document.getElementById('btn-logout');
   if (logoutBtn) logoutBtn.classList.toggle('hidden', !isUsingCloud());
+
+  await renderMessages();
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+async function renderMessages() {
+  const notice = document.getElementById('messages-notice');
+  const thread = document.getElementById('chat-thread');
+  const input = document.getElementById('chat-input');
+  const sendBtn = document.getElementById('btn-send-message');
+  if (!thread) return;
+
+  if (!messagingAvailable()) {
+    notice.innerHTML = '<div class="chat-empty" style="background:var(--cream-2); border-radius:10px; padding:12px;">💾 Esse canal só funciona com conta na nuvem (Supabase). Crie uma conta com e-mail e senha para poder falar com o professor.</div>';
+    thread.innerHTML = '';
+    input.disabled = true;
+    sendBtn.disabled = true;
+    return;
+  }
+
+  notice.innerHTML = '';
+  input.disabled = false;
+  sendBtn.disabled = false;
+
+  const messages = await getMyMessages();
+  if (messages.length === 0) {
+    thread.innerHTML = '<div class="chat-empty">Nenhuma mensagem ainda. Mande a primeira dúvida para o professor! 👋</div>';
+  } else {
+    thread.innerHTML = messages.map(m => {
+      const who = m.sender === 'teacher' ? 'Professor(a)' : 'Você';
+      const date = new Date(m.created_at).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+      return `<div class="chat-bubble ${m.sender}">
+        <span class="chat-meta">${who} · ${date}</span>
+        ${escapeHtml(m.body)}
+      </div>`;
+    }).join('');
+  }
+  thread.scrollTop = thread.scrollHeight;
 }
 
 function setupProfileViewScreen() {
@@ -569,6 +612,26 @@ function setupProfileViewScreen() {
     document.getElementById('bottom-nav').style.display = 'none';
     setAuthMode('login');
     showScreen('auth');
+  });
+
+  document.getElementById('btn-send-message').addEventListener('click', async () => {
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+    const btn = document.getElementById('btn-send-message');
+    btn.disabled = true;
+    const result = await sendMessageToTeacher(text);
+    btn.disabled = false;
+    if (!result.ok) { alert(result.message); return; }
+    input.value = '';
+    await renderMessages();
+  });
+
+  document.getElementById('chat-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      document.getElementById('btn-send-message').click();
+    }
   });
 }
 

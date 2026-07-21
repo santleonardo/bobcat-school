@@ -227,3 +227,37 @@ async function resetAllProgress() {
   }
   localStorage.setItem(PROGRESS_KEY, JSON.stringify({}));
 }
+
+// ---------- Mensagens (canal de comunicação com o professor) ----------
+// Esse recurso só existe com o Supabase configurado: sem nuvem não há como
+// a mensagem "sair" do aparelho do aluno e chegar ao painel do professor.
+
+function messagingAvailable() {
+  return useSupabase && !!currentUserId;
+}
+
+// Retorna a conversa do aluno logado, mais antiga primeiro.
+async function getMyMessages() {
+  if (!messagingAvailable()) return [];
+  const { data, error } = await supabaseClient
+    .from('messages')
+    .select('*')
+    .eq('user_id', currentUserId)
+    .order('created_at', { ascending: true });
+  if (error) { console.error(error); return []; }
+  return data || [];
+}
+
+// Envia uma mensagem do aluno para o professor.
+async function sendMessageToTeacher(body) {
+  if (!messagingAvailable()) return { ok: false, message: 'Esse recurso precisa de uma conta na nuvem (Supabase) para funcionar.' };
+  const text = (body || '').trim();
+  if (!text) return { ok: false, message: 'Escreva algo antes de enviar.' };
+  const { error } = await supabaseClient.from('messages').insert({
+    user_id: currentUserId,
+    sender: 'student',
+    body: text
+  });
+  if (error) { console.error(error); return { ok: false, message: 'Não foi possível enviar. Tente novamente.' }; }
+  return { ok: true };
+}

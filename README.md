@@ -137,3 +137,9 @@ Troque `SEU_VIDEO_ID` pelo ID do vídeo escolhido (a parte depois de `watch?v=` 
 ## Painel do professor
 
 Depois de configurar o Supabase, abra `https://SEU-SITE.vercel.app/teacher.html` — mostra todos os alunos que já criaram perfil, pontuação por lição e data da última tentativa. Dá pra favoritar esse link separado do app dos alunos.
+
+## Canal de mensagens (aluno ↔ professor)
+
+Cada aluno tem, no próprio perfil (aba "Perfil" → "💬 Fale com o professor"), um campo para mandar mensagens/dúvidas. Elas chegam para o professor na aba "💬 Mensagens" de `teacher.html`, organizadas por aluno (como uma caixa de conversas), e o professor pode responder por lá — a resposta aparece de volta no app do aluno.
+
+Esse recurso **só funciona com o Supabase configurado** (não existe versão local/offline, já que a mensagem precisa "viajar" de um aparelho para o outro). Se você já tinha o Supabase configurado antes dessa atualização, é preciso rodar a nova parte do `schema.sql` (a tabela `messages` e as políticas dela, logo abaixo da tabela `progress`) no SQL Editor do Supabase — o restante do arquivo pode ser executado de novo sem problema, os `create table if not exists` e `drop policy if exists` são seguros para rodar mais de uma vez.

@@ -57,6 +57,48 @@ create policy "Authenticated can view all progress"
   on progress for select
   using (auth.role() = 'authenticated');
 
+-- Tabela de mensagens (canal de comunicação aluno ↔ professor)
+-- Cada linha é uma mensagem dentro da "conversa" do aluno (user_id) com o
+-- professor. sender indica quem escreveu: 'student' (o próprio aluno) ou
+-- 'teacher' (o professor, respondendo pelo painel teacher.html).
+create table if not exists messages (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  sender text not null check (sender in ('student', 'teacher')),
+  body text not null,
+  created_at timestamptz not null default now()
+);
+
+alter table messages enable row level security;
+
+-- Alunos só enxergam e criam mensagens na própria conversa, e só como 'student'.
+drop policy if exists "Students manage their own messages" on messages;
+create policy "Students manage their own messages"
+  on messages for all
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id and sender = 'student');
+
+-- Qualquer usuário autenticado pode LER todas as conversas — é o que
+-- permite o painel do professor (teacher.html, que usa login anônimo)
+-- listar as mensagens de todos os alunos. Mesmo trade-off já assumido
+-- acima para profiles/progress: leitura ampla, escrita restrita.
+drop policy if exists "Authenticated can view all messages" on messages;
+create policy "Authenticated can view all messages"
+  on messages for select
+  using (auth.role() = 'authenticated');
+
+-- Permite que o painel do professor (sessão anônima) insira respostas em
+-- qualquer conversa, desde que marcadas como sender = 'teacher'. Como o
+-- teacher.html não tem uma conta de professor "de verdade" (usa login
+-- anônimo do Supabase), não dá para restringir isso a um único usuário
+-- específico — qualquer sessão autenticada pode enviar como 'teacher'.
+-- Para uma turma pequena costuma ser um risco aceitável; se quiser um
+-- login de professor de verdade (com senha), me avise que ajusto.
+drop policy if exists "Authenticated can reply as teacher" on messages;
+create policy "Authenticated can reply as teacher"
+  on messages for insert
+  with check (auth.role() = 'authenticated' and sender = 'teacher');
+
 -- ============================================================
 -- IMPORTANTE: também é preciso habilitar login por e-mail/senha:
 -- painel do Supabase → Authentication → Providers → Email → Enable.
