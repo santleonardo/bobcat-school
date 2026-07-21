@@ -311,6 +311,8 @@ body.on-auth-screen .topbar { display: none; }
   display: flex;
   box-shadow: 0 -2px 8px rgba(0,0,0,0.04);
 }
+.bottom-nav.single { justify-content: center; }
+.bottom-nav.single .nav-btn { flex: none; padding: 12px 40px 10px 40px; }
 .nav-btn {
   flex: 1;
   border: none;
