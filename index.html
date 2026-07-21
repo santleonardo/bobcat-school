@@ -184,7 +184,12 @@
         <div id="messages-notice"></div>
         <div class="chat-thread" id="chat-thread"></div>
         <div class="chat-input-row">
-          <textarea id="chat-input" rows="2" placeholder="Escreva sua dúvida ou mensagem para o professor..."></textarea>
+          <div class="chat-input-main">
+            <div class="chat-file-preview hidden" id="chat-file-preview"></div>
+            <textarea id="chat-input" rows="2" placeholder="Escreva sua dúvida ou mensagem para o professor..."></textarea>
+          </div>
+          <input type="file" id="chat-file-input" class="hidden" accept=".pdf,.doc,.docx,.odt,.rtf,.txt,.xls,.xlsx,.csv,.ppt,.pptx,.jpg,.jpeg,.png">
+          <button class="btn-icon" id="btn-attach-file" type="button" title="Anexar arquivo (PDF, Word, texto, planilha, imagem...)">📎</button>
           <button class="btn" id="btn-send-message" style="width:auto; padding:0 18px;">Enviar</button>
         </div>
       </div>

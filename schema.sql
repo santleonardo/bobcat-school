@@ -66,7 +66,14 @@ create table if not exists messages (
   user_id uuid not null references auth.users(id) on delete cascade,
   sender text not null check (sender in ('student', 'teacher')),
   body text not null,
-  created_at timestamptz not null default now()
+  created_at timestamptz not null default now(),
+  -- Anexo opcional (PDF, Word, texto, planilha, imagem etc.). Uma mensagem
+  -- pode ter só texto, só arquivo, ou os dois — nunca os dois vazios (isso é
+  -- validado no app, não aqui no banco).
+  file_url text,
+  file_name text,
+  file_type text,
+  file_size bigint
 );
 
 alter table messages enable row level security;
@@ -98,6 +105,33 @@ drop policy if exists "Authenticated can reply as teacher" on messages;
 create policy "Authenticated can reply as teacher"
   on messages for insert
   with check (auth.role() = 'authenticated' and sender = 'teacher');
+
+-- ============================================================
+-- Storage: anexos das mensagens (aluno ↔ professor)
+-- Bucket público (mesmo trade-off já assumido nas tabelas acima: qualquer
+-- pessoa com o link do arquivo consegue abrir, mas ninguém consegue listar
+-- ou enviar arquivo sem estar autenticado). Isso permite mostrar o anexo
+-- direto num link, sem precisar gerar URL assinada.
+-- ============================================================
+insert into storage.buckets (id, name, public)
+values ('mensagens-arquivos', 'mensagens-arquivos', true)
+on conflict (id) do nothing;
+
+-- Qualquer usuário autenticado (aluno logado ou a sessão anônima do painel
+-- do professor) pode enviar arquivos para este bucket.
+drop policy if exists "Authenticated can upload message files" on storage.objects;
+create policy "Authenticated can upload message files"
+  on storage.objects for insert
+  with check (bucket_id = 'mensagens-arquivos' and auth.role() = 'authenticated');
+
+-- Qualquer usuário autenticado pode listar/ler os arquivos (necessário para
+-- o painel do professor enxergar anexos de qualquer aluno). O acesso via
+-- link público (usado dentro do app) não passa por essa política, mas ela
+-- ainda é necessária para chamadas autenticadas via SDK.
+drop policy if exists "Authenticated can read message files" on storage.objects;
+create policy "Authenticated can read message files"
+  on storage.objects for select
+  using (bucket_id = 'mensagens-arquivos' and auth.role() = 'authenticated');
 
 -- Tabela de senhas para "zerar progresso" — uma por aluno, definida pelo
 -- professor no painel (teacher.html). O aluno só consegue apagar o próprio

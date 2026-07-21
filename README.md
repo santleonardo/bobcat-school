@@ -144,6 +144,14 @@ Cada aluno tem, no próprio perfil (aba "Perfil" → "💬 Fale com o professor"
 
 Esse recurso **só funciona com o Supabase configurado** (não existe versão local/offline, já que a mensagem precisa "viajar" de um aparelho para o outro). Se você já tinha o Supabase configurado antes dessa atualização, é preciso rodar a nova parte do `schema.sql` (a tabela `messages` e as políticas dela, logo abaixo da tabela `progress`) no SQL Editor do Supabase — o restante do arquivo pode ser executado de novo sem problema, os `create table if not exists` e `drop policy if exists` são seguros para rodar mais de uma vez.
 
+### Enviando arquivos pelo chat (PDF, Word, texto, planilha, imagem...)
+
+Ao lado da caixa de mensagem, tanto no app do aluno quanto no painel do professor, tem um botão 📎 para anexar um arquivo — junto com o texto, ou sozinho, sem escrever nada. Tipos aceitos: PDF, Word (`.doc`/`.docx`), OpenDocument (`.odt`), RTF, texto (`.txt`), planilha (`.xls`/`.xlsx`/`.csv`), apresentação (`.ppt`/`.pptx`) e imagens (`.jpg`/`.png`). Tamanho máximo: 10MB por arquivo. O arquivo aparece na conversa como um cartão clicável que abre/baixa o anexo.
+
+Os arquivos ficam guardados no **Supabase Storage**, num bucket chamado `mensagens-arquivos` (criado automaticamente ao rodar o `schema.sql` — não precisa criar nada manualmente no painel do Supabase). Se você já tinha o Supabase configurado antes dessa atualização, rode o `schema.sql` de novo no SQL Editor: ele adiciona as colunas novas na tabela `messages` (`file_url`, `file_name`, `file_type`, `file_size`) e cria o bucket + políticas de Storage, tudo de forma segura para rodar mais de uma vez.
+
+> **Sobre segurança dos arquivos:** o bucket é público (mesmo trade-off já assumido no resto do projeto) — quem tiver o link direto do arquivo consegue abrir, mas ninguém consegue enviar ou listar arquivos sem estar autenticado (aluno logado ou o painel do professor). Para uma turma pequena costuma ser um risco aceitável.
+
 ## Senha para zerar progresso (uma por aluno)
 
 O botão "Zerar progresso das lições" (no perfil do aluno) agora pede uma senha antes de apagar qualquer coisa. Essa senha é **definida pelo professor, individualmente para cada aluno**, na aba "🔑 Senhas" de `teacher.html` — basta digitar a senha desejada no campo do aluno e clicar em Salvar (deixar em branco remove a senha, e sem senha o aluno não consegue zerar sozinho).

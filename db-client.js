@@ -252,6 +252,43 @@ function messagingAvailable() {
   return useSupabase && !!currentUserId;
 }
 
+// ---------- Anexos de mensagens (PDF, Word, texto, planilha, imagem etc.) ----------
+
+const MESSAGE_FILES_BUCKET = 'mensagens-arquivos';
+const MAX_MESSAGE_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+const ALLOWED_MESSAGE_FILE_EXTENSIONS = [
+  'pdf', 'doc', 'docx', 'odt', 'rtf', 'txt',
+  'xls', 'xlsx', 'csv', 'ppt', 'pptx',
+  'jpg', 'jpeg', 'png'
+];
+
+function getFileExtension(name) {
+  const parts = (name || '').split('.');
+  return parts.length > 1 ? parts.pop().toLowerCase() : '';
+}
+
+function isAllowedMessageFile(file) {
+  return ALLOWED_MESSAGE_FILE_EXTENSIONS.includes(getFileExtension(file.name));
+}
+
+// Faz upload de um arquivo anexado ao bucket do Supabase Storage e devolve
+// os metadados para salvar junto da mensagem.
+async function uploadMessageFile(file) {
+  if (!messagingAvailable()) return { ok: false, message: 'Esse recurso precisa de uma conta na nuvem (Supabase) para funcionar.' };
+  if (!file) return { ok: false, message: 'Nenhum arquivo selecionado.' };
+  if (file.size > MAX_MESSAGE_FILE_SIZE) return { ok: false, message: 'Arquivo muito grande (máximo 10MB).' };
+  if (!isAllowedMessageFile(file)) return { ok: false, message: 'Tipo de arquivo não permitido. Envie PDF, Word, texto, planilha, apresentação ou imagem.' };
+
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+  const path = `${currentUserId}/${Date.now()}-${safeName}`;
+
+  const { error: uploadError } = await supabaseClient.storage.from(MESSAGE_FILES_BUCKET).upload(path, file, { upsert: false });
+  if (uploadError) { console.error(uploadError); return { ok: false, message: 'Não foi possível enviar o arquivo. Tente novamente.' }; }
+
+  const { data } = supabaseClient.storage.from(MESSAGE_FILES_BUCKET).getPublicUrl(path);
+  return { ok: true, url: data.publicUrl, name: file.name, type: file.type || getFileExtension(file.name), size: file.size };
+}
+
 // Retorna a conversa do aluno logado, mais antiga primeiro.
 async function getMyMessages() {
   if (!messagingAvailable()) return [];
@@ -264,15 +301,28 @@ async function getMyMessages() {
   return data || [];
 }
 
-// Envia uma mensagem do aluno para o professor.
-async function sendMessageToTeacher(body) {
+// Envia uma mensagem do aluno para o professor. `file`, se passado (um
+// objeto File do input), é enviado como anexo — pode ir sozinho, sem texto.
+async function sendMessageToTeacher(body, file) {
   if (!messagingAvailable()) return { ok: false, message: 'Esse recurso precisa de uma conta na nuvem (Supabase) para funcionar.' };
   const text = (body || '').trim();
-  if (!text) return { ok: false, message: 'Escreva algo antes de enviar.' };
+  if (!text && !file) return { ok: false, message: 'Escreva algo ou anexe um arquivo antes de enviar.' };
+
+  let fileData = null;
+  if (file) {
+    const uploadResult = await uploadMessageFile(file);
+    if (!uploadResult.ok) return uploadResult;
+    fileData = uploadResult;
+  }
+
   const { error } = await supabaseClient.from('messages').insert({
     user_id: currentUserId,
     sender: 'student',
-    body: text
+    body: text,
+    file_url: fileData ? fileData.url : null,
+    file_name: fileData ? fileData.name : null,
+    file_type: fileData ? fileData.type : null,
+    file_size: fileData ? fileData.size : null
   });
   if (error) { console.error(error); return { ok: false, message: 'Não foi possível enviar. Tente novamente.' }; }
   return { ok: true };

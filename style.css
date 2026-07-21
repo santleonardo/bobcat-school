@@ -414,8 +414,9 @@ body.on-auth-screen .topbar { display: none; }
   gap: 8px;
   align-items: flex-end;
 }
+.chat-input-main { flex: 1; min-width: 0; }
 .chat-input-row textarea {
-  flex: 1;
+  width: 100%;
   resize: none;
   border: 2px solid var(--border);
   border-radius: 10px;
@@ -425,6 +426,64 @@ body.on-auth-screen .topbar { display: none; }
 }
 .chat-input-row textarea:focus { outline: none; border-color: var(--orange); }
 .chat-input-row .btn { margin-top: 0; }
+.btn-icon {
+  background: var(--cream);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  width: 42px;
+  height: 42px;
+  font-size: 17px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.btn-icon:hover { background: var(--cream-2); }
+
+.chat-file-preview { margin-bottom: 6px; }
+.chat-file-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: var(--ink);
+  max-width: 100%;
+}
+.chat-file-chip button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: #999;
+  padding: 0;
+  line-height: 1;
+}
+.chat-file-chip button:hover { color: var(--bad, #C0392B); }
+
+.chat-file-attachment {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.18);
+  text-decoration: none;
+  color: inherit;
+}
+.chat-bubble.teacher .chat-file-attachment { background: var(--cream-2); }
+.chat-file-attachment .file-icon { font-size: 20px; flex-shrink: 0; }
+.chat-file-attachment .file-info { min-width: 0; display: flex; flex-direction: column; }
+.chat-file-attachment .file-name {
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.chat-file-attachment .file-size { font-size: 10.5px; opacity: 0.8; }
 
 /* ── MENU INICIAL (4 botões grandes) ─────────── */
 .menu-grid {

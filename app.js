@@ -548,6 +548,58 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+// ---------- Anexos de mensagens (helpers de exibição) ----------
+
+function fileIconFor(name) {
+  const ext = (name || '').split('.').pop().toLowerCase();
+  if (ext === 'pdf') return '📕';
+  if (['doc', 'docx', 'odt', 'rtf'].includes(ext)) return '📄';
+  if (['xls', 'xlsx', 'csv'].includes(ext)) return '📊';
+  if (['ppt', 'pptx'].includes(ext)) return '📽️';
+  if (['jpg', 'jpeg', 'png'].includes(ext)) return '🖼️';
+  return '📎';
+}
+
+function formatFileSize(bytes) {
+  if (!bytes) return '';
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function renderFileAttachment(url, name, size) {
+  if (!url) return '';
+  return `<a class="chat-file-attachment" href="${url}" target="_blank" rel="noopener noreferrer">
+    <span class="file-icon">${fileIconFor(name)}</span>
+    <span class="file-info">
+      <span class="file-name">${escapeHtml(name || 'arquivo')}</span>
+      <span class="file-size">${formatFileSize(size)}${size ? ' · ' : ''}abrir ↗</span>
+    </span>
+  </a>`;
+}
+
+let selectedChatFile = null;
+
+function renderChatFilePreview() {
+  const preview = document.getElementById('chat-file-preview');
+  if (!preview) return;
+  if (!selectedChatFile) {
+    preview.classList.add('hidden');
+    preview.innerHTML = '';
+    return;
+  }
+  preview.classList.remove('hidden');
+  preview.innerHTML = `<span class="chat-file-chip">📎 ${escapeHtml(selectedChatFile.name)} <button type="button" id="btn-remove-chat-file">✕</button></span>`;
+  document.getElementById('btn-remove-chat-file').addEventListener('click', clearSelectedChatFile);
+}
+
+function clearSelectedChatFile() {
+  selectedChatFile = null;
+  const input = document.getElementById('chat-file-input');
+  if (input) input.value = '';
+  renderChatFilePreview();
+}
+
 async function renderMessages() {
   const notice = document.getElementById('messages-notice');
   const thread = document.getElementById('chat-thread');
@@ -574,9 +626,11 @@ async function renderMessages() {
     thread.innerHTML = messages.map(m => {
       const who = m.sender === 'teacher' ? 'Professor(a)' : 'Você';
       const date = new Date(m.created_at).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+      const bodyHtml = m.body ? escapeHtml(m.body) : '';
+      const fileHtml = renderFileAttachment(m.file_url, m.file_name, m.file_size);
       return `<div class="chat-bubble ${m.sender}">
         <span class="chat-meta">${who} · ${date}</span>
-        ${escapeHtml(m.body)}
+        ${bodyHtml}${fileHtml}
       </div>`;
     }).join('');
   }
@@ -683,16 +737,33 @@ function setupProfileViewScreen() {
     showScreen('auth');
   });
 
+  document.getElementById('btn-attach-file').addEventListener('click', () => {
+    document.getElementById('chat-file-input').click();
+  });
+
+  document.getElementById('chat-file-input').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      alert('Arquivo muito grande (máximo 10MB).');
+      e.target.value = '';
+      return;
+    }
+    selectedChatFile = file;
+    renderChatFilePreview();
+  });
+
   document.getElementById('btn-send-message').addEventListener('click', async () => {
     const input = document.getElementById('chat-input');
     const text = input.value.trim();
-    if (!text) return;
+    if (!text && !selectedChatFile) return;
     const btn = document.getElementById('btn-send-message');
     btn.disabled = true;
-    const result = await sendMessageToTeacher(text);
+    const result = await sendMessageToTeacher(text, selectedChatFile);
     btn.disabled = false;
     if (!result.ok) { alert(result.message); return; }
     input.value = '';
+    clearSelectedChatFile();
     await renderMessages();
   });
 
