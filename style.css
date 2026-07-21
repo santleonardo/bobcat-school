@@ -411,7 +411,7 @@ body.on-auth-screen .topbar { display: none; }
 }
 .chat-input-row {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   align-items: flex-end;
 }
 .chat-input-main { flex: 1; min-width: 0; }
@@ -425,16 +425,25 @@ body.on-auth-screen .topbar { display: none; }
   font-family: inherit;
 }
 .chat-input-row textarea:focus { outline: none; border-color: var(--orange); }
-.chat-input-row .btn { margin-top: 0; }
+.chat-input-row .btn {
+  margin-top: 0;
+  width: auto;
+  padding: 0 12px;
+  height: 34px;
+  font-size: 12px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
 .btn-icon {
   background: var(--cream);
   border: 2px solid var(--border);
-  border-radius: 10px;
-  width: 42px;
-  height: 42px;
-  font-size: 17px;
+  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  font-size: 14px;
   cursor: pointer;
   flex-shrink: 0;
+  padding: 0;
 }
 .btn-icon:hover { background: var(--cream-2); }
 
