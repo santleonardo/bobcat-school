@@ -110,7 +110,7 @@
     width:100%; resize:none; border:1px solid #ddd; border-radius:8px; padding:9px 11px; font-size:13.5px; font-family:inherit;
   }
   .thread-input-row textarea:focus { outline:none; border-color: var(--orange); }
-  .thread-input-row .btn { padding:0 12px; height:34px; font-size:12px; border-radius:8px; flex-shrink:0; }
+  .thread-input-row .btn { padding:0; width:34px; height:34px; font-size:15px; border-radius:8px; flex-shrink:0; }
   .btn-icon {
     background:#fff; border:1px solid #ddd; border-radius:8px; width:34px; height:34px;
     font-size:14px; cursor:pointer; flex-shrink:0; padding:0;
@@ -655,7 +655,7 @@ function renderThread(studentId) {
       </div>
       <input type="file" id="reply-file-input" class="hidden" accept=".pdf,.doc,.docx,.odt,.rtf,.txt,.xls,.xlsx,.csv,.ppt,.pptx,.jpg,.jpeg,.png">
       <button class="btn-icon" id="btn-attach-reply-file" type="button" title="Anexar arquivo">📎</button>
-      <button class="btn" id="thread-send-btn" onclick="sendTeacherReply('${studentId}')">Enviar</button>
+      <button class="btn" id="thread-send-btn" title="Enviar resposta" aria-label="Enviar resposta" onclick="sendTeacherReply('${studentId}')">➤</button>
     </div>
   `;
   const body = document.getElementById('thread-body');
