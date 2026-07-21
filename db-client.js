@@ -228,6 +228,22 @@ async function resetAllProgress() {
   localStorage.setItem(PROGRESS_KEY, JSON.stringify({}));
 }
 
+// ---------- Senha para zerar progresso (definida pelo professor) ----------
+
+// Retorna a senha cadastrada pelo professor para o aluno logado, ou null se
+// não houver nenhuma cadastrada (ou se não estiver usando Supabase — nesse
+// caso o app cai para a senha global de config.js como alternativa).
+async function getMyResetPassword() {
+  if (!useSupabase || !currentUserId) return null;
+  const { data, error } = await supabaseClient
+    .from('student_reset_passwords')
+    .select('password')
+    .eq('user_id', currentUserId)
+    .maybeSingle();
+  if (error) { console.error(error); return null; }
+  return data ? data.password : null;
+}
+
 // ---------- Mensagens (canal de comunicação com o professor) ----------
 // Esse recurso só existe com o Supabase configurado: sem nuvem não há como
 // a mensagem "sair" do aparelho do aluno e chegar ao painel do professor.

@@ -602,16 +602,26 @@ function closeResetPasswordModal() {
 async function confirmResetPassword() {
   const input = document.getElementById('reset-password-input');
   const error = document.getElementById('reset-password-error');
-  const configuredPassword = (window.APP_CONFIG && window.APP_CONFIG.resetProgressPassword) || '';
+  const confirmBtn = document.getElementById('reset-password-confirm');
 
-  if (!configuredPassword) {
-    error.textContent = 'Nenhuma senha configurada em config.js (resetProgressPassword).';
+  confirmBtn.disabled = true;
+  // Prioridade: senha cadastrada pelo professor para este aluno (Supabase).
+  // Se não houver Supabase ou nenhuma senha cadastrada para o aluno, cai
+  // para a senha global de config.js como alternativa.
+  let expectedPassword = await getMyResetPassword();
+  if (!expectedPassword) {
+    expectedPassword = (window.APP_CONFIG && window.APP_CONFIG.resetProgressPassword) || '';
+  }
+  confirmBtn.disabled = false;
+
+  if (!expectedPassword) {
+    error.textContent = 'Nenhuma senha configurada. Peça ao professor para cadastrar uma no painel.';
     error.classList.remove('hidden');
     return;
   }
 
-  if (input.value !== configuredPassword) {
-    error.textContent = 'Senha incorreta.';
+  if (input.value !== expectedPassword) {
+    error.textContent = 'Senha incorreta. Peça a senha ao professor.';
     error.classList.remove('hidden');
     input.value = '';
     input.focus();

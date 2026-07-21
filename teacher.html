@@ -116,6 +116,27 @@
     .msg-conv-list { width:100%; max-height:220px; }
     .msg-thread-panel { width:100%; }
   }
+
+  /* ── SENHAS POR ALUNO ─────────────────────── */
+  .pw-row {
+    display:flex; align-items:center; gap:10px; background:#fff; border:1px solid #eee;
+    border-radius:10px; padding:10px 14px; margin-bottom:8px;
+  }
+  .pw-row .avatar { font-size:20px; }
+  .pw-row .info { flex:0 0 180px; min-width:0; }
+  .pw-row .name { font-weight:700; font-size:13.5px; }
+  .pw-row .level { font-size:11.5px; color:#888; }
+  .pw-row input[type=text] {
+    flex:1; border:1px solid #ddd; border-radius:8px; padding:8px 10px; font-size:13.5px; font-family:inherit;
+  }
+  .pw-row input[type=text]:focus { outline:none; border-color:var(--orange); }
+  .pw-row .btn { padding:8px 14px; font-size:12.5px; white-space:nowrap; }
+  .pw-row .pw-status { font-size:11px; color:#2E8B57; min-width:70px; text-align:center; }
+  @media (max-width: 640px) {
+    .pw-row { flex-wrap:wrap; }
+    .pw-row .info { flex:1 1 100%; }
+    .pw-row input[type=text] { flex:1 1 100%; }
+  }
 </style>
 </head>
 <body>
@@ -132,6 +153,7 @@
     <button class="tab-btn active" id="tab-btn-progress" onclick="switchTab('progress')">📊 Progresso da turma</button>
     <button class="tab-btn" id="tab-btn-lessons" onclick="switchTab('lessons')">📚 Todas as lições</button>
     <button class="tab-btn" id="tab-btn-messages" onclick="switchTab('messages')">💬 Mensagens<span id="unread-dot" class="unread-dot hidden"></span></button>
+    <button class="tab-btn" id="tab-btn-passwords" onclick="switchTab('passwords')">🔑 Senhas</button>
   </div>
 
   <div id="panel-progress" class="tab-panel active">
@@ -163,6 +185,14 @@
           <div class="empty" style="padding:60px 20px;">Selecione um aluno na lista ao lado para ver a conversa.</div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div id="panel-passwords" class="tab-panel">
+    <div id="passwords-notice-slot"></div>
+    <div id="passwords-content" style="display:none;">
+      <p class="lesson-list-meta">Cada aluno só consegue zerar o próprio progresso de lições se souber a senha cadastrada aqui. Deixe em branco para nenhuma senha (aluno não consegue zerar sozinho).</p>
+      <div id="passwords-list"></div>
     </div>
   </div>
 </div>
@@ -216,11 +246,14 @@ function switchTab(tab) {
   document.getElementById('panel-progress').classList.toggle('active', tab === 'progress');
   document.getElementById('panel-lessons').classList.toggle('active', tab === 'lessons');
   document.getElementById('panel-messages').classList.toggle('active', tab === 'messages');
+  document.getElementById('panel-passwords').classList.toggle('active', tab === 'passwords');
   document.getElementById('tab-btn-progress').classList.toggle('active', tab === 'progress');
   document.getElementById('tab-btn-lessons').classList.toggle('active', tab === 'lessons');
   document.getElementById('tab-btn-messages').classList.toggle('active', tab === 'messages');
+  document.getElementById('tab-btn-passwords').classList.toggle('active', tab === 'passwords');
   if (tab === 'lessons') renderLessonsTab();
   if (tab === 'messages') loadMessages();
+  if (tab === 'passwords') loadPasswords();
 }
 
 function renderLessonsTab() {
@@ -536,6 +569,72 @@ async function sendTeacherReply(studentId) {
   input.value = '';
   await loadMessages();
   openConversation(studentId);
+}
+
+// ---------- Senhas de "zerar progresso" (por aluno) ----------
+
+async function loadPasswords() {
+  const client = await ensureClient();
+  const slot = document.getElementById('passwords-notice-slot');
+  if (!client) {
+    slot.innerHTML = '<div class="notice error">⚠️ O Supabase ainda não foi configurado — não dá pra cadastrar senhas por aluno sem ele.</div>';
+    document.getElementById('passwords-content').style.display = 'none';
+    return;
+  }
+
+  const { data: profiles, error: pErr } = await client.from('profiles').select('*').order('name');
+  const { data: passwords, error: pwErr } = await client.from('student_reset_passwords').select('*');
+
+  if (pErr || pwErr) {
+    slot.innerHTML = '<div class="notice error">⚠️ Erro ao consultar o Supabase: ' + ((pErr && pErr.message) || (pwErr && pwErr.message)) + '</div>';
+    return;
+  }
+
+  slot.innerHTML = '';
+  document.getElementById('passwords-content').style.display = 'block';
+
+  const pwByStudent = {};
+  (passwords || []).forEach(p => { pwByStudent[p.user_id] = p.password; });
+
+  const list = document.getElementById('passwords-list');
+  if (!profiles || profiles.length === 0) {
+    list.innerHTML = '<div class="empty">Nenhum aluno com perfil criado ainda.</div>';
+    return;
+  }
+
+  list.innerHTML = profiles.map(p => `
+    <div class="pw-row">
+      <div class="avatar">${p.avatar}</div>
+      <div class="info">
+        <div class="name">${escapeHtml(p.name)}</div>
+        <div class="level">nível ${p.level}</div>
+      </div>
+      <input type="text" id="pw-input-${p.id}" placeholder="Sem senha definida" value="${escapeHtml(pwByStudent[p.id] || '')}">
+      <span class="pw-status hidden" id="pw-status-${p.id}">✓ Salvo</span>
+      <button class="btn" onclick="savePassword('${p.id}')">Salvar</button>
+    </div>
+  `).join('');
+}
+
+async function savePassword(studentId) {
+  const input = document.getElementById('pw-input-' + studentId);
+  const status = document.getElementById('pw-status-' + studentId);
+  const value = input.value.trim();
+  const client = await ensureClient();
+  if (!client) return;
+
+  let error;
+  if (!value) {
+    // campo vazio = remove a senha (aluno fica sem conseguir zerar sozinho)
+    ({ error } = await client.from('student_reset_passwords').delete().eq('user_id', studentId));
+  } else {
+    ({ error } = await client.from('student_reset_passwords').upsert({ user_id: studentId, password: value, updated_at: new Date().toISOString() }));
+  }
+
+  if (error) { alert('Não foi possível salvar: ' + error.message); return; }
+
+  status.classList.remove('hidden');
+  setTimeout(() => status.classList.add('hidden'), 2000);
 }
 </script>
 </body>

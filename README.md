@@ -143,3 +143,13 @@ Depois de configurar o Supabase, abra `https://SEU-SITE.vercel.app/teacher.html`
 Cada aluno tem, no próprio perfil (aba "Perfil" → "💬 Fale com o professor"), um campo para mandar mensagens/dúvidas. Elas chegam para o professor na aba "💬 Mensagens" de `teacher.html`, organizadas por aluno (como uma caixa de conversas), e o professor pode responder por lá — a resposta aparece de volta no app do aluno.
 
 Esse recurso **só funciona com o Supabase configurado** (não existe versão local/offline, já que a mensagem precisa "viajar" de um aparelho para o outro). Se você já tinha o Supabase configurado antes dessa atualização, é preciso rodar a nova parte do `schema.sql` (a tabela `messages` e as políticas dela, logo abaixo da tabela `progress`) no SQL Editor do Supabase — o restante do arquivo pode ser executado de novo sem problema, os `create table if not exists` e `drop policy if exists` são seguros para rodar mais de uma vez.
+
+## Senha para zerar progresso (uma por aluno)
+
+O botão "Zerar progresso das lições" (no perfil do aluno) agora pede uma senha antes de apagar qualquer coisa. Essa senha é **definida pelo professor, individualmente para cada aluno**, na aba "🔑 Senhas" de `teacher.html` — basta digitar a senha desejada no campo do aluno e clicar em Salvar (deixar em branco remove a senha, e sem senha o aluno não consegue zerar sozinho).
+
+- Com Supabase configurado: cada aluno usa a própria senha, cadastrada pelo professor.
+- Sem Supabase (app rodando só localmente): não existe painel do professor, então o app cai para a senha única em `config.js` → `window.APP_CONFIG.resetProgressPassword`, que serve como alternativa.
+- Assim como as outras senhas deste projeto (é um app 100% front-end), essa não é um segredo criptográfico à prova de tudo — quem souber mexer no navegador consegue contornar. Ela serve para evitar zeragem sem querer ou sem autorização, não como proteção contra alguém tecnicamente insistente.
+
+Também é preciso rodar a nova tabela do `schema.sql` (`student_reset_passwords`, perto do final do arquivo) no SQL Editor do Supabase se você já tinha o banco configurado antes dessa atualização.

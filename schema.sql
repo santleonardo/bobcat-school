@@ -99,6 +99,36 @@ create policy "Authenticated can reply as teacher"
   on messages for insert
   with check (auth.role() = 'authenticated' and sender = 'teacher');
 
+-- Tabela de senhas para "zerar progresso" — uma por aluno, definida pelo
+-- professor no painel (teacher.html). O aluno só consegue apagar o próprio
+-- progresso das lições se souber essa senha.
+create table if not exists student_reset_passwords (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  password text not null,
+  updated_at timestamptz not null default now()
+);
+
+alter table student_reset_passwords enable row level security;
+
+-- O aluno só pode LER a própria senha (para conferir no app quando tenta
+-- zerar o progresso) — nunca definir ou mudar a própria senha.
+drop policy if exists "Students can read their own reset password" on student_reset_passwords;
+create policy "Students can read their own reset password"
+  on student_reset_passwords for select
+  using (auth.uid() = user_id);
+
+-- Qualquer sessão autenticada (inclui a sessão anônima do painel do
+-- professor) pode ler e definir a senha de qualquer aluno — é o que
+-- permite o professor cadastrar/trocar a senha de cada aluno pelo painel.
+-- Mesmo trade-off já assumido nas outras tabelas: leitura/escrita ampla
+-- para quem estiver autenticado, já que teacher.html não tem uma conta de
+-- professor "de verdade" com senha própria.
+drop policy if exists "Authenticated can manage reset passwords" on student_reset_passwords;
+create policy "Authenticated can manage reset passwords"
+  on student_reset_passwords for all
+  using (auth.role() = 'authenticated')
+  with check (auth.role() = 'authenticated');
+
 -- ============================================================
 -- IMPORTANTE: também é preciso habilitar login por e-mail/senha:
 -- painel do Supabase → Authentication → Providers → Email → Enable.
