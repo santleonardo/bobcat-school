@@ -109,10 +109,41 @@
     <button class="btn" id="btn-save-profile">Começar a estudar</button>
   </div>
 
-  <!-- TELA: HOME -->
-  <div class="screen hidden" id="screen-home">
+  <!-- TELA: MENU (página inicial) -->
+  <div class="screen hidden" id="screen-menu">
     <div id="install-banner-slot"></div>
 
+    <div class="hello-card">
+      <div class="emoji" id="menu-avatar">🦁</div>
+      <div>
+        <div class="greeting" id="menu-greeting">Olá!</div>
+        <div class="sub" id="menu-level-sub">Nível A1</div>
+      </div>
+    </div>
+
+    <h2 class="screen-title" style="margin:20px 0 12px 0;">O que você quer fazer?</h2>
+    <div class="menu-grid">
+      <button class="menu-btn" data-screen="home">
+        <span class="menu-btn-icon">📖</span>
+        <span class="menu-btn-label">Lições</span>
+      </button>
+      <button class="menu-btn" data-screen="tests">
+        <span class="menu-btn-icon">🎯</span>
+        <span class="menu-btn-label">Testes</span>
+      </button>
+      <button class="menu-btn" data-screen="extra">
+        <span class="menu-btn-icon">📘</span>
+        <span class="menu-btn-label">Extra</span>
+      </button>
+      <button class="menu-btn" data-screen="profile-view">
+        <span class="menu-btn-icon">👤</span>
+        <span class="menu-btn-label">Perfil</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- TELA: HOME -->
+  <div class="screen hidden" id="screen-home">
     <div class="hello-card">
       <div class="emoji" id="home-avatar">🦁</div>
       <div>
@@ -231,7 +262,11 @@
   </div>
 
   <div class="bottom-nav" id="bottom-nav" style="display:none;">
-    <button class="nav-btn active" data-screen="home">
+    <button class="nav-btn active" data-screen="menu">
+      <span class="nav-icon">🏠</span>
+      <span>Início</span>
+    </button>
+    <button class="nav-btn" data-screen="home">
       <span class="nav-icon">📖</span>
       <span>Lições</span>
     </button>

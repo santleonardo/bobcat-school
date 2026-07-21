@@ -325,6 +325,7 @@ function showScreen(id) {
   const navBtn = document.querySelector('.nav-btn[data-screen="' + id + '"]');
   if (navBtn) navBtn.classList.add('active');
 
+  if (id === 'menu') renderMenu();
   if (id === 'home') renderHome();
   if (id === 'tests') renderTests();
   if (id === 'extra') renderExtras();
@@ -744,6 +745,17 @@ function renderExtras() {
   });
 }
 
+// ---------- Tela Menu (página inicial) ----------
+
+async function renderMenu() {
+  const profile = await getProfile();
+  if (!profile) return;
+
+  document.getElementById('menu-avatar').textContent = profile.avatar;
+  document.getElementById('menu-greeting').textContent = 'Olá, ' + profile.name + '!';
+  document.getElementById('menu-level-sub').textContent = 'Nível ' + profile.level + ' • o que vamos fazer hoje?';
+}
+
 // ---------- Tela Home / lista de lições ----------
 
 async function renderHome() {
@@ -881,7 +893,7 @@ function openLesson(lesson) {
 
 function enterApp() {
   document.getElementById('bottom-nav').style.display = 'flex';
-  showScreen('home');
+  showScreen('menu');
 }
 
 async function boot() {
@@ -893,6 +905,10 @@ async function boot() {
   setupProfileViewScreen();
 
   document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => showScreen(btn.dataset.screen));
+  });
+
+  document.querySelectorAll('.menu-btn').forEach(btn => {
     btn.addEventListener('click', () => showScreen(btn.dataset.screen));
   });
 
