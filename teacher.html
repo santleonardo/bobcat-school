@@ -71,12 +71,6 @@
     font-size:11.5px; font-weight:700; color:var(--orange-dark); background: var(--cream);
     border-radius:20px; padding:4px 10px; white-space:nowrap;
   }
-  .lesson-item .open-lesson-btn {
-    font-size:12px; font-weight:700; color:#fff; background: var(--orange);
-    border:none; border-radius:8px; padding:8px 14px; white-space:nowrap; cursor:pointer;
-    text-decoration:none; display:inline-block; flex-shrink:0;
-  }
-  .lesson-item .open-lesson-btn:hover { background: var(--orange-dark); }
 
   /* ── MENSAGENS ────────────────────────────── */
   .unread-dot {
@@ -164,12 +158,6 @@
     .pw-row { flex-wrap:wrap; }
     .pw-row .info { flex:1 1 100%; }
     .pw-row input[type=text] { flex:1 1 100%; }
-  }
-  @media (max-width: 560px) {
-    .lesson-item { flex-wrap:wrap; }
-    .lesson-item .info { flex:1 1 100%; order:1; }
-    .lesson-item .qcount { order:2; }
-    .lesson-item .open-lesson-btn { order:3; margin-left:auto; }
   }
 </style>
 </head>
@@ -320,7 +308,6 @@ function renderLessonsTab() {
           <div class="desc">${item.description}</div>
         </div>
         <div class="qcount">${item.totalQuestions} questões</div>
-        <a class="open-lesson-btn" href="lessons/${item.id}.html" target="_blank" rel="noopener noreferrer">Abrir ↗</a>
       </div>`;
     });
     html += '</div></div>';

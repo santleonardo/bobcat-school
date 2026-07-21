@@ -26,6 +26,13 @@ const EXTRAS = [
     icon: '📘',
     description: 'Morfologia, sintaxe, concordância, crase, pontuação e mais — com exercícios',
     url: 'lessons/manual-portugues.html'
+  },
+  {
+    id: 'licao-2-interativa',
+    name: '🧪 [Teste] Lição 2 — Novo Visual e Formato',
+    icon: '🧪',
+    description: 'Versão em teste da Lição 2 com um visual e formato de exercícios novos — só para avaliação',
+    url: 'lessons/licao-2-interativa.html'
   }
 ];
 

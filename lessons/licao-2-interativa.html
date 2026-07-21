@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Lição 2 — Fazendo Perguntas e Apresentando Coisas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+<style>
+:root {
+  --orange:#D9793F;--orange-dark:#C9622A;--orange-light:#F2A06A;
+  --cream:#FBEFE6;--cream-2:#F7F1EC;--cream-3:#FDF7F1;
+  --ink:#2b2b2b;--ink-soft:#555;
+  --ok:#2E8B57;--ok-bg:#EAF7EF;--bad:#C0392B;--bad-bg:#FBEAE8;
+  --border:#EBC9AE;--teal:#2A7F8C;--plum:#8C4A6A;--gold:#C9962A;
+  --shadow:0 4px 16px rgba(180,120,80,.08);
+  --radius:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Inter","Segoe UI",sans-serif;color:var(--ink);background:var(--cream-3);line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,.serif{font-family:"Fraunces",Georgia,serif;letter-spacing:-.01em}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer}
+/* ─── STICKY HUD ─── */
+.hud{position:sticky;top:0;z-index:100;background:rgba(253,247,241,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;justify-content:space-between;font-size:13px;flex-wrap:wrap}
+.hud-left{display:flex;align-items:center;gap:10px;flex:1;min-width:200px}
+.hud-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.xp-track{flex:1;max-width:220px;height:10px;background:#ece2d6;border-radius:99px;overflow:hidden}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--orange-light),var(--orange));border-radius:99px;transition:width .4s ease;width:0%}
+.pill{display:inline-flex;align-items:center;gap:4px;background:white;border:1px solid var(--border);border-radius:99px;padding:3px 10px;font-size:12px;font-weight:700;color:var(--orange-dark)}
+/* ─── LAYOUT ─── */
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+.section{padding:56px 0;position:relative}
+.section+.section{border-top:1px dashed var(--border)}
+.section-head{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:11px;background:var(--orange);color:#fff;font-family:"Fraunces",serif;font-weight:900;font-size:17px;box-shadow:0 4px 12px rgba(217,121,63,.3);flex-shrink:0}
+.sec-title{font-size:clamp(20px,3.2vw,30px);font-weight:800;line-height:1.15}
+.sec-sub{color:var(--ink-soft);font-size:13.5px;margin-top:2px}
+/* ─── CARDS & GRIDS ─── */
+.card{background:#fff;border:1px solid #f0e6da;border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow)}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+/* ─── HERO ─── */
+.hero{position:relative;min-height:70vh;display:flex;align-items:flex-end;background:linear-gradient(180deg,rgba(43,27,18,0) 40%,rgba(43,27,18,.78) 100%),url("https://sfile.chatglm.cn/images-ppt/d0545b552b80.jpeg") center/cover no-repeat;color:#fff;padding:36px 0 48px}
+.hero::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(217,121,63,.4),transparent 50%);pointer-events:none}
+.hero-inner{position:relative;z-index:2}
+.hero .badge{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.14);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.35);padding:5px 13px;border-radius:99px;font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:14px}
+.hero h1{font-size:clamp(28px,5.5vw,52px);font-weight:900;line-height:1.05;margin:0 0 12px;max-width:16ch;text-shadow:0 2px 20px rgba(0,0,0,.3)}
+.hero .lede{font-size:clamp(14px,1.5vw,17px);max-width:58ch;color:rgba(255,255,255,.92);margin:0 0 20px}
+.hero-meta{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px}
+.hero-meta span{display:inline-flex;align-items:center;gap:5px}
+.hero-meta b{font-weight:700}
+.hero-cta{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+.btn{background:var(--orange);color:#fff;border:none;padding:11px 20px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:7px}
+.btn:hover{background:var(--orange-dark);transform:translateY(-1px);box-shadow:0 6px 16px rgba(201,98,42,.25)}
+.btn:active{transform:scale(.98)}
+.btn.ghost{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.6)}
+.btn.ghost:hover{background:rgba(255,255,255,.12)}
+.btn.sec{background:#fff;color:var(--orange-dark);border:2px solid var(--orange)}
+.btn.sec:hover{background:var(--cream)}
+.btn.sm{padding:7px 14px;font-size:12.5px;border-radius:8px}
+.scroll-hint{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.7);font-size:11px;z-index:2;display:flex;flex-direction:column;align-items:center;gap:3px;animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,6px)}}
+/* ─── AUDIO BTN ─── */
+.audio-btn{display:inline-flex;align-items:center;gap:3px;background:#fff;border:1.5px solid var(--orange);color:var(--orange-dark);border-radius:20px;padding:2px 9px;font-size:11.5px;font-weight:700;cursor:pointer;transition:all .15s;vertical-align:middle}
+.audio-btn:hover{background:var(--cream)}
+.audio-btn.playing{background:var(--orange);color:#fff;border-color:var(--orange)}
+/* ─── CALLOUT ─── */
+.callout{border-radius:12px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;background:var(--cream);border:1px solid var(--border);margin:14px 0;font-size:13.5px}
+.callout .ic{font-size:20px;flex-shrink:0}
+.callout.tip{background:#EAF5FB;border-color:#c8e2ee}
+.callout.warn{background:#FFF6E6;border-color:#f0d28a}
+.callout.culture{background:#F3ECF6;border-color:#d8c2e2}
+/* ─── DIALOGUE ─── */
+.chat{background:linear-gradient(180deg,#fff,var(--cream-3));border:1px solid var(--border);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.chat-head{display:flex;align-items:center;gap:9px;padding-bottom:10px;border-bottom:1px dashed var(--border);margin-bottom:2px}
+.chat-head .av{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:14px;flex-shrink:0}
+.av.anna{background:linear-gradient(135deg,var(--orange),var(--orange-dark))}
+.av.tom{background:linear-gradient(135deg,var(--teal),#1f5e69)}
+.bubble-row{display:flex;gap:8px;align-items:flex-end}
+.bubble-row.right{flex-direction:row-reverse}
+.bubble-row .miniav{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:11px}
+.bubble{max-width:80%;padding:9px 13px;border-radius:14px;font-size:13.5px;line-height:1.45;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.bubble.anna{background:var(--cream);border-bottom-left-radius:4px}
+.bubble.tom{background:#E4F1F4;border-bottom-right-radius:4px}
+.bubble .who{font-size:10.5px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;margin-bottom:1px;display:block}
+/* ─── TABLE ─── */
+.lesson-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.03)}
+.lesson-table th{background:var(--orange);color:#fff;padding:9px 11px;text-align:left;font-size:12.5px}
+.lesson-table td{padding:9px 11px;border-bottom:1px solid #f0e6da;vertical-align:middle}
+.lesson-table tr:last-child td{border-bottom:none}
+.lesson-table tr:nth-child(even) td{background:var(--cream-3)}
+.lesson-table td:first-child{font-weight:700;color:var(--orange-dark)}
+/* ─── PHOTO CARDS ─── */
+.photo-card{background:#fff;border-radius:var(--radius);overflow:hidden;border:1px solid #f0e6da;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s}
+.photo-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(180,120,80,.12)}
+.photo-card .img{height:140px;background-size:cover;background-position:center;position:relative}
+.photo-card .img::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,.3) 100%)}
+.photo-card .badge-art{position:absolute;top:9px;left:9px;z-index:2;background:rgba(255,255,255,.95);color:var(--orange-dark);font-weight:800;padding:3px 10px;border-radius:99px;font-size:12.5px;font-family:"Fraunces",serif}
+.photo-card .body{padding:10px 14px 14px}
+.photo-card .body .en{font-weight:700;color:var(--ink);font-size:14px}
+.photo-card .body .why{font-size:12px;color:var(--ink-soft);margin-top:2px}
+/* ─── FLOWCHART ─── */
+.flow{background:#fff;border:1px solid var(--border);border-radius:18px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.flow .row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;align-items:stretch}
+.flow .node{background:var(--cream);border:2px solid var(--border);border-radius:12px;padding:10px 14px;text-align:center;min-width:120px;max-width:180px}
+.flow .node.start{background:var(--orange);color:#fff;border-color:var(--orange-dark);font-weight:700}
+.flow .node.decision{background:#FFF6E6;border-color:#f0d28a}
+.flow .node.out-a{background:#EAF7EF;border-color:#b6dec6}
+.flow .node.out-an{background:#EAF7EF;border-color:#b6dec6}
+.flow .node.out-the{background:#F3ECF6;border-color:#d8c2e2}
+.flow .node .label{font-size:11px;color:var(--ink-soft);margin-bottom:3px}
+.flow .node .word{font-family:"Fraunces",serif;font-weight:800;font-size:20px}
+.flow .node.start .word{color:#fff}
+.flow .node .ex{font-size:11px;color:var(--ink-soft);margin-top:3px;font-style:italic}
+.flow .arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--orange-dark);font-weight:700}
+.flow .arrow .yn{font-size:10.5px;font-weight:700}
+.flow .arrow svg{width:24px;height:24px}
+/* ─── GAME WRAPPER ─── */
+.game-wrap{background:#fff;border:2px dashed var(--border);border-radius:20px;padding:24px;margin:16px 0;position:relative;overflow:hidden}
+.game-wrap::before{content:"";position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;opacity:.06}
+.game-title{text-align:center;margin-bottom:18px}
+.game-title h3{font-size:clamp(18px,2.8vw,24px);font-weight:800;margin-bottom:4px}
+.game-title p{font-size:13px;color:var(--ink-soft)}
+/* ─── DRAG & DROP ─── */
+.article-tokens{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px}
+.token{padding:8px 18px;border-radius:11px;font-weight:800;font-size:16px;border:2px solid var(--orange);background:linear-gradient(135deg,#FFF7ED,#FFFBEB);color:var(--orange-dark);cursor:grab;transition:all .15s;user-select:none;font-family:"Fraunces",Georgia,serif}
+.token:hover{transform:scale(1.08);box-shadow:0 4px 12px rgba(217,121,63,.2);border-color:var(--orange-dark)}
+.token:active,.token.dragging{opacity:.5;transform:scale(.95)}
+.fill-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px}
+@media(max-width:600px){.fill-grid{grid-template-columns:1fr}}
+.fill-item{display:flex;align-items:center;gap:6px;font-size:13.5px;flex-wrap:wrap}
+.blank-slot{display:inline-flex;align-items:center;justify-content:center;min-width:42px;height:30px;padding:0 10px;border:2px dashed #ccc;border-radius:8px;background:#fafafa;font-size:14px;transition:all .2s;margin:0 3px}
+.blank-slot.filled{border-style:solid;border-color:var(--orange);background:#FFF7ED;color:var(--orange-dark);font-weight:700}
+.blank-slot.correct{border-color:var(--ok);background:var(--ok-bg);color:#1e6b40;font-weight:700}
+.blank-slot.incorrect{border-color:var(--bad);background:var(--bad-bg);color:var(--bad);text-decoration:line-through}
+.blank-slot.drag-over{border-color:var(--orange-dark);background:#FED7AA;transform:scale(1.05)}
+.game-actions{display:flex;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap;justify-content:center}
+.score-badge{display:inline-block;font-weight:700;font-size:13px;padding:5px 12px;border-radius:99px;background:var(--cream-2);color:var(--orange-dark)}
+/* ─── MEMORY MATCH ─── */
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:420px;margin:0 auto}
+@media(max-width:480px){.mem-grid{grid-template-columns:repeat(3,1fr)}}
+.mem-card{aspect-ratio:1;perspective:600px;cursor:pointer}
+.mem-card-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.mem-card.flipped .mem-card-inner{transform:rotateY(180deg)}
+.mem-card.matched{opacity:.6;pointer-events:none}
+.mem-card.matched .mem-card-inner{transform:rotateY(180deg)}
+.mem-face{position:absolute;inset:0;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;backface-visibility:hidden;padding:6px}
+.mem-front{background:linear-gradient(135deg,var(--orange),var(--orange-dark));box-shadow:0 3px 10px rgba(217,121,63,.2);border:2px solid rgba(255,255,255,.3)}
+.mem-front span{color:#fff;font-size:22px;font-weight:900}
+.mem-back{background:#fff;border:2px solid var(--border);transform:rotateY(180deg);gap:2px}
+.mem-back .mem-word{font-weight:800;font-size:clamp(13px,2.5vw,17px);font-family:"Fraunces",serif}
+.mem-back .mem-trans{font-size:11px;color:var(--ink-soft)}
+.mem-back.type-word{border-color:var(--orange-light)}
+.mem-back.type-word .mem-word{color:var(--orange-dark)}
+.mem-back.type-meaning{border-color:var(--teal)}
+.mem-back.type-meaning .mem-word{color:var(--teal)}
+.mem-stats{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:13px;font-weight:600;flex-wrap:wrap;gap:6px}
+.win-screen{background:linear-gradient(135deg,#7C3AED,#6D28D9);color:#fff;border-radius:18px;padding:28px;text-align:center;margin-top:16px;animation:popIn .4s ease}
+@keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+/* ─── TIMED QUIZ ─── */
+.quiz-timer{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:14px}
+.timer-display{display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:99px;font-size:13px;font-weight:700}
+.timer-display.ok{background:#EAF7EF;color:var(--ok)}
+.timer-display.warn{background:#FFF6E6;color:#D97706}
+.timer-display.danger{background:#FBEAE8;color:var(--bad)}
+.timer-display.pulse{animation:pulse .5s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.streak-badge{font-size:11px;font-weight:700;color:var(--orange-dark);background:#FFF7ED;border:1px solid var(--orange-light);padding:3px 10px;border-radius:99px;animation:popIn .3s ease}
+.quiz-question{background:#fff;border:2px solid #f0e6da;border-radius:18px;padding:20px;text-align:center;margin-bottom:14px}
+.quiz-question h4{font-family:"Fraunces",serif;font-size:clamp(16px,2.5vw,20px);font-weight:700;margin-bottom:4px}
+.quiz-question .hint{font-size:12.5px;color:var(--ink-soft)}
+.quiz-options{display:grid;gap:8px}
+.quiz-option{width:100%;text-align:left;padding:12px 14px;border-radius:12px;border:2px solid #e5e7eb;background:#fff;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:10px}
+.quiz-option:hover:not(.disabled){border-color:var(--orange);background:#FFF7ED}
+.quiz-option .letter{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:2px solid #d1d5db;color:#6b7280;flex-shrink:0;transition:all .15s}
+.quiz-option.selected{border-color:var(--orange);background:#FFF7ED}
+.quiz-option.selected .letter{background:var(--orange);color:#fff;border-color:var(--orange)}
+.quiz-option.correct-answer{border-color:var(--ok);background:var(--ok-bg)}
+.quiz-option.correct-answer .letter{background:var(--ok);color:#fff;border-color:var(--ok)}
+.quiz-option.wrong-answer{border-color:var(--bad);background:var(--bad-bg)}
+.quiz-option.wrong-answer .letter{background:var(--bad);color:#fff;border-color:var(--bad)}
+.quiz-option.disabled{pointer-events:none;opacity:.5}
+.quiz-result{background:linear-gradient(135deg,#FFF7ED,#FFFBEB);border:2px solid var(--border);border-radius:18px;padding:28px;text-align:center;margin-top:16px}
+.quiz-result .big-num{font-size:36px;font-weight:900;color:var(--orange-dark);font-family:"Fraunces",serif}
+.quiz-progress{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.quiz-progress .qp-track{flex:1;height:6px;background:#ece2d6;border-radius:99px;overflow:hidden}
+.quiz-progress .qp-fill{height:100%;background:var(--orange);border-radius:99px;transition:width .3s ease}
+.quiz-progress span{font-size:11px;color:var(--ink-soft);font-weight:600;min-width:36px;text-align:right}
+/* ─── FLIP CARDS ─── */
+.flip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:560px){.flip-grid{grid-template-columns:repeat(2,1fr)}}
+.flip-card{perspective:800px;cursor:pointer}
+.flip-card-inner{position:relative;width:100%;aspect-ratio:4/3;transition:transform .6s;transform-style:preserve-3d}
+.flip-card.flipped .flip-card-inner{transform:rotateY(180deg)}
+.flip-card-face{position:absolute;inset:0;border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px;backface-visibility:hidden;box-shadow:var(--shadow)}
+.flip-front{color:#fff;font-size:clamp(20px,3vw,28px);font-weight:900;font-family:"Fraunces",serif}
+.flip-front .flip-icon{font-size:28px;margin-bottom:6px}
+.flip-front .flip-hint{font-size:10px;opacity:.7;font-family:"Inter",sans-serif;font-weight:500}
+.flip-back{background:#fff;border:2px solid #e5e7eb;transform:rotateY(180deg)}
+.flip-back .fb-word{font-weight:800;font-size:clamp(16px,2.5vw,22px);font-family:"Fraunces",serif;color:var(--ink)}
+.flip-back .fb-trans{font-size:12px;color:var(--ink-soft);margin:2px 0}
+.flip-back .fb-example{font-size:12px;color:var(--ink-soft);font-style:italic;background:#f9fafb;border:1px solid #f0e6da;border-radius:8px;padding:4px 10px}
+.flip-back .fb-audio{margin-top:6px}
+/* ─── STRUCT BLOCKS ─── */
+.struct{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0;font-family:"Fraunces",serif}
+.struct .block{padding:8px 12px;border-radius:9px;font-weight:700;font-size:14px;color:#fff;position:relative}
+.struct .block .tag{display:block;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;opacity:.85;font-family:"Inter",sans-serif;margin-bottom:1px}
+.struct .block.wh{background:var(--orange)}.struct .block.v{background:var(--teal)}.struct .block.s{background:var(--plum)}.struct .block.c{background:var(--gold)}
+.struct .plus{font-weight:800;color:var(--ink-soft);font-size:16px}
+.struct .q{font-weight:900;color:var(--orange-dark);font-size:20px}
+.struct-example{background:var(--cream-3);border-left:3px solid var(--orange);padding:8px 12px;border-radius:8px;font-size:13.5px;margin-top:5px}
+/* ─── TWISTER ─── */
+.twister{background:linear-gradient(135deg,var(--orange),var(--orange-dark));color:#fff;border-radius:18px;padding:30px 26px;text-align:center;position:relative;overflow:hidden}
+.twister::before{content:"";position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:rgba(255,255,255,.08);border-radius:50%}
+.twister .label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+.twister .quote{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(20px,3.5vw,32px);line-height:1.2;margin:8px 0 14px;position:relative;z-index:2}
+.twister .hint{font-size:12.5px;opacity:.9;position:relative;z-index:2}
+/* ─── CULTURE CARD ─── */
+.culture-card{background:#fff;border-radius:18px;overflow:hidden;border:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr}
+@media(max-width:640px){.culture-card{grid-template-columns:1fr}}
+.culture-card .img{background-size:cover;background-position:center;min-height:220px}
+.culture-card .content{padding:20px}
+.culture-card h3{font-size:18px;margin:0 0 6px}
+.culture-card p{font-size:13.5px;color:var(--ink-soft);margin:5px 0}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+@media(max-width:500px){.compare{grid-template-columns:1fr}}
+.compare .col{border-radius:12px;padding:14px 16px;border:2px solid}
+.compare .col.bad{background:var(--bad-bg);border-color:#f0c2bc}
+.compare .col.ok{background:var(--ok-bg);border-color:#b6dec6}
+.compare .col .tag{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.compare .col.bad .tag{color:var(--bad)}.compare .col.ok .tag{color:var(--ok)}
+.compare .col .ex{font-family:"Fraunces",serif;font-size:20px;font-weight:800;margin-top:5px}
+.compare .col .note{font-size:12.5px;color:var(--ink-soft);margin-top:3px}
+/* ─── CHECKLIST ─── */
+.check-list{list-style:none;display:grid;gap:8px}
+.check-list li{background:#fff;border:1px solid #f0e6da;border-left:4px solid var(--ok);padding:10px 14px;border-radius:10px;font-size:14px;display:flex;align-items:center;gap:9px}
+.check-list li .ic{color:var(--ok);font-size:16px;flex-shrink:0}
+/* ─── HW CARDS ─── */
+.hw-card{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid #f0e6da;border-radius:12px;padding:12px 16px}
+.hw-card .num{width:30px;height:30px;border-radius:50%;background:var(--cream);color:var(--orange-dark);display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-family:"Fraunces",serif;flex-shrink:0}
+.hw-card .txt{font-size:13.5px}
+.hw-card .txt b{color:var(--orange-dark)}
+/* ─── FOOTER ─── */
+.footer{background:var(--ink);color:#d8cfc6;padding:24px 16px;text-align:center;font-size:12.5px;margin-top:auto}
+.footer b{color:var(--orange-light)}
+.footer .school{font-family:"Fraunces",serif;font-weight:800;font-size:15px;color:#fff}
+/* ─── REVEAL ANIM ─── */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease}
+.reveal.in{opacity:1;transform:none}
+/* ─── TOAST ─── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 20px;border-radius:12px;font-size:13px;font-weight:600;z-index:200;animation:toastIn .3s ease,toastOut .3s ease 2.5s forwards;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,20px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes toastOut{to{opacity:0;transform:translate(-50%,20px)}}
+/* ─── MISC ─── */
+.obj-card{border-left:4px solid var(--orange);display:flex;flex-direction:column;gap:6px}
+.obj-card .ic{font-size:24px}
+.obj-card h3{font-size:16px;font-weight:700;color:var(--orange-dark)}
+.obj-card p{font-size:13px;color:var(--ink-soft)}
+.letter-heading{font-family:"Fraunces",serif;font-weight:700;font-size:16px;color:var(--orange-dark);margin:14px 0 6px}
+.start-screen{display:flex;flex-direction:column;align-items:center;gap:14px;padding:32px 0;text-align:center}
+.start-screen .big-icon{font-size:48px;animation:bob 2s ease-in-out infinite}
+</style>
+</head>
+<body>
+
+<!-- ════════════════ STICKY HUD ════════════════ -->
+<div class="hud" id="hud">
+  <div class="hud-left">
+    <span>🐾 Bobcat</span>
+    <div class="xp-track"><div class="xp-fill" id="xpBar"></div></div>
+    <span id="xpLabel" style="font-weight:700;color:var(--orange-dark)">0 XP</span>
+  </div>
+  <div class="hud-right">
+    <span class="pill" id="levelPill">⭐ Nível 1</span>
+    <span class="pill" id="starsPill">🏆 0 estrelas</span>
+  </div>
+</div>
+
+<!-- ════════════════ HERO ════════════════ -->
+<header class="hero" id="hero">
+  <div class="wrap hero-inner">
+    <span class="badge">🐾 Bobcat Language School · A1-A2</span>
+    <h1>Fazendo Perguntas &amp; Apresentando Coisas</h1>
+    <p class="lede">Lição 2 — Aprenda a formar perguntas com <b>Wh- words</b> e a escolher o artigo certo (<b>a</b>, <b>an</b>, <b>the</b>) em qualquer situação do dia a dia.</p>
+    <div class="hero-meta">
+      <span>⏱️ <b>~30 min</b></span><span>🎯 <b>3 objetivos</b></span><span>🎧 <b>Áudio nativo</b></span><span>🎮 <b>3 jogos</b></span>
+    </div>
+    <div class="hero-cta">
+      <a href="#objetivos" class="btn ghost">Começar a lição →</a>
+      <a href="#exercises" class="btn ghost" style="background:rgba(255,255,255,.18)">🎮 Ir para Jogos</a>
+    </div>
+  </div>
+  <div class="scroll-hint">role para começar
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+  </div>
+</header>
+
+<div class="wrap" style="min-height:100vh;display:flex;flex-direction:column">
+
+<!-- ════════════════ OBJETIVOS ════════════════ -->
+<section class="section" id="objetivos">
+  <div class="section-head reveal">
+    <span class="sec-num">1</span>
+    <div><h2 class="sec-title">🎯 Objetivos da Lição</h2><p class="sec-sub">Ao final desta lição você será capaz de:</p></div>
+  </div>
+  <div class="grid-3 reveal">
+    <div class="card obj-card"><span class="ic">❓</span><h3>Perguntas Wh-</h3><p>Compreender e usar corretamente os pronomes interrogativos (What, Where, Who, When, Why, How).</p></div>
+    <div class="card obj-card"><span class="ic">🔤</span><h3>Artigos a / an / the</h3><p>Aprender e aplicar os artigos definidos e indefinidos em inglês de forma natural.</p></div>
+    <div class="card obj-card"><span class="ic">🗣️</span><h3>Falar &amp; Ouvir</h3><p>Ampliar vocabulário e habilidades de fala e escuta com perguntas básicas do dia a dia.</p></div>
+  </div>
+</section>
+
+<!-- ════════════════ WARM-UP ════════════════ -->
+<section class="section" id="warmup">
+  <div class="section-head reveal">
+    <span class="sec-num">2</span>
+    <div><h2 class="sec-title">🔥 Warm-Up: O que você perguntaria?</h2><p class="sec-sub">Observe a cena e pense em perguntas.</p></div>
+  </div>
+  <div class="grid-2 reveal">
+    <div class="card">
+      <p style="margin:0 0 10px;font-size:13.5px">Imagine que você vê no parque: uma <b>mochila</b>, um <b>cachorro</b> e uma <b>pessoa</b> que você não conhece.</p>
+      <div class="callout tip"><span class="ic">💭</span><div><p><b>Pense:</b> o que você perguntaria sobre isso?</p><p style="color:var(--ink-soft);font-size:12.5px">Use: <i>o quê? quem? onde? como?</i></p><button class="audio-btn" onclick="speak(this,'What would you ask about this?')">🔊 Ouvir</button></div></div>
+    </div>
+    <div class="card">
+      <p style="margin:0 0 8px;font-weight:700;color:var(--orange-dark);font-size:12.5px">EXEMPLOS:</p>
+      <p style="margin:5px 0"><b>What</b> is this? <button class="audio-btn" onclick="speak(this,'What is this?')">🔊</button></p>
+      <p style="margin:5px 0"><b>Who</b> is he? <button class="audio-btn" onclick="speak(this,'Who is he?')">🔊</button></p>
+      <p style="margin:5px 0"><b>Where</b> is the bag? <button class="audio-btn" onclick="speak(this,'Where is the bag?')">🔊</button></p>
+      <div class="callout" style="margin-top:12px"><span class="ic">💡</span><p><b>Dica:</b> Não se preocupe em errar. Perguntar é o melhor caminho para aprender!</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ DIÁLOGO ════════════════ -->
+<section class="section" id="dialogue" style="background:linear-gradient(180deg,var(--cream-3),#fff)">
+  <div class="section-head reveal">
+    <span class="sec-num">3</span>
+    <div><h2 class="sec-title">🎧 Listening &amp; Speaking — "At the Park"</h2><p class="sec-sub">Anna e Tom se encontram no parque. Ouça e repita cada linha.</p></div>
+  </div>
+  <div class="chat reveal">
+    <div class="chat-head"><span class="av anna">A</span><span class="av tom">T</span><div style="font-size:13px"><b>Diálogo · At the Park</b><br><span style="color:var(--ink-soft);font-size:11.5px">Clique em 🔊 para ouvir a pronúncia nativa</span></div></div>
+    <div class="bubble-row"><span class="miniav anna">A</span><div class="bubble anna"><span class="who">Anna</span>Hi! What's your name? <button class="audio-btn" onclick="speak(this,'Hi! What\'s your name?')">🔊</button></div></div>
+    <div class="bubble-row right"><span class="miniav tom">T</span><div class="bubble tom"><span class="who">Tom</span>I'm Tom. <button class="audio-btn" onclick="speak(this,'I\'m Tom.')">🔊</button></div></div>
+    <div class="bubble-row"><span class="miniav anna">A</span><div class="bubble anna"><span class="who">Anna</span>Where are you from? <button class="audio-btn" onclick="speak(this,'Where are you from?')">🔊</button></div></div>
+    <div class="bubble-row right"><span class="miniav tom">T</span><div class="bubble tom"><span class="who">Tom</span>I'm from New York. And you? <button class="audio-btn" onclick="speak(this,'I\'m from New York. And you?')">🔊</button></div></div>
+    <div class="bubble-row"><span class="miniav anna">A</span><div class="bubble anna"><span class="who">Anna</span>I'm from Boston. Who is that? <button class="audio-btn" onclick="speak(this,'I\'m from Boston. Who is that?')">🔊</button></div></div>
+    <div class="bubble-row right"><span class="miniav tom">T</span><div class="bubble tom"><span class="who">Tom</span>That's my brother. He's 10. <button class="audio-btn" onclick="speak(this,'That\'s my brother. He\'s 10.')">🔊</button></div></div>
+    <div class="bubble-row"><span class="miniav anna">A</span><div class="bubble anna"><span class="who">Anna</span>What's in your bag? <button class="audio-btn" onclick="speak(this,'What\'s in your bag?')">🔊</button></div></div>
+    <div class="bubble-row right"><span class="miniav tom">T</span><div class="bubble tom"><span class="who">Tom</span>A sandwich and an apple! <button class="audio-btn" onclick="speak(this,'A sandwich and an apple!')">🔊</button></div></div>
+  </div>
+  <div class="callout tip reveal" style="margin-top:16px"><span class="ic">🔁</span><div><p><b>Repita com atenção:</b> escute e repita cada linha.</p><p style="color:var(--ink-soft);font-size:12.5px">💡 Faça a voz dos personagens — isso ajuda a fixar a entonação!</p></div></div>
+</section>
+
+<!-- ════════════════ VOCABULÁRIO ════════════════ -->
+<section class="section" id="vocab">
+  <div class="section-head reveal">
+    <span class="sec-num">4</span>
+    <div><h2 class="sec-title">🔍 Vocabulário da Lição</h2><p class="sec-sub">Pronomes interrogativos e artigos.</p></div>
+  </div>
+
+  <!-- FLIP CARDS -->
+  <h3 style="margin:6px 0 4px;color:var(--orange-dark);font-size:18px">🃏 Cartões de Vocabulário</h3>
+  <p style="color:var(--ink-soft);font-size:13px;margin:0 0 12px">👆 Toque nos cartões para virar e ver a tradução</p>
+  <div class="flip-grid reveal" id="flipGrid"></div>
+
+  <!-- TABLE -->
+  <table class="lesson-table reveal" style="margin-top:20px">
+    <tr><th>Palavra</th><th>Tradução</th><th>Exemplo</th></tr>
+    <tr><td>What <button class="audio-btn" onclick="speak(this,'What')">🔊</button></td><td>O quê / Qual</td><td>What is this? <i>(O que é isso?)</i></td></tr>
+    <tr><td>Where <button class="audio-btn" onclick="speak(this,'Where')">🔊</button></td><td>Onde</td><td>Where are you from? <i>(De onde você é?)</i></td></tr>
+    <tr><td>Who <button class="audio-btn" onclick="speak(this,'Who')">🔊</button></td><td>Quem</td><td>Who is that? <i>(Quem é aquele?)</i></td></tr>
+    <tr><td>When <button class="audio-btn" onclick="speak(this,'When')">🔊</button></td><td>Quando</td><td>When is your birthday? <i>(Quando é seu aniversário?)</i></td></tr>
+    <tr><td>Why <button class="audio-btn" onclick="speak(this,'Why')">🔊</button></td><td>Por quê</td><td>Why are you sad? <i>(Por que você está triste?)</i></td></tr>
+    <tr><td>How <button class="audio-btn" onclick="speak(this,'How')">🔊</button></td><td>Como</td><td>How are you? <i>(Como você está?)</i></td></tr>
+  </table>
+
+  <!-- ARTICLES FLOWCHART -->
+  <h3 style="margin:24px 0 4px;color:var(--orange-dark);font-size:18px">📚 Fluxograma — Artigos em Inglês</h3>
+  <p style="color:var(--ink-soft);font-size:13px;margin:0 0 10px">Siga as setas para descobrir qual artigo usar.</p>
+  <div class="flow reveal">
+    <div class="node start"><span class="label">Você tem um substantivo</span><span class="word">🎯 noun</span></div>
+    <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
+    <div class="node decision"><span class="label">É específico / único / já mencionado?</span><span class="word">🤔</span></div>
+    <div class="row">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+        <span class="yn" style="font-size:10.5px;color:var(--ok);font-weight:700">SIM ↓</span>
+        <div class="node out-the"><span class="label">definido</span><span class="word">the</span><span class="ex">the sun, the book</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+        <span class="yn" style="font-size:10.5px;color:var(--ink-soft);font-weight:700">NÃO →</span>
+        <div class="node decision" style="background:#FFF6E6"><span class="label">Começa com som de vogal?</span><span class="word">🔊</span></div>
+      </div>
+    </div>
+    <div class="row">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+        <span class="yn" style="font-size:10.5px;color:var(--ok);font-weight:700">SIM ↓</span>
+        <div class="node out-an"><span class="label">indefinido · vogal</span><span class="word">an</span><span class="ex">an apple, an umbrella</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+        <span class="yn" style="font-size:10.5px;color:var(--bad);font-weight:700">NÃO ↓</span>
+        <div class="node out-a"><span class="label">indefinido · consoante</span><span class="word">a</span><span class="ex">a dog, a car</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHOTO CARDS -->
+  <h3 style="margin:24px 0 4px;color:var(--orange-dark);font-size:18px">🖼️ Artigos na Prática</h3>
+  <div class="grid-3 reveal">
+    <div class="photo-card"><div class="img" style="background-image:url('https://sfile.chatglm.cn/images-ppt/7ce7ad3adc81.jpeg')"><span class="badge-art">an</span></div><div class="body"><div class="en">an apple 🍎 <button class="audio-btn" onclick="speak(this,'an apple')">🔊</button></div><div class="why">"apple" começa com som de <b>vogal</b> (/æ/).</div></div></div>
+    <div class="photo-card"><div class="img" style="background-image:url('https://sfile.chatglm.cn/images-ppt/f7e04aa01d00.jpg')"><span class="badge-art">a</span></div><div class="body"><div class="en">a dog 🐕 <button class="audio-btn" onclick="speak(this,'a dog')">🔊</button></div><div class="why">"dog" começa com som de <b>consoante</b> (/d/).</div></div></div>
+    <div class="photo-card"><div class="img" style="background-image:url('https://sfile.chatglm.cn/images-ppt/d4662b77ed8d.png')"><span class="badge-art">the</span></div><div class="body"><div class="en">the book 📖 <button class="audio-btn" onclick="speak(this,'the book')">🔊</button></div><div class="why">"the" indica um livro <b>específico</b> já conhecido.</div></div></div>
+  </div>
+  <div class="callout warn reveal" style="margin-top:14px"><span class="ic">⚠️</span><div><p><b>Observação importante:</b></p><p>• Use <b>"a / an"</b> para coisas <u>não específicas</u> (qualquer uma).</p><p>• Use <b>"the"</b> quando todos sabem de qual coisa você está falando.</p></div></div>
+</section>
+
+<!-- ════════════════ GRAMÁTICA ════════════════ -->
+<section class="section" id="grammar" style="background:linear-gradient(180deg,#fff,var(--cream-3))">
+  <div class="section-head reveal">
+    <span class="sec-num">5</span>
+    <div><h2 class="sec-title">📘 Gramática — Estrutura &amp; Uso</h2><p class="sec-sub">Como montar perguntas e combinar artigos com substantivos.</p></div>
+  </div>
+  <div class="card reveal" style="margin-bottom:16px">
+    <h3 style="margin:0 0 5px;color:var(--orange-dark);font-size:16px">1. Estrutura básica de perguntas com Wh- words</h3>
+    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 8px">A ordem das palavras em inglês é fixa — basta seguir o padrão:</p>
+    <div class="struct"><div class="block wh"><span class="tag">Wh-word</span>What</div><span class="plus">+</span><div class="block v"><span class="tag">verbo</span>is</div><span class="plus">+</span><div class="block s"><span class="tag">sujeito</span>your name</div><span class="plus">+</span><span class="q">?</span></div>
+    <div class="struct-example">📞 <b>What</b> is your name? <button class="audio-btn" onclick="speak(this,'What is your name?')">🔊</button></div>
+    <div class="struct-example">📍 <b>Where</b> is the pen? <button class="audio-btn" onclick="speak(this,'Where is the pen?')">🔊</button></div>
+    <div class="struct-example">👤 <b>Who</b> is that woman? <button class="audio-btn" onclick="speak(this,'Who is that woman?')">🔊</button></div>
+  </div>
+  <div class="card reveal">
+    <h3 style="margin:0 0 5px;color:var(--orange-dark);font-size:16px">2. Uso dos artigos "a", "an", "the" com substantivos</h3>
+    <p style="font-size:13px;color:var(--ink-soft);margin:0 0 8px">Observe o contraste entre definido e indefinido:</p>
+    <div class="struct-example">📚 I have <b style="color:var(--ok)">a</b> book. <button class="audio-btn" onclick="speak(this,'I have a book.')">🔊</button> <span style="color:var(--ink-soft);font-size:12px">— um livro qualquer</span></div>
+    <div class="struct-example">🍊 She is eating <b style="color:var(--ok)">an</b> orange. <button class="audio-btn" onclick="speak(this,'She is eating an orange.')">🔊</button> <span style="color:var(--ink-soft);font-size:12px">— começa com vogal</span></div>
+    <div class="struct-example">📰 He is reading <b style="color:var(--plum)">the</b> newspaper. <button class="audio-btn" onclick="speak(this,'He is reading the newspaper.')">🔊</button> <span style="color:var(--ink-soft);font-size:12px">— aquele jornal específico</span></div>
+  </div>
+</section>
+
+<!-- ════════════════ EXERCÍCIOS / JOGOS ════════════════ -->
+<section class="section" id="exercises">
+  <div class="section-head reveal">
+    <span class="sec-num">6</span>
+    <div><h2 class="sec-title">🎮 Exercícios Interativos</h2><p class="sec-sub">Jogue e aprenda! Cada jogo dá pontos de XP.</p></div>
+  </div>
+
+  <!-- JOGO 1: DRAG & DROP -->
+  <div class="game-wrap reveal" id="game1">
+    <div class="game-title"><h3>🎮 Jogo 1: Arraste &amp; Solte</h3><p>Arraste os artigos (a, an, the) para os espaços em branco — ou clique no artigo e depois no espaço!</p></div>
+    <div class="article-tokens" id="articleTokens"></div>
+    <div class="fill-grid" id="fillGrid"></div>
+    <div class="game-actions">
+      <button class="btn" onclick="checkDragDrop()">✨ Verificar Respostas</button>
+      <button class="btn sec" onclick="resetDragDrop()">🔄 Refazer</button>
+      <span class="score-badge" id="ddScore">0/8</span>
+    </div>
+  </div>
+
+  <!-- JOGO 2: MEMÓRIA -->
+  <div class="game-wrap reveal" id="game2" style="border-color:#c4b5fd;background:linear-gradient(135deg,#FAF5FF,#FDF7F1)">
+    <div class="game-title"><h3>🧠 Jogo 2: Memória das Wh-Words</h3><p>Encontre os pares! Vire duas cartas e combine cada Wh-word com sua tradução.</p></div>
+    <div id="memGame">
+      <div class="start-screen"><div class="big-icon">🧠</div><p style="max-width:300px;color:var(--ink-soft);font-size:13.5px">Encontre os 6 pares o mais rápido possível!</p><button class="btn" style="background:linear-gradient(135deg,#7C3AED,#6D28D9)" onclick="startMemory()">⚡ Iniciar Jogo</button></div>
+    </div>
+  </div>
+
+  <!-- JOGO 3: QUIZ RELÂMPAGO -->
+  <div class="game-wrap reveal" id="game3" style="border-color:#fcd34d;background:linear-gradient(135deg,#FFFBEB,#FDF7F1)">
+    <div class="game-title"><h3>⚡ Jogo 3: Quiz Relâmpago</h3><p>Responda o mais rápido possível! Cada pergunta tem 15 segundos. Streaks dão bônus!</p></div>
+    <div id="quizGame">
+      <div class="start-screen"><div class="big-icon">⚡</div><p style="max-width:300px;color:var(--ink-soft);font-size:13.5px">6 perguntas sobre Wh-words. Quanto mais rápido, mais XP!</p><button class="btn" style="background:linear-gradient(135deg,#D97706,#B45309)" onclick="startQuiz()">🚀 Iniciar Quiz</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ PRÁTICA ORAL ════════════════ -->
+<section class="section" id="oral" style="background:linear-gradient(180deg,var(--cream-3),#fff)">
+  <div class="section-head reveal">
+    <span class="sec-num">7</span>
+    <div><h2 class="sec-title">🎭 Prática Oral — Role-play</h2><p class="sec-sub">Em dupla ou sozinho com o espelho: conhecendo alguém novo.</p></div>
+  </div>
+  <div class="chat reveal">
+    <div class="chat-head"><span class="av anna" style="background:linear-gradient(135deg,var(--orange),var(--orange-dark))">Y</span><span class="av tom">P</span><div style="font-size:13px"><b>Situação · Meeting Someone New</b><br><span style="color:var(--ink-soft);font-size:11.5px">Use o roteiro e complete os espaços</span></div></div>
+    <div class="bubble-row"><span class="miniav anna">Y</span><div class="bubble anna"><span class="who">You</span>Hi! What's your name? <button class="audio-btn" onclick="speak(this,'Hi! What\'s your name?')">🔊</button></div></div>
+    <div class="bubble-row right"><span class="miniav tom">P</span><div class="bubble tom"><span class="who">Partner</span>My name is ___. <button class="audio-btn" onclick="speak(this,'My name is.')">🔊</button></div></div>
+    <div class="bubble-row"><span class="miniav anna">Y</span><div class="bubble anna"><span class="who">You</span>Where are you from? <button class="audio-btn" onclick="speak(this,'Where are you from?')">🔊</button></div></div>
+    <div class="bubble-row right"><span class="miniav tom">P</span><div class="bubble tom"><span class="who">Partner</span>I'm from ___. <button class="audio-btn" onclick="speak(this,'I\'m from.')">🔊</button></div></div>
+    <div class="bubble-row"><span class="miniav anna">Y</span><div class="bubble anna"><span class="who">You</span>What is in your bag? <button class="audio-btn" onclick="speak(this,'What is in your bag?')">🔊</button></div></div>
+    <div class="bubble-row right"><span class="miniav tom">P</span><div class="bubble tom"><span class="who">Partner</span>I have a ___ and an ___. <button class="audio-btn" onclick="speak(this,'I have a and an.')">🔊</button></div></div>
+    <div class="bubble-row"><span class="miniav anna">Y</span><div class="bubble anna"><span class="who">You</span>Nice to meet you! <button class="audio-btn" onclick="speak(this,'Nice to meet you!')">🔊</button></div></div>
+  </div>
+  <div class="callout tip reveal"><span class="ic">🎤</span><p><b>Dica para autoestudo:</b> Grave sua voz e escute depois. Repita até soar natural!</p></div>
+</section>
+
+<!-- ════════════════ TRAVA-LÍNGUA ════════════════ -->
+<section class="section" id="twister">
+  <div class="section-head reveal">
+    <span class="sec-num">8</span>
+    <div><h2 class="sec-title">👅 Trava-língua (Tongue Twister)</h2><p class="sec-sub">Treine a pronúncia — repita 3x rápido!</p></div>
+  </div>
+  <div class="twister reveal">
+    <div class="label">🎯 Repeat 3× fast</div>
+    <div class="quote">"A happy hippo has a hat and an apple."</div>
+    <button class="btn ghost" onclick="speak(this,'A happy hippo has a hat and an apple.')">🔊 Ouvir &amp; Repetir</button>
+    <div class="hint">💡 Concentre-se no som <b>/h/</b> e na diferença entre <b>a</b> (hat) e <b>an</b> (apple).</div>
+  </div>
+</section>
+
+<!-- ════════════════ CULTURA ════════════════ -->
+<section class="section" id="culture" style="background:linear-gradient(180deg,#fff,var(--cream-3))">
+  <div class="section-head reveal">
+    <span class="sec-num">9</span>
+    <div><h2 class="sec-title">🌍 Curiosidade Cultural — o artigo "the"</h2><p class="sec-sub">Diferente do português, em inglês "the" nem sempre aparece.</p></div>
+  </div>
+  <div class="culture-card reveal">
+    <div class="img" style="background-image:url('https://sfile.chatglm.cn/images-ppt/768d351eae49.jpg')"></div>
+    <div class="content">
+      <h3>Países e nomes próprios</h3>
+      <p>Em inglês, <b>não usamos "the"</b> com nomes próprios ou países em geral.</p>
+      <div class="compare">
+        <div class="col bad"><span class="tag">❌ Errado</span><div class="ex">The Brazil</div><div class="note">Soa estranho — como se o Brasil fosse um conjunto de estados.</div><button class="audio-btn" onclick="speak(this,'The Brazil')" style="margin-top:4px">🔊</button></div>
+        <div class="col ok"><span class="tag">✅ Certo</span><div class="ex">Brazil</div><div class="note">Apenas o nome do país, sem artigo.</div><button class="audio-btn" onclick="speak(this,'Brazil')" style="margin-top:4px">🔊</button></div>
+      </div>
+      <div class="callout culture" style="margin-top:12px"><span class="ic">🇺🇸</span><p><b>Exceção:</b> use "the" com países que são "Estados" ou "Ilhas" — <i>The United States</i>, <i>The Netherlands</i>, <i>The Philippines</i>.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════ REVISÃO ════════════════ -->
+<section class="section" id="review">
+  <div class="section-head reveal">
+    <span class="sec-num">10</span>
+    <div><h2 class="sec-title">🔁 Revisão Rápida</h2><p class="sec-sub">Os pontos-chave da lição, em um minuto.</p></div>
+  </div>
+  <ul class="check-list reveal">
+    <li><span class="ic">✅</span> <b>Wh- words</b> servem para fazer perguntas (What, Where, Who, When, Why, How).</li>
+    <li><span class="ic">✅</span> <b>"a"</b> e <b>"an"</b> são <u>indefinidos</u> — para coisas genéricas.</li>
+    <li><span class="ic">✅</span> <b>"the"</b> é <u>definido</u> — para coisa específica ou já mencionada.</li>
+    <li><span class="ic">✅</span> Estrutura básica: <b>Wh-word + verbo + sujeito + complemento?</b></li>
+  </ul>
+</section>
+
+<!-- ════════════════ TAREFA DE CASA ════════════════ -->
+<section class="section" id="homework" style="background:linear-gradient(180deg,var(--cream-3),#fff)">
+  <div class="section-head reveal">
+    <span class="sec-num">11</span>
+    <div><h2 class="sec-title">🏠 Tarefa de Casa</h2><p class="sec-sub">Pratique escrevendo no seu caderno ou no app de notas.</p></div>
+  </div>
+  <div class="grid-3 reveal">
+    <div class="hw-card"><span class="num">1</span><div class="txt">Escreva <b>5 frases</b> com <b>"a"</b> ou <b>"an"</b>.</div></div>
+    <div class="hw-card"><span class="num">2</span><div class="txt">Escreva <b>3 frases</b> com <b>"the"</b>.</div></div>
+    <div class="hw-card"><span class="num">3</span><div class="txt">Escreva <b>3 perguntas</b> usando <b>what</b>, <b>who</b>, <b>where</b>.</div></div>
+  </div>
+  <div class="game-actions reveal" style="margin-top:20px;justify-content:center">
+    <button class="btn" onclick="finishLesson()">✅ Finalizar e Salvar Progresso</button>
+    <span id="finishMsg" style="display:none;font-size:13px;color:var(--ok);font-weight:700"></span>
+  </div>
+</section>
+
+</div>
+
+<!-- ════════════════ FOOTER ════════════════ -->
+<footer class="footer">
+  <div class="school">🐾 Bobcat Language School</div>
+  <p style="margin:5px 0 0">Lição 2 — <b>Fazendo Perguntas e Apresentando Coisas</b> · A1-A2</p>
+  <p style="margin:2px 0 0;font-size:11px;opacity:.6">Fotos: Pexels &amp; domínio público · Design interativo inspirado em Genially</p>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════
+   GAME STATE
+   ═══════════════════════════════════════════ */
+var XP=0, LEVEL=1, STARS=0;
+function addXP(n){XP+=n;LEVEL=Math.floor(XP/100)+1;STARS=Math.floor(XP/50);updateHUD()}
+function updateHUD(){
+  var b=document.getElementById('xpBar'),l=document.getElementById('xpLabel'),
+      lv=document.getElementById('levelPill'),st=document.getElementById('starsPill');
+  if(b) b.style.width=Math.min(XP%100,100)+'%';
+  if(l) l.textContent=XP+' XP';
+  if(lv) lv.textContent='⭐ Nível '+LEVEL;
+  if(st) st.textContent='🏆 '+STARS+' estrelas';
+}
+function showToast(msg){
+  var t=document.createElement('div');t.className='toast';t.textContent=msg;
+  document.body.appendChild(t);setTimeout(function(){t.remove()},3000);
+}
+
+/* ═══════════════════════════════════════════
+   SPEAK (TTS)
+   ═══════════════════════════════════════════ */
+function speak(btn,text){
+  if(!('speechSynthesis' in window)){alert('Seu navegador não suporta síntese de voz.');return}
+  window.speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=0.92;u.pitch=1;
+  if(btn){btn.classList.add('playing')}
+  u.onend=function(){if(btn)btn.classList.remove('playing')};
+  u.onerror=function(){if(btn)btn.classList.remove('playing')};
+  window.speechSynthesis.speak(u);
+}
+
+/* ═══════════════════════════════════════════
+   REVEAL ON SCROLL
+   ═══════════════════════════════════════════ */
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return}
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target)}});
+  },{threshold:0.1});
+  els.forEach(function(e){io.observe(e)});
+})();
+
+/* ═══════════════════════════════════════════
+   FLIP CARDS
+   ═══════════════════════════════════════════ */
+(function(){
+  var data=[
+    {word:'What',trans:'O quê / Qual',ex:'What is this?',icon:'❓',gradient:'from-orange-500 to-amber-500',color:'#D9793F'},
+    {word:'Where',trans:'Onde',ex:'Where are you from?',icon:'📍',gradient:'from-teal-500 to-cyan-500',color:'#2A7F8C'},
+    {word:'Who',trans:'Quem',ex:'Who is that?',icon:'👤',gradient:'from-rose-500 to-pink-500',color:'#E11D48'},
+    {word:'When',trans:'Quando',ex:'When is your birthday?',icon:'⏰',gradient:'from-amber-500 to-yellow-500',color:'#D97706'},
+    {word:'Why',trans:'Por quê',ex:'Why are you sad?',icon:'🤔',gradient:'from-red-500 to-rose-500',color:'#DC2626'},
+    {word:'How',trans:'Como',ex:'How are you?',icon:'💬',gradient:'from-emerald-500 to-green-500',color:'#059669'}
+  ];
+  var grid=document.getElementById('flipGrid');
+  data.forEach(function(d){
+    var card=document.createElement('div');card.className='flip-card';
+    card.innerHTML='<div class="flip-card-inner">'
+      +'<div class="flip-card-face flip-front" style="background:linear-gradient(135deg,'+d.color+','+d.color+'dd)"><span class="flip-icon">'+d.icon+'</span>'+d.word+'<span class="flip-hint">Toque para virar</span></div>'
+      +'<div class="flip-card-face flip-back"><span class="fb-word">'+d.word+'</span><span class="fb-trans">'+d.trans+'</span><span class="fb-example">"'+d.ex+'"</span><div class="fb-audio"><button class="audio-btn" onclick="event.stopPropagation();speak(this,\''+d.ex+'\')">🔊 Ouvir</button></div></div>'
+      +'</div>';
+    card.addEventListener('click',function(){card.classList.toggle('flipped')});
+    grid.appendChild(card);
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   GAME 1: DRAG & DROP ARTICLES
+   ═══════════════════════════════════════════ */
+var DD_EXERCISES=[
+  {id:1,sentence:'I see ___ elephant.',answer:'an'},
+  {id:2,sentence:'She has ___ umbrella.',answer:'an'},
+  {id:3,sentence:'___ sun is hot today.',answer:'the'},
+  {id:4,sentence:'I need ___ pen.',answer:'a'},
+  {id:5,sentence:'He is eating ___ banana.',answer:'a'},
+  {id:6,sentence:'Can you pass me ___ orange?',answer:'an'},
+  {id:7,sentence:'___ book on the table is mine.',answer:'The'},
+  {id:8,sentence:'She wants to be ___ doctor.',answer:'a'}
+];
+var DD_ANSWERS={},DD_CHECKED=false,DD_SELECTED_TOKEN=null;
+
+function initDragDrop(){
+  var tokens=['a','an','the','A','An','The'];
+  var container=document.getElementById('articleTokens');container.innerHTML='';
+  tokens.forEach(function(t){
+    var el=document.createElement('div');el.className='token';el.textContent=t;el.draggable=true;
+    el.addEventListener('dragstart',function(e){e.dataTransfer.setData('text/plain',t);el.classList.add('dragging')});
+    el.addEventListener('dragend',function(){el.classList.remove('dragging')});
+    el.addEventListener('click',function(){
+      DD_SELECTED_TOKEN=t;
+      document.querySelectorAll('.token').forEach(function(tk){tk.style.outline=tk.textContent===t?'3px solid var(--orange-dark)':'none'});
+      document.querySelectorAll('.blank-slot:not(.correct)').forEach(function(s){s.style.borderColor='var(--orange)';s.style.animation='pulse .8s ease-in-out infinite'});
+    });
+    container.appendChild(el);
+  });
+  var grid=document.getElementById('fillGrid');grid.innerHTML='';DD_ANSWERS={};DD_CHECKED=false;
+  document.getElementById('ddScore').textContent='0/8';
+  DD_EXERCISES.forEach(function(ex){
+    var row=document.createElement('div');row.className='fill-item';
+    var parts=ex.sentence.split('___');
+    row.innerHTML='<span>'+parts[0]+'</span><span class="blank-slot" data-id="'+ex.id+'">?</span><span>'+parts[1]+'</span>'
+      +'<button class="audio-btn" style="margin-left:auto" onclick="speak(this,\''+ex.sentence.replace('___','a')+'\')">🔊</button>';
+    grid.appendChild(row);
+    var slot=row.querySelector('.blank-slot');
+    slot.addEventListener('dragover',function(e){e.preventDefault();slot.classList.add('drag-over')});
+    slot.addEventListener('dragleave',function(){slot.classList.remove('drag-over')});
+    slot.addEventListener('drop',function(e){
+      e.preventDefault();slot.classList.remove('drag-over');
+      var val=e.dataTransfer.getData('text/plain')||DD_SELECTED_TOKEN;
+      if(val){DD_ANSWERS[ex.id]=val.toLowerCase();slot.textContent=val;slot.classList.add('filled');DD_SELECTED_TOKEN=null;
+        document.querySelectorAll('.token').forEach(function(tk){tk.style.outline='none'});
+        document.querySelectorAll('.blank-slot').forEach(function(s){s.style.animation='none';s.style.borderColor=''});
+      }
+    });
+    slot.addEventListener('click',function(){
+      if(DD_SELECTED_TOKEN&&!DD_CHECKED){
+        DD_ANSWERS[ex.id]=DD_SELECTED_TOKEN.toLowerCase();slot.textContent=DD_SELECTED_TOKEN;slot.classList.add('filled');DD_SELECTED_TOKEN=null;
+        document.querySelectorAll('.token').forEach(function(tk){tk.style.outline='none'});
+        document.querySelectorAll('.blank-slot').forEach(function(s){s.style.animation='none';s.style.borderColor=''});
+      }
+    });
+  });
+}
+function checkDragDrop(){
+  DD_CHECKED=true;var correct=0;
+  DD_EXERCISES.forEach(function(ex){
+    var slot=document.querySelector('.blank-slot[data-id="'+ex.id+'"]');
+    var userAns=(DD_ANSWERS[ex.id]||'').toLowerCase();
+    slot.classList.remove('correct','incorrect');
+    if(!userAns){return}
+    if(userAns===ex.answer.toLowerCase()){slot.classList.add('correct');correct++}
+    else{slot.classList.add('incorrect')}
+  });
+  document.getElementById('ddScore').textContent=correct+'/8';
+  addXP(correct*15);
+  if(correct===8){confetti({particleCount:150,spread:80,origin:{y:.6}});showToast('🎉 Perfeito! +'+correct*15+' XP')}
+  else if(correct>=6){confetti({particleCount:60,spread:50,origin:{y:.6}});showToast('👍 Bom trabalho! +'+correct*15+' XP')}
+  else{showToast('Tente novamente para mais XP!')}
+}
+function resetDragDrop(){DD_CHECKED=false;DD_ANSWERS={};DD_SELECTED_TOKEN=null;initDragDrop()}
+initDragDrop();
+
+/* ═══════════════════════════════════════════
+   GAME 2: MEMORY MATCH
+   ═══════════════════════════════════════════ */
+var MEM_PAIRS=[
+  {word:'What',meaning:'O quê / Qual'},
+  {word:'Where',meaning:'Onde'},
+  {word:'Who',meaning:'Quem'},
+  {word:'When',meaning:'Quando'},
+  {word:'Why',meaning:'Por quê'},
+  {word:'How',meaning:'Como'}
+];
+var memCards=[],memFlipped=[],memMatched=[],memMoves=0,memStart=0,memTimer=null,memStarted=false;
+
+function startMemory(){
+  memCards=[];memFlipped=[];memMatched=[];memMoves=0;memStarted=true;memStart=Date.now();
+  if(memTimer)clearInterval(memTimer);
+  MEM_PAIRS.forEach(function(p,i){
+    memCards.push({id:'w'+i,pairId:i,content:p.word,type:'word'});
+    memCards.push({id:'m'+i,pairId:i,content:p.meaning,type:'meaning'});
+  });
+  // shuffle
+  for(var i=memCards.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=memCards[i];memCards[i]=memCards[j];memCards[j]=t}
+  renderMemory();
+  memTimer=setInterval(function(){
+    var el=document.getElementById('memTime');if(el) el.textContent=formatTime(Math.floor((Date.now()-memStart)/1000));
+  },1000);
+}
+function formatTime(s){var m=Math.floor(s/60);return m+':'+(s%60<10?'0':'')+(s%60)}
+function renderMemory(){
+  var container=document.getElementById('memGame');
+  var elapsed=memStarted?formatTime(Math.floor((Date.now()-memStart)/1000)):'0:00';
+  var html='<div class="mem-stats"><span>⏱️ <span id="memTime">'+elapsed+'</span></span><span>🔄 '+memMoves+' jogadas</span><span>✅ '+memMatched.length+'/6</span></div>';
+  html+='<div class="mem-grid">';
+  memCards.forEach(function(c){
+    var isFlipped=memFlipped.indexOf(c.id)!==-1;
+    var isMatched=memMatched.indexOf(c.pairId)!==-1;
+    html+='<div class="mem-card'+(isFlipped?' flipped':'')+(isMatched?' matched':'')+'" onclick="flipMemCard(\''+c.id+'\')">';
+    html+='<div class="mem-card-inner">';
+    html+='<div class="mem-face mem-front"><span>?</span></div>';
+    html+='<div class="mem-face mem-back type-'+c.type+'"><span class="mem-word">'+c.content+'</span>'+(c.type==='word'?'<span class="mem-trans">clique para ouvir</span>':'')+'</div>';
+    html+='</div></div>';
+  });
+  html+='</div>';
+  if(memMatched.length===6){
+    var time=Math.floor((Date.now()-memStart)/1000);
+    var bonus=Math.max(0,60-time)*2;
+    var totalXP=Math.max(100+bonus-memMoves*3,50);
+    html+='<div class="win-screen"><div style="font-size:40px">🏆</div><h3 style="font-family:Fraunces,serif;font-size:22px">Parabéns!</h3>';
+    html+='<p style="margin:8px 0">Completou em '+formatTime(time)+' com '+memMoves+' jogadas!</p>';
+    html+='<p style="font-weight:700">+'+totalXP+' XP</p></div>';
+    if(memTimer)clearInterval(memTimer);
+    addXP(totalXP);confetti({particleCount:200,spread:100,origin:{y:.5}});
+  }
+  container.innerHTML=html;
+}
+function flipMemCard(id){
+  if(memFlipped.length>=2)return;
+  var card=memCards.find(function(c){return c.id===id});
+  if(!card||memMatched.indexOf(card.pairId)!==-1||memFlipped.indexOf(id)!==-1)return;
+  if(card.type==='word')speak(null,card.content);
+  memFlipped.push(id);
+  if(memFlipped.length===2){
+    memMoves++;
+    var c1=memCards.find(function(c){return c.id===memFlipped[0]});
+    var c2=memCards.find(function(c){return c.id===memFlipped[1]});
+    if(c1.pairId===c2.pairId&&c1.id!==c2.id){
+      memMatched.push(c1.pairId);memFlipped=[];renderMemory();
+    } else {
+      renderMemory();
+      setTimeout(function(){memFlipped=[];renderMemory()},800);
+    }
+  } else { renderMemory(); }
+}
+
+/* ═══════════════════════════════════════════
+   GAME 3: TIMED QUIZ
+   ═══════════════════════════════════════════ */
+var QUIZ=[
+  {prompt:'Faça uma pergunta para: "(your name?)"',hint:'Use What',options:['What is your name?','Who is your name?','Where is your name?','How is your name?'],correct:0,audio:'What is your name?'},
+  {prompt:'Faça uma pergunta para: "(he?)"',hint:'Use Who',options:['What is he?','Who is he?','Where is he?','How is he?'],correct:1,audio:'Who is he?'},
+  {prompt:'Faça uma pergunta para: "(this?)"',hint:'Use What',options:['Who is this?','Where is this?','What is this?','How is this?'],correct:2,audio:'What is this?'},
+  {prompt:'Faça uma pergunta para: "(you from?)"',hint:'Use Where',options:['What are you from?','Who are you from?','Where are you from?','How are you from?'],correct:2,audio:'Where are you from?'},
+  {prompt:'Faça uma pergunta para: "(your favorite color?)"',hint:'Use What',options:['How is your favorite color?','Where is your favorite color?','Who is your favorite color?','What is your favorite color?'],correct:3,audio:'What is your favorite color?'},
+  {prompt:'Faça uma pergunta para: "(they?)"',hint:'Use Who',options:['What are they?','Who are they?','Where are they?','How are they?'],correct:1,audio:'Who are they?'}
+];
+var qCurrent=0,qCorrect=0,qStreak=0,qTimeLeft=15,qTimer=null,qSelected=-1,qAnswered=false,qStarted=false;
+
+function startQuiz(){
+  qCurrent=0;qCorrect=0;qStreak=0;qTimeLeft=15;qSelected=-1;qAnswered=false;qStarted=true;
+  if(qTimer)clearInterval(qTimer);
+  renderQuiz();startQuizTimer();
+}
+function startQuizTimer(){
+  if(qTimer)clearInterval(qTimer);
+  qTimeLeft=15;
+  qTimer=setInterval(function(){
+    qTimeLeft--;
+    var el=document.getElementById('quizTimerDisplay');
+    if(el) el.textContent=qTimeLeft+'s';
+    if(el){el.className='timer-display '+(qTimeLeft<=5?'danger pulse':qTimeLeft<=10?'warn':'ok')}
+    if(qTimeLeft<=0){clearInterval(qTimer);answerQuiz(-1)}
+  },1000);
+}
+function renderQuiz(){
+  var c=document.getElementById('quizGame');
+  if(qCurrent>=QUIZ.length){renderQuizResult(c);return}
+  var q=QUIZ[qCurrent];
+  var letters='ABCD';
+  var html='<div class="quiz-progress"><div class="qp-track"><div class="qp-fill" style="width:'+((qCurrent)/QUIZ.length*100)+'%"></div></div><span>'+(qCurrent+1)+'/'+QUIZ.length+'</span></div>';
+  html+='<div class="quiz-timer"><span id="quizTimerDisplay" class="timer-display ok">⏱ '+qTimeLeft+'s</span>';
+  if(qStreak>=2)html+='<span class="streak-badge">🔥 '+qStreak+'x streak!</span>';
+  html+='</div>';
+  html+='<div class="quiz-question"><h4>'+q.prompt+'</h4><p class="hint">💡 '+q.hint+'</p></div>';
+  html+='<div class="quiz-options">';
+  q.options.forEach(function(opt,i){
+    var cls='quiz-option';
+    if(qAnswered){
+      cls+=' disabled';
+      if(i===q.correct)cls+=' correct-answer';
+      else if(i===qSelected)cls+=' wrong-answer';
+    }
+    html+='<button class="'+cls+'" onclick="answerQuiz('+i+')"><span class="letter">'+(qAnswered&&i===q.correct?'✓':qAnswered&&i===qSelected?'✗':letters[i])+'</span><span>'+opt+'</span></button>';
+  });
+  html+='</div>';
+  c.innerHTML=html;
+}
+function answerQuiz(idx){
+  if(qAnswered)return;qAnswered=true;qSelected=idx;
+  if(qTimer)clearInterval(qTimer);
+  var q=QUIZ[qCurrent];
+  if(idx===q.correct){qCorrect++;qStreak++;speak(null,q.audio)}
+  else{qStreak=0}
+  renderQuiz();
+  setTimeout(function(){qCurrent++;qAnswered=false;qSelected=-1;renderQuiz();if(qCurrent<QUIZ.length)startQuizTimer()},1400);
+}
+function renderQuizResult(c){
+  var pct=Math.round(qCorrect/QUIZ.length*100);
+  var xpEarned=qCorrect*20;
+  addXP(xpEarned);
+  if(pct>=70)confetti({particleCount:180,spread:90,origin:{y:.5}});
+  c.innerHTML='<div class="quiz-result">'
+    +'<div style="font-size:40px;margin-bottom:8px">🏆</div>'
+    +'<h3 style="font-family:Fraunces,serif;font-size:22px">Quiz Completo!</h3>'
+    +'<div style="display:flex;justify-content:center;gap:24px;margin:16px 0;font-size:13px">'
+    +'<div><div class="big-num">'+qCorrect+'/'+QUIZ.length+'</div><div style="color:var(--ink-soft)">Acertos</div></div>'
+    +'<div><div class="big-num">'+pct+'%</div><div style="color:var(--ink-soft)">Precisão</div></div>'
+    +'<div><div class="big-num">+'+xpEarned+'</div><div style="color:var(--ink-soft)">XP</div></div>'
+    +'</div>'
+    +'<div class="qp-track" style="max-width:300px;margin:0 auto"><div class="qp-fill" style="width:'+pct+'%"></div></div>'
+    +'<button class="btn" style="margin-top:16px" onclick="startQuiz()">🔄 Tentar Novamente</button>'
+    +'</div>';
+}
+
+/* ═══════════════════════════════════════════
+   FINISH LESSON
+   ═══════════════════════════════════════════ */
+function finishLesson(){
+  var msg=document.getElementById('finishMsg');if(!msg)return;
+  msg.style.display='inline-block';msg.textContent='✓ Lição finalizada! Bom trabalho.';
+  XP=Math.max(XP,100);updateHUD();
+  confetti({particleCount:100,spread:70,origin:{y:.7}});
+  try{localStorage.setItem('licao2_done','1')}catch(e){}
+}
+
+/* ═══════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════ */
+updateHUD();
+</script>
+</body>
+</html>
