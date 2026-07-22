@@ -127,17 +127,18 @@ button{font-family:inherit;cursor:pointer}
 .game-title p{font-size:13px;color:var(--ink-soft)}
 /* ─── DRAG & DROP ─── */
 .article-tokens{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px}
-.token{padding:8px 18px;border-radius:11px;font-weight:800;font-size:16px;border:2px solid var(--orange);background:linear-gradient(135deg,#FFF7ED,#FFFBEB);color:var(--orange-dark);cursor:grab;transition:all .15s;user-select:none;font-family:"Fraunces",Georgia,serif}
+.token{padding:8px 18px;border-radius:11px;font-weight:800;font-size:16px;border:2px solid var(--orange);background:linear-gradient(135deg,#FFF7ED,#FFFBEB);color:var(--orange-dark);cursor:pointer;transition:all .15s;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;font-family:"Fraunces",Georgia,serif;touch-action:manipulation}
 .token:hover{transform:scale(1.08);box-shadow:0 4px 12px rgba(217,121,63,.2);border-color:var(--orange-dark)}
-.token:active,.token.dragging{opacity:.5;transform:scale(.95)}
+.token:active{opacity:.7;transform:scale(.95)}
+.token.selected{outline:3px solid var(--orange-dark);outline-offset:1px;transform:scale(1.06);box-shadow:0 4px 12px rgba(217,121,63,.3)}
 .fill-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 20px}
 @media(max-width:600px){.fill-grid{grid-template-columns:1fr}}
 .fill-item{display:flex;align-items:center;gap:6px;font-size:13.5px;flex-wrap:wrap}
-.blank-slot{display:inline-flex;align-items:center;justify-content:center;min-width:42px;height:30px;padding:0 10px;border:2px dashed #ccc;border-radius:8px;background:#fafafa;font-size:14px;transition:all .2s;margin:0 3px}
+.blank-slot{display:inline-flex;align-items:center;justify-content:center;min-width:42px;height:30px;padding:0 10px;border:2px dashed #ccc;border-radius:8px;background:#fafafa;font-size:14px;transition:all .2s;margin:0 3px;cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .blank-slot.filled{border-style:solid;border-color:var(--orange);background:#FFF7ED;color:var(--orange-dark);font-weight:700}
 .blank-slot.correct{border-color:var(--ok);background:var(--ok-bg);color:#1e6b40;font-weight:700}
 .blank-slot.incorrect{border-color:var(--bad);background:var(--bad-bg);color:var(--bad);text-decoration:line-through}
-.blank-slot.drag-over{border-color:var(--orange-dark);background:#FED7AA;transform:scale(1.05)}
+.blank-slot.waiting{border-color:var(--orange);animation:pulse .8s ease-in-out infinite}
 .game-actions{display:flex;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap;justify-content:center}
 .score-badge{display:inline-block;font-weight:700;font-size:13px;padding:5px 12px;border-radius:99px;background:var(--cream-2);color:var(--orange-dark)}
 /* ─── MEMORY MATCH ─── */
@@ -449,7 +450,7 @@ button{font-family:inherit;cursor:pointer}
 
   <!-- JOGO 1: DRAG & DROP -->
   <div class="game-wrap reveal" id="game1">
-    <div class="game-title"><h3>🎮 Jogo 1: Arraste &amp; Solte</h3><p>Arraste os artigos (a, an, the) para os espaços em branco — ou clique no artigo e depois no espaço!</p></div>
+    <div class="game-title"><h3>🎮 Jogo 1: Toque e Complete</h3><p>Toque num artigo (a, an, the) e depois toque no espaço em branco para preenchê-lo. Toque num espaço já preenchido para trocar a resposta.</p></div>
     <div class="article-tokens" id="articleTokens"></div>
     <div class="fill-grid" id="fillGrid"></div>
     <div class="game-actions">
@@ -656,17 +657,13 @@ function initDragDrop(){
   var tokens=['a','an','the','A','An','The'];
   var container=document.getElementById('articleTokens');container.innerHTML='';
   tokens.forEach(function(t){
-    var el=document.createElement('div');el.className='token';el.textContent=t;el.draggable=true;
-    el.addEventListener('dragstart',function(e){e.dataTransfer.setData('text/plain',t);el.classList.add('dragging')});
-    el.addEventListener('dragend',function(){el.classList.remove('dragging')});
-    el.addEventListener('click',function(){
-      DD_SELECTED_TOKEN=t;
-      document.querySelectorAll('.token').forEach(function(tk){tk.style.outline=tk.textContent===t?'3px solid var(--orange-dark)':'none'});
-      document.querySelectorAll('.blank-slot:not(.correct)').forEach(function(s){s.style.borderColor='var(--orange)';s.style.animation='pulse .8s ease-in-out infinite'});
-    });
+    var el=document.createElement('div');el.className='token';el.textContent=t;
+    el.setAttribute('role','button');el.setAttribute('tabindex','0');
+    el.addEventListener('click',function(){selectToken(t)});
+    el.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();selectToken(t)}});
     container.appendChild(el);
   });
-  var grid=document.getElementById('fillGrid');grid.innerHTML='';DD_ANSWERS={};DD_CHECKED=false;
+  var grid=document.getElementById('fillGrid');grid.innerHTML='';DD_ANSWERS={};DD_CHECKED=false;DD_SELECTED_TOKEN=null;
   document.getElementById('ddScore').textContent='0/8';
   DD_EXERCISES.forEach(function(ex){
     var row=document.createElement('div');row.className='fill-item';
@@ -675,24 +672,31 @@ function initDragDrop(){
       +'<button class="audio-btn" style="margin-left:auto" onclick="speak(this,\''+ex.sentence.replace('___','a')+'\')">🔊</button>';
     grid.appendChild(row);
     var slot=row.querySelector('.blank-slot');
-    slot.addEventListener('dragover',function(e){e.preventDefault();slot.classList.add('drag-over')});
-    slot.addEventListener('dragleave',function(){slot.classList.remove('drag-over')});
-    slot.addEventListener('drop',function(e){
-      e.preventDefault();slot.classList.remove('drag-over');
-      var val=e.dataTransfer.getData('text/plain')||DD_SELECTED_TOKEN;
-      if(val){DD_ANSWERS[ex.id]=val.toLowerCase();slot.textContent=val;slot.classList.add('filled');DD_SELECTED_TOKEN=null;
-        document.querySelectorAll('.token').forEach(function(tk){tk.style.outline='none'});
-        document.querySelectorAll('.blank-slot').forEach(function(s){s.style.animation='none';s.style.borderColor=''});
-      }
-    });
-    slot.addEventListener('click',function(){
-      if(DD_SELECTED_TOKEN&&!DD_CHECKED){
-        DD_ANSWERS[ex.id]=DD_SELECTED_TOKEN.toLowerCase();slot.textContent=DD_SELECTED_TOKEN;slot.classList.add('filled');DD_SELECTED_TOKEN=null;
-        document.querySelectorAll('.token').forEach(function(tk){tk.style.outline='none'});
-        document.querySelectorAll('.blank-slot').forEach(function(s){s.style.animation='none';s.style.borderColor=''});
-      }
-    });
+    slot.setAttribute('role','button');slot.setAttribute('tabindex','0');
+    slot.addEventListener('click',function(){slotTapped(ex.id,slot)});
+    slot.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();slotTapped(ex.id,slot)}});
   });
+}
+function clearTokenHighlight(){
+  document.querySelectorAll('.token').forEach(function(tk){tk.classList.remove('selected')});
+  document.querySelectorAll('.blank-slot').forEach(function(s){s.classList.remove('waiting')});
+}
+function selectToken(t){
+  if(DD_CHECKED)return;
+  DD_SELECTED_TOKEN=t;
+  document.querySelectorAll('.token').forEach(function(tk){tk.classList.toggle('selected',tk.textContent===t)});
+  document.querySelectorAll('.blank-slot:not(.correct)').forEach(function(s){s.classList.add('waiting')});
+}
+function slotTapped(id,slot){
+  if(DD_CHECKED)return;
+  if(DD_SELECTED_TOKEN){
+    // Preenche o espaço com o artigo selecionado.
+    DD_ANSWERS[id]=DD_SELECTED_TOKEN.toLowerCase();slot.textContent=DD_SELECTED_TOKEN;slot.classList.add('filled');
+    DD_SELECTED_TOKEN=null;clearTokenHighlight();
+  } else if(slot.classList.contains('filled')){
+    // Toque num espaço já preenchido (sem token selecionado) limpa a resposta.
+    delete DD_ANSWERS[id];slot.textContent='?';slot.classList.remove('filled');
+  }
 }
 function checkDragDrop(){
   DD_CHECKED=true;var correct=0;
