@@ -21,11 +21,74 @@ const TESTS = [
 // aqui não há bloqueio nem pré-requisito: todo aluno pode acessar direto.
 const EXTRAS = [
   {
-    id: 'manual-portugues-basico',
-    name: 'Português Básico: Classes Gramaticais',
-    icon: '🔤',
-    description: 'O que é substantivo, verbo, pronome e as outras classes — do jeito simples, com exercício',
-    url: 'lessons/manual-portugues-basico.html'
+    id: 'pb-substantivo',
+    name: 'Básico 1 — Substantivo',
+    icon: '🧑‍🤝‍🧑',
+    description: 'Pessoas, animais, lugares, objetos e sentimentos',
+    url: 'lessons/pb-substantivo.html'
+  },
+  {
+    id: 'pb-artigo',
+    name: 'Básico 2 — Artigo',
+    icon: '🔖',
+    description: 'Indica se falamos de algo específico ou qualquer',
+    url: 'lessons/pb-artigo.html'
+  },
+  {
+    id: 'pb-adjetivo',
+    name: 'Básico 3 — Adjetivo',
+    icon: '🎨',
+    description: 'Descreve como é o substantivo',
+    url: 'lessons/pb-adjetivo.html'
+  },
+  {
+    id: 'pb-numeral',
+    name: 'Básico 4 — Numeral',
+    icon: '🔢',
+    description: 'Indica quantidade, ordem ou quantas vezes',
+    url: 'lessons/pb-numeral.html'
+  },
+  {
+    id: 'pb-pronome',
+    name: 'Básico 5 — Pronome',
+    icon: '👉',
+    description: 'Pessoal, possessivo e demonstrativo',
+    url: 'lessons/pb-pronome.html'
+  },
+  {
+    id: 'pb-verbo',
+    name: 'Básico 6 — Verbo',
+    icon: '🏃',
+    description: 'O que acontece, o que se faz, como se está',
+    url: 'lessons/pb-verbo.html'
+  },
+  {
+    id: 'pb-adverbio',
+    name: 'Básico 7 — Advérbio',
+    icon: '⚡',
+    description: 'Modifica verbo, adjetivo ou outro advérbio',
+    url: 'lessons/pb-adverbio.html'
+  },
+  {
+    id: 'pb-preposicao',
+    name: 'Básico 8 — Preposição',
+    icon: '🔗',
+    description: 'Estabelece relação entre termos',
+    url: 'lessons/pb-preposicao.html'
+  },
+  {
+    id: 'pb-conjuncao',
+    name: 'Básico 9 — Conjunção',
+    icon: '🧷',
+    description: 'Adição, oposição, causa e outras relações',
+    url: 'lessons/pb-conjuncao.html'
+  },
+  {
+    id: 'pb-interjeicao',
+    name: 'Básico 10 — Interjeição',
+    icon: '❗',
+    description: 'Alegria, dor, surpresa, pedido',
+    url: 'lessons/pb-interjeicao.html'
   },
   {
     id: 'pt-morfologia',
@@ -104,6 +167,7 @@ const EXTRAS = [
     description: 'Versão em teste da Lição 2 com um visual e formato de exercícios novos — só para avaliação',
     url: 'lessons/licao-2-interativa.html'
   }
+
 ];
 
 const LESSONS = [

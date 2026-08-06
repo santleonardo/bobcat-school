@@ -7,7 +7,7 @@
 // esse número — é o que avisa o navegador que existe uma versão nova do
 // service worker para instalar. Sem isso, o navegador pode continuar
 // rodando a versão antiga do service worker por bastante tempo.
-const CACHE_NAME = 'bobcat-app-v17';
+const CACHE_NAME = 'bobcat-app-v18';
 
 const APP_SHELL = [
   './',
@@ -21,6 +21,16 @@ const APP_SHELL = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './lessons/nivelamento.html',
+  './lessons/pb-interjeicao.html',
+  './lessons/pb-conjuncao.html',
+  './lessons/pb-preposicao.html',
+  './lessons/pb-adverbio.html',
+  './lessons/pb-verbo.html',
+  './lessons/pb-pronome.html',
+  './lessons/pb-numeral.html',
+  './lessons/pb-adjetivo.html',
+  './lessons/pb-artigo.html',
+  './lessons/pb-substantivo.html',
   './lessons/pronuncia-essencial.html',
   './lessons/verb-to-be.html',
   './lessons/saudacoes-apresentacoes.html',
@@ -53,7 +63,6 @@ const APP_SHELL = [
   './lessons/licao-29-phrasal-verbs.html',
   './lessons/licao-30-revisao-semestre-2.html',
   './lessons/custom.html',
-  './lessons/manual-portugues-basico.html',
   './lessons/pt-interpretacao.html',
   './lessons/pt-pontuacao.html',
   './lessons/pt-ortografia.html',
