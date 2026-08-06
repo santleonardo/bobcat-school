@@ -61,7 +61,11 @@
   .lesson-card-list { display:flex; flex-direction:column; gap:8px; }
   .lesson-item {
     display:flex; align-items:center; gap:12px; background:#fff; border:1px solid #eee;
-    border-radius:10px; padding:10px 14px;
+    border-radius:10px; padding:10px 14px; cursor:pointer; text-decoration:none; color:inherit;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  .lesson-item:hover {
+    border-color: var(--orange); box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   }
   .lesson-item .icon { font-size:22px; }
   .lesson-item .info { flex:1; min-width:0; }
@@ -301,14 +305,14 @@ function renderLessonsTab() {
     html += '<div class="level-title">' + g.level + '</div>';
     html += '<div class="lesson-card-list">';
     g.items.forEach(item => {
-      html += `<div class="lesson-item">
+      html += `<a class="lesson-item" href="lessons/${item.id}.html" target="_blank" rel="noopener">
         <div class="icon">${item.icon}</div>
         <div class="info">
           <div class="name">${item.name}</div>
           <div class="desc">${item.description}</div>
         </div>
         <div class="qcount">${item.totalQuestions} questões</div>
-      </div>`;
+      </a>`;
     });
     html += '</div></div>';
   });
