@@ -21,18 +21,18 @@ const TESTS = [
 // aqui não há bloqueio nem pré-requisito: todo aluno pode acessar direto.
 const EXTRAS = [
   {
-    id: 'manual-portugues',
-    name: 'Manual Prático de Língua Portuguesa',
-    icon: '📘',
-    description: 'Morfologia, sintaxe, concordância, crase, pontuação e mais — com exercícios',
-    url: 'lessons/manual-portugues.html'
-  },
-  {
     id: 'manual-portugues-basico',
     name: 'Português Básico: Classes Gramaticais',
     icon: '🔤',
     description: 'O que é substantivo, verbo, pronome e as outras classes — do jeito simples, com exercício',
     url: 'lessons/manual-portugues-basico.html'
+  },
+  {
+    id: 'manual-portugues',
+    name: 'Manual Prático de Língua Portuguesa',
+    icon: '📘',
+    description: 'Morfologia, sintaxe, concordância, crase, pontuação e mais — com exercícios',
+    url: 'lessons/manual-portugues.html'
   },
   {
     id: 'licao-2-interativa',
