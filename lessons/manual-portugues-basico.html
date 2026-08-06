@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bobcat Language School — Português Básico: Classes Gramaticais</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<style>
+  :root {
+    --orange: #D9793F;
+    --orange-dark: #C9622A;
+    --cream: #FBEFE6;
+    --cream-2: #F7F1EC;
+    --ink: #2b2b2b;
+    --ok: #2E8B57;
+    --bad: #C0392B;
+    --border: #EBC9AE;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    background: #fdfaf7;
+    margin: 0;
+    padding: 0 0 60px 0;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 28px 20px; }
+
+  .back-link { display: inline-block; font-size: 13.5px; color: var(--orange-dark); text-decoration: none; font-weight: 700; margin-bottom: 14px; }
+  .back-link:hover { text-decoration: underline; }
+
+  .header { border-bottom: 3px solid var(--orange); padding-bottom: 16px; margin-bottom: 22px; text-align: center; }
+  .header .badge { font-size: 12.5px; font-weight: 700; color: var(--orange-dark); background: var(--cream); display: inline-block; padding: 4px 14px; border-radius: 20px; margin-bottom: 10px; }
+  h1.title { color: var(--orange-dark); font-size: 26px; margin: 0 0 6px 0; }
+  .subtitle { font-style: italic; color: #777; font-size: 13.5px; }
+
+  .intro-box {
+    background: var(--cream); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 18px; font-size: 14px; margin-bottom: 24px;
+  }
+
+  .class-card {
+    background: #fff; border: 1px solid #eee; border-radius: 12px;
+    padding: 18px 20px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  }
+  .class-card .head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .class-card .icon { font-size: 26px; }
+  .class-card h2 { font-size: 18px; color: var(--orange-dark); margin: 0; }
+  .class-card .what { font-size: 14px; margin: 6px 0 10px 0; }
+  .class-card .examples {
+    background: var(--cream-2); border-radius: 8px; padding: 10px 14px;
+    font-size: 13.5px; display: flex; flex-wrap: wrap; gap: 8px 18px;
+  }
+  .class-card .examples b { color: var(--orange-dark); }
+
+  .section-title {
+    background: var(--orange); color: #fff; font-weight: 700; font-size: 15px;
+    padding: 9px 16px; border-radius: 6px; margin: 30px 0 14px 0;
+  }
+
+  .ex-card { background: #fff; border: 1px solid #eee; border-radius: 10px; padding: 18px 20px; margin: 14px 0; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+  .mc-item { margin: 16px 0; font-size: 14px; }
+  .mc-item .q { font-weight: 700; margin-bottom: 8px; }
+  .mc-item .q .target { color: var(--orange-dark); text-decoration: underline; text-decoration-style: wavy; }
+  .mc-options { display: flex; gap: 10px; flex-wrap: wrap; }
+  .mc-options label {
+    display: flex; align-items: center; gap: 6px; border: 2px solid #ddd; border-radius: 6px;
+    padding: 6px 12px; cursor: pointer; font-size: 13.5px; transition: border-color .15s, background .15s;
+  }
+  .mc-options label:hover { border-color: var(--orange); }
+  .mc-options label.correct { border-color: var(--ok); background: #EAF7EF; color: #1e6b40; font-weight: 600; }
+  .mc-options label.incorrect { border-color: var(--bad); background: #FBEAE8; color: var(--bad); }
+  .mc-options input { accent-color: var(--orange); }
+
+  .btn { background: var(--orange); color: #fff; border: none; padding: 11px 22px; border-radius: 7px; font-size: 14.5px; font-weight: 700; cursor: pointer; transition: background .15s, transform .1s; }
+  .btn:hover { background: var(--orange-dark); }
+  .btn:active { transform: scale(0.98); }
+
+  .score-badge { display: none; margin-left: 14px; font-weight: 700; font-size: 14.5px; padding: 6px 14px; border-radius: 20px; background: var(--cream-2); color: var(--orange-dark); }
+  .actions { display: flex; align-items: center; gap: 6px; margin-top: 16px; flex-wrap: wrap; }
+  .footer-note { text-align: center; font-size: 12px; color: #999; margin-top: 30px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back-link" href="../index.html">&larr; Voltar ao app</a>
+
+  <div class="header">
+    <span class="badge">📘 Extra — Português</span>
+    <h1 class="title">Manual Básico: Classes Gramaticais</h1>
+    <div class="subtitle">O que é substantivo, verbo, pronome e as outras classes — do jeito simples</div>
+  </div>
+
+  <div class="intro-box">
+    Toda palavra da língua portuguesa pertence a uma <strong>classe gramatical</strong> — é como se fosse a "profissão"
+    da palavra dentro da frase. Aqui vamos ver as classes mais importantes, uma de cada vez, com bastante exemplo.
+    No final tem um exercício para você praticar. 🎯
+  </div>
+
+  <div class="class-card">
+    <div class="head"><span class="icon">🧑‍🤝‍🧑</span><h2>Substantivo</h2></div>
+    <p class="what">É o nome de tudo: pessoas, animais, lugares, objetos e até sentimentos.</p>
+    <div class="examples">
+      <span><b>Pessoas:</b> Maria, professor, criança</span>
+      <span><b>Lugares:</b> escola, cidade, Brasil</span>
+      <span><b>Objetos:</b> caderno, celular, mesa</span>
+      <span><b>Sentimentos:</b> alegria, medo, amor</span>
+    </div>
+  </div>
+
+  <div class="class-card">
+    <div class="head"><span class="icon">🔖</span><h2>Artigo</h2></div>
+    <p class="what">Vem antes do substantivo e ajuda a indicar se estamos falando de algo já conhecido ou não.</p>
+    <div class="examples">
+      <span><b>Definidos</b> (algo específico): o, a, os, as — <i>"o carro" (aquele carro)</i></span>
+      <span><b>Indefinidos</b> (algo qualquer): um, uma, uns, umas — <i>"um carro" (qualquer carro)</i></span>
+    </div>
+  </div>
+
+  <div class="class-card">
+    <div class="head"><span class="icon">🎨</span><h2>Adjetivo</h2></div>
+    <p class="what">Descreve como é o substantivo — uma característica, qualidade ou defeito.</p>
+    <div class="examples">
+      <span><i>Uma casa</i> <b>grande</b></span>
+      <span><i>Um dia</i> <b>ensolarado</b></span>
+      <span><i>Uma pessoa</i> <b>gentil</b></span>
+      <span><i>Um filme</i> <b>chato</b></span>
+    </div>
+  </div>
+
+  <div class="class-card">
+    <div class="head"><span class="icon">🔢</span><h2>Numeral</h2></div>
+    <p class="what">Indica quantidade, ordem ou quantas vezes algo acontece.</p>
+    <div class="examples">
+      <span><b>Quantidade:</b> dois, cem, mil</span>
+      <span><b>Ordem:</b> primeiro, segundo, terceiro</span>
+      <span><b>Múltiplo:</b> dobro, triplo</span>
+    </div>
+  </div>
+
+  <div class="class-card">
+    <div class="head"><span class="icon">👉</span><h2>Pronome</h2></div>
+    <p class="what">Substitui ou acompanha o substantivo, para não precisar repeti-lo o tempo todo.</p>
+    <div class="examples">
+      <span><b>Pessoal:</b> eu, você, ele, nós — <i>"Ela chegou."</i> (em vez de repetir o nome)</span>
+      <span><b>Possessivo:</b> meu, seu, nosso — <i>"Este é o meu livro."</i></span>
+      <span><b>Demonstrativo:</b> este, esse, aquele — <i>"Quero aquele ali."</i></span>
+    </div>
+  </div>
+
+  <div class="class-card">
+    <div class="head"><span class="icon">🏃</span><h2>Verbo</h2></div>
+    <p class="what">Indica uma ação, um estado ou algo que acontece.</p>
+    <div class="examples">
+      <span><b>Ação:</b> correr, estudar, comer</span>
+      <span><b>Estado:</b> ser, estar, ficar</span>
+      <span><b>Fenômeno:</b> chover, anoitecer</span>
+    </div>
+  </div>
+
+  <div class="class-card">
+    <div class="head"><span class="icon">⚡</span><h2>Advérbio</h2></div>
+    <p class="what">Modifica um verbo, um adjetivo ou outro advérbio — geralmente indica como, quando, onde ou quanto.</p>
+    <div class="examples">
+      <span><b>Modo:</b> Ela fala <i>bem</i>.</span>
+      <span><b>Tempo:</b> Chego <i>amanhã</i>.</span>
+      <span><b>Lugar:</b> Fica <i>aqui</i>.</span>
+      <span><b>Intensidade:</b> Estou <i>muito</i> feliz.</span>
+    </div>
+  </div>
+
+  <div class="class-card">
+    <div class="head"><span class="icon">🔗</span><h2>Preposição</h2></div>
+    <p class="what">Liga duas palavras, criando uma relação entre elas (não tem tradução sozinha, só faz sentido junto de outra palavra).</p>
+    <div class="examples">
+      <span><i>Livro</i> <b>de</b> <i>história</i></span>
+      <span><i>Vou</i> <b>para</b> <i>casa</i></span>
+      <span><i>Café</i> <b>com</b> <i>leite</i></span>
+    </div>
+  </div>
+
+  <div class="class-card">
+    <div class="head"><span class="icon">🧷</span><h2>Conjunção</h2></div>
+    <p class="what">Liga duas frases ou duas palavras de mesmo tipo, mostrando a relação entre elas.</p>
+    <div class="examples">
+      <span><b>Adição:</b> Estudei <i>e</i> passei.</span>
+      <span><b>Oposição:</b> Quis ir, <i>mas</i> não deu.</span>
+      <span><b>Causa:</b> Faltei <i>porque</i> fiquei doente.</span>
+    </div>
+  </div>
+
+  <div class="class-card">
+    <div class="head"><span class="icon">❗</span><h2>Interjeição</h2></div>
+    <p class="what">Expressa uma emoção repentina — alegria, dor, surpresa, chamado.</p>
+    <div class="examples">
+      <span><b>Ai!</b> (dor)</span>
+      <span><b>Nossa!</b> (surpresa)</span>
+      <span><b>Que legal!</b> (alegria)</span>
+      <span><b>Socorro!</b> (pedido)</span>
+    </div>
+  </div>
+
+  <div class="section-title">📝 Agora é sua vez — pratique!</div>
+  <div class="ex-card">
+    <p style="font-size:13.5px;color:#666;margin-bottom:14px;">Em cada frase, uma palavra está <span style="text-decoration:underline;text-decoration-style:wavy;color:var(--orange-dark);">sublinhada</span>. Escolha a classe gramatical certa dela.</p>
+
+    <div class="mc-item">
+      <div class="q">1. O <span class="target">CACHORRO</span> correu no parque.</div>
+      <div class="mc-options">
+        <label><input type="radio" name="q1" value="a">Verbo</label>
+        <label class="correct-answer"><input type="radio" name="q1" value="b">Substantivo</label>
+        <label><input type="radio" name="q1" value="c">Adjetivo</label>
+        <label><input type="radio" name="q1" value="d">Advérbio</label>
+      </div>
+    </div>
+
+    <div class="mc-item">
+      <div class="q">2. Ela é uma pessoa muito <span class="target">GENTIL</span>.</div>
+      <div class="mc-options">
+        <label><input type="radio" name="q2" value="a">Substantivo</label>
+        <label><input type="radio" name="q2" value="b">Pronome</label>
+        <label class="correct-answer"><input type="radio" name="q2" value="c">Adjetivo</label>
+        <label><input type="radio" name="q2" value="d">Conjunção</label>
+      </div>
+    </div>
+
+    <div class="mc-item">
+      <div class="q">3. <span class="target">EU</span> gosto de música.</div>
+      <div class="mc-options">
+        <label class="correct-answer"><input type="radio" name="q3" value="a">Pronome</label>
+        <label><input type="radio" name="q3" value="b">Verbo</label>
+        <label><input type="radio" name="q3" value="c">Artigo</label>
+        <label><input type="radio" name="q3" value="d">Interjeição</label>
+      </div>
+    </div>
+
+    <div class="mc-item">
+      <div class="q">4. Nós vamos <span class="target">ESTUDAR</span> hoje à noite.</div>
+      <div class="mc-options">
+        <label><input type="radio" name="q4" value="a">Substantivo</label>
+        <label class="correct-answer"><input type="radio" name="q4" value="b">Verbo</label>
+        <label><input type="radio" name="q4" value="c">Advérbio</label>
+        <label><input type="radio" name="q4" value="d">Numeral</label>
+      </div>
+    </div>
+
+    <div class="mc-item">
+      <div class="q">5. Ele chegou <span class="target">ONTEM</span> à tarde.</div>
+      <div class="mc-options">
+        <label><input type="radio" name="q5" value="a">Substantivo</label>
+        <label><input type="radio" name="q5" value="b">Preposição</label>
+        <label class="correct-answer"><input type="radio" name="q5" value="c">Advérbio</label>
+        <label><input type="radio" name="q5" value="d">Pronome</label>
+      </div>
+    </div>
+
+    <div class="mc-item">
+      <div class="q">6. O caderno está em cima <span class="target">DA</span> mesa. <span style="font-weight:400;">(de + a)</span></div>
+      <div class="mc-options">
+        <label><input type="radio" name="q6" value="a">Conjunção</label>
+        <label class="correct-answer"><input type="radio" name="q6" value="b">Preposição (combinada com artigo)</label>
+        <label><input type="radio" name="q6" value="c">Adjetivo</label>
+        <label><input type="radio" name="q6" value="d">Interjeição</label>
+      </div>
+    </div>
+
+    <div class="mc-item">
+      <div class="q">7. Comprei <span class="target">DOIS</span> presentes para ela.</div>
+      <div class="mc-options">
+        <label><input type="radio" name="q7" value="a">Artigo</label>
+        <label><input type="radio" name="q7" value="b">Adjetivo</label>
+        <label class="correct-answer"><input type="radio" name="q7" value="c">Numeral</label>
+        <label><input type="radio" name="q7" value="d">Verbo</label>
+      </div>
+    </div>
+
+    <div class="mc-item">
+      <div class="q">8. Queria sair, <span class="target">MAS</span> estava chovendo.</div>
+      <div class="mc-options">
+        <label><input type="radio" name="q8" value="a">Advérbio</label>
+        <label class="correct-answer"><input type="radio" name="q8" value="b">Conjunção</label>
+        <label><input type="radio" name="q8" value="c">Substantivo</label>
+        <label><input type="radio" name="q8" value="d">Pronome</label>
+      </div>
+    </div>
+
+    <div class="mc-item">
+      <div class="q">9. <span class="target">NOSSA!</span> Que susto você me deu!</div>
+      <div class="mc-options">
+        <label><input type="radio" name="q9" value="a">Adjetivo</label>
+        <label><input type="radio" name="q9" value="b">Verbo</label>
+        <label class="correct-answer"><input type="radio" name="q9" value="c">Interjeição</label>
+        <label><input type="radio" name="q9" value="d">Numeral</label>
+      </div>
+    </div>
+
+    <div class="mc-item">
+      <div class="q">10. <span class="target">O</span> menino saiu cedo.</div>
+      <div class="mc-options">
+        <label class="correct-answer"><input type="radio" name="q10" value="a">Artigo</label>
+        <label><input type="radio" name="q10" value="b">Pronome</label>
+        <label><input type="radio" name="q10" value="c">Preposição</label>
+        <label><input type="radio" name="q10" value="d">Substantivo</label>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
+      <span class="score-badge" id="score-badge"></span>
+      <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
+    </div>
+  </div>
+
+  <div class="footer-note">Bobcat Language School • Manual Básico de Português — Classes Gramaticais</div>
+</div>
+
+<script>
+const LESSON_ID = 'manual-portugues-basico';
+let finishing = false;
+
+const QUESTIONS = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10'];
+
+function checkAnswers() {
+  let correct = 0;
+  QUESTIONS.forEach(name => {
+    const options = document.querySelectorAll('input[name=' + name + ']');
+    const selected = document.querySelector('input[name=' + name + ']:checked');
+    options.forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
+    const correctLabel = document.querySelector('input[name=' + name + ']').closest('.mc-options').querySelector('.correct-answer');
+    if (selected) {
+      const label = selected.parentElement;
+      if (label.classList.contains('correct-answer')) {
+        label.classList.add('correct');
+        correct++;
+      } else {
+        label.classList.add('incorrect');
+        if (correctLabel) correctLabel.classList.add('correct');
+      }
+    } else if (correctLabel) {
+      correctLabel.classList.add('correct');
+    }
+  });
+  const badge = document.getElementById('score-badge');
+  badge.style.display = 'inline-block';
+  badge.textContent = correct + ' / ' + QUESTIONS.length + ' corretas';
+  return correct;
+}
+
+async function finishLesson() {
+  if (finishing) return;
+  finishing = true;
+
+  const correct = checkAnswers();
+  const total = QUESTIONS.length;
+
+  const passed = await handleLessonFinish(LESSON_ID, correct, total, 'correct');
+  if (!passed) finishing = false; // permite tentar novamente sem recarregar a página
+}
+</script>
+</body>
+</html>

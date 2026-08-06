@@ -28,6 +28,13 @@ const EXTRAS = [
     url: 'lessons/manual-portugues.html'
   },
   {
+    id: 'manual-portugues-basico',
+    name: 'Português Básico: Classes Gramaticais',
+    icon: '🔤',
+    description: 'O que é substantivo, verbo, pronome e as outras classes — do jeito simples, com exercício',
+    url: 'lessons/manual-portugues-basico.html'
+  },
+  {
     id: 'licao-2-interativa',
     name: '🧪 [Teste] Lição 2 — Novo Visual e Formato',
     icon: '🧪',
