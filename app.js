@@ -22,6 +22,7 @@ const TESTS = [
 const EXTRAS = [
   {
     id: 'pb-substantivo',
+    group: 'Manual Básico — Classes Gramaticais',
     name: 'Básico 1 — Substantivo',
     icon: '🧑‍🤝‍🧑',
     description: 'Pessoas, animais, lugares, objetos e sentimentos',
@@ -29,6 +30,7 @@ const EXTRAS = [
   },
   {
     id: 'pb-artigo',
+    group: 'Manual Básico — Classes Gramaticais',
     name: 'Básico 2 — Artigo',
     icon: '🔖',
     description: 'Indica se falamos de algo específico ou qualquer',
@@ -36,6 +38,7 @@ const EXTRAS = [
   },
   {
     id: 'pb-adjetivo',
+    group: 'Manual Básico — Classes Gramaticais',
     name: 'Básico 3 — Adjetivo',
     icon: '🎨',
     description: 'Descreve como é o substantivo',
@@ -43,6 +46,7 @@ const EXTRAS = [
   },
   {
     id: 'pb-numeral',
+    group: 'Manual Básico — Classes Gramaticais',
     name: 'Básico 4 — Numeral',
     icon: '🔢',
     description: 'Indica quantidade, ordem ou quantas vezes',
@@ -50,6 +54,7 @@ const EXTRAS = [
   },
   {
     id: 'pb-pronome',
+    group: 'Manual Básico — Classes Gramaticais',
     name: 'Básico 5 — Pronome',
     icon: '👉',
     description: 'Pessoal, possessivo e demonstrativo',
@@ -57,6 +62,7 @@ const EXTRAS = [
   },
   {
     id: 'pb-verbo',
+    group: 'Manual Básico — Classes Gramaticais',
     name: 'Básico 6 — Verbo',
     icon: '🏃',
     description: 'O que acontece, o que se faz, como se está',
@@ -64,6 +70,7 @@ const EXTRAS = [
   },
   {
     id: 'pb-adverbio',
+    group: 'Manual Básico — Classes Gramaticais',
     name: 'Básico 7 — Advérbio',
     icon: '⚡',
     description: 'Modifica verbo, adjetivo ou outro advérbio',
@@ -71,6 +78,7 @@ const EXTRAS = [
   },
   {
     id: 'pb-preposicao',
+    group: 'Manual Básico — Classes Gramaticais',
     name: 'Básico 8 — Preposição',
     icon: '🔗',
     description: 'Estabelece relação entre termos',
@@ -78,6 +86,7 @@ const EXTRAS = [
   },
   {
     id: 'pb-conjuncao',
+    group: 'Manual Básico — Classes Gramaticais',
     name: 'Básico 9 — Conjunção',
     icon: '🧷',
     description: 'Adição, oposição, causa e outras relações',
@@ -85,6 +94,7 @@ const EXTRAS = [
   },
   {
     id: 'pb-interjeicao',
+    group: 'Manual Básico — Classes Gramaticais',
     name: 'Básico 10 — Interjeição',
     icon: '❗',
     description: 'Alegria, dor, surpresa, pedido',
@@ -92,6 +102,7 @@ const EXTRAS = [
   },
   {
     id: 'pt-morfologia',
+    group: 'Manual Prático — Língua Portuguesa',
     name: 'Português 1 — Morfologia',
     icon: '🔤',
     description: 'Classes gramaticais, formação e flexão das palavras',
@@ -99,6 +110,7 @@ const EXTRAS = [
   },
   {
     id: 'pt-sintaxe',
+    group: 'Manual Prático — Língua Portuguesa',
     name: 'Português 2 — Sintaxe',
     icon: '🧩',
     description: 'Sujeito, predicado, objetos e termos acessórios',
@@ -106,6 +118,7 @@ const EXTRAS = [
   },
   {
     id: 'pt-concordancia',
+    group: 'Manual Prático — Língua Portuguesa',
     name: 'Português 3 — Concordância',
     icon: '🤝',
     description: 'Concordância nominal e verbal, casos especiais',
@@ -113,6 +126,7 @@ const EXTRAS = [
   },
   {
     id: 'pt-regencia',
+    group: 'Manual Prático — Língua Portuguesa',
     name: 'Português 4 — Regência',
     icon: '🔗',
     description: 'Regência verbal e nominal, preposições exigidas',
@@ -120,6 +134,7 @@ const EXTRAS = [
   },
   {
     id: 'pt-crase',
+    group: 'Manual Prático — Língua Portuguesa',
     name: 'Português 5 — Crase',
     icon: '🅰️',
     description: 'Casos obrigatórios, proibidos e facultativos de crase',
@@ -127,6 +142,7 @@ const EXTRAS = [
   },
   {
     id: 'pt-colocacao',
+    group: 'Manual Prático — Língua Portuguesa',
     name: 'Português 6 — Colocação Pronominal',
     icon: '📎',
     description: 'Posição dos pronomes oblíquos átonos',
@@ -134,6 +150,7 @@ const EXTRAS = [
   },
   {
     id: 'pt-acentuacao',
+    group: 'Manual Prático — Língua Portuguesa',
     name: 'Português 7 — Acentuação',
     icon: '✏️',
     description: 'Oxítonas, paroxítonas, proparoxítonas e casos especiais',
@@ -141,6 +158,7 @@ const EXTRAS = [
   },
   {
     id: 'pt-ortografia',
+    group: 'Manual Prático — Língua Portuguesa',
     name: 'Português 8 — Ortografia',
     icon: '📝',
     description: 'Uso de S, Z, X, CH, G, J, H e hífen',
@@ -148,6 +166,7 @@ const EXTRAS = [
   },
   {
     id: 'pt-pontuacao',
+    group: 'Manual Prático — Língua Portuguesa',
     name: 'Português 9 — Pontuação',
     icon: '✒️',
     description: 'Vírgula, ponto e vírgula, dois-pontos e demais sinais',
@@ -155,6 +174,7 @@ const EXTRAS = [
   },
   {
     id: 'pt-interpretacao',
+    group: 'Manual Prático — Língua Portuguesa',
     name: 'Português 10 — Interpretação de Textos',
     icon: '📖',
     description: 'Níveis de leitura, tipologias, coesão e recursos de linguagem',
@@ -162,6 +182,7 @@ const EXTRAS = [
   },
   {
     id: 'licao-2-interativa',
+    group: 'Outros',
     name: '🧪 [Teste] Lição 2 — Novo Visual e Formato',
     icon: '🧪',
     description: 'Versão em teste da Lição 2 com um visual e formato de exercícios novos — só para avaliação',
@@ -996,21 +1017,56 @@ function renderExtras() {
   if (!list) return;
   list.innerHTML = '';
 
+  // Agrupa visualmente: Manual Básico, Manual Prático e Outros
+  const GROUP_ORDER = [
+    'Manual Básico — Classes Gramaticais',
+    'Manual Prático — Língua Portuguesa',
+    'Outros'
+  ];
+  const groups = {};
   EXTRAS.forEach(extra => {
-    const card = document.createElement('div');
-    card.className = 'lesson-card';
-    card.innerHTML = `
-      <div class="icon">${extra.icon}</div>
-      <div class="info">
-        <div class="name">${extra.name}</div>
-        <div class="level">${extra.description}</div>
+    const g = extra.group || 'Outros';
+    if (!groups[g]) groups[g] = [];
+    groups[g].push(extra);
+  });
+
+  GROUP_ORDER.forEach(groupName => {
+    const items = groups[groupName];
+    if (!items || items.length === 0) return;
+
+    const section = document.createElement('div');
+    section.className = 'level-group extra-group';
+
+    const isBasico = groupName.startsWith('Manual Básico');
+    const isPratico = groupName.startsWith('Manual Prático');
+    const groupIcon = isBasico ? '🔤' : (isPratico ? '📘' : '📎');
+    const countLabel = items.length === 1 ? '1 lição' : items.length + ' lições';
+
+    section.innerHTML = `
+      <div class="level-group-title">
+        <span class="label">${groupIcon} ${groupName}</span>
+        <span class="line"></span>
+        <span class="count">${countLabel}</span>
       </div>
-      <div class="badge">Aberto</div>
-      <div class="chevron">›</div>
     `;
-    // Sem verificação de bloqueio: matéria extra é sempre acessível.
-    card.addEventListener('click', () => { window.location.href = extra.url; });
-    list.appendChild(card);
+
+    items.forEach(extra => {
+      const card = document.createElement('div');
+      card.className = 'lesson-card';
+      card.innerHTML = `
+        <div class="icon">${extra.icon}</div>
+        <div class="info">
+          <div class="name">${extra.name}</div>
+          <div class="level">${extra.description}</div>
+        </div>
+        <div class="badge">Aberto</div>
+        <div class="chevron">›</div>
+      `;
+      card.addEventListener('click', () => { window.location.href = extra.url; });
+      section.appendChild(card);
+    });
+
+    list.appendChild(section);
   });
 }
 
@@ -1173,7 +1229,10 @@ async function loadCustomLessonsIntoCatalog() {
   const custom = await getCustomLessons();
   custom.forEach(item => {
     if (item.section === 'extras') {
-      if (!EXTRAS.some(e => e.id === item.id)) EXTRAS.push(item);
+      if (!EXTRAS.some(e => e.id === item.id)) {
+        if (!item.group) item.group = 'Outros';
+        EXTRAS.push(item);
+      }
     } else {
       if (!LESSONS.some(l => l.id === item.id)) LESSONS.push(item);
     }
