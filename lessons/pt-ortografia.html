@@ -10,6 +10,7 @@
 <script src="../db-client.js"></script>
 <style>
 
+
   :root {
     --ink:        #2B2D42;
     --ink-light:  #555770;
@@ -637,6 +638,61 @@
     flex-wrap: wrap;
   }
 
+
+
+  .mc-comment {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--slate-light);
+    color: var(--ink-light);
+    border-left: 3px solid var(--slate);
+  }
+  .mc-comment.show { display: block; }
+  .mc-comment strong {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 4px;
+  }
+  .mc-item.has-correct .mc-comment { border-left-color: var(--green); background: var(--green-soft); }
+  .mc-item.has-incorrect .mc-comment { border-left-color: var(--gold); background: var(--gold-soft); }
+  .gabarito-box {
+    margin-top: 28px;
+    border: 1px solid var(--parchment);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .gabarito-box summary {
+    cursor: pointer;
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    list-style: none;
+    background: var(--slate-light);
+  }
+  .gabarito-box summary::-webkit-details-marker { display: none; }
+  .gabarito-box summary::before { content: '▶ '; font-size: 10px; color: var(--slate); }
+  .gabarito-box[open] summary::before { content: '▼ '; }
+  .gabarito-list { padding: 8px 18px 16px; }
+  .gabarito-list .g-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--parchment);
+    font-size: 13.5px;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+  .gabarito-list .g-item:last-child { border-bottom: none; }
+  .gabarito-list .g-item b { color: var(--ink); }
+  .gabarito-list .g-ans { color: var(--green); font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -668,18 +724,18 @@
     <a href="pt-interpretacao.html"><span class="num">10.</span> Interpretação de Textos</a>
   </nav>
   <div class="sidebar-footer">
-    Capítulo 8 de 10 — estude um tema por vez.
+    Capítulo 8 de 10 — conteúdo ampliado + exercícios.
   </div>
 </aside>
 
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Capítulo 8 de 10 · Gramática Aplicada</div>
-    <h2>Ortografia<br><em>Grafias, dígrafos e as dúvidas mais comuns</em></h2>
-    <p>Uso de S, Z, X, CH, G, J, H e hífen. Ao final, pratique com exercícios interativos e salve o progresso no app.</p>
+    <h2>📝 Ortografia<br><em>Grafias, dígrafos e as dúvidas mais comuns</em></h2>
+    <p>Uso de S, Z, X, CH, G, J, H e hífen. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Capítulo 8/10</span>
-      <span class="badge">4 exercícios</span>
+      <span class="badge">8 exercícios</span>
       <span class="badge">Extra — Português</span>
     </div>
   </div>
@@ -763,6 +819,17 @@
         </div>
       </div>
     
+
+      <div class="callout info">
+        <strong>Hábito de estudo</strong>
+        Monte mini-listas de dúvida (s/z, g/j, x/ch) e revise com frases suas, não só com listas isoladas.
+      </div>
+      <div class="prose">
+        <h3>Hífen (núcleo do Acordo)</h3>
+        <p>Prefixo + H → hífen (<em>anti-higiênico</em>). Mesma vogal em encontro → hífen (<em>micro-ondas</em>). Muitos casos sem hífen: <em>autoescola, antiaéreo</em>.</p>
+        <p>Consulte o VOLP em dúvidas finas — a regra geral ajuda, mas o léxico oficial decide casos-limite.</p>
+      </div>
+
     </section>
 
     <section class="section" id="exercicios">
@@ -771,11 +838,11 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Fixação deste capítulo</p>
+          <p class="section-subtitle">Fixação deste capítulo — ortografia</p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no seu perfil no app.</p>
+        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no perfil (mínimo 85% para concluir a lição).</p>
 
         <div class="mc-item">
           <div class="q">A grafia correta é:</div>
@@ -784,7 +851,8 @@
           <label class="correct-answer"><input type="radio" name="q1" value="b">adivinhar</label>
           <label><input type="radio" name="q1" value="c">hadivinhar</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Pelo Novo Acordo, a forma correta é:</div>
@@ -793,25 +861,68 @@
           <label class="correct-answer"><input type="radio" name="q2" value="b">autoescola</label>
           <label><input type="radio" name="q2" value="c">auto escola</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Em palavras como <em>chave</em> e <em>chocolate</em>, usa-se:</div>
+          <div class="q">Em “chave” e “chocolate”, usa-se:</div>
           <div class="mc-options">
           <label><input type="radio" name="q3" value="a">X</label>
           <label class="correct-answer"><input type="radio" name="q3" value="b">CH</label>
           <label><input type="radio" name="q3" value="c">SH</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Prefixo + H (ex.: anti + higiênico):</div>
+          <div class="q">Prefixo + H (anti + higiênico):</div>
           <div class="mc-options">
-          <label><input type="radio" name="q4" value="a">Sem hífen: antihigiênico</label>
-          <label class="correct-answer"><input type="radio" name="q4" value="b">Com hífen: anti-higiênico</label>
-          <label><input type="radio" name="q4" value="c">Com espaço: anti higiênico</label>
+          <label><input type="radio" name="q4" value="a">antihigiênico</label>
+          <label class="correct-answer"><input type="radio" name="q4" value="b">anti-higiênico</label>
+          <label><input type="radio" name="q4" value="c">anti higiênico</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">Entre vogais com som /s/ forte, em muitos casos usa-se:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q5" value="a">s simples sempre</label>
+          <label class="correct-answer"><input type="radio" name="q5" value="b">ss (passo, missão)</label>
+          <label><input type="radio" name="q5" value="c">trema</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">“Exceção” e “estrangeiro” estão:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q6" value="a">Com grafia irregular inventada</label>
+          <label class="correct-answer"><input type="radio" name="q6" value="b">Nas formas corretas usuais</label>
+          <label><input type="radio" name="q6" value="c">Sempre com hífen</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">Micro + ondas:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q7" value="a">microondas (sem hífen sempre)</label>
+          <label class="correct-answer"><input type="radio" name="q7" value="b">micro-ondas (hífen pela mesma vogal)</label>
+          <label><input type="radio" name="q7" value="c">micro ondas</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">O VOLP serve para:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q8" value="a">Só regras de crase</label>
+          <label class="correct-answer"><input type="radio" name="q8" value="b">Consultar a grafia oficial em dúvidas</label>
+          <label><input type="radio" name="q8" value="c">Só conjugação verbal</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="actions-row">
           <button class="btn-finish" type="button" onclick="finishLesson()">Finalizar e salvar progresso</button>
@@ -819,9 +930,22 @@
           <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
         </div>
 
+        <details class="gabarito-box">
+          <summary>📋 Gabarito comentado</summary>
+          <div class="gabarito-list">
+          <div class="g-item"><b>Questão 1.</b> A grafia correta é:<br><span class="g-ans">Resposta: adivinhar</span><br>A grafia correta é <strong>adivinhar</strong> (com i). “Advinhar” é erro ortográfico frequente, mas não standard.</div>
+          <div class="g-item"><b>Questão 2.</b> A grafia correta é:<br><span class="g-ans">Resposta: autoescola</span><br>Pelo Acordo de 2009, autoescola, autossustentável, infraestrutura etc. perderam hífen em vários encontros em que a regra nova não o exige. “Auto-escola” ficou ultrapassada.</div>
+          <div class="g-item"><b>Questão 3.</b> A grafia correta é:<br><span class="g-ans">Resposta: CH</span><br>O dígrafo CH aparece em chave, chuva, chocolate, chamamento. Não se troca por X nessas bases.</div>
+          <div class="g-item"><b>Questão 4.</b> A grafia correta é:<br><span class="g-ans">Resposta: anti-higiênico</span><br>Regra produtiva: prefixo terminado em vogal + palavra iniciada por H → hífen (anti-higiênico, super-homem).</div>
+          <div class="g-item"><b>Questão 5.</b> A grafia correta é:<br><span class="g-ans">Resposta: ss (passo, missão)</span><br>Entre vogais, o som /s/ “forte” costuma graficar-se com <strong>ss</strong> (passo, missão, assunto), distinguindo-se do /z/ de “casa”.</div>
+          <div class="g-item"><b>Questão 6.</b> A grafia correta é:<br><span class="g-ans">Resposta: Nas formas corretas usuais</span><br>Exceção (com ç) e estrangeiro (com e após str) são as formas corretas; hipercorreções geram grafias inventadas.</div>
+          <div class="g-item"><b>Questão 7.</b> A grafia correta é:<br><span class="g-ans">Resposta: micro-ondas (hífen pela mesma vogal)</span><br>Encontro de vogais iguais na fronteira do prefixo favorece hífen: micro-ondas, anti-inflamatório. A regra visa legibilidade e padrão oficial.</div>
+          <div class="g-item"><b>Questão 8.</b> A grafia correta é:<br><span class="g-ans">Resposta: Consultar a grafia oficial em dúvidas</span><br>O Vocabulário Ortográfico da Língua Portuguesa (VOLP) é a referência lexical oficial para dirimir dúvidas de grafia e hifenização.</div>
+          </div>
+        </details>
         <div class="callout info" style="margin-top:28px;">
           <strong>Próximo passo</strong>
-          Depois de concluir, avance para o próximo capítulo pelo menu lateral — ou volte ao app.
+          Revise os itens errados no texto do capítulo e avance pelo menu lateral.
         </div>
         <div class="ornament">· · ·</div>
       </div>
@@ -832,27 +956,48 @@
 <script>
 const LESSON_ID = 'pt-ortografia';
 let finishing = false;
-const QUESTIONS = ['q1', 'q2', 'q3', 'q4'];
+const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
+
+const COMMENTS = {
+  "q1": "A grafia correta é <strong>adivinhar</strong> (com i). “Advinhar” é erro ortográfico frequente, mas não standard.",
+  "q2": "Pelo Acordo de 2009, autoescola, autossustentável, infraestrutura etc. perderam hífen em vários encontros em que a regra nova não o exige. “Auto-escola” ficou ultrapassada.",
+  "q3": "O dígrafo CH aparece em chave, chuva, chocolate, chamamento. Não se troca por X nessas bases.",
+  "q4": "Regra produtiva: prefixo terminado em vogal + palavra iniciada por H → hífen (anti-higiênico, super-homem).",
+  "q5": "Entre vogais, o som /s/ “forte” costuma graficar-se com <strong>ss</strong> (passo, missão, assunto), distinguindo-se do /z/ de “casa”.",
+  "q6": "Exceção (com ç) e estrangeiro (com e após str) são as formas corretas; hipercorreções geram grafias inventadas.",
+  "q7": "Encontro de vogais iguais na fronteira do prefixo favorece hífen: micro-ondas, anti-inflamatório. A regra visa legibilidade e padrão oficial.",
+  "q8": "O Vocabulário Ortográfico da Língua Portuguesa (VOLP) é a referência lexical oficial para dirimir dúvidas de grafia e hifenização."
+};
 
 function checkAnswers() {
   let correct = 0;
   QUESTIONS.forEach(name => {
     const selected = document.querySelector('input[name=' + name + ']:checked');
-    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const group = document.querySelector('input[name=' + name + ']');
     if (!group) return;
+    const item = group.closest('.mc-item');
+    item.classList.remove('has-correct', 'has-incorrect');
+    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const correctLabel = group.closest('.mc-options').querySelector('.correct-answer');
+    const commentEl = item.querySelector('.mc-comment');
     if (selected) {
       const label = selected.parentElement;
       if (label.classList.contains('correct-answer')) {
         label.classList.add('correct');
+        item.classList.add('has-correct');
         correct++;
       } else {
         label.classList.add('incorrect');
+        item.classList.add('has-incorrect');
         if (correctLabel) correctLabel.classList.add('correct');
       }
     } else if (correctLabel) {
       correctLabel.classList.add('correct');
+      item.classList.add('has-incorrect');
+    }
+    if (commentEl && COMMENTS[name]) {
+      commentEl.innerHTML = '<strong>Gabarito comentado</strong>' + COMMENTS[name];
+      commentEl.classList.add('show');
     }
   });
   const badge = document.getElementById('score-badge');

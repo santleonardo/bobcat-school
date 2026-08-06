@@ -10,6 +10,7 @@
 <script src="../db-client.js"></script>
 <style>
 
+
   :root {
     --ink:        #2B2D42;
     --ink-light:  #555770;
@@ -637,6 +638,61 @@
     flex-wrap: wrap;
   }
 
+
+
+  .mc-comment {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--slate-light);
+    color: var(--ink-light);
+    border-left: 3px solid var(--slate);
+  }
+  .mc-comment.show { display: block; }
+  .mc-comment strong {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 4px;
+  }
+  .mc-item.has-correct .mc-comment { border-left-color: var(--green); background: var(--green-soft); }
+  .mc-item.has-incorrect .mc-comment { border-left-color: var(--gold); background: var(--gold-soft); }
+  .gabarito-box {
+    margin-top: 28px;
+    border: 1px solid var(--parchment);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .gabarito-box summary {
+    cursor: pointer;
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    list-style: none;
+    background: var(--slate-light);
+  }
+  .gabarito-box summary::-webkit-details-marker { display: none; }
+  .gabarito-box summary::before { content: '▶ '; font-size: 10px; color: var(--slate); }
+  .gabarito-box[open] summary::before { content: '▼ '; }
+  .gabarito-list { padding: 8px 18px 16px; }
+  .gabarito-list .g-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--parchment);
+    font-size: 13.5px;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+  .gabarito-list .g-item:last-child { border-bottom: none; }
+  .gabarito-list .g-item b { color: var(--ink); }
+  .gabarito-list .g-ans { color: var(--green); font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -668,18 +724,18 @@
     <a href="pt-interpretacao.html"><span class="num">10.</span> Interpretação de Textos</a>
   </nav>
   <div class="sidebar-footer">
-    Capítulo 4 de 10 — estude um tema por vez.
+    Capítulo 4 de 10 — conteúdo ampliado + exercícios.
   </div>
 </aside>
 
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Capítulo 4 de 10 · Gramática Aplicada</div>
-    <h2>Regência<br><em>Verbal e nominal — o uso correto das preposições</em></h2>
-    <p>Regência verbal e nominal, preposições exigidas. Ao final, pratique com exercícios interativos e salve o progresso no app.</p>
+    <h2>🔗 Regência<br><em>Verbal e nominal — o uso correto das preposições</em></h2>
+    <p>Regência verbal e nominal, preposições exigidas. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Capítulo 4/10</span>
-      <span class="badge">4 exercícios</span>
+      <span class="badge">8 exercícios</span>
       <span class="badge">Extra — Português</span>
     </div>
   </div>
@@ -760,6 +816,21 @@
         </div>
       </div>
     
+
+      <div class="callout danger">
+        <strong>Erro clássico</strong>
+        “Prefiro X do que Y” está errado. Use <strong>Prefiro X a Y</strong>.
+      </div>
+      <div class="prose">
+        <h3>Tabela mental útil</h3>
+        <p><strong>Assistir</strong> (ver) → a · <strong>Gostar</strong> → de · <strong>Obedecer</strong> → a · <strong>Namorar</strong> → VT direto (sem “com” na norma culta).</p>
+        <p>Sempre que errar uma preposição, volte ao verbo/nome regente e pergunte: “o que este termo exige?”</p>
+      </div>
+      <div class="ex-grid">
+        <div class="ex-box correct"><span class="ex-label">Correto</span><code>Assisti ao filme.</code></div>
+        <div class="ex-box wrong"><span class="ex-label">Incorreto</span><code>Assisti o filme.</code><small>no sentido de “ver”</small></div>
+      </div>
+
     </section>
 
     <section class="section" id="exercicios">
@@ -768,48 +839,92 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Fixação deste capítulo</p>
+          <p class="section-subtitle">Fixação deste capítulo — regência</p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no seu perfil no app.</p>
+        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no perfil (mínimo 85% para concluir a lição).</p>
 
         <div class="mc-item">
-          <div class="q">Em <em>"Assisti ___ filme."</em> (sentido de ver), o correto é:</div>
+          <div class="q">Em <em>"Assisti ___ filme."</em> (ver), o correto é:</div>
           <div class="mc-options">
           <label><input type="radio" name="q1" value="a">Assisti o filme</label>
           <label class="correct-answer"><input type="radio" name="q1" value="b">Assisti ao filme</label>
           <label><input type="radio" name="q1" value="c">Assisti no filme</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">A regência correta de <em>preferir</em> é:</div>
+          <div class="q">A regência de <em>preferir</em> é:</div>
           <div class="mc-options">
           <label><input type="radio" name="q2" value="a">Prefiro chá do que café</label>
           <label class="correct-answer"><input type="radio" name="q2" value="b">Prefiro chá a café</label>
           <label><input type="radio" name="q2" value="c">Prefiro chá que café</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Em <em>"Gosto ___ música."</em>, completa-se com:</div>
+          <div class="q">Em <em>"Gosto ___ música."</em>:</div>
           <div class="mc-options">
           <label class="correct-answer"><input type="radio" name="q3" value="a">de</label>
           <label><input type="radio" name="q3" value="b">a</label>
           <label><input type="radio" name="q3" value="c">com</label>
           <label><input type="radio" name="q3" value="d">(sem preposição)</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">“Namorar” na norma culta regência:</div>
+          <div class="q">“Namorar” na norma culta:</div>
           <div class="mc-options">
           <label><input type="radio" name="q4" value="a">Namoro com a Carla</label>
           <label class="correct-answer"><input type="radio" name="q4" value="b">Namoro a Carla</label>
           <label><input type="radio" name="q4" value="c">Namoro da Carla</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">“Obedecer” regência:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q5" value="a">Obedeceu o regulamento</label>
+          <label class="correct-answer"><input type="radio" name="q5" value="b">Obedeceu ao regulamento</label>
+          <label><input type="radio" name="q5" value="c">Obedeceu no regulamento</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">“Aspirar” (= desejar):</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q6" value="a">Aspiro o cargo</label>
+          <label class="correct-answer"><input type="radio" name="q6" value="b">Aspiro ao cargo</label>
+          <label><input type="radio" name="q6" value="c">Aspiro em cargo</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">Qual está correta?</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q7" value="a">Assisti o jogo ontem. (ver)</label>
+          <label class="correct-answer"><input type="radio" name="q7" value="b">Assisti ao jogo ontem.</label>
+          <label><input type="radio" name="q7" value="c">Assisti no jogo ontem.</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">“Implicar” (= acarretar), na norma culta contemporânea, tende a:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q8" value="a">Exigir sempre “em”</label>
+          <label class="correct-answer"><input type="radio" name="q8" value="b">Transitivo direto: implica mudanças</label>
+          <label><input type="radio" name="q8" value="c">Ser só interjeição</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="actions-row">
           <button class="btn-finish" type="button" onclick="finishLesson()">Finalizar e salvar progresso</button>
@@ -817,9 +932,22 @@
           <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
         </div>
 
+        <details class="gabarito-box">
+          <summary>📋 Gabarito comentado</summary>
+          <div class="gabarito-list">
+          <div class="g-item"><b>Questão 1.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Assisti ao filme</span><br>Assistir no sentido de “ver/presenciar” regência indireta com <strong>a</strong>: assistir ao filme / ao jogo. Sem a preposição, a frase foge à norma culta dessa acepção.</div>
+          <div class="g-item"><b>Questão 2.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Prefiro chá a café</span><br>Preferir rege dois complementos com <strong>a</strong> no segundo termo: preferir X <strong>a</strong> Y. “Do que” é padrão de comparativos com “mais”, não de preferir.</div>
+          <div class="g-item"><b>Questão 3.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: de</span><br>Gostar seleciona <strong>de</strong>: gostar de música, de alguém. Omitir a preposição ou trocá-la altera a regência culta.</div>
+          <div class="g-item"><b>Questão 4.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Namoro a Carla</span><br>Na norma culta contemporânea ensinada em manuais, namorar é transitivo direto: namorar alguém (não “namorar com”). O “com” é uso corrente coloquial, mas não a resposta de prova nesse item.</div>
+          <div class="g-item"><b>Questão 5.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Obedeceu ao regulamento</span><br>Obedecer / desobedecer regem objeto indireto com <strong>a</strong>: obedecer ao regulamento, às regras.</div>
+          <div class="g-item"><b>Questão 6.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Aspiro ao cargo</span><br>Aspirar (= almejar) pede <strong>a</strong>: aspirar ao cargo. Aspirar (= inalar) é transitivo direto: aspirar o aroma — sentidos diferentes, regências diferentes.</div>
+          <div class="g-item"><b>Questão 7.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Assisti ao jogo ontem.</span><br>Mesma regra de assistir (ver): assisti <strong>ao</strong> jogo. “Assisti o jogo” é o erro clássico cobrado em exercícios.</div>
+          <div class="g-item"><b>Questão 8.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Transitivo direto: implica mudanças</span><br>Implicar no sentido de “acarretar/ensejar” tende a transitivo direto na norma atual: isso implica mudanças. Construções com “em” existem em outros sentidos/usos, mas a opção alinhada ao manual é a VTD.</div>
+          </div>
+        </details>
         <div class="callout info" style="margin-top:28px;">
           <strong>Próximo passo</strong>
-          Depois de concluir, avance para o próximo capítulo pelo menu lateral — ou volte ao app.
+          Revise os itens errados no texto do capítulo e avance pelo menu lateral.
         </div>
         <div class="ornament">· · ·</div>
       </div>
@@ -830,27 +958,48 @@
 <script>
 const LESSON_ID = 'pt-regencia';
 let finishing = false;
-const QUESTIONS = ['q1', 'q2', 'q3', 'q4'];
+const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
+
+const COMMENTS = {
+  "q1": "Assistir no sentido de “ver/presenciar” regência indireta com <strong>a</strong>: assistir ao filme / ao jogo. Sem a preposição, a frase foge à norma culta dessa acepção.",
+  "q2": "Preferir rege dois complementos com <strong>a</strong> no segundo termo: preferir X <strong>a</strong> Y. “Do que” é padrão de comparativos com “mais”, não de preferir.",
+  "q3": "Gostar seleciona <strong>de</strong>: gostar de música, de alguém. Omitir a preposição ou trocá-la altera a regência culta.",
+  "q4": "Na norma culta contemporânea ensinada em manuais, namorar é transitivo direto: namorar alguém (não “namorar com”). O “com” é uso corrente coloquial, mas não a resposta de prova nesse item.",
+  "q5": "Obedecer / desobedecer regem objeto indireto com <strong>a</strong>: obedecer ao regulamento, às regras.",
+  "q6": "Aspirar (= almejar) pede <strong>a</strong>: aspirar ao cargo. Aspirar (= inalar) é transitivo direto: aspirar o aroma — sentidos diferentes, regências diferentes.",
+  "q7": "Mesma regra de assistir (ver): assisti <strong>ao</strong> jogo. “Assisti o jogo” é o erro clássico cobrado em exercícios.",
+  "q8": "Implicar no sentido de “acarretar/ensejar” tende a transitivo direto na norma atual: isso implica mudanças. Construções com “em” existem em outros sentidos/usos, mas a opção alinhada ao manual é a VTD."
+};
 
 function checkAnswers() {
   let correct = 0;
   QUESTIONS.forEach(name => {
     const selected = document.querySelector('input[name=' + name + ']:checked');
-    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const group = document.querySelector('input[name=' + name + ']');
     if (!group) return;
+    const item = group.closest('.mc-item');
+    item.classList.remove('has-correct', 'has-incorrect');
+    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const correctLabel = group.closest('.mc-options').querySelector('.correct-answer');
+    const commentEl = item.querySelector('.mc-comment');
     if (selected) {
       const label = selected.parentElement;
       if (label.classList.contains('correct-answer')) {
         label.classList.add('correct');
+        item.classList.add('has-correct');
         correct++;
       } else {
         label.classList.add('incorrect');
+        item.classList.add('has-incorrect');
         if (correctLabel) correctLabel.classList.add('correct');
       }
     } else if (correctLabel) {
       correctLabel.classList.add('correct');
+      item.classList.add('has-incorrect');
+    }
+    if (commentEl && COMMENTS[name]) {
+      commentEl.innerHTML = '<strong>Gabarito comentado</strong>' + COMMENTS[name];
+      commentEl.classList.add('show');
     }
   });
   const badge = document.getElementById('score-badge');

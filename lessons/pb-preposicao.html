@@ -685,6 +685,60 @@
   }
   .class-card .examples b { color: var(--ink); font-weight: 600; }
 
+
+  .mc-comment {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--slate-light);
+    color: var(--ink-light);
+    border-left: 3px solid var(--slate);
+  }
+  .mc-comment.show { display: block; }
+  .mc-comment strong {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 4px;
+  }
+  .mc-item.has-correct .mc-comment { border-left-color: var(--green); background: var(--green-soft); }
+  .mc-item.has-incorrect .mc-comment { border-left-color: var(--gold); background: var(--gold-soft); }
+  .gabarito-box {
+    margin-top: 28px;
+    border: 1px solid var(--parchment);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .gabarito-box summary {
+    cursor: pointer;
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    list-style: none;
+    background: var(--slate-light);
+  }
+  .gabarito-box summary::-webkit-details-marker { display: none; }
+  .gabarito-box summary::before { content: '▶ '; font-size: 10px; color: var(--slate); }
+  .gabarito-box[open] summary::before { content: '▼ '; }
+  .gabarito-list { padding: 8px 18px 16px; }
+  .gabarito-list .g-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--parchment);
+    font-size: 13.5px;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+  .gabarito-list .g-item:last-child { border-bottom: none; }
+  .gabarito-list .g-item b { color: var(--ink); }
+  .gabarito-list .g-ans { color: var(--green); font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -810,7 +864,8 @@
           <label><input type="radio" name="q1" value="c">Adjetivo</label>
           <label><input type="radio" name="q1" value="d">Interjeição</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Em <em>"Café com leite"</em>, “com” é:</div>
@@ -820,7 +875,8 @@
           <label><input type="radio" name="q2" value="c">Verbo</label>
           <label><input type="radio" name="q2" value="d">Numeral</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">A preposição, sozinha:</div>
@@ -830,7 +886,8 @@
           <label><input type="radio" name="q3" value="c">É sempre verbo</label>
           <label><input type="radio" name="q3" value="d">É sempre substantivo</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Qual opção é preposição?</div>
@@ -840,7 +897,8 @@
           <label><input type="radio" name="q4" value="c">gentil</label>
           <label><input type="radio" name="q4" value="d">correr</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">“Em cima de” e “a fim de” são:</div>
@@ -850,7 +908,8 @@
           <label><input type="radio" name="q5" value="c">Numerais</label>
           <label><input type="radio" name="q5" value="d">Interjeições</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">A combinação <em>por + o</em> resulta em:</div>
@@ -860,7 +919,8 @@
           <label><input type="radio" name="q6" value="c">ao</label>
           <label><input type="radio" name="q6" value="d">nele</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Em <em>"gostar de música"</em>, a preposição “de” aparece por:</div>
@@ -870,7 +930,8 @@
           <label><input type="radio" name="q7" value="c">Ser numeral</label>
           <label><input type="radio" name="q7" value="d">Ser interjeição</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Qual frase usa preposição de destino / direção?</div>
@@ -880,7 +941,8 @@
           <label><input type="radio" name="q8" value="c">Ai!</label>
           <label><input type="radio" name="q8" value="d">Dois livros</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="actions-row">
           <button class="btn-finish" type="button" onclick="finishLesson()">Finalizar e salvar progresso</button>
@@ -888,6 +950,19 @@
           <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
         </div>
 
+        <details class="gabarito-box">
+          <summary>📋 Gabarito comentado</summary>
+          <div class="gabarito-list">
+          <div class="g-item"><b>Questão 1.</b> Em "em cima DA mesa" (de + a), “da” contém:<br><span class="g-ans">Resposta: Preposição (combinada com artigo)</span><br>“Da” em “em cima da mesa” resulta de de + a: a preposição estabelece a relação; o artigo determina “mesa”. Por isso a classificação correta envolve preposição combinada com artigo.</div>
+          <div class="g-item"><b>Questão 2.</b> Em "em cima DA mesa" (de + a), “da” contém:<br><span class="g-ans">Resposta: Preposição</span><br>Preposição essencial “com” liga “café” a “leite”, criando relação de companhia/mistura. Não é núcleo verbal nem quantificador.</div>
+          <div class="g-item"><b>Questão 3.</b> Em "em cima DA mesa" (de + a), “da” contém:<br><span class="g-ans">Resposta: Só faz sentido junto de outras palavras</span><br>Isolada, a preposição quase não comunica conteúdo lexical pleno; o sentido emerge no sintagma (livro <strong>de</strong> história, vou <strong>para</strong> casa).</div>
+          <div class="g-item"><b>Questão 4.</b> Em "em cima DA mesa" (de + a), “da” contém:<br><span class="g-ans">Resposta: para</span><br>Para, de, em, com, por, sem, sobre… formam o inventário clássico das preposições essenciais. “Ontem” é advérbio; “gentil”, adjetivo; “correr”, verbo.</div>
+          <div class="g-item"><b>Questão 5.</b> Em "em cima DA mesa" (de + a), “da” contém:<br><span class="g-ans">Resposta: Locuções prepositivas</span><br>Locução prepositiva: em cima de, embaixo de, a fim de, apesar de, por causa de… Equivale funcionalmente a uma preposição.</div>
+          <div class="g-item"><b>Questão 6.</b> Em "em cima DA mesa" (de + a), “da” contém:<br><span class="g-ans">Resposta: pelo</span><br>por + o = <strong>pelo</strong>; por + a = pela. Reconhecer a fusão evita erros de análise e de escrita.</div>
+          <div class="g-item"><b>Questão 7.</b> Em "em cima DA mesa" (de + a), “da” contém:<br><span class="g-ans">Resposta: Regência do verbo gostar</span><br>Regência: o verbo gostar seleciona a preposição <strong>de</strong> antes do complemento (gostar de música). Trocar a preposição viola a regência culta.</div>
+          <div class="g-item"><b>Questão 8.</b> Em "em cima DA mesa" (de + a), “da” contém:<br><span class="g-ans">Resposta: Vou para casa.</span><br>Em “Vou para casa”, “para” marca direção/destino. “De” em “livro de Ana” tende a posse/autoria; não é o mesmo valor semântico.</div>
+          </div>
+        </details>
         <div class="callout info" style="margin-top:28px;">
           <strong>Próximo passo</strong>
           Revise os erros, releia a seção correspondente e avance para a próxima classe pelo menu lateral.
@@ -903,25 +978,46 @@ const LESSON_ID = 'pb-preposicao';
 let finishing = false;
 const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
 
+const COMMENTS = {
+  "q1": "“Da” em “em cima da mesa” resulta de de + a: a preposição estabelece a relação; o artigo determina “mesa”. Por isso a classificação correta envolve preposição combinada com artigo.",
+  "q2": "Preposição essencial “com” liga “café” a “leite”, criando relação de companhia/mistura. Não é núcleo verbal nem quantificador.",
+  "q3": "Isolada, a preposição quase não comunica conteúdo lexical pleno; o sentido emerge no sintagma (livro <strong>de</strong> história, vou <strong>para</strong> casa).",
+  "q4": "Para, de, em, com, por, sem, sobre… formam o inventário clássico das preposições essenciais. “Ontem” é advérbio; “gentil”, adjetivo; “correr”, verbo.",
+  "q5": "Locução prepositiva: em cima de, embaixo de, a fim de, apesar de, por causa de… Equivale funcionalmente a uma preposição.",
+  "q6": "por + o = <strong>pelo</strong>; por + a = pela. Reconhecer a fusão evita erros de análise e de escrita.",
+  "q7": "Regência: o verbo gostar seleciona a preposição <strong>de</strong> antes do complemento (gostar de música). Trocar a preposição viola a regência culta.",
+  "q8": "Em “Vou para casa”, “para” marca direção/destino. “De” em “livro de Ana” tende a posse/autoria; não é o mesmo valor semântico."
+};
+
 function checkAnswers() {
   let correct = 0;
   QUESTIONS.forEach(name => {
     const selected = document.querySelector('input[name=' + name + ']:checked');
-    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const group = document.querySelector('input[name=' + name + ']');
     if (!group) return;
+    const item = group.closest('.mc-item');
+    item.classList.remove('has-correct', 'has-incorrect');
+    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const correctLabel = group.closest('.mc-options').querySelector('.correct-answer');
+    const commentEl = item.querySelector('.mc-comment');
     if (selected) {
       const label = selected.parentElement;
       if (label.classList.contains('correct-answer')) {
         label.classList.add('correct');
+        item.classList.add('has-correct');
         correct++;
       } else {
         label.classList.add('incorrect');
+        item.classList.add('has-incorrect');
         if (correctLabel) correctLabel.classList.add('correct');
       }
     } else if (correctLabel) {
       correctLabel.classList.add('correct');
+      item.classList.add('has-incorrect');
+    }
+    if (commentEl && COMMENTS[name]) {
+      commentEl.innerHTML = '<strong>Gabarito comentado</strong>' + COMMENTS[name];
+      commentEl.classList.add('show');
     }
   });
   const badge = document.getElementById('score-badge');

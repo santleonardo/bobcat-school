@@ -10,6 +10,7 @@
 <script src="../db-client.js"></script>
 <style>
 
+
   :root {
     --ink:        #2B2D42;
     --ink-light:  #555770;
@@ -637,6 +638,61 @@
     flex-wrap: wrap;
   }
 
+
+
+  .mc-comment {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--slate-light);
+    color: var(--ink-light);
+    border-left: 3px solid var(--slate);
+  }
+  .mc-comment.show { display: block; }
+  .mc-comment strong {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 4px;
+  }
+  .mc-item.has-correct .mc-comment { border-left-color: var(--green); background: var(--green-soft); }
+  .mc-item.has-incorrect .mc-comment { border-left-color: var(--gold); background: var(--gold-soft); }
+  .gabarito-box {
+    margin-top: 28px;
+    border: 1px solid var(--parchment);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .gabarito-box summary {
+    cursor: pointer;
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    list-style: none;
+    background: var(--slate-light);
+  }
+  .gabarito-box summary::-webkit-details-marker { display: none; }
+  .gabarito-box summary::before { content: '▶ '; font-size: 10px; color: var(--slate); }
+  .gabarito-box[open] summary::before { content: '▼ '; }
+  .gabarito-list { padding: 8px 18px 16px; }
+  .gabarito-list .g-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--parchment);
+    font-size: 13.5px;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+  .gabarito-list .g-item:last-child { border-bottom: none; }
+  .gabarito-list .g-item b { color: var(--ink); }
+  .gabarito-list .g-ans { color: var(--green); font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -668,18 +724,18 @@
     <a href="pt-interpretacao.html"><span class="num">10.</span> Interpretação de Textos</a>
   </nav>
   <div class="sidebar-footer">
-    Capítulo 5 de 10 — estude um tema por vez.
+    Capítulo 5 de 10 — conteúdo ampliado + exercícios.
   </div>
 </aside>
 
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Capítulo 5 de 10 · Gramática Aplicada</div>
-    <h2>Crase<br><em>Quando e como usar o acento grave</em></h2>
-    <p>Casos obrigatórios, proibidos e facultativos de crase. Ao final, pratique com exercícios interativos e salve o progresso no app.</p>
+    <h2>🅰️ Crase<br><em>Quando e como usar o acento grave</em></h2>
+    <p>Casos obrigatórios, proibidos e facultativos de crase. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Capítulo 5/10</span>
-      <span class="badge">4 exercícios</span>
+      <span class="badge">8 exercícios</span>
       <span class="badge">Extra — Português</span>
     </div>
   </div>
@@ -755,6 +811,18 @@
         </div>
       </div>
     
+
+      <div class="callout info">
+        <strong>Teste do masculino</strong>
+        Troque o termo feminino por um masculino. Se aparecer <em>ao</em>, há crase: “Fui à escola” → “Fui ao colégio”.
+      </div>
+      <div class="prose">
+        <h3>Proibido × obrigatório</h3>
+        <p><strong>Proibido:</strong> antes de masculino, verbo, pronomes pessoais, “a pé / a cavalo” (sem artigo).</p>
+        <p><strong>Obrigatório:</strong> a + a(s) (artigo), horas (“às 14h”), locuções femininas (“à noite”), àquela/àquilo.</p>
+        <p><strong>Facultativo:</strong> nomes próprios femininos e pronomes possessivos femininos em vários contextos.</p>
+      </div>
+
     </section>
 
     <section class="section" id="exercicios">
@@ -763,45 +831,89 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Fixação deste capítulo</p>
+          <p class="section-subtitle">Fixação deste capítulo — crase</p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no seu perfil no app.</p>
+        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no perfil (mínimo 85% para concluir a lição).</p>
 
         <div class="mc-item">
           <div class="q"><em>"Cheguei ___ escola às 8h."</em> — usa crase?</div>
           <div class="mc-options">
-          <label class="correct-answer"><input type="radio" name="q1" value="a">Sim: “Cheguei à escola às 8h.”</label>
-          <label><input type="radio" name="q1" value="b">Não: “Cheguei a escola às 8h.”</label>
+          <label class="correct-answer"><input type="radio" name="q1" value="a">Sim: “Cheguei à escola…”</label>
+          <label><input type="radio" name="q1" value="b">Não: “Cheguei a escola…”</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q"><em>"Prefiro viajar ___ pé."</em> — usa crase?</div>
+          <div class="q"><em>"Prefiro viajar ___ pé."</em></div>
           <div class="mc-options">
-          <label><input type="radio" name="q2" value="a">Sim: “Prefiro viajar à pé.”</label>
-          <label class="correct-answer"><input type="radio" name="q2" value="b">Não: “Prefiro viajar a pé.”</label>
+          <label><input type="radio" name="q2" value="a">à pé</label>
+          <label class="correct-answer"><input type="radio" name="q2" value="b">a pé (sem crase)</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Antes de verbo, a crase é:</div>
           <div class="mc-options">
           <label><input type="radio" name="q3" value="a">Obrigatória</label>
           <label class="correct-answer"><input type="radio" name="q3" value="b">Proibida</label>
-          <label><input type="radio" name="q3" value="c">Facultativa</label>
+          <label><input type="radio" name="q3" value="c">Sempre facultativa</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Em <em>"Refiro-me ___ proposta."</em> (aquela), o correto é:</div>
+          <div class="q">Em <em>"Refiro-me ___ proposta."</em> (aquela):</div>
           <div class="mc-options">
           <label><input type="radio" name="q4" value="a">a aquela</label>
           <label class="correct-answer"><input type="radio" name="q4" value="b">àquela</label>
           <label><input type="radio" name="q4" value="c">aquela</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">“Às 14h” leva crase porque:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q5" value="a">É palavra masculina</label>
+          <label class="correct-answer"><input type="radio" name="q5" value="b">Há fusão a + as (horas)</label>
+          <label><input type="radio" name="q5" value="c">É interjeição</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">Antes de palavra masculina, em regra:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q6" value="a">Crase obrigatória</label>
+          <label class="correct-answer"><input type="radio" name="q6" value="b">Crase proibida</label>
+          <label><input type="radio" name="q6" value="c">Crase sempre facultativa</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">O teste do masculino: se aparecer “ao”, então:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q7" value="a">Não há crase</label>
+          <label class="correct-answer"><input type="radio" name="q7" value="b">Há crase no feminino correspondente</label>
+          <label><input type="radio" name="q7" value="c">A frase está sempre errada</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">“Fui a pé” está sem crase porque:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q8" value="a">Há artigo definido claro</label>
+          <label class="correct-answer"><input type="radio" name="q8" value="b">Não há artigo antes de “pé” nessa locução</label>
+          <label><input type="radio" name="q8" value="c">“pé” é verbo</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="actions-row">
           <button class="btn-finish" type="button" onclick="finishLesson()">Finalizar e salvar progresso</button>
@@ -809,9 +921,22 @@
           <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
         </div>
 
+        <details class="gabarito-box">
+          <summary>📋 Gabarito comentado</summary>
+          <div class="gabarito-list">
+          <div class="g-item"><b>Questão 1.</b> "Cheguei ___ escola às 8h." — usa crase?<br><span class="g-ans">Resposta: Sim: “Cheguei à escola…”</span><br>Chegar rege a preposição a; “escola” aceita artigo a → fusão à. O teste do masculino confirma: “Cheguei ao colégio” ⇒ no feminino, “Cheguei à escola”.</div>
+          <div class="g-item"><b>Questão 2.</b> "Cheguei ___ escola às 8h." — usa crase?<br><span class="g-ans">Resposta: a pé (sem crase)</span><br>Em “a pé”, “a cavalo”, “a esmo”, não há artigo definido antes do substantivo; só a preposição. Logo, <strong>não</strong> há crase: viajar a pé.</div>
+          <div class="g-item"><b>Questão 3.</b> "Cheguei ___ escola às 8h." — usa crase?<br><span class="g-ans">Resposta: Proibida</span><br>Antes de verbo (a estudar, a trabalhar) não se coloca artigo a; portanto a crase é proibida.</div>
+          <div class="g-item"><b>Questão 4.</b> "Cheguei ___ escola às 8h." — usa crase?<br><span class="g-ans">Resposta: àquela</span><br>A preposição a funde-se com o demonstrativo aquela: a + aquela = <strong>àquela</strong> (e àquele, àquilo).</div>
+          <div class="g-item"><b>Questão 5.</b> "Cheguei ___ escola às 8h." — usa crase?<br><span class="g-ans">Resposta: Há fusão a + as (horas)</span><br>Horas determinadas: a + as = <strong>às</strong> (às 14h). O artigo das horas autoriza a crase com a preposição.</div>
+          <div class="g-item"><b>Questão 6.</b> "Cheguei ___ escola às 8h." — usa crase?<br><span class="g-ans">Resposta: Crase proibida</span><br>Termo masculino leva artigo o, não a; sem a + a não há crase (“a pé”, “a um amigo”, “a Pedro”).</div>
+          <div class="g-item"><b>Questão 7.</b> "Cheguei ___ escola às 8h." — usa crase?<br><span class="g-ans">Resposta: Há crase no feminino correspondente</span><br>Heurística confiável: se a troca pelo masculino gera “ao”, o feminino correspondente leva crase (“à”).</div>
+          <div class="g-item"><b>Questão 8.</b> "Cheguei ___ escola às 8h." — usa crase?<br><span class="g-ans">Resposta: Não há artigo antes de “pé” nessa locução</span><br>Locuções com preposição a + palavra feminina <strong>sem artigo</strong> não craseiam. “Pé” aqui entra sem artigo → “a pé”.</div>
+          </div>
+        </details>
         <div class="callout info" style="margin-top:28px;">
           <strong>Próximo passo</strong>
-          Depois de concluir, avance para o próximo capítulo pelo menu lateral — ou volte ao app.
+          Revise os itens errados no texto do capítulo e avance pelo menu lateral.
         </div>
         <div class="ornament">· · ·</div>
       </div>
@@ -822,27 +947,48 @@
 <script>
 const LESSON_ID = 'pt-crase';
 let finishing = false;
-const QUESTIONS = ['q1', 'q2', 'q3', 'q4'];
+const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
+
+const COMMENTS = {
+  "q1": "Chegar rege a preposição a; “escola” aceita artigo a → fusão à. O teste do masculino confirma: “Cheguei ao colégio” ⇒ no feminino, “Cheguei à escola”.",
+  "q2": "Em “a pé”, “a cavalo”, “a esmo”, não há artigo definido antes do substantivo; só a preposição. Logo, <strong>não</strong> há crase: viajar a pé.",
+  "q3": "Antes de verbo (a estudar, a trabalhar) não se coloca artigo a; portanto a crase é proibida.",
+  "q4": "A preposição a funde-se com o demonstrativo aquela: a + aquela = <strong>àquela</strong> (e àquele, àquilo).",
+  "q5": "Horas determinadas: a + as = <strong>às</strong> (às 14h). O artigo das horas autoriza a crase com a preposição.",
+  "q6": "Termo masculino leva artigo o, não a; sem a + a não há crase (“a pé”, “a um amigo”, “a Pedro”).",
+  "q7": "Heurística confiável: se a troca pelo masculino gera “ao”, o feminino correspondente leva crase (“à”).",
+  "q8": "Locuções com preposição a + palavra feminina <strong>sem artigo</strong> não craseiam. “Pé” aqui entra sem artigo → “a pé”."
+};
 
 function checkAnswers() {
   let correct = 0;
   QUESTIONS.forEach(name => {
     const selected = document.querySelector('input[name=' + name + ']:checked');
-    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const group = document.querySelector('input[name=' + name + ']');
     if (!group) return;
+    const item = group.closest('.mc-item');
+    item.classList.remove('has-correct', 'has-incorrect');
+    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const correctLabel = group.closest('.mc-options').querySelector('.correct-answer');
+    const commentEl = item.querySelector('.mc-comment');
     if (selected) {
       const label = selected.parentElement;
       if (label.classList.contains('correct-answer')) {
         label.classList.add('correct');
+        item.classList.add('has-correct');
         correct++;
       } else {
         label.classList.add('incorrect');
+        item.classList.add('has-incorrect');
         if (correctLabel) correctLabel.classList.add('correct');
       }
     } else if (correctLabel) {
       correctLabel.classList.add('correct');
+      item.classList.add('has-incorrect');
+    }
+    if (commentEl && COMMENTS[name]) {
+      commentEl.innerHTML = '<strong>Gabarito comentado</strong>' + COMMENTS[name];
+      commentEl.classList.add('show');
     }
   });
   const badge = document.getElementById('score-badge');

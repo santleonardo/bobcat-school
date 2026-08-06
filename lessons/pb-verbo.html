@@ -685,6 +685,60 @@
   }
   .class-card .examples b { color: var(--ink); font-weight: 600; }
 
+
+  .mc-comment {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--slate-light);
+    color: var(--ink-light);
+    border-left: 3px solid var(--slate);
+  }
+  .mc-comment.show { display: block; }
+  .mc-comment strong {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 4px;
+  }
+  .mc-item.has-correct .mc-comment { border-left-color: var(--green); background: var(--green-soft); }
+  .mc-item.has-incorrect .mc-comment { border-left-color: var(--gold); background: var(--gold-soft); }
+  .gabarito-box {
+    margin-top: 28px;
+    border: 1px solid var(--parchment);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .gabarito-box summary {
+    cursor: pointer;
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    list-style: none;
+    background: var(--slate-light);
+  }
+  .gabarito-box summary::-webkit-details-marker { display: none; }
+  .gabarito-box summary::before { content: '▶ '; font-size: 10px; color: var(--slate); }
+  .gabarito-box[open] summary::before { content: '▼ '; }
+  .gabarito-list { padding: 8px 18px 16px; }
+  .gabarito-list .g-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--parchment);
+    font-size: 13.5px;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+  .gabarito-list .g-item:last-child { border-bottom: none; }
+  .gabarito-list .g-item b { color: var(--ink); }
+  .gabarito-list .g-ans { color: var(--green); font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -806,7 +860,8 @@
           <label><input type="radio" name="q1" value="c">Advérbio</label>
           <label><input type="radio" name="q1" value="d">Numeral</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">“Chover” e “anoitecer” indicam:</div>
@@ -816,7 +871,8 @@
           <label><input type="radio" name="q2" value="c">Posse</label>
           <label><input type="radio" name="q2" value="d">Artigo</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">“Ser” e “estar” são verbos de:</div>
@@ -826,7 +882,8 @@
           <label><input type="radio" name="q3" value="c">Só futuro</label>
           <label><input type="radio" name="q3" value="d">Interjeição</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Qual opção é verbo?</div>
@@ -836,7 +893,8 @@
           <label><input type="radio" name="q4" value="c">ontem</label>
           <label><input type="radio" name="q4" value="d">mas</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Em <em>"Eu estudo"</em> e <em>"Nós estudamos"</em>, o verbo muda para marcar:</div>
@@ -846,7 +904,8 @@
           <label><input type="radio" name="q5" value="c">Só o artigo</label>
           <label><input type="radio" name="q5" value="d">Só a preposição</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">A forma <em>estudando</em> é:</div>
@@ -856,7 +915,8 @@
           <label><input type="radio" name="q6" value="c">Artigo</label>
           <label><input type="radio" name="q6" value="d">Numeral ordinal</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Qual frase tem verbo de fenômeno?</div>
@@ -866,7 +926,8 @@
           <label><input type="radio" name="q7" value="c">Meu livro é novo.</label>
           <label><input type="radio" name="q7" value="d">Dois alunos saíram.</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">O verbo, na oração, costuma ser o núcleo do:</div>
@@ -876,7 +937,8 @@
           <label><input type="radio" name="q8" value="c">Só do artigo</label>
           <label><input type="radio" name="q8" value="d">Só da interjeição</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="actions-row">
           <button class="btn-finish" type="button" onclick="finishLesson()">Finalizar e salvar progresso</button>
@@ -884,6 +946,19 @@
           <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
         </div>
 
+        <details class="gabarito-box">
+          <summary>📋 Gabarito comentado</summary>
+          <div class="gabarito-list">
+          <div class="g-item"><b>Questão 1.</b> Em "vamos ESTUDAR hoje", “estudar” é:<br><span class="g-ans">Resposta: Verbo</span><br>Verbo expressa ação, estado ou fenômeno e é a classe mais flexionada. “Estudar” está no infinitivo (forma nominal), mas continua sendo verbo: indica o processo de estudar.</div>
+          <div class="g-item"><b>Questão 2.</b> Em "vamos ESTUDAR hoje", “estudar” é:<br><span class="g-ans">Resposta: Fenômeno</span><br>Verbos como chover, nevar, anoitecer, ventar designam fenômenos da natureza. Muitas vezes aparecem com sujeito inexistente (“Choveu ontem”).</div>
+          <div class="g-item"><b>Questão 3.</b> Em "vamos ESTUDAR hoje", “estudar” é:<br><span class="g-ans">Resposta: Estado / ligação</span><br>Ser e estar são verbos de ligação/estado: ligam o sujeito a uma qualidade ou condição (“Ela está feliz”, “Ele é professor”), em vez de denotar ação física dinâmica.</div>
+          <div class="g-item"><b>Questão 4.</b> Em "vamos ESTUDAR hoje", “estudar” é:<br><span class="g-ans">Resposta: correr</span><br>Correr é processo/ação → verbo. Gentil (adjetivo), ontem (advérbio), mas (conjunção) pertencem a outras classes.</div>
+          <div class="g-item"><b>Questão 5.</b> Em "vamos ESTUDAR hoje", “estudar” é:<br><span class="g-ans">Resposta: Pessoa e número (concordância)</span><br>A concordância verbal exige que o verbo acompanhe o sujeito em pessoa e número: eu estudo / nós estudamos / eles estudam. A mudança da desinência marca essa concordância.</div>
+          <div class="g-item"><b>Questão 6.</b> Em "vamos ESTUDAR hoje", “estudar” é:<br><span class="g-ans">Resposta: Gerúndio</span><br>Gerúndio (estudando, correndo) é forma nominal que frequentemente expressa ação em curso. Infinitivo (estudar) e particípio (estudado) completam o trio das formas nominais.</div>
+          <div class="g-item"><b>Questão 7.</b> Em "vamos ESTUDAR hoje", “estudar” é:<br><span class="g-ans">Resposta: Choveu muito ontem.</span><br>“Choveu muito ontem” exemplifica fenômeno meteorológico com verbo impessoal (sem sujeito actante).</div>
+          <div class="g-item"><b>Questão 8.</b> Em "vamos ESTUDAR hoje", “estudar” é:<br><span class="g-ans">Resposta: Predicado</span><br>No predicado, o núcleo costuma ser o verbo (predicados verbais e verbo-nominais) ou um nome com verbo de ligação (predicados nominais). Por isso o verbo organiza o que se declara do sujeito.</div>
+          </div>
+        </details>
         <div class="callout info" style="margin-top:28px;">
           <strong>Próximo passo</strong>
           Revise os erros, releia a seção correspondente e avance para a próxima classe pelo menu lateral.
@@ -899,25 +974,46 @@ const LESSON_ID = 'pb-verbo';
 let finishing = false;
 const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
 
+const COMMENTS = {
+  "q1": "Verbo expressa ação, estado ou fenômeno e é a classe mais flexionada. “Estudar” está no infinitivo (forma nominal), mas continua sendo verbo: indica o processo de estudar.",
+  "q2": "Verbos como chover, nevar, anoitecer, ventar designam fenômenos da natureza. Muitas vezes aparecem com sujeito inexistente (“Choveu ontem”).",
+  "q3": "Ser e estar são verbos de ligação/estado: ligam o sujeito a uma qualidade ou condição (“Ela está feliz”, “Ele é professor”), em vez de denotar ação física dinâmica.",
+  "q4": "Correr é processo/ação → verbo. Gentil (adjetivo), ontem (advérbio), mas (conjunção) pertencem a outras classes.",
+  "q5": "A concordância verbal exige que o verbo acompanhe o sujeito em pessoa e número: eu estudo / nós estudamos / eles estudam. A mudança da desinência marca essa concordância.",
+  "q6": "Gerúndio (estudando, correndo) é forma nominal que frequentemente expressa ação em curso. Infinitivo (estudar) e particípio (estudado) completam o trio das formas nominais.",
+  "q7": "“Choveu muito ontem” exemplifica fenômeno meteorológico com verbo impessoal (sem sujeito actante).",
+  "q8": "No predicado, o núcleo costuma ser o verbo (predicados verbais e verbo-nominais) ou um nome com verbo de ligação (predicados nominais). Por isso o verbo organiza o que se declara do sujeito."
+};
+
 function checkAnswers() {
   let correct = 0;
   QUESTIONS.forEach(name => {
     const selected = document.querySelector('input[name=' + name + ']:checked');
-    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const group = document.querySelector('input[name=' + name + ']');
     if (!group) return;
+    const item = group.closest('.mc-item');
+    item.classList.remove('has-correct', 'has-incorrect');
+    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const correctLabel = group.closest('.mc-options').querySelector('.correct-answer');
+    const commentEl = item.querySelector('.mc-comment');
     if (selected) {
       const label = selected.parentElement;
       if (label.classList.contains('correct-answer')) {
         label.classList.add('correct');
+        item.classList.add('has-correct');
         correct++;
       } else {
         label.classList.add('incorrect');
+        item.classList.add('has-incorrect');
         if (correctLabel) correctLabel.classList.add('correct');
       }
     } else if (correctLabel) {
       correctLabel.classList.add('correct');
+      item.classList.add('has-incorrect');
+    }
+    if (commentEl && COMMENTS[name]) {
+      commentEl.innerHTML = '<strong>Gabarito comentado</strong>' + COMMENTS[name];
+      commentEl.classList.add('show');
     }
   });
   const badge = document.getElementById('score-badge');

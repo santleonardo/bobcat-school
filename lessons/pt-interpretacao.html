@@ -10,6 +10,7 @@
 <script src="../db-client.js"></script>
 <style>
 
+
   :root {
     --ink:        #2B2D42;
     --ink-light:  #555770;
@@ -637,6 +638,61 @@
     flex-wrap: wrap;
   }
 
+
+
+  .mc-comment {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--slate-light);
+    color: var(--ink-light);
+    border-left: 3px solid var(--slate);
+  }
+  .mc-comment.show { display: block; }
+  .mc-comment strong {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 4px;
+  }
+  .mc-item.has-correct .mc-comment { border-left-color: var(--green); background: var(--green-soft); }
+  .mc-item.has-incorrect .mc-comment { border-left-color: var(--gold); background: var(--gold-soft); }
+  .gabarito-box {
+    margin-top: 28px;
+    border: 1px solid var(--parchment);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .gabarito-box summary {
+    cursor: pointer;
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    list-style: none;
+    background: var(--slate-light);
+  }
+  .gabarito-box summary::-webkit-details-marker { display: none; }
+  .gabarito-box summary::before { content: '▶ '; font-size: 10px; color: var(--slate); }
+  .gabarito-box[open] summary::before { content: '▼ '; }
+  .gabarito-list { padding: 8px 18px 16px; }
+  .gabarito-list .g-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--parchment);
+    font-size: 13.5px;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+  .gabarito-list .g-item:last-child { border-bottom: none; }
+  .gabarito-list .g-item b { color: var(--ink); }
+  .gabarito-list .g-ans { color: var(--green); font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -668,18 +724,18 @@
     <a href="pt-interpretacao.html"><span class="num">10.</span> Interpretação de Textos</a>
   </nav>
   <div class="sidebar-footer">
-    Capítulo 10 de 10 — estude um tema por vez.
+    Capítulo 10 de 10 — conteúdo ampliado + exercícios.
   </div>
 </aside>
 
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Capítulo 10 de 10 · Gramática Aplicada</div>
-    <h2>Interpretação de Textos<br><em>Leitura, análise e inferência</em></h2>
-    <p>Níveis de leitura, tipologias, coesão e recursos de linguagem. Ao final, pratique com exercícios interativos e salve o progresso no app.</p>
+    <h2>📖 Interpretação de Textos<br><em>Leitura, análise e inferência</em></h2>
+    <p>Níveis de leitura, tipologias, coesão e recursos de linguagem. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Capítulo 10/10</span>
-      <span class="badge">4 exercícios</span>
+      <span class="badge">8 exercícios</span>
       <span class="badge">Extra — Português</span>
     </div>
   </div>
@@ -797,6 +853,17 @@
 
       </div>
     
+
+      <div class="callout info">
+        <strong>Método de prova</strong>
+        1ª leitura rápida (tema + tipo) · 2ª leitura guiada pelas perguntas · responda com base no texto, não no “achismo” · cuidado com “sempre/nunca/apenas”.
+      </div>
+      <div class="prose">
+        <h3>Três níveis</h3>
+        <p><strong>Denotativo:</strong> o que está escrito · <strong>Conotativo:</strong> o que se sugere · <strong>Crítico:</strong> propósito e ponto de vista do autor.</p>
+        <p>Coesão = amarração linguística; coerência = lógica das ideias. Um texto pode ser coeso e incoerente.</p>
+      </div>
+
     </section>
 
     <section class="section" id="exercicios">
@@ -805,47 +872,91 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Fixação deste capítulo</p>
+          <p class="section-subtitle">Fixação deste capítulo — interpretação de textos</p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no seu perfil no app.</p>
+        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no perfil (mínimo 85% para concluir a lição).</p>
 
         <div class="mc-item">
-          <div class="q">Leia: <em>"Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar."</em> A ideia central é:</div>
+          <div class="q">“Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:</div>
           <div class="mc-options">
           <label class="correct-answer"><input type="radio" name="q1" value="a">Valoriza antecipação e persistência</label>
-          <label><input type="radio" name="q1" value="b">Critica quem planta cedo demais</label>
-          <label><input type="radio" name="q1" value="c">Fala só de agricultura, sem metáfora</label>
+          <label><input type="radio" name="q1" value="b">Critica quem planta cedo</label>
+          <label><input type="radio" name="q1" value="c">Só fala de agricultura literal</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">A leitura que busca o que o texto <strong>sugere</strong> (implícito) é:</div>
+          <div class="q">Leitura que busca o que o texto <strong>sugere</strong>:</div>
           <div class="mc-options">
           <label><input type="radio" name="q2" value="a">Denotativa</label>
           <label class="correct-answer"><input type="radio" name="q2" value="b">Conotativa / inferencial</label>
-          <label><input type="radio" name="q2" value="c">Apenas literal</label>
+          <label><input type="radio" name="q2" value="c">Apenas ortográfica</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Um texto com tese, argumentos e conclusão é tipicamente:</div>
+          <div class="q">Texto com tese, argumentos e conclusão é tipicamente:</div>
           <div class="mc-options">
           <label><input type="radio" name="q3" value="a">Narrativo</label>
           <label class="correct-answer"><input type="radio" name="q3" value="b">Dissertativo</label>
           <label><input type="radio" name="q3" value="c">Injuntivo</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Coesão textual refere-se principalmente a:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q4" value="a">Harmonia lógica das ideias</label>
-          <label class="correct-answer"><input type="radio" name="q4" value="b">Ligação entre partes com conectivos e referências</label>
-          <label><input type="radio" name="q4" value="c">Uso exclusivo de metáforas</label>
+          <label><input type="radio" name="q4" value="a">Harmonia lógica apenas</label>
+          <label class="correct-answer"><input type="radio" name="q4" value="b">Ligação entre partes (conectivos, pronomes…)</label>
+          <label><input type="radio" name="q4" value="c">Só metáforas</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">Coerência refere-se principalmente a:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q5" value="a">Só pontuação</label>
+          <label class="correct-answer"><input type="radio" name="q5" value="b">Harmonia lógica entre as ideias</label>
+          <label><input type="radio" name="q5" value="c">Só a fonte da letra</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">Em provas, “sempre / nunca / apenas” em alternativas:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q6" value="a">Tornam a frase automaticamente certa</label>
+          <label class="correct-answer"><input type="radio" name="q6" value="b">Merecem atenção — costumam absolutizar demais</label>
+          <label><input type="radio" name="q6" value="c">Não influenciam nada</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">Metáfora é:</div>
+          <div class="mc-options">
+          <label class="correct-answer"><input type="radio" name="q7" value="a">Comparação implícita</label>
+          <label><input type="radio" name="q7" value="b">Sempre sentido literal</label>
+          <label><input type="radio" name="q7" value="c">Só erro de concordância</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">Estratégia útil:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q8" value="a">Responder só pelo senso comum, sem voltar ao texto</label>
+          <label class="correct-answer"><input type="radio" name="q8" value="b">Localizar no texto o trecho que sustenta a resposta</label>
+          <label><input type="radio" name="q8" value="c">Ignorar o tipo textual</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="actions-row">
           <button class="btn-finish" type="button" onclick="finishLesson()">Finalizar e salvar progresso</button>
@@ -853,9 +964,22 @@
           <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
         </div>
 
+        <details class="gabarito-box">
+          <summary>📋 Gabarito comentado</summary>
+          <div class="gabarito-list">
+          <div class="g-item"><b>Questão 1.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Valoriza antecipação e persistência</span><br>A metáfora plantar/colher projeta esforço antecipado e recompensa futura. O trecho valoriza quem age cedo e permanece, em contraste com quem apenas sonha — não é manual agrícola literal.</div>
+          <div class="g-item"><b>Questão 2.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Conotativa / inferencial</span><br>Nível conotativo/inferencial recupera o não dito explicitamente: ironias, subentendidos, implicações. O denotativo fica no sentido literal da superfície textual.</div>
+          <div class="g-item"><b>Questão 3.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Dissertativo</span><br>Dissertação (argumentativa) organiza tese, desenvolvimento com argumentos e conclusão. Narrativa conta fatos; injunção instrui/ordena.</div>
+          <div class="g-item"><b>Questão 4.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Ligação entre partes (conectivos, pronomes…)</span><br>Coesão é a rede de recursos que amarra o texto (pronomes de retomada, conectivos, elipses, repetições controladas). Sem coesão, o fio referencial se perde.</div>
+          <div class="g-item"><b>Questão 5.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Harmonia lógica entre as ideias</span><br>Coerência diz respeito à compatibilidade lógica e semântica das ideias. Um texto pode estar coeso (bem “costurado”) e ainda assim incoerente (ideias que não se sustentam mutuamente).</div>
+          <div class="g-item"><b>Questão 6.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Merecem atenção — costumam absolutizar demais</span><br>Em itens de prova, quantificadores absolutos (sempre, nunca, apenas, jamais) merecem leitura crítica: bastam para invalidar afirmativas que o texto trata de modo parcial ou matizado.</div>
+          <div class="g-item"><b>Questão 7.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Comparação implícita</span><br>Metáfora compara de forma implícita (“a vida é uma viagem”), sem conectar com “como/tal qual”. Diferente da comparação explícita (símile).</div>
+          <div class="g-item"><b>Questão 8.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Localizar no texto o trecho que sustenta a resposta</span><br>Estratégia sólida: localizar no texto o trecho que autoriza a alternativa. Responder só pelo senso comum, sem âncora textual, é a fonte clássica de erro em interpretação.</div>
+          </div>
+        </details>
         <div class="callout info" style="margin-top:28px;">
           <strong>Próximo passo</strong>
-          Depois de concluir, avance para o próximo capítulo pelo menu lateral — ou volte ao app.
+          Revise os itens errados no texto do capítulo e avance pelo menu lateral.
         </div>
         <div class="ornament">· · ·</div>
       </div>
@@ -866,27 +990,48 @@
 <script>
 const LESSON_ID = 'pt-interpretacao';
 let finishing = false;
-const QUESTIONS = ['q1', 'q2', 'q3', 'q4'];
+const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
+
+const COMMENTS = {
+  "q1": "A metáfora plantar/colher projeta esforço antecipado e recompensa futura. O trecho valoriza quem age cedo e permanece, em contraste com quem apenas sonha — não é manual agrícola literal.",
+  "q2": "Nível conotativo/inferencial recupera o não dito explicitamente: ironias, subentendidos, implicações. O denotativo fica no sentido literal da superfície textual.",
+  "q3": "Dissertação (argumentativa) organiza tese, desenvolvimento com argumentos e conclusão. Narrativa conta fatos; injunção instrui/ordena.",
+  "q4": "Coesão é a rede de recursos que amarra o texto (pronomes de retomada, conectivos, elipses, repetições controladas). Sem coesão, o fio referencial se perde.",
+  "q5": "Coerência diz respeito à compatibilidade lógica e semântica das ideias. Um texto pode estar coeso (bem “costurado”) e ainda assim incoerente (ideias que não se sustentam mutuamente).",
+  "q6": "Em itens de prova, quantificadores absolutos (sempre, nunca, apenas, jamais) merecem leitura crítica: bastam para invalidar afirmativas que o texto trata de modo parcial ou matizado.",
+  "q7": "Metáfora compara de forma implícita (“a vida é uma viagem”), sem conectar com “como/tal qual”. Diferente da comparação explícita (símile).",
+  "q8": "Estratégia sólida: localizar no texto o trecho que autoriza a alternativa. Responder só pelo senso comum, sem âncora textual, é a fonte clássica de erro em interpretação."
+};
 
 function checkAnswers() {
   let correct = 0;
   QUESTIONS.forEach(name => {
     const selected = document.querySelector('input[name=' + name + ']:checked');
-    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const group = document.querySelector('input[name=' + name + ']');
     if (!group) return;
+    const item = group.closest('.mc-item');
+    item.classList.remove('has-correct', 'has-incorrect');
+    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const correctLabel = group.closest('.mc-options').querySelector('.correct-answer');
+    const commentEl = item.querySelector('.mc-comment');
     if (selected) {
       const label = selected.parentElement;
       if (label.classList.contains('correct-answer')) {
         label.classList.add('correct');
+        item.classList.add('has-correct');
         correct++;
       } else {
         label.classList.add('incorrect');
+        item.classList.add('has-incorrect');
         if (correctLabel) correctLabel.classList.add('correct');
       }
     } else if (correctLabel) {
       correctLabel.classList.add('correct');
+      item.classList.add('has-incorrect');
+    }
+    if (commentEl && COMMENTS[name]) {
+      commentEl.innerHTML = '<strong>Gabarito comentado</strong>' + COMMENTS[name];
+      commentEl.classList.add('show');
     }
   });
   const badge = document.getElementById('score-badge');

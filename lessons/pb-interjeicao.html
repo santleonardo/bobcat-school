@@ -685,6 +685,60 @@
   }
   .class-card .examples b { color: var(--ink); font-weight: 600; }
 
+
+  .mc-comment {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--slate-light);
+    color: var(--ink-light);
+    border-left: 3px solid var(--slate);
+  }
+  .mc-comment.show { display: block; }
+  .mc-comment strong {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 4px;
+  }
+  .mc-item.has-correct .mc-comment { border-left-color: var(--green); background: var(--green-soft); }
+  .mc-item.has-incorrect .mc-comment { border-left-color: var(--gold); background: var(--gold-soft); }
+  .gabarito-box {
+    margin-top: 28px;
+    border: 1px solid var(--parchment);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .gabarito-box summary {
+    cursor: pointer;
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    list-style: none;
+    background: var(--slate-light);
+  }
+  .gabarito-box summary::-webkit-details-marker { display: none; }
+  .gabarito-box summary::before { content: '▶ '; font-size: 10px; color: var(--slate); }
+  .gabarito-box[open] summary::before { content: '▼ '; }
+  .gabarito-list { padding: 8px 18px 16px; }
+  .gabarito-list .g-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--parchment);
+    font-size: 13.5px;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+  .gabarito-list .g-item:last-child { border-bottom: none; }
+  .gabarito-list .g-item b { color: var(--ink); }
+  .gabarito-list .g-ans { color: var(--green); font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -802,7 +856,8 @@
           <label class="correct-answer"><input type="radio" name="q1" value="c">Interjeição</label>
           <label><input type="radio" name="q1" value="d">Numeral</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">“Ai!” tipicamente expressa:</div>
@@ -812,7 +867,8 @@
           <label><input type="radio" name="q2" value="c">Artigo</label>
           <label><input type="radio" name="q2" value="d">Lugar</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">A interjeição serve para:</div>
@@ -822,7 +878,8 @@
           <label><input type="radio" name="q3" value="c">Indicar posse</label>
           <label><input type="radio" name="q3" value="d">Flexionar o verbo</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Qual opção é interjeição?</div>
@@ -832,7 +889,8 @@
           <label><input type="radio" name="q4" value="c">mesa</label>
           <label><input type="radio" name="q4" value="d">dois</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">“Meu Deus!” e “Que legal!” são:</div>
@@ -842,7 +900,8 @@
           <label><input type="radio" name="q5" value="c">Numerais ordinais</label>
           <label><input type="radio" name="q5" value="d">Preposições</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Qual sentimento combina com “Viva!” / “Oba!”?</div>
@@ -852,7 +911,8 @@
           <label><input type="radio" name="q6" value="c">Só regência verbal</label>
           <label><input type="radio" name="q6" value="d">Só concordância nominal</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">A interjeição, em relação às outras classes:</div>
@@ -862,7 +922,8 @@
           <label><input type="radio" name="q7" value="c">É sempre numeral</label>
           <label><input type="radio" name="q7" value="d">É sempre artigo</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Qual frase começa com interjeição de surpresa?</div>
@@ -872,7 +933,8 @@
           <label><input type="radio" name="q8" value="c">Ele chegou ontem.</label>
           <label><input type="radio" name="q8" value="d">Estudei e passei.</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="actions-row">
           <button class="btn-finish" type="button" onclick="finishLesson()">Finalizar e salvar progresso</button>
@@ -880,6 +942,19 @@
           <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
         </div>
 
+        <details class="gabarito-box">
+          <summary>📋 Gabarito comentado</summary>
+          <div class="gabarito-list">
+          <div class="g-item"><b>Questão 1.</b> Em "NOSSA! Que susto você me deu!", “Nossa!” é:<br><span class="g-ans">Resposta: Interjeição</span><br>Interjeição expressa emoção ou reação súbita, muitas vezes isolada e seguida de exclamação. “Nossa!” sinaliza surpresa; não nomeia, não conjuga e não liga termos.</div>
+          <div class="g-item"><b>Questão 2.</b> Em "NOSSA! Que susto você me deu!", “Nossa!” é:<br><span class="g-ans">Resposta: Dor</span><br>“Ai!” / “Ui!” convencionalmente exprimem dor ou desconforto. O valor exato depende do contexto, mas a classe permanece interjeição.</div>
+          <div class="g-item"><b>Questão 3.</b> Em "NOSSA! Que susto você me deu!", “Nossa!” é:<br><span class="g-ans">Resposta: Expressar emoção repentina</span><br>Função pragmática: desabafar reação (alegria, dor, susto, pedido). Por isso difere de conjunção (conexão), substantivo (nomeação) e verbo (processo).</div>
+          <div class="g-item"><b>Questão 4.</b> Em "NOSSA! Que susto você me deu!", “Nossa!” é:<br><span class="g-ans">Resposta: Socorro!</span><br>“Socorro!” funciona como chamado urgente — locução/interjeição de apelo. “Porque” é conjunção; “mesa”, substantivo; “dois”, numeral.</div>
+          <div class="g-item"><b>Questão 5.</b> Em "NOSSA! Que susto você me deu!", “Nossa!” é:<br><span class="g-ans">Resposta: Locuções interjetivas</span><br>Quando a reação vem em mais de uma palavra (“Meu Deus!”, “Que legal!”, “Ora bolas!”), fala-se em <strong>locução interjetiva</strong>.</div>
+          <div class="g-item"><b>Questão 6.</b> Em "NOSSA! Que susto você me deu!", “Nossa!” é:<br><span class="g-ans">Resposta: Alegria</span><br>“Viva!”, “Oba!”, “Que legal!” gravitam semanticamente em torno da alegria ou celebração.</div>
+          <div class="g-item"><b>Questão 7.</b> Em "NOSSA! Que susto você me deu!", “Nossa!” é:<br><span class="g-ans">Resposta: Não nomeia nem conjuga; expressa reação</span><br>Critério distintivo: se a expressão não nomeia, não caracteriza, não quantifica e não conecta — apenas reage — a classificação tende a interjeição.</div>
+          <div class="g-item"><b>Questão 8.</b> Em "NOSSA! Que susto você me deu!", “Nossa!” é:<br><span class="g-ans">Resposta: Nossa! Não acredito.</span><br>“Nossa! Não acredito.” abre com interjeição de surpresa, seguida de oração que explicita o conteúdo da reação.</div>
+          </div>
+        </details>
         <div class="callout info" style="margin-top:28px;">
           <strong>Próximo passo</strong>
           Revise os erros, releia a seção correspondente e avance para a próxima classe pelo menu lateral.
@@ -895,25 +970,46 @@ const LESSON_ID = 'pb-interjeicao';
 let finishing = false;
 const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
 
+const COMMENTS = {
+  "q1": "Interjeição expressa emoção ou reação súbita, muitas vezes isolada e seguida de exclamação. “Nossa!” sinaliza surpresa; não nomeia, não conjuga e não liga termos.",
+  "q2": "“Ai!” / “Ui!” convencionalmente exprimem dor ou desconforto. O valor exato depende do contexto, mas a classe permanece interjeição.",
+  "q3": "Função pragmática: desabafar reação (alegria, dor, susto, pedido). Por isso difere de conjunção (conexão), substantivo (nomeação) e verbo (processo).",
+  "q4": "“Socorro!” funciona como chamado urgente — locução/interjeição de apelo. “Porque” é conjunção; “mesa”, substantivo; “dois”, numeral.",
+  "q5": "Quando a reação vem em mais de uma palavra (“Meu Deus!”, “Que legal!”, “Ora bolas!”), fala-se em <strong>locução interjetiva</strong>.",
+  "q6": "“Viva!”, “Oba!”, “Que legal!” gravitam semanticamente em torno da alegria ou celebração.",
+  "q7": "Critério distintivo: se a expressão não nomeia, não caracteriza, não quantifica e não conecta — apenas reage — a classificação tende a interjeição.",
+  "q8": "“Nossa! Não acredito.” abre com interjeição de surpresa, seguida de oração que explicita o conteúdo da reação."
+};
+
 function checkAnswers() {
   let correct = 0;
   QUESTIONS.forEach(name => {
     const selected = document.querySelector('input[name=' + name + ']:checked');
-    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const group = document.querySelector('input[name=' + name + ']');
     if (!group) return;
+    const item = group.closest('.mc-item');
+    item.classList.remove('has-correct', 'has-incorrect');
+    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const correctLabel = group.closest('.mc-options').querySelector('.correct-answer');
+    const commentEl = item.querySelector('.mc-comment');
     if (selected) {
       const label = selected.parentElement;
       if (label.classList.contains('correct-answer')) {
         label.classList.add('correct');
+        item.classList.add('has-correct');
         correct++;
       } else {
         label.classList.add('incorrect');
+        item.classList.add('has-incorrect');
         if (correctLabel) correctLabel.classList.add('correct');
       }
     } else if (correctLabel) {
       correctLabel.classList.add('correct');
+      item.classList.add('has-incorrect');
+    }
+    if (commentEl && COMMENTS[name]) {
+      commentEl.innerHTML = '<strong>Gabarito comentado</strong>' + COMMENTS[name];
+      commentEl.classList.add('show');
     }
   });
   const badge = document.getElementById('score-badge');

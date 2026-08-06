@@ -10,6 +10,7 @@
 <script src="../db-client.js"></script>
 <style>
 
+
   :root {
     --ink:        #2B2D42;
     --ink-light:  #555770;
@@ -637,6 +638,61 @@
     flex-wrap: wrap;
   }
 
+
+
+  .mc-comment {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--slate-light);
+    color: var(--ink-light);
+    border-left: 3px solid var(--slate);
+  }
+  .mc-comment.show { display: block; }
+  .mc-comment strong {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 4px;
+  }
+  .mc-item.has-correct .mc-comment { border-left-color: var(--green); background: var(--green-soft); }
+  .mc-item.has-incorrect .mc-comment { border-left-color: var(--gold); background: var(--gold-soft); }
+  .gabarito-box {
+    margin-top: 28px;
+    border: 1px solid var(--parchment);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .gabarito-box summary {
+    cursor: pointer;
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    list-style: none;
+    background: var(--slate-light);
+  }
+  .gabarito-box summary::-webkit-details-marker { display: none; }
+  .gabarito-box summary::before { content: '▶ '; font-size: 10px; color: var(--slate); }
+  .gabarito-box[open] summary::before { content: '▼ '; }
+  .gabarito-list { padding: 8px 18px 16px; }
+  .gabarito-list .g-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--parchment);
+    font-size: 13.5px;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+  .gabarito-list .g-item:last-child { border-bottom: none; }
+  .gabarito-list .g-item b { color: var(--ink); }
+  .gabarito-list .g-ans { color: var(--green); font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -668,18 +724,18 @@
     <a href="pt-interpretacao.html"><span class="num">10.</span> Interpretação de Textos</a>
   </nav>
   <div class="sidebar-footer">
-    Capítulo 3 de 10 — estude um tema por vez.
+    Capítulo 3 de 10 — conteúdo ampliado + exercícios.
   </div>
 </aside>
 
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Capítulo 3 de 10 · Gramática Aplicada</div>
-    <h2>Concordância<br><em>Nominal e verbal — regras e casos especiais</em></h2>
-    <p>Concordância nominal e verbal, casos especiais. Ao final, pratique com exercícios interativos e salve o progresso no app.</p>
+    <h2>🤝 Concordância<br><em>Nominal e verbal — regras e casos especiais</em></h2>
+    <p>Concordância nominal e verbal, casos especiais. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Capítulo 3/10</span>
-      <span class="badge">4 exercícios</span>
+      <span class="badge">8 exercícios</span>
       <span class="badge">Extra — Português</span>
     </div>
   </div>
@@ -760,6 +816,19 @@
         </div>
       </div>
     
+
+      <div class="callout danger">
+        <strong>Erro clássico</strong>
+        “Haviam muitas pessoas” está incorreto no sentido de existir. O correto é <strong>Havia muitas pessoas</strong> (haver impessoal no singular).
+      </div>
+      <div class="prose">
+        <h3>Checklist rápido</h3>
+        <p>• Adjetivo concorda com o substantivo em gênero e número.</p>
+        <p>• Verbo concorda com o sujeito em pessoa e número.</p>
+        <p>• “A maioria de…” admite singular (núcleo) ou plural (atração) — o singular é o mais tradicional.</p>
+        <p>• Fazer/haver indicando tempo ou existência: singular.</p>
+      </div>
+
     </section>
 
     <section class="section" id="exercicios">
@@ -768,19 +837,20 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Fixação deste capítulo</p>
+          <p class="section-subtitle">Fixação deste capítulo — concordância</p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no seu perfil no app.</p>
+        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no perfil (mínimo 85% para concluir a lição).</p>
 
         <div class="mc-item">
           <div class="q">A frase <em>"Fazem dois anos que ele não vem aqui."</em> está correta?</div>
           <div class="mc-options">
-          <label><input type="radio" name="q1" value="a">Sim, está correta</label>
-          <label class="correct-answer"><input type="radio" name="q1" value="b">Não — o verbo fazer (tempo) fica no singular: “Faz dois anos…”</label>
+          <label><input type="radio" name="q1" value="a">Sim</label>
+          <label class="correct-answer"><input type="radio" name="q1" value="b">Não — “Faz dois anos…” (fazer impessoal no singular)</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Complete: <em>"É necessário ___ atenção."</em></div>
@@ -789,7 +859,8 @@
           <label><input type="radio" name="q2" value="b">haver mais</label>
           <label><input type="radio" name="q2" value="c">haverem mais</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Complete: <em>"A maioria dos alunos ___ o exercício."</em> (forma mais tradicional)</div>
@@ -798,17 +869,58 @@
           <label><input type="radio" name="q3" value="b">entregaram (única forma correta)</label>
           <label><input type="radio" name="q3" value="c">entrega</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">O verbo <em>haver</em> no sentido de “existir”:</div>
+          <div class="q">O verbo <em>haver</em> (= existir):</div>
           <div class="mc-options">
-          <label><input type="radio" name="q4" value="a">Vai para o plural com o objeto</label>
-          <label class="correct-answer"><input type="radio" name="q4" value="b">Fica sempre no singular</label>
-          <label><input type="radio" name="q4" value="c">Só se usa no futuro</label>
-          <label><input type="radio" name="q4" value="d">É sempre pessoal</label>
+          <label><input type="radio" name="q4" value="a">Vai ao plural com o objeto</label>
+          <label class="correct-answer"><input type="radio" name="q4" value="b">Fica no singular</label>
+          <label><input type="radio" name="q4" value="c">Só no futuro</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">Qual frase está correta?</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q5" value="a">Haviam muitas pessoas.</label>
+          <label class="correct-answer"><input type="radio" name="q5" value="b">Havia muitas pessoas.</label>
+          <label><input type="radio" name="q5" value="c">Houveram muitas pessoas. (existir)</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">Em <em>"As alunas dedicadas"</em>, o adjetivo concorda em:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q6" value="a">Só número</label>
+          <label class="correct-answer"><input type="radio" name="q6" value="b">Gênero e número</label>
+          <label><input type="radio" name="q6" value="c">Nada</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">Com sujeito composto antes do verbo, a regra geral é:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q7" value="a">Verbo no singular sempre</label>
+          <label class="correct-answer"><input type="radio" name="q7" value="b">Verbo no plural</label>
+          <label><input type="radio" name="q7" value="c">Omitir o verbo</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">“Faz dez anos” está correto porque:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q8" value="a">Fazer no plural é obrigatório</label>
+          <label class="correct-answer"><input type="radio" name="q8" value="b">Fazer de tempo decorrido é impessoal e singular</label>
+          <label><input type="radio" name="q8" value="c">Não existe essa construção</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="actions-row">
           <button class="btn-finish" type="button" onclick="finishLesson()">Finalizar e salvar progresso</button>
@@ -816,9 +928,22 @@
           <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
         </div>
 
+        <details class="gabarito-box">
+          <summary>📋 Gabarito comentado</summary>
+          <div class="gabarito-list">
+          <div class="g-item"><b>Questão 1.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: Não — “Faz dois anos…” (fazer impessoal no singular)</span><br>O verbo <strong>fazer</strong> indicando tempo decorrido é impessoal e fica no singular: “Faz dois anos que…”. “Fazem dois anos” é desvio frequente, mas não atende a essa regra.</div>
+          <div class="g-item"><b>Questão 2.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: mais</span><br>Em “É necessário mais atenção”, não há sujeito lexical que force plural; a construção com “é necessário” + termo no singular é a forma natural. “Haverem mais” está inadequado aqui.</div>
+          <div class="g-item"><b>Questão 3.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: entregou</span><br>Com “a maioria de + plural”, a norma admite singular (concordância com o núcleo “maioria”) ou plural (atração pelo especificado). A concordância com o núcleo — “entregou” — é a mais tradicional.</div>
+          <div class="g-item"><b>Questão 4.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: Fica no singular</span><br>Haver (= existir) é impessoal: “Havia muitas pessoas”, nunca “haviam” nesse sentido. O objeto não transmite plural ao verbo.</div>
+          <div class="g-item"><b>Questão 5.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: Havia muitas pessoas.</span><br>Única forma adequada entre as opções, no sentido de existir: <strong>Havia muitas pessoas</strong>. “Haviam/Houveram” como impessoal de existência são incorretos.</div>
+          <div class="g-item"><b>Questão 6.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: Gênero e número</span><br>Concordância nominal: o adjetivo espelha gênero e número do substantivo (alunas dedicadas). Falhar um dos traços já configura erro.</div>
+          <div class="g-item"><b>Questão 7.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: Verbo no plural</span><br>Sujeito composto anteposto ao verbo → verbo no plural (“Pedro e Ana chegaram”). Posposto, a língua admite, em certos casos, concordância com o núcleo mais próximo — mas a regra geral com sujeito antes é plural.</div>
+          <div class="g-item"><b>Questão 8.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: Fazer de tempo decorrido é impessoal e singular</span><br>Mesma lógica de q1: fazer de tempo decorrido não flexiona no plural (“Faz dez anos”).</div>
+          </div>
+        </details>
         <div class="callout info" style="margin-top:28px;">
           <strong>Próximo passo</strong>
-          Depois de concluir, avance para o próximo capítulo pelo menu lateral — ou volte ao app.
+          Revise os itens errados no texto do capítulo e avance pelo menu lateral.
         </div>
         <div class="ornament">· · ·</div>
       </div>
@@ -829,27 +954,48 @@
 <script>
 const LESSON_ID = 'pt-concordancia';
 let finishing = false;
-const QUESTIONS = ['q1', 'q2', 'q3', 'q4'];
+const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
+
+const COMMENTS = {
+  "q1": "O verbo <strong>fazer</strong> indicando tempo decorrido é impessoal e fica no singular: “Faz dois anos que…”. “Fazem dois anos” é desvio frequente, mas não atende a essa regra.",
+  "q2": "Em “É necessário mais atenção”, não há sujeito lexical que force plural; a construção com “é necessário” + termo no singular é a forma natural. “Haverem mais” está inadequado aqui.",
+  "q3": "Com “a maioria de + plural”, a norma admite singular (concordância com o núcleo “maioria”) ou plural (atração pelo especificado). A concordância com o núcleo — “entregou” — é a mais tradicional.",
+  "q4": "Haver (= existir) é impessoal: “Havia muitas pessoas”, nunca “haviam” nesse sentido. O objeto não transmite plural ao verbo.",
+  "q5": "Única forma adequada entre as opções, no sentido de existir: <strong>Havia muitas pessoas</strong>. “Haviam/Houveram” como impessoal de existência são incorretos.",
+  "q6": "Concordância nominal: o adjetivo espelha gênero e número do substantivo (alunas dedicadas). Falhar um dos traços já configura erro.",
+  "q7": "Sujeito composto anteposto ao verbo → verbo no plural (“Pedro e Ana chegaram”). Posposto, a língua admite, em certos casos, concordância com o núcleo mais próximo — mas a regra geral com sujeito antes é plural.",
+  "q8": "Mesma lógica de q1: fazer de tempo decorrido não flexiona no plural (“Faz dez anos”)."
+};
 
 function checkAnswers() {
   let correct = 0;
   QUESTIONS.forEach(name => {
     const selected = document.querySelector('input[name=' + name + ']:checked');
-    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const group = document.querySelector('input[name=' + name + ']');
     if (!group) return;
+    const item = group.closest('.mc-item');
+    item.classList.remove('has-correct', 'has-incorrect');
+    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const correctLabel = group.closest('.mc-options').querySelector('.correct-answer');
+    const commentEl = item.querySelector('.mc-comment');
     if (selected) {
       const label = selected.parentElement;
       if (label.classList.contains('correct-answer')) {
         label.classList.add('correct');
+        item.classList.add('has-correct');
         correct++;
       } else {
         label.classList.add('incorrect');
+        item.classList.add('has-incorrect');
         if (correctLabel) correctLabel.classList.add('correct');
       }
     } else if (correctLabel) {
       correctLabel.classList.add('correct');
+      item.classList.add('has-incorrect');
+    }
+    if (commentEl && COMMENTS[name]) {
+      commentEl.innerHTML = '<strong>Gabarito comentado</strong>' + COMMENTS[name];
+      commentEl.classList.add('show');
     }
   });
   const badge = document.getElementById('score-badge');

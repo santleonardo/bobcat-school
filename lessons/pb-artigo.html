@@ -685,6 +685,60 @@
   }
   .class-card .examples b { color: var(--ink); font-weight: 600; }
 
+
+  .mc-comment {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--slate-light);
+    color: var(--ink-light);
+    border-left: 3px solid var(--slate);
+  }
+  .mc-comment.show { display: block; }
+  .mc-comment strong {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 4px;
+  }
+  .mc-item.has-correct .mc-comment { border-left-color: var(--green); background: var(--green-soft); }
+  .mc-item.has-incorrect .mc-comment { border-left-color: var(--gold); background: var(--gold-soft); }
+  .gabarito-box {
+    margin-top: 28px;
+    border: 1px solid var(--parchment);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .gabarito-box summary {
+    cursor: pointer;
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    list-style: none;
+    background: var(--slate-light);
+  }
+  .gabarito-box summary::-webkit-details-marker { display: none; }
+  .gabarito-box summary::before { content: '▶ '; font-size: 10px; color: var(--slate); }
+  .gabarito-box[open] summary::before { content: '▼ '; }
+  .gabarito-list { padding: 8px 18px 16px; }
+  .gabarito-list .g-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--parchment);
+    font-size: 13.5px;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+  .gabarito-list .g-item:last-child { border-bottom: none; }
+  .gabarito-list .g-item b { color: var(--ink); }
+  .gabarito-list .g-ans { color: var(--green); font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -818,7 +872,8 @@
           <label><input type="radio" name="q1" value="c">Preposição</label>
           <label><input type="radio" name="q1" value="d">Substantivo</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Em <em>"um carro"</em>, o artigo é:</div>
@@ -828,7 +883,8 @@
           <label><input type="radio" name="q2" value="c">Possessivo</label>
           <label><input type="radio" name="q2" value="d">Numeral</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Os artigos definidos são:</div>
@@ -838,7 +894,8 @@
           <label><input type="radio" name="q3" value="c">meu, sua</label>
           <label><input type="radio" name="q3" value="d">este, aquele</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Em <em>"da mesa"</em> (de + a), há:</div>
@@ -848,7 +905,8 @@
           <label><input type="radio" name="q4" value="c">Só artigo</label>
           <label><input type="radio" name="q4" value="d">Conjunção</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">“Feche a porta” sugere que a porta é:</div>
@@ -858,7 +916,8 @@
           <label><input type="radio" name="q5" value="c">Um verbo</label>
           <label><input type="radio" name="q5" value="d">Um advérbio</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">A combinação <em>em + o</em> resulta em:</div>
@@ -868,7 +927,8 @@
           <label><input type="radio" name="q6" value="c">ao</label>
           <label><input type="radio" name="q6" value="d">pelo</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Qual frase usa artigo <strong>indefinido</strong>?</div>
@@ -878,7 +938,8 @@
           <label><input type="radio" name="q7" value="c">A porta está aberta.</label>
           <label><input type="radio" name="q7" value="d">As casas são antigas.</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Em <em>"a + a"</em> (preposição + artigo), a forma correta com crase é:</div>
@@ -888,7 +949,8 @@
           <label><input type="radio" name="q8" value="c">á</label>
           <label><input type="radio" name="q8" value="d">a</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="actions-row">
           <button class="btn-finish" type="button" onclick="finishLesson()">Finalizar e salvar progresso</button>
@@ -896,6 +958,19 @@
           <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
         </div>
 
+        <details class="gabarito-box">
+          <summary>📋 Gabarito comentado</summary>
+          <div class="gabarito-list">
+          <div class="g-item"><b>Questão 1.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: Artigo</span><br>O artigo vem antes do substantivo e ajuda a determiná-lo. Em “O menino saiu cedo”, <strong>O</strong> é artigo <strong>definido</strong> masculino singular: aponta para um menino específico ou já identificável no contexto. Não é pronome (não substitui o nome) nem preposição (não liga termos).</div>
+          <div class="g-item"><b>Questão 2.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: Indefinido</span><br>Artigos <strong>indefinidos</strong> (um, uma, uns, umas) apresentam algo ainda não particularizado — “qualquer um” da espécie. Em “um carro”, não se trata daquele carro já conhecido, e sim de um exemplar qualquer.</div>
+          <div class="g-item"><b>Questão 3.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: o, a, os, as</span><br>Quadro fixo: definidos = <strong>o, a, os, as</strong>; indefinidos = <strong>um, uma, uns, umas</strong>. “Meu/sua” são possessivos; “este/aquele”, demonstrativos — classes diferentes, embora também acompanhem o substantivo.</div>
+          <div class="g-item"><b>Questão 4.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: Preposição + artigo</span><br>Na fala e na escrita, preposição e artigo se fundem: de + a = <strong>da</strong>, de + o = do, em + a = na, a + a = à. Em “em cima da mesa”, “da” carrega preposição (relação) + artigo (determinação de “mesa”).</div>
+          <div class="g-item"><b>Questão 5.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: Uma porta específica / conhecida</span><br>“Feche a porta” usa definido porque a porta já faz parte da situação comunicativa (aquela porta do ambiente). Se dissesse “feche uma porta”, sugeriria qualquer porta, sem identificação prévia.</div>
+          <div class="g-item"><b>Questão 6.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: no</span><br>Combinações usuais: em+o=<strong>no</strong>, em+a=na, de+o=do, de+a=da, a+o=ao, a+a=à, por+o=pelo, por+a=pela. Reconhecer essas fusões evita classificar “no/da” como uma só classe isolada.</div>
+          <div class="g-item"><b>Questão 7.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: Vi um gato no quintal.</span><br>“Vi um gato no quintal” introduz o animal pela primeira vez, sem torná-lo único e já conhecido → indefinido. “Os alunos” / “A porta” / “As casas” usam definidos.</div>
+          <div class="g-item"><b>Questão 8.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: à</span><br>Quando a preposição <strong>a</strong> se junta ao artigo <strong>a</strong>, a fusão marca-se com acento grave: <strong>à</strong> (crase). Não se escreve “aa” nem se confunde com o “á” de outras palavras.</div>
+          </div>
+        </details>
         <div class="callout info" style="margin-top:28px;">
           <strong>Próximo passo</strong>
           Revise os erros, releia a seção correspondente e avance para a próxima classe pelo menu lateral.
@@ -911,25 +986,46 @@ const LESSON_ID = 'pb-artigo';
 let finishing = false;
 const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
 
+const COMMENTS = {
+  "q1": "O artigo vem antes do substantivo e ajuda a determiná-lo. Em “O menino saiu cedo”, <strong>O</strong> é artigo <strong>definido</strong> masculino singular: aponta para um menino específico ou já identificável no contexto. Não é pronome (não substitui o nome) nem preposição (não liga termos).",
+  "q2": "Artigos <strong>indefinidos</strong> (um, uma, uns, umas) apresentam algo ainda não particularizado — “qualquer um” da espécie. Em “um carro”, não se trata daquele carro já conhecido, e sim de um exemplar qualquer.",
+  "q3": "Quadro fixo: definidos = <strong>o, a, os, as</strong>; indefinidos = <strong>um, uma, uns, umas</strong>. “Meu/sua” são possessivos; “este/aquele”, demonstrativos — classes diferentes, embora também acompanhem o substantivo.",
+  "q4": "Na fala e na escrita, preposição e artigo se fundem: de + a = <strong>da</strong>, de + o = do, em + a = na, a + a = à. Em “em cima da mesa”, “da” carrega preposição (relação) + artigo (determinação de “mesa”).",
+  "q5": "“Feche a porta” usa definido porque a porta já faz parte da situação comunicativa (aquela porta do ambiente). Se dissesse “feche uma porta”, sugeriria qualquer porta, sem identificação prévia.",
+  "q6": "Combinações usuais: em+o=<strong>no</strong>, em+a=na, de+o=do, de+a=da, a+o=ao, a+a=à, por+o=pelo, por+a=pela. Reconhecer essas fusões evita classificar “no/da” como uma só classe isolada.",
+  "q7": "“Vi um gato no quintal” introduz o animal pela primeira vez, sem torná-lo único e já conhecido → indefinido. “Os alunos” / “A porta” / “As casas” usam definidos.",
+  "q8": "Quando a preposição <strong>a</strong> se junta ao artigo <strong>a</strong>, a fusão marca-se com acento grave: <strong>à</strong> (crase). Não se escreve “aa” nem se confunde com o “á” de outras palavras."
+};
+
 function checkAnswers() {
   let correct = 0;
   QUESTIONS.forEach(name => {
     const selected = document.querySelector('input[name=' + name + ']:checked');
-    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const group = document.querySelector('input[name=' + name + ']');
     if (!group) return;
+    const item = group.closest('.mc-item');
+    item.classList.remove('has-correct', 'has-incorrect');
+    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const correctLabel = group.closest('.mc-options').querySelector('.correct-answer');
+    const commentEl = item.querySelector('.mc-comment');
     if (selected) {
       const label = selected.parentElement;
       if (label.classList.contains('correct-answer')) {
         label.classList.add('correct');
+        item.classList.add('has-correct');
         correct++;
       } else {
         label.classList.add('incorrect');
+        item.classList.add('has-incorrect');
         if (correctLabel) correctLabel.classList.add('correct');
       }
     } else if (correctLabel) {
       correctLabel.classList.add('correct');
+      item.classList.add('has-incorrect');
+    }
+    if (commentEl && COMMENTS[name]) {
+      commentEl.innerHTML = '<strong>Gabarito comentado</strong>' + COMMENTS[name];
+      commentEl.classList.add('show');
     }
   });
   const badge = document.getElementById('score-badge');

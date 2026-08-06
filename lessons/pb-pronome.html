@@ -685,6 +685,60 @@
   }
   .class-card .examples b { color: var(--ink); font-weight: 600; }
 
+
+  .mc-comment {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--slate-light);
+    color: var(--ink-light);
+    border-left: 3px solid var(--slate);
+  }
+  .mc-comment.show { display: block; }
+  .mc-comment strong {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 4px;
+  }
+  .mc-item.has-correct .mc-comment { border-left-color: var(--green); background: var(--green-soft); }
+  .mc-item.has-incorrect .mc-comment { border-left-color: var(--gold); background: var(--gold-soft); }
+  .gabarito-box {
+    margin-top: 28px;
+    border: 1px solid var(--parchment);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .gabarito-box summary {
+    cursor: pointer;
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    list-style: none;
+    background: var(--slate-light);
+  }
+  .gabarito-box summary::-webkit-details-marker { display: none; }
+  .gabarito-box summary::before { content: '▶ '; font-size: 10px; color: var(--slate); }
+  .gabarito-box[open] summary::before { content: '▼ '; }
+  .gabarito-list { padding: 8px 18px 16px; }
+  .gabarito-list .g-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--parchment);
+    font-size: 13.5px;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+  .gabarito-list .g-item:last-child { border-bottom: none; }
+  .gabarito-list .g-item b { color: var(--ink); }
+  .gabarito-list .g-ans { color: var(--green); font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -812,7 +866,8 @@
           <label><input type="radio" name="q1" value="c">Artigo</label>
           <label><input type="radio" name="q1" value="d">Interjeição</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Em <em>"meu livro"</em>, “meu” é pronome:</div>
@@ -822,7 +877,8 @@
           <label><input type="radio" name="q2" value="c">Demonstrativo</label>
           <label><input type="radio" name="q2" value="d">Relativo</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">“Este”, “esse” e “aquele” são pronomes:</div>
@@ -832,7 +888,8 @@
           <label><input type="radio" name="q3" value="c">Pessoais retos</label>
           <label><input type="radio" name="q3" value="d">Numerais</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">O pronome serve principalmente para:</div>
@@ -842,7 +899,8 @@
           <label><input type="radio" name="q4" value="c">Ligar orações</label>
           <label><input type="radio" name="q4" value="d">Expressar emoção</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Em <em>"O professor me chamou"</em>, “me” é pronome:</div>
@@ -852,7 +910,8 @@
           <label><input type="radio" name="q5" value="c">Artigo</label>
           <label><input type="radio" name="q5" value="d">Numeral</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">“Alguém” e “ninguém” são pronomes:</div>
@@ -862,7 +921,8 @@
           <label><input type="radio" name="q6" value="c">Artigos</label>
           <label><input type="radio" name="q6" value="d">Preposições</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Qual opção é pronome possessivo?</div>
@@ -872,7 +932,8 @@
           <label><input type="radio" name="q7" value="c">aquele</label>
           <label><input type="radio" name="q7" value="d">dois</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Em <em>"Maria chegou. Ela sorriu."</em>, “Ela” evita:</div>
@@ -882,7 +943,8 @@
           <label><input type="radio" name="q8" value="c">Usar artigo</label>
           <label><input type="radio" name="q8" value="d">Fazer plural</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="actions-row">
           <button class="btn-finish" type="button" onclick="finishLesson()">Finalizar e salvar progresso</button>
@@ -890,6 +952,19 @@
           <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
         </div>
 
+        <details class="gabarito-box">
+          <summary>📋 Gabarito comentado</summary>
+          <div class="gabarito-list">
+          <div class="g-item"><b>Questão 1.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Pronome</span><br>Pronomes pessoais retos (eu, tu, ele…) desempenham função de sujeito e representam as pessoas do discurso. “Eu” não nomeia um ser do mundo como substantivo; representa quem fala.</div>
+          <div class="g-item"><b>Questão 2.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Possessivo</span><br>Possessivos (meu, tua, seu, nosso…) indicam posse ou relação de pertencimento. Em “meu livro”, “meu” acompanha o substantivo e marca o possuidor.</div>
+          <div class="g-item"><b>Questão 3.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Demonstrativos</span><br>Demonstrativos (este, esse, aquele e variantes) situam no espaço ou no texto. Em linhas gerais: este (perto de quem fala), esse (perto de quem ouve), aquele (longe de ambos) — com usos variáveis no português do Brasil.</div>
+          <div class="g-item"><b>Questão 4.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Substituir ou acompanhar o substantivo</span><br>Função nuclear: <strong>substituir</strong> o substantivo (“Maria chegou” → “Ela chegou”) ou <strong>acompanhá-lo</strong> (“este livro”, “meu livro”), evitando repetição e organizando a referência.</div>
+          <div class="g-item"><b>Questão 5.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Pessoal oblíquo</span><br>Oblíquos átonos (me, te, se, o, a, lhe…) funcionam como complemento, não como sujeito. Em “O professor me chamou”, “me” é objeto do verbo chamar.</div>
+          <div class="g-item"><b>Questão 6.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Indefinidos</span><br>Indefinidos (alguém, ninguém, tudo, algum, nenhum…) referem-se a seres ou quantidades de modo vago, sem identificar exatamente quem ou quantos.</div>
+          <div class="g-item"><b>Questão 7.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: nosso</span><br>“Nosso” é possessivo da 1ª pessoa do plural. “Ela” é pessoal; “aquele”, demonstrativo; “dois”, numeral.</div>
+          <div class="g-item"><b>Questão 8.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Repetir o substantivo Maria</span><br>A retomada por pronome é mecanismo de coesão: evita eco (“Maria… Maria…”) e mantém a referência clara (“Maria… Ela…”).</div>
+          </div>
+        </details>
         <div class="callout info" style="margin-top:28px;">
           <strong>Próximo passo</strong>
           Revise os erros, releia a seção correspondente e avance para a próxima classe pelo menu lateral.
@@ -905,25 +980,46 @@ const LESSON_ID = 'pb-pronome';
 let finishing = false;
 const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
 
+const COMMENTS = {
+  "q1": "Pronomes pessoais retos (eu, tu, ele…) desempenham função de sujeito e representam as pessoas do discurso. “Eu” não nomeia um ser do mundo como substantivo; representa quem fala.",
+  "q2": "Possessivos (meu, tua, seu, nosso…) indicam posse ou relação de pertencimento. Em “meu livro”, “meu” acompanha o substantivo e marca o possuidor.",
+  "q3": "Demonstrativos (este, esse, aquele e variantes) situam no espaço ou no texto. Em linhas gerais: este (perto de quem fala), esse (perto de quem ouve), aquele (longe de ambos) — com usos variáveis no português do Brasil.",
+  "q4": "Função nuclear: <strong>substituir</strong> o substantivo (“Maria chegou” → “Ela chegou”) ou <strong>acompanhá-lo</strong> (“este livro”, “meu livro”), evitando repetição e organizando a referência.",
+  "q5": "Oblíquos átonos (me, te, se, o, a, lhe…) funcionam como complemento, não como sujeito. Em “O professor me chamou”, “me” é objeto do verbo chamar.",
+  "q6": "Indefinidos (alguém, ninguém, tudo, algum, nenhum…) referem-se a seres ou quantidades de modo vago, sem identificar exatamente quem ou quantos.",
+  "q7": "“Nosso” é possessivo da 1ª pessoa do plural. “Ela” é pessoal; “aquele”, demonstrativo; “dois”, numeral.",
+  "q8": "A retomada por pronome é mecanismo de coesão: evita eco (“Maria… Maria…”) e mantém a referência clara (“Maria… Ela…”)."
+};
+
 function checkAnswers() {
   let correct = 0;
   QUESTIONS.forEach(name => {
     const selected = document.querySelector('input[name=' + name + ']:checked');
-    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const group = document.querySelector('input[name=' + name + ']');
     if (!group) return;
+    const item = group.closest('.mc-item');
+    item.classList.remove('has-correct', 'has-incorrect');
+    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const correctLabel = group.closest('.mc-options').querySelector('.correct-answer');
+    const commentEl = item.querySelector('.mc-comment');
     if (selected) {
       const label = selected.parentElement;
       if (label.classList.contains('correct-answer')) {
         label.classList.add('correct');
+        item.classList.add('has-correct');
         correct++;
       } else {
         label.classList.add('incorrect');
+        item.classList.add('has-incorrect');
         if (correctLabel) correctLabel.classList.add('correct');
       }
     } else if (correctLabel) {
       correctLabel.classList.add('correct');
+      item.classList.add('has-incorrect');
+    }
+    if (commentEl && COMMENTS[name]) {
+      commentEl.innerHTML = '<strong>Gabarito comentado</strong>' + COMMENTS[name];
+      commentEl.classList.add('show');
     }
   });
   const badge = document.getElementById('score-badge');

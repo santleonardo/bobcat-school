@@ -685,6 +685,60 @@
   }
   .class-card .examples b { color: var(--ink); font-weight: 600; }
 
+
+  .mc-comment {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--slate-light);
+    color: var(--ink-light);
+    border-left: 3px solid var(--slate);
+  }
+  .mc-comment.show { display: block; }
+  .mc-comment strong {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 4px;
+  }
+  .mc-item.has-correct .mc-comment { border-left-color: var(--green); background: var(--green-soft); }
+  .mc-item.has-incorrect .mc-comment { border-left-color: var(--gold); background: var(--gold-soft); }
+  .gabarito-box {
+    margin-top: 28px;
+    border: 1px solid var(--parchment);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .gabarito-box summary {
+    cursor: pointer;
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    list-style: none;
+    background: var(--slate-light);
+  }
+  .gabarito-box summary::-webkit-details-marker { display: none; }
+  .gabarito-box summary::before { content: '▶ '; font-size: 10px; color: var(--slate); }
+  .gabarito-box[open] summary::before { content: '▼ '; }
+  .gabarito-list { padding: 8px 18px 16px; }
+  .gabarito-list .g-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--parchment);
+    font-size: 13.5px;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+  .gabarito-list .g-item:last-child { border-bottom: none; }
+  .gabarito-list .g-item b { color: var(--ink); }
+  .gabarito-list .g-ans { color: var(--green); font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -810,7 +864,8 @@
           <label class="correct-answer"><input type="radio" name="q1" value="c">Advérbio</label>
           <label><input type="radio" name="q1" value="d">Pronome</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Em <em>"Estou muito feliz"</em>, “muito” indica:</div>
@@ -820,7 +875,8 @@
           <label><input type="radio" name="q2" value="c">Posse</label>
           <label><input type="radio" name="q2" value="d">Sujeito</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">O advérbio modifica principalmente:</div>
@@ -830,7 +886,8 @@
           <label><input type="radio" name="q3" value="c">Só o artigo</label>
           <label><input type="radio" name="q3" value="d">Só a interjeição</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Qual opção é advérbio de lugar?</div>
@@ -840,7 +897,8 @@
           <label><input type="radio" name="q4" value="c">dois</label>
           <label><input type="radio" name="q4" value="d">porque</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">“De repente” e “à noite” são:</div>
@@ -850,7 +908,8 @@
           <label><input type="radio" name="q5" value="c">Numerais</label>
           <label><input type="radio" name="q5" value="d">Substantivos próprios</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Em <em>"pessoa feliz"</em> × <em>"muito feliz"</em>, “muito” é:</div>
@@ -860,7 +919,8 @@
           <label><input type="radio" name="q6" value="c">Artigo</label>
           <label><input type="radio" name="q6" value="d">Verbo</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Qual frase traz advérbio de modo?</div>
@@ -870,7 +930,8 @@
           <label><input type="radio" name="q7" value="c">Moro aqui.</label>
           <label><input type="radio" name="q7" value="d">Comprei dois.</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Em regra, o advérbio é uma palavra:</div>
@@ -880,7 +941,8 @@
           <label><input type="radio" name="q8" value="c">Só usada no plural</label>
           <label><input type="radio" name="q8" value="d">Só no início do texto</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="actions-row">
           <button class="btn-finish" type="button" onclick="finishLesson()">Finalizar e salvar progresso</button>
@@ -888,6 +950,19 @@
           <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
         </div>
 
+        <details class="gabarito-box">
+          <summary>📋 Gabarito comentado</summary>
+          <div class="gabarito-list">
+          <div class="g-item"><b>Questão 1.</b> Em "Ele chegou ONTEM", “ontem” é:<br><span class="g-ans">Resposta: Advérbio</span><br>Advérbio de tempo situa a ação no eixo temporal. “Ontem” responde “quando chegou?” e modifica o verbo chegar — não caracteriza um substantivo.</div>
+          <div class="g-item"><b>Questão 2.</b> Em "Ele chegou ONTEM", “ontem” é:<br><span class="g-ans">Resposta: Intensidade</span><br>Advérbio de intensidade (muito, pouco, bastante, tão) gradua adjetivos ou advérbios. Em “muito feliz”, “muito” intensifica o adjetivo feliz.</div>
+          <div class="g-item"><b>Questão 3.</b> Em "Ele chegou ONTEM", “ontem” é:<br><span class="g-ans">Resposta: Verbo, adjetivo ou advérbio</span><br>Alvo do advérbio: verbo (“fala bem”), adjetivo (“muito feliz”) ou outro advérbio (“muito bem”). Caracterizar substantivo é papel do adjetivo (“pessoa feliz”).</div>
+          <div class="g-item"><b>Questão 4.</b> Em "Ele chegou ONTEM", “ontem” é:<br><span class="g-ans">Resposta: aqui</span><br>Aqui, ali, perto, longe, dentro… são típicos advérbios de lugar. “Gentil” é adjetivo; “dois”, numeral; “porque”, conjunção.</div>
+          <div class="g-item"><b>Questão 5.</b> Em "Ele chegou ONTEM", “ontem” é:<br><span class="g-ans">Resposta: Locuções adverbiais</span><br>Locução adverbial = grupo com valor de advérbio: de repente, à noite, com certeza, em silêncio, de vez em quando. Funciona como um bloco circunstancial.</div>
+          <div class="g-item"><b>Questão 6.</b> Em "Ele chegou ONTEM", “ontem” é:<br><span class="g-ans">Resposta: Advérbio de intensidade</span><br>Em “pessoa feliz”, feliz é adjetivo. Em “muito feliz”, muito não qualifica “pessoa” diretamente: intensifica a qualidade → advérbio.</div>
+          <div class="g-item"><b>Questão 7.</b> Em "Ele chegou ONTEM", “ontem” é:<br><span class="g-ans">Resposta: Ela fala bem.</span><br>“Bem” em “Ela fala bem” indica o modo da ação (como fala). “Amanhã” seria tempo; “aqui”, lugar; “dois”, numeral.</div>
+          <div class="g-item"><b>Questão 8.</b> Em "Ele chegou ONTEM", “ontem” é:<br><span class="g-ans">Resposta: Em geral invariável</span><br>Ao contrário do adjetivo, o advérbio em geral <strong>não flexiona</strong> em gênero e número: “muito” permanece igual diante de feliz/felizes, alto/alta.</div>
+          </div>
+        </details>
         <div class="callout info" style="margin-top:28px;">
           <strong>Próximo passo</strong>
           Revise os erros, releia a seção correspondente e avance para a próxima classe pelo menu lateral.
@@ -903,25 +978,46 @@ const LESSON_ID = 'pb-adverbio';
 let finishing = false;
 const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
 
+const COMMENTS = {
+  "q1": "Advérbio de tempo situa a ação no eixo temporal. “Ontem” responde “quando chegou?” e modifica o verbo chegar — não caracteriza um substantivo.",
+  "q2": "Advérbio de intensidade (muito, pouco, bastante, tão) gradua adjetivos ou advérbios. Em “muito feliz”, “muito” intensifica o adjetivo feliz.",
+  "q3": "Alvo do advérbio: verbo (“fala bem”), adjetivo (“muito feliz”) ou outro advérbio (“muito bem”). Caracterizar substantivo é papel do adjetivo (“pessoa feliz”).",
+  "q4": "Aqui, ali, perto, longe, dentro… são típicos advérbios de lugar. “Gentil” é adjetivo; “dois”, numeral; “porque”, conjunção.",
+  "q5": "Locução adverbial = grupo com valor de advérbio: de repente, à noite, com certeza, em silêncio, de vez em quando. Funciona como um bloco circunstancial.",
+  "q6": "Em “pessoa feliz”, feliz é adjetivo. Em “muito feliz”, muito não qualifica “pessoa” diretamente: intensifica a qualidade → advérbio.",
+  "q7": "“Bem” em “Ela fala bem” indica o modo da ação (como fala). “Amanhã” seria tempo; “aqui”, lugar; “dois”, numeral.",
+  "q8": "Ao contrário do adjetivo, o advérbio em geral <strong>não flexiona</strong> em gênero e número: “muito” permanece igual diante de feliz/felizes, alto/alta."
+};
+
 function checkAnswers() {
   let correct = 0;
   QUESTIONS.forEach(name => {
     const selected = document.querySelector('input[name=' + name + ']:checked');
-    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const group = document.querySelector('input[name=' + name + ']');
     if (!group) return;
+    const item = group.closest('.mc-item');
+    item.classList.remove('has-correct', 'has-incorrect');
+    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const correctLabel = group.closest('.mc-options').querySelector('.correct-answer');
+    const commentEl = item.querySelector('.mc-comment');
     if (selected) {
       const label = selected.parentElement;
       if (label.classList.contains('correct-answer')) {
         label.classList.add('correct');
+        item.classList.add('has-correct');
         correct++;
       } else {
         label.classList.add('incorrect');
+        item.classList.add('has-incorrect');
         if (correctLabel) correctLabel.classList.add('correct');
       }
     } else if (correctLabel) {
       correctLabel.classList.add('correct');
+      item.classList.add('has-incorrect');
+    }
+    if (commentEl && COMMENTS[name]) {
+      commentEl.innerHTML = '<strong>Gabarito comentado</strong>' + COMMENTS[name];
+      commentEl.classList.add('show');
     }
   });
   const badge = document.getElementById('score-badge');

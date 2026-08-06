@@ -10,6 +10,7 @@
 <script src="../db-client.js"></script>
 <style>
 
+
   :root {
     --ink:        #2B2D42;
     --ink-light:  #555770;
@@ -637,6 +638,61 @@
     flex-wrap: wrap;
   }
 
+
+
+  .mc-comment {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--slate-light);
+    color: var(--ink-light);
+    border-left: 3px solid var(--slate);
+  }
+  .mc-comment.show { display: block; }
+  .mc-comment strong {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 4px;
+  }
+  .mc-item.has-correct .mc-comment { border-left-color: var(--green); background: var(--green-soft); }
+  .mc-item.has-incorrect .mc-comment { border-left-color: var(--gold); background: var(--gold-soft); }
+  .gabarito-box {
+    margin-top: 28px;
+    border: 1px solid var(--parchment);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .gabarito-box summary {
+    cursor: pointer;
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    list-style: none;
+    background: var(--slate-light);
+  }
+  .gabarito-box summary::-webkit-details-marker { display: none; }
+  .gabarito-box summary::before { content: '▶ '; font-size: 10px; color: var(--slate); }
+  .gabarito-box[open] summary::before { content: '▼ '; }
+  .gabarito-list { padding: 8px 18px 16px; }
+  .gabarito-list .g-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--parchment);
+    font-size: 13.5px;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+  .gabarito-list .g-item:last-child { border-bottom: none; }
+  .gabarito-list .g-item b { color: var(--ink); }
+  .gabarito-list .g-ans { color: var(--green); font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -668,18 +724,18 @@
     <a href="pt-interpretacao.html"><span class="num">10.</span> Interpretação de Textos</a>
   </nav>
   <div class="sidebar-footer">
-    Capítulo 1 de 10 — estude um tema por vez.
+    Capítulo 1 de 10 — conteúdo ampliado + exercícios.
   </div>
 </aside>
 
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Capítulo 1 de 10 · Gramática Aplicada</div>
-    <h2>Morfologia<br><em>As classes de palavras e suas funções</em></h2>
-    <p>Classes gramaticais, formação e flexão das palavras. Ao final, pratique com exercícios interativos e salve o progresso no app.</p>
+    <h2>🔤 Morfologia<br><em>As classes de palavras e suas funções</em></h2>
+    <p>Classes gramaticais, formação e flexão das palavras. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Capítulo 1/10</span>
-      <span class="badge">4 exercícios</span>
+      <span class="badge">8 exercícios</span>
       <span class="badge">Extra — Português</span>
     </div>
   </div>
@@ -795,6 +851,22 @@
         </div>
       </div>
     
+
+      <div class="callout info">
+        <strong>Como estudar este capítulo</strong>
+        Memorize as 10 classes e a diferença variável × invariável. Em seguida, treine formação de palavras (prefixo, sufixo, composição) e os graus do adjetivo.
+      </div>
+      <div class="prose">
+        <h3>Roteiro prático</h3>
+        <p>1) Classifique palavras de um parágrafo do jornal em substantivo, adjetivo, verbo etc.</p>
+        <p>2) Monte famílias: <em>flor → florista → floricultura</em> (derivação).</p>
+        <p>3) Compare graus: <em>bom / melhor / ótimo</em> — evite “mais melhor”.</p>
+      </div>
+      <div class="ex-grid">
+        <div class="ex-box correct"><span class="ex-label">Derivação</span><code>feliz + mente = felizmente</code><small>Sufixação</small></div>
+        <div class="ex-box gold"><span class="ex-label">Composição</span><code>guarda + chuva = guarda-chuva</code><small>Justaposição</small></div>
+      </div>
+
     </section>
 
     <section class="section" id="exercicios">
@@ -803,11 +875,11 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Fixação deste capítulo</p>
+          <p class="section-subtitle">Fixação deste capítulo — morfologia</p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no seu perfil no app.</p>
+        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no perfil (mínimo 85% para concluir a lição).</p>
 
         <div class="mc-item">
           <div class="q">A palavra <em>empobrecer</em> é formada por:</div>
@@ -817,7 +889,8 @@
           <label class="correct-answer"><input type="radio" name="q1" value="c">Parassíntese (prefixo + sufixo juntos)</label>
           <label><input type="radio" name="q1" value="d">Justaposição</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Qual classe é <strong>invariável</strong>?</div>
@@ -827,7 +900,8 @@
           <label class="correct-answer"><input type="radio" name="q2" value="c">Preposição</label>
           <label><input type="radio" name="q2" value="d">Verbo</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Em <em>"casarão"</em>, o grau do substantivo é:</div>
@@ -837,7 +911,8 @@
           <label><input type="radio" name="q3" value="c">Comparativo</label>
           <label><input type="radio" name="q3" value="d">Superlativo</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">O comparativo sintético de <em>bom</em> é:</div>
@@ -847,7 +922,52 @@
           <label><input type="radio" name="q4" value="c">boníssimo</label>
           <label><input type="radio" name="q4" value="d">ótimo</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">“Guarda-chuva” é exemplo de:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q5" value="a">Derivação prefixal</label>
+          <label class="correct-answer"><input type="radio" name="q5" value="b">Composição por justaposição</label>
+          <label><input type="radio" name="q5" value="c">Parassíntese</label>
+          <label><input type="radio" name="q5" value="d">Artigo definido</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">“Planalto” (plano + alto) ilustra composição por:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q6" value="a">Justaposição</label>
+          <label class="correct-answer"><input type="radio" name="q6" value="b">Aglutinação</label>
+          <label><input type="radio" name="q6" value="c">Só sufixo</label>
+          <label><input type="radio" name="q6" value="d">Trema</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">Todas as proparoxítonas, quanto à acentuação, são:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q7" value="a">Nunca acentuadas</label>
+          <label class="correct-answer"><input type="radio" name="q7" value="b">Sempre acentuadas</label>
+          <label><input type="radio" name="q7" value="c">Acentuadas só no plural</label>
+          <label><input type="radio" name="q7" value="d">Acentuadas só se femininas</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">“Belíssimo” corresponde ao grau:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q8" value="a">Comparativo de igualdade</label>
+          <label class="correct-answer"><input type="radio" name="q8" value="b">Superlativo absoluto</label>
+          <label><input type="radio" name="q8" value="c">Diminutivo nominal</label>
+          <label><input type="radio" name="q8" value="d">Coletivo</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="actions-row">
           <button class="btn-finish" type="button" onclick="finishLesson()">Finalizar e salvar progresso</button>
@@ -855,9 +975,22 @@
           <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
         </div>
 
+        <details class="gabarito-box">
+          <summary>📋 Gabarito comentado</summary>
+          <div class="gabarito-list">
+          <div class="g-item"><b>Questão 1.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: Parassíntese (prefixo + sufixo juntos)</span><br>Parassíntese ocorre quando prefixo e sufixo são acrescentados <strong>simultaneamente</strong> a uma base, de modo que a retirada de um dos afixos não deixa palavra atestada com o mesmo processo: em- + pobr- + -ecer → empobrecer. Não é só prefixação nem só sufixação.</div>
+          <div class="g-item"><b>Questão 2.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: Preposição</span><br>Classes invariáveis (não flexionam em gênero/número como o nome): advérbio, preposição, conjunção e interjeição. Substantivo, adjetivo e verbo são variáveis. Preposição entra no grupo invariável.</div>
+          <div class="g-item"><b>Questão 3.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: Aumentativo</span><br>Grau aumentativo do substantivo amplia a noção (casarão, livrão). Diminutivo reduz (casinha). Comparativo/superlativo são graus típicos do adjetivo, não desse exemplo.</div>
+          <div class="g-item"><b>Questão 4.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: melhor</span><br>Formas sintéticas irregulares: bom→melhor, mau→pior, grande→maior, pequeno→menor. “Mais bom” é desvio da norma; “boníssimo/ótimo” são superlativos, não o comparativo pedido.</div>
+          <div class="g-item"><b>Questão 5.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: Composição por justaposição</span><br>Composição por justaposição une radicais preservando a identidade de cada um (muitas vezes com hífen): guarda-chuva, beija-flor. Aglutinação funde com alteração (planalto).</div>
+          <div class="g-item"><b>Questão 6.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: Aglutinação</span><br>Em planalto, plano + alto sofrem fusão com perda segmentável nítida → aglutinação. Justaposição manteria os elementos mais “intactos”.</div>
+          <div class="g-item"><b>Questão 7.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: Sempre acentuadas</span><br>Regra geral de acentuação: <strong>todas</strong> as proparoxítonas são acentuadas (médico, árvore, público), independentemente da terminação.</div>
+          <div class="g-item"><b>Questão 8.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: Superlativo absoluto</span><br>Superlativo absoluto sintético usa sufixo (-íssimo): belíssimo. O analítico usa “muito belo”. Comparativo compara dois termos (“mais belo que”).</div>
+          </div>
+        </details>
         <div class="callout info" style="margin-top:28px;">
           <strong>Próximo passo</strong>
-          Depois de concluir, avance para o próximo capítulo pelo menu lateral — ou volte ao app.
+          Revise os itens errados no texto do capítulo e avance pelo menu lateral.
         </div>
         <div class="ornament">· · ·</div>
       </div>
@@ -868,27 +1001,48 @@
 <script>
 const LESSON_ID = 'pt-morfologia';
 let finishing = false;
-const QUESTIONS = ['q1', 'q2', 'q3', 'q4'];
+const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
+
+const COMMENTS = {
+  "q1": "Parassíntese ocorre quando prefixo e sufixo são acrescentados <strong>simultaneamente</strong> a uma base, de modo que a retirada de um dos afixos não deixa palavra atestada com o mesmo processo: em- + pobr- + -ecer → empobrecer. Não é só prefixação nem só sufixação.",
+  "q2": "Classes invariáveis (não flexionam em gênero/número como o nome): advérbio, preposição, conjunção e interjeição. Substantivo, adjetivo e verbo são variáveis. Preposição entra no grupo invariável.",
+  "q3": "Grau aumentativo do substantivo amplia a noção (casarão, livrão). Diminutivo reduz (casinha). Comparativo/superlativo são graus típicos do adjetivo, não desse exemplo.",
+  "q4": "Formas sintéticas irregulares: bom→melhor, mau→pior, grande→maior, pequeno→menor. “Mais bom” é desvio da norma; “boníssimo/ótimo” são superlativos, não o comparativo pedido.",
+  "q5": "Composição por justaposição une radicais preservando a identidade de cada um (muitas vezes com hífen): guarda-chuva, beija-flor. Aglutinação funde com alteração (planalto).",
+  "q6": "Em planalto, plano + alto sofrem fusão com perda segmentável nítida → aglutinação. Justaposição manteria os elementos mais “intactos”.",
+  "q7": "Regra geral de acentuação: <strong>todas</strong> as proparoxítonas são acentuadas (médico, árvore, público), independentemente da terminação.",
+  "q8": "Superlativo absoluto sintético usa sufixo (-íssimo): belíssimo. O analítico usa “muito belo”. Comparativo compara dois termos (“mais belo que”)."
+};
 
 function checkAnswers() {
   let correct = 0;
   QUESTIONS.forEach(name => {
     const selected = document.querySelector('input[name=' + name + ']:checked');
-    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const group = document.querySelector('input[name=' + name + ']');
     if (!group) return;
+    const item = group.closest('.mc-item');
+    item.classList.remove('has-correct', 'has-incorrect');
+    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const correctLabel = group.closest('.mc-options').querySelector('.correct-answer');
+    const commentEl = item.querySelector('.mc-comment');
     if (selected) {
       const label = selected.parentElement;
       if (label.classList.contains('correct-answer')) {
         label.classList.add('correct');
+        item.classList.add('has-correct');
         correct++;
       } else {
         label.classList.add('incorrect');
+        item.classList.add('has-incorrect');
         if (correctLabel) correctLabel.classList.add('correct');
       }
     } else if (correctLabel) {
       correctLabel.classList.add('correct');
+      item.classList.add('has-incorrect');
+    }
+    if (commentEl && COMMENTS[name]) {
+      commentEl.innerHTML = '<strong>Gabarito comentado</strong>' + COMMENTS[name];
+      commentEl.classList.add('show');
     }
   });
   const badge = document.getElementById('score-badge');

@@ -10,6 +10,7 @@
 <script src="../db-client.js"></script>
 <style>
 
+
   :root {
     --ink:        #2B2D42;
     --ink-light:  #555770;
@@ -637,6 +638,61 @@
     flex-wrap: wrap;
   }
 
+
+
+  .mc-comment {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--slate-light);
+    color: var(--ink-light);
+    border-left: 3px solid var(--slate);
+  }
+  .mc-comment.show { display: block; }
+  .mc-comment strong {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 4px;
+  }
+  .mc-item.has-correct .mc-comment { border-left-color: var(--green); background: var(--green-soft); }
+  .mc-item.has-incorrect .mc-comment { border-left-color: var(--gold); background: var(--gold-soft); }
+  .gabarito-box {
+    margin-top: 28px;
+    border: 1px solid var(--parchment);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .gabarito-box summary {
+    cursor: pointer;
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    list-style: none;
+    background: var(--slate-light);
+  }
+  .gabarito-box summary::-webkit-details-marker { display: none; }
+  .gabarito-box summary::before { content: '▶ '; font-size: 10px; color: var(--slate); }
+  .gabarito-box[open] summary::before { content: '▼ '; }
+  .gabarito-list { padding: 8px 18px 16px; }
+  .gabarito-list .g-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--parchment);
+    font-size: 13.5px;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+  .gabarito-list .g-item:last-child { border-bottom: none; }
+  .gabarito-list .g-item b { color: var(--ink); }
+  .gabarito-list .g-ans { color: var(--green); font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -668,18 +724,18 @@
     <a href="pt-interpretacao.html"><span class="num">10.</span> Interpretação de Textos</a>
   </nav>
   <div class="sidebar-footer">
-    Capítulo 2 de 10 — estude um tema por vez.
+    Capítulo 2 de 10 — conteúdo ampliado + exercícios.
   </div>
 </aside>
 
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Capítulo 2 de 10 · Gramática Aplicada</div>
-    <h2>Sintaxe<br><em>A estrutura e os termos da oração</em></h2>
-    <p>Sujeito, predicado, objetos e termos acessórios. Ao final, pratique com exercícios interativos e salve o progresso no app.</p>
+    <h2>🧩 Sintaxe<br><em>A estrutura e os termos da oração</em></h2>
+    <p>Sujeito, predicado, objetos e termos acessórios. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Capítulo 2/10</span>
-      <span class="badge">4 exercícios</span>
+      <span class="badge">8 exercícios</span>
       <span class="badge">Extra — Português</span>
     </div>
   </div>
@@ -786,6 +842,23 @@
         </div>
       </div>
     
+
+      <div class="callout info">
+        <strong>Como estudar este capítulo</strong>
+        Separe sujeito e predicado em frases curtas. Depois identifique objetos (direto/indireto) e termos acessórios (adjunto, aposto, vocativo).
+      </div>
+      <div class="prose">
+        <h3>Perguntas-guia</h3>
+        <p><strong>Sujeito:</strong> de quem / do que se fala?</p>
+        <p><strong>Predicado:</strong> o que se diz a respeito do sujeito?</p>
+        <p><strong>OD:</strong> o verbo pede complemento <em>sem</em> preposição obrigatória?</p>
+        <p><strong>OI:</strong> o complemento vem <em>com</em> preposição exigida pelo verbo?</p>
+      </div>
+      <div class="ex-grid">
+        <div class="ex-box neutral"><span class="ex-label">Análise</span><code>Maria comprou um livro.</code><small>Sujeito: Maria · OD: um livro</small></div>
+        <div class="ex-box neutral"><span class="ex-label">Análise</span><code>João, venha aqui!</code><small>Vocativo: João</small></div>
+      </div>
+
     </section>
 
     <section class="section" id="exercicios">
@@ -794,11 +867,11 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Fixação deste capítulo</p>
+          <p class="section-subtitle">Fixação deste capítulo — sintaxe</p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no seu perfil no app.</p>
+        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no perfil (mínimo 85% para concluir a lição).</p>
 
         <div class="mc-item">
           <div class="q">Em <em>"Choveu muito ontem."</em>, o sujeito é:</div>
@@ -808,7 +881,8 @@
           <label class="correct-answer"><input type="radio" name="q1" value="c">Inexistente (verbo impessoal)</label>
           <label><input type="radio" name="q1" value="d">Composto</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Em <em>"Comprei um livro."</em>, “um livro” é:</div>
@@ -818,7 +892,8 @@
           <label><input type="radio" name="q2" value="c">Adjunto adverbial</label>
           <label><input type="radio" name="q2" value="d">Predicativo</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Em <em>"João, venha aqui!"</em>, “João” é:</div>
@@ -828,7 +903,8 @@
           <label class="correct-answer"><input type="radio" name="q3" value="c">Vocativo</label>
           <label><input type="radio" name="q3" value="d">Objeto direto</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">O predicado de <em>"Ela chegou cansada."</em> é:</div>
@@ -838,7 +914,52 @@
           <label class="correct-answer"><input type="radio" name="q4" value="c">Verbo-nominal</label>
           <label><input type="radio" name="q4" value="d">Inexistente</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">Em <em>"Gosto de música."</em>, “de música” é tipicamente:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q5" value="a">Objeto direto</label>
+          <label class="correct-answer"><input type="radio" name="q5" value="b">Objeto indireto</label>
+          <label><input type="radio" name="q5" value="c">Vocativo</label>
+          <label><input type="radio" name="q5" value="d">Artigo</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">“Pedro e Ana chegaram” tem sujeito:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q6" value="a">Simples</label>
+          <label class="correct-answer"><input type="radio" name="q6" value="b">Composto</label>
+          <label><input type="radio" name="q6" value="c">Inexistente</label>
+          <label><input type="radio" name="q6" value="d">Só predicativo</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">Em <em>"Machado de Assis, grande romancista, nasceu no Rio."</em>, o trecho entre vírgulas é:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q7" value="a">Vocativo</label>
+          <label class="correct-answer"><input type="radio" name="q7" value="b">Aposto</label>
+          <label><input type="radio" name="q7" value="c">Objeto direto</label>
+          <label><input type="radio" name="q7" value="d">Agente da passiva</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
+
+        <div class="mc-item">
+          <div class="q">Adjunto adverbial modifica principalmente:</div>
+          <div class="mc-options">
+          <label><input type="radio" name="q8" value="a">Só o artigo</label>
+          <label class="correct-answer"><input type="radio" name="q8" value="b">Verbo, adjetivo ou advérbio</label>
+          <label><input type="radio" name="q8" value="c">Só o substantivo sem verbo</label>
+          <label><input type="radio" name="q8" value="d">Só a interjeição</label>
+          </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="actions-row">
           <button class="btn-finish" type="button" onclick="finishLesson()">Finalizar e salvar progresso</button>
@@ -846,9 +967,22 @@
           <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
         </div>
 
+        <details class="gabarito-box">
+          <summary>📋 Gabarito comentado</summary>
+          <div class="gabarito-list">
+          <div class="g-item"><b>Questão 1.</b> Em "Choveu muito ontem.", o sujeito é:<br><span class="g-ans">Resposta: Inexistente (verbo impessoal)</span><br>Verbos impessoais de fenômeno (chover, haver em sentido de existir, fazer de tempo) não têm sujeito actante. Em “Choveu muito ontem”, não há “alguém que chove” → sujeito inexistente.</div>
+          <div class="g-item"><b>Questão 2.</b> Em "Choveu muito ontem.", o sujeito é:<br><span class="g-ans">Resposta: Objeto direto</span><br>Objeto direto completa verbo transitivo direto sem preposição obrigatória: comprei <strong>um livro</strong>. Objeto indireto viria com preposição exigida (gosto <strong>de</strong> música).</div>
+          <div class="g-item"><b>Questão 3.</b> Em "Choveu muito ontem.", o sujeito é:<br><span class="g-ans">Resposta: Vocativo</span><br>Vocativo chama o interlocutor e isolado por vírgula: “João, venha aqui!”. Não é sujeito de “venha” na mesma estrutura de declaração; é termo independente de chamamento.</div>
+          <div class="g-item"><b>Questão 4.</b> Em "Choveu muito ontem.", o sujeito é:<br><span class="g-ans">Resposta: Verbo-nominal</span><br>Predicado verbo-nominal combina verbo significativo + predicativo: “chegou” (processo) + “cansada” (estado do sujeito). Predicado só verbal não traria predicativo; só nominal giraria em torno de verbo de ligação.</div>
+          <div class="g-item"><b>Questão 5.</b> Em "Choveu muito ontem.", o sujeito é:<br><span class="g-ans">Resposta: Objeto indireto</span><br>Com regência de, o complemento de gostar é objeto indireto: gosto <strong>de música</strong>. A preposição é exigência do verbo, não mero adjunto livre.</div>
+          <div class="g-item"><b>Questão 6.</b> Em "Choveu muito ontem.", o sujeito é:<br><span class="g-ans">Resposta: Composto</span><br>Sujeito composto tem mais de um núcleo: Pedro <strong>e</strong> Ana. Sujeito simples tem um só núcleo (“Pedro chegou”).</div>
+          <div class="g-item"><b>Questão 7.</b> Em "Choveu muito ontem.", o sujeito é:<br><span class="g-ans">Resposta: Aposto</span><br>Aposto explica ou identifica o termo anterior: “Machado de Assis, <strong>grande romancista</strong>, …”. Vocativo chamaria o ouvinte; não explica o nome próprio nessa estrutura.</div>
+          <div class="g-item"><b>Questão 8.</b> Em "Choveu muito ontem.", o sujeito é:<br><span class="g-ans">Resposta: Verbo, adjetivo ou advérbio</span><br>Adjunto adverbial expressa circunstância (tempo, modo, lugar…) e modifica verbo, adjetivo ou advérbio — não é complemento selecionado como OD/OI, embora às vezes a fronteira exija análise fina.</div>
+          </div>
+        </details>
         <div class="callout info" style="margin-top:28px;">
           <strong>Próximo passo</strong>
-          Depois de concluir, avance para o próximo capítulo pelo menu lateral — ou volte ao app.
+          Revise os itens errados no texto do capítulo e avance pelo menu lateral.
         </div>
         <div class="ornament">· · ·</div>
       </div>
@@ -859,27 +993,48 @@
 <script>
 const LESSON_ID = 'pt-sintaxe';
 let finishing = false;
-const QUESTIONS = ['q1', 'q2', 'q3', 'q4'];
+const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
+
+const COMMENTS = {
+  "q1": "Verbos impessoais de fenômeno (chover, haver em sentido de existir, fazer de tempo) não têm sujeito actante. Em “Choveu muito ontem”, não há “alguém que chove” → sujeito inexistente.",
+  "q2": "Objeto direto completa verbo transitivo direto sem preposição obrigatória: comprei <strong>um livro</strong>. Objeto indireto viria com preposição exigida (gosto <strong>de</strong> música).",
+  "q3": "Vocativo chama o interlocutor e isolado por vírgula: “João, venha aqui!”. Não é sujeito de “venha” na mesma estrutura de declaração; é termo independente de chamamento.",
+  "q4": "Predicado verbo-nominal combina verbo significativo + predicativo: “chegou” (processo) + “cansada” (estado do sujeito). Predicado só verbal não traria predicativo; só nominal giraria em torno de verbo de ligação.",
+  "q5": "Com regência de, o complemento de gostar é objeto indireto: gosto <strong>de música</strong>. A preposição é exigência do verbo, não mero adjunto livre.",
+  "q6": "Sujeito composto tem mais de um núcleo: Pedro <strong>e</strong> Ana. Sujeito simples tem um só núcleo (“Pedro chegou”).",
+  "q7": "Aposto explica ou identifica o termo anterior: “Machado de Assis, <strong>grande romancista</strong>, …”. Vocativo chamaria o ouvinte; não explica o nome próprio nessa estrutura.",
+  "q8": "Adjunto adverbial expressa circunstância (tempo, modo, lugar…) e modifica verbo, adjetivo ou advérbio — não é complemento selecionado como OD/OI, embora às vezes a fronteira exija análise fina."
+};
 
 function checkAnswers() {
   let correct = 0;
   QUESTIONS.forEach(name => {
     const selected = document.querySelector('input[name=' + name + ']:checked');
-    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const group = document.querySelector('input[name=' + name + ']');
     if (!group) return;
+    const item = group.closest('.mc-item');
+    item.classList.remove('has-correct', 'has-incorrect');
+    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const correctLabel = group.closest('.mc-options').querySelector('.correct-answer');
+    const commentEl = item.querySelector('.mc-comment');
     if (selected) {
       const label = selected.parentElement;
       if (label.classList.contains('correct-answer')) {
         label.classList.add('correct');
+        item.classList.add('has-correct');
         correct++;
       } else {
         label.classList.add('incorrect');
+        item.classList.add('has-incorrect');
         if (correctLabel) correctLabel.classList.add('correct');
       }
     } else if (correctLabel) {
       correctLabel.classList.add('correct');
+      item.classList.add('has-incorrect');
+    }
+    if (commentEl && COMMENTS[name]) {
+      commentEl.innerHTML = '<strong>Gabarito comentado</strong>' + COMMENTS[name];
+      commentEl.classList.add('show');
     }
   });
   const badge = document.getElementById('score-badge');

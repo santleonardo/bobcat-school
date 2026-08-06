@@ -685,6 +685,60 @@
   }
   .class-card .examples b { color: var(--ink); font-weight: 600; }
 
+
+  .mc-comment {
+    display: none;
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+    background: var(--slate-light);
+    color: var(--ink-light);
+    border-left: 3px solid var(--slate);
+  }
+  .mc-comment.show { display: block; }
+  .mc-comment strong {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 4px;
+  }
+  .mc-item.has-correct .mc-comment { border-left-color: var(--green); background: var(--green-soft); }
+  .mc-item.has-incorrect .mc-comment { border-left-color: var(--gold); background: var(--gold-soft); }
+  .gabarito-box {
+    margin-top: 28px;
+    border: 1px solid var(--parchment);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .gabarito-box summary {
+    cursor: pointer;
+    padding: 14px 18px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--ink);
+    list-style: none;
+    background: var(--slate-light);
+  }
+  .gabarito-box summary::-webkit-details-marker { display: none; }
+  .gabarito-box summary::before { content: '▶ '; font-size: 10px; color: var(--slate); }
+  .gabarito-box[open] summary::before { content: '▼ '; }
+  .gabarito-list { padding: 8px 18px 16px; }
+  .gabarito-list .g-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--parchment);
+    font-size: 13.5px;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+  .gabarito-list .g-item:last-child { border-bottom: none; }
+  .gabarito-list .g-item b { color: var(--ink); }
+  .gabarito-list .g-ans { color: var(--green); font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -826,7 +880,8 @@
           <label><input type="radio" name="q1" value="c">Adjetivo</label>
           <label><input type="radio" name="q1" value="d">Advérbio</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Qual opção é um substantivo <strong>próprio</strong>?</div>
@@ -836,7 +891,8 @@
           <label><input type="radio" name="q2" value="c">professor</label>
           <label><input type="radio" name="q2" value="d">alegria</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">“Amor” e “medo” são substantivos:</div>
@@ -846,7 +902,8 @@
           <label><input type="radio" name="q3" value="c">Coletivos</label>
           <label><input type="radio" name="q3" value="d">Artigos</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">“Cardume” é exemplo de substantivo:</div>
@@ -856,7 +913,8 @@
           <label><input type="radio" name="q4" value="c">Adjetivo</label>
           <label><input type="radio" name="q4" value="d">Pronome</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Em <em>"A menina leu o livro."</em>, quantos substantivos há?</div>
@@ -866,7 +924,8 @@
           <label><input type="radio" name="q5" value="c">3</label>
           <label><input type="radio" name="q5" value="d">Nenhum</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">“Casarão” indica grau:</div>
@@ -876,7 +935,8 @@
           <label><input type="radio" name="q6" value="c">Comparativo</label>
           <label><input type="radio" name="q6" value="d">Superlativo de adjetivo</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">“Guarda-chuva” é substantivo:</div>
@@ -886,7 +946,8 @@
           <label><input type="radio" name="q7" value="c">Artigo</label>
           <label><input type="radio" name="q7" value="d">Verbo</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="mc-item">
           <div class="q">Qual frase tem substantivo <strong>abstrato</strong>?</div>
@@ -896,7 +957,8 @@
           <label><input type="radio" name="q8" value="c">Comprei uma mesa.</label>
           <label><input type="radio" name="q8" value="d">O rio nasceu na serra.</label>
           </div>
-        </div>
+        
+        <div class="mc-comment"></div></div>
 
         <div class="actions-row">
           <button class="btn-finish" type="button" onclick="finishLesson()">Finalizar e salvar progresso</button>
@@ -904,6 +966,19 @@
           <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
         </div>
 
+        <details class="gabarito-box">
+          <summary>📋 Gabarito comentado</summary>
+          <div class="gabarito-list">
+          <div class="g-item"><b>Questão 1.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: Substantivo</span><br>Substantivo é a classe que <em>nomeia</em>. Em “O cachorro correu no parque”, a palavra <strong>cachorro</strong> designa um animal — não descreve (adjetivo), não indica ação (verbo) nem circunstância (advérbio). Trata-se de um substantivo <strong>comum</strong> (nome genérico da espécie) e <strong>concreto</strong> (existência independente).</div>
+          <div class="g-item"><b>Questão 2.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: Brasil</span><br>Substantivo <strong>próprio</strong> identifica um ser particular e, em geral, escreve-se com inicial maiúscula: Brasil, Maria, Amazonas. Já “cidade”, “professor” e “alegria” são comuns (ou abstrato, no caso de alegria): nomeiam classes ou ideias, não um indivíduo único.</div>
+          <div class="g-item"><b>Questão 3.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: Abstratos</span><br>Substantivos <strong>abstratos</strong> nomeiam qualidades, ações ou estados que dependem de outro ser para serem concebidos: amor, medo, liberdade, honestidade. Diferem dos concretos (mesa, cão), que designam entidades com existência autônoma no mundo físico ou imaginário concreto.</div>
+          <div class="g-item"><b>Questão 4.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: Coletivo</span><br>Coletivo é o substantivo que, no <strong>singular</strong>, nomeia um conjunto de seres da mesma espécie: cardume (peixes), enxame (abelhas), multidão (pessoas), alcateia (lobos). Não é preciso usar o plural do nome dos elementos para expressar a ideia de grupo.</div>
+          <div class="g-item"><b>Questão 5.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: 2</span><br>Na frase “A menina leu o livro”, há dois núcleos nominais: <strong>menina</strong> (sujeito) e <strong>livro</strong> (objeto direto). Ambos são substantivos. Artigos (“A”, “o”) e o verbo “leu” pertencem a outras classes.</div>
+          <div class="g-item"><b>Questão 6.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: Aumentativo</span><br>O grau <strong>aumentativo</strong> amplia a ideia do substantivo, muitas vezes com sufixos como -ão, -ona, -aço: casa → casarão, livro → livrão. O diminutivo reduz (casinha, livrinho). Não confundir com graus do adjetivo (comparativo/superlativo).</div>
+          <div class="g-item"><b>Questão 7.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: Composto</span><br>Substantivo <strong>composto</strong> reúne mais de um radical. Em guarda-chuva, “guarda” + “chuva” se justapõem (em geral com hífen). Já o simples tem um só radical (flor, sol). Compostos também podem nascer por aglutinação (planalto).</div>
+          <div class="g-item"><b>Questão 8.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: A honestidade importa.</span><br>“A honestidade importa”: honestidade nomeia uma qualidade moral, não um objeto tocável → substantivo abstrato. Nas outras opções, gato, mesa e rio são concretos.</div>
+          </div>
+        </details>
         <div class="callout info" style="margin-top:28px;">
           <strong>Próximo passo</strong>
           Revise os erros, releia a seção correspondente e avance para a próxima classe pelo menu lateral.
@@ -919,25 +994,46 @@ const LESSON_ID = 'pb-substantivo';
 let finishing = false;
 const QUESTIONS = ['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8'];
 
+const COMMENTS = {
+  "q1": "Substantivo é a classe que <em>nomeia</em>. Em “O cachorro correu no parque”, a palavra <strong>cachorro</strong> designa um animal — não descreve (adjetivo), não indica ação (verbo) nem circunstância (advérbio). Trata-se de um substantivo <strong>comum</strong> (nome genérico da espécie) e <strong>concreto</strong> (existência independente).",
+  "q2": "Substantivo <strong>próprio</strong> identifica um ser particular e, em geral, escreve-se com inicial maiúscula: Brasil, Maria, Amazonas. Já “cidade”, “professor” e “alegria” são comuns (ou abstrato, no caso de alegria): nomeiam classes ou ideias, não um indivíduo único.",
+  "q3": "Substantivos <strong>abstratos</strong> nomeiam qualidades, ações ou estados que dependem de outro ser para serem concebidos: amor, medo, liberdade, honestidade. Diferem dos concretos (mesa, cão), que designam entidades com existência autônoma no mundo físico ou imaginário concreto.",
+  "q4": "Coletivo é o substantivo que, no <strong>singular</strong>, nomeia um conjunto de seres da mesma espécie: cardume (peixes), enxame (abelhas), multidão (pessoas), alcateia (lobos). Não é preciso usar o plural do nome dos elementos para expressar a ideia de grupo.",
+  "q5": "Na frase “A menina leu o livro”, há dois núcleos nominais: <strong>menina</strong> (sujeito) e <strong>livro</strong> (objeto direto). Ambos são substantivos. Artigos (“A”, “o”) e o verbo “leu” pertencem a outras classes.",
+  "q6": "O grau <strong>aumentativo</strong> amplia a ideia do substantivo, muitas vezes com sufixos como -ão, -ona, -aço: casa → casarão, livro → livrão. O diminutivo reduz (casinha, livrinho). Não confundir com graus do adjetivo (comparativo/superlativo).",
+  "q7": "Substantivo <strong>composto</strong> reúne mais de um radical. Em guarda-chuva, “guarda” + “chuva” se justapõem (em geral com hífen). Já o simples tem um só radical (flor, sol). Compostos também podem nascer por aglutinação (planalto).",
+  "q8": "“A honestidade importa”: honestidade nomeia uma qualidade moral, não um objeto tocável → substantivo abstrato. Nas outras opções, gato, mesa e rio são concretos."
+};
+
 function checkAnswers() {
   let correct = 0;
   QUESTIONS.forEach(name => {
     const selected = document.querySelector('input[name=' + name + ']:checked');
-    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const group = document.querySelector('input[name=' + name + ']');
     if (!group) return;
+    const item = group.closest('.mc-item');
+    item.classList.remove('has-correct', 'has-incorrect');
+    document.querySelectorAll('input[name=' + name + ']').forEach(r => r.parentElement.classList.remove('correct', 'incorrect'));
     const correctLabel = group.closest('.mc-options').querySelector('.correct-answer');
+    const commentEl = item.querySelector('.mc-comment');
     if (selected) {
       const label = selected.parentElement;
       if (label.classList.contains('correct-answer')) {
         label.classList.add('correct');
+        item.classList.add('has-correct');
         correct++;
       } else {
         label.classList.add('incorrect');
+        item.classList.add('has-incorrect');
         if (correctLabel) correctLabel.classList.add('correct');
       }
     } else if (correctLabel) {
       correctLabel.classList.add('correct');
+      item.classList.add('has-incorrect');
+    }
+    if (commentEl && COMMENTS[name]) {
+      commentEl.innerHTML = '<strong>Gabarito comentado</strong>' + COMMENTS[name];
+      commentEl.classList.add('show');
     }
   });
   const badge = document.getElementById('score-badge');
