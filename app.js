@@ -28,11 +28,74 @@ const EXTRAS = [
     url: 'lessons/manual-portugues-basico.html'
   },
   {
-    id: 'manual-portugues',
-    name: 'Manual Prático de Língua Portuguesa',
-    icon: '📘',
-    description: 'Morfologia, sintaxe, concordância, crase, pontuação e mais — com exercícios',
-    url: 'lessons/manual-portugues.html'
+    id: 'pt-morfologia',
+    name: 'Português 1 — Morfologia',
+    icon: '🔤',
+    description: 'Classes gramaticais, formação e flexão das palavras',
+    url: 'lessons/pt-morfologia.html'
+  },
+  {
+    id: 'pt-sintaxe',
+    name: 'Português 2 — Sintaxe',
+    icon: '🧩',
+    description: 'Sujeito, predicado, objetos e termos acessórios',
+    url: 'lessons/pt-sintaxe.html'
+  },
+  {
+    id: 'pt-concordancia',
+    name: 'Português 3 — Concordância',
+    icon: '🤝',
+    description: 'Concordância nominal e verbal, casos especiais',
+    url: 'lessons/pt-concordancia.html'
+  },
+  {
+    id: 'pt-regencia',
+    name: 'Português 4 — Regência',
+    icon: '🔗',
+    description: 'Regência verbal e nominal, preposições exigidas',
+    url: 'lessons/pt-regencia.html'
+  },
+  {
+    id: 'pt-crase',
+    name: 'Português 5 — Crase',
+    icon: '🅰️',
+    description: 'Casos obrigatórios, proibidos e facultativos de crase',
+    url: 'lessons/pt-crase.html'
+  },
+  {
+    id: 'pt-colocacao',
+    name: 'Português 6 — Colocação Pronominal',
+    icon: '📎',
+    description: 'Posição dos pronomes oblíquos átonos',
+    url: 'lessons/pt-colocacao.html'
+  },
+  {
+    id: 'pt-acentuacao',
+    name: 'Português 7 — Acentuação',
+    icon: '✏️',
+    description: 'Oxítonas, paroxítonas, proparoxítonas e casos especiais',
+    url: 'lessons/pt-acentuacao.html'
+  },
+  {
+    id: 'pt-ortografia',
+    name: 'Português 8 — Ortografia',
+    icon: '📝',
+    description: 'Uso de S, Z, X, CH, G, J, H e hífen',
+    url: 'lessons/pt-ortografia.html'
+  },
+  {
+    id: 'pt-pontuacao',
+    name: 'Português 9 — Pontuação',
+    icon: '✒️',
+    description: 'Vírgula, ponto e vírgula, dois-pontos e demais sinais',
+    url: 'lessons/pt-pontuacao.html'
+  },
+  {
+    id: 'pt-interpretacao',
+    name: 'Português 10 — Interpretação de Textos',
+    icon: '📖',
+    description: 'Níveis de leitura, tipologias, coesão e recursos de linguagem',
+    url: 'lessons/pt-interpretacao.html'
   },
   {
     id: 'licao-2-interativa',
