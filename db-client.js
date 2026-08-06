@@ -147,6 +147,7 @@ async function getProgress() {
         completed: row.completed,
         correct: row.correct,
         total: row.total,
+        answers: row.answers || [],
         lastAttempt: row.last_attempt
       };
     });
@@ -156,9 +157,10 @@ async function getProgress() {
   return raw ? JSON.parse(raw) : {};
 }
 
-async function saveLessonProgressData(lessonId, correct, total) {
+async function saveLessonProgressData(lessonId, correct, total, answers) {
   const pct = total > 0 ? (correct / total) * 100 : 0;
   const completed = pct >= PASSING_PCT;
+  const safeAnswers = Array.isArray(answers) ? answers : [];
 
   if (useSupabase) {
     if (!currentUserId) return { completed, pct };
@@ -168,6 +170,7 @@ async function saveLessonProgressData(lessonId, correct, total) {
       completed: completed,
       correct: correct,
       total: total,
+      answers: safeAnswers,
       last_attempt: new Date().toISOString()
     };
     const { error } = await supabaseClient.from('progress').upsert(row, { onConflict: 'user_id,lesson_id' });
@@ -175,9 +178,117 @@ async function saveLessonProgressData(lessonId, correct, total) {
     return { completed, pct };
   }
   const progress = await getProgress();
-  progress[lessonId] = { completed, correct, total, lastAttempt: new Date().toISOString() };
+  progress[lessonId] = { completed, correct, total, answers: safeAnswers, lastAttempt: new Date().toISOString() };
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
   return { completed, pct };
+}
+
+// ---------- Captura automática das respostas (para o professor revisar) ----------
+// Lê o gabarito direto do que já existe no HTML de cada lição — não precisa
+// editar lição por lição. Cobre os dois padrões usados nas lições:
+//  1) Campo de texto com data-answer="..." ou data-answers="a|b" (uma ou mais
+//     respostas aceitas), opcionalmente com data-label="enunciado".
+//  2) Grupo de rádio (mesmo atributo `name`) onde a opção certa tem a classe
+//     "correct-answer" no HTML, com o enunciado em ".mc-item .q".
+// Como fallback (grupos de rádio corrigidos só via JavaScript da própria
+// lição, sem marcação no HTML), aproveita as classes "correct"/"incorrect"
+// que a lição já aplica na tela ao conferir as respostas.
+// Campos de texto livre (sem gabarito) entram como resposta aberta, sem
+// status de certo/errado — útil pro professor ver o que o aluno escreveu.
+function normalizeAnswerText(s) {
+  return (s || '').trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
+function labelFromContext(el) {
+  if (el.dataset && el.dataset.label) return el.dataset.label;
+  const item = el.closest('.fill-item, .mc-item');
+  if (item) {
+    const qEl = item.querySelector('.q');
+    if (qEl) return qEl.textContent.replace(/\s+/g, ' ').trim();
+    const clone = item.cloneNode(true);
+    clone.querySelectorAll('input, select, button, .answer-hint').forEach(n => n.remove());
+    const text = clone.textContent.replace(/\s+/g, ' ').trim();
+    if (text) return text;
+  }
+  return el.placeholder || el.name || el.id || 'Questão';
+}
+
+function labelTextForRadio(radioEl) {
+  const label = radioEl.closest('label');
+  if (label) return label.textContent.replace(/\s+/g, ' ').trim();
+  return radioEl.value;
+}
+
+function collectLessonAnswers() {
+  const items = [];
+  const handledInputs = new Set();
+
+  // 1) Campos de texto com gabarito declarado no HTML
+  document.querySelectorAll('input[type="text"][data-answer], input[type="text"][data-answers]').forEach(inp => {
+    handledInputs.add(inp);
+    const given = inp.value.trim();
+    const acceptedRaw = inp.dataset.answers || inp.dataset.answer || '';
+    const accepted = acceptedRaw.split('|').map(a => a.trim()).filter(Boolean);
+    const isCorrect = given !== '' && accepted.some(a => normalizeAnswerText(a) === normalizeAnswerText(given));
+    items.push({
+      question: labelFromContext(inp),
+      studentAnswer: given || '(em branco)',
+      correctAnswer: accepted[0] || null,
+      status: given === '' ? 'blank' : (isCorrect ? 'correct' : 'incorrect')
+    });
+  });
+
+  // 2) Grupos de rádio (múltipla escolha / verdadeiro-falso)
+  const radioGroups = {};
+  document.querySelectorAll('input[type="radio"]').forEach(r => {
+    (radioGroups[r.name] = radioGroups[r.name] || []).push(r);
+  });
+  Object.values(radioGroups).forEach(group => {
+    const selected = group.find(r => r.checked) || null;
+    const staticCorrect = group.find(r => r.classList.contains('correct-answer'));
+    let correctLabel = null;
+    let status;
+
+    if (staticCorrect) {
+      correctLabel = labelTextForRadio(staticCorrect);
+      status = !selected ? 'blank' : (selected === staticCorrect ? 'correct' : 'incorrect');
+    } else if (selected) {
+      // Fallback: usa a marcação visual que a própria lição já aplicou ao conferir
+      const selLabel = selected.closest('label');
+      if (selLabel && selLabel.classList.contains('correct')) status = 'correct';
+      else if (selLabel && selLabel.classList.contains('incorrect')) status = 'incorrect';
+      else status = 'open';
+      const correctMarked = group.find(r => {
+        const l = r.closest('label');
+        return l && l.classList.contains('correct');
+      });
+      if (correctMarked) correctLabel = labelTextForRadio(correctMarked);
+    } else {
+      status = 'blank';
+    }
+
+    items.push({
+      question: labelFromContext(group[0]),
+      studentAnswer: selected ? labelTextForRadio(selected) : '(em branco)',
+      correctAnswer: correctLabel,
+      status
+    });
+  });
+
+  // 3) Texto livre preenchido, sem gabarito (produção do aluno)
+  document.querySelectorAll('input[type="text"]').forEach(inp => {
+    if (handledInputs.has(inp)) return;
+    const given = inp.value.trim();
+    if (given === '') return;
+    items.push({
+      question: labelFromContext(inp),
+      studentAnswer: given,
+      correctAnswer: null,
+      status: 'open'
+    });
+  });
+
+  return items;
 }
 
 // Fluxo compartilhado de "finalizar lição", usado por todas as páginas de lição.
@@ -195,7 +306,8 @@ async function handleLessonFinish(lessonId, correct, total, kind) {
   }
 
   await initDataLayer();
-  const { completed, pct } = await saveLessonProgressData(lessonId, correct, total);
+  const answers = collectLessonAnswers();
+  const { completed, pct } = await saveLessonProgressData(lessonId, correct, total, answers);
   const roundedPct = Math.round(pct);
 
   const cloudNote = isUsingCloud() ? ' (sincronizado na nuvem ☁️)' : ' (salvo neste navegador 💾)';

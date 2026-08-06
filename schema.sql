@@ -13,6 +13,10 @@ create table if not exists profiles (
 );
 
 -- Tabela de progresso (1 linha por aluno + lição)
+-- A coluna `answers` guarda um array JSON com cada pergunta da última
+-- tentativa (enunciado, resposta do aluno, resposta certa e status), gerado
+-- automaticamente pelo app — é o que alimenta o botão "Ver respostas" no
+-- painel do professor.
 create table if not exists progress (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
@@ -20,9 +24,15 @@ create table if not exists progress (
   completed boolean not null default false,
   correct int not null default 0,
   total int not null default 0,
+  answers jsonb not null default '[]'::jsonb,
   last_attempt timestamptz not null default now(),
   unique (user_id, lesson_id)
 );
+
+-- Se você já tinha criado a tabela `progress` antes desta atualização, rode
+-- só esta linha abaixo no SQL Editor do Supabase (não precisa rodar o
+-- arquivo inteiro de novo):
+--   alter table progress add column if not exists answers jsonb not null default '[]'::jsonb;
 
 -- Row Level Security: cada aluno só enxerga e altera os próprios dados
 alter table profiles enable row level security;
