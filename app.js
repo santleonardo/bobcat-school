@@ -1123,11 +1123,65 @@ function showInstallBanner() {
 }
 
 function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js').catch(() => {
-      console.log('Service worker não registrado (provavelmente rodando via file://).');
+  if (!('serviceWorker' in navigator)) return;
+
+  navigator.serviceWorker.register('./sw.js').then((registration) => {
+    // Se já existir uma versão nova esperando (ex: publicada enquanto o
+    // aluno estava com o app aberto), avisa na hora.
+    if (registration.waiting && navigator.serviceWorker.controller) {
+      showUpdateBanner(registration);
+    }
+
+    // Detecta quando uma nova versão termina de baixar em segundo plano.
+    registration.addEventListener('updatefound', () => {
+      const newWorker = registration.installing;
+      if (!newWorker) return;
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          // Já havia um service worker controlando a página antes —
+          // ou seja, isso é uma atualização, não a primeira instalação.
+          showUpdateBanner(registration);
+        }
+      });
     });
-  }
+
+    // Verifica se saiu uma versão nova sempre que o aluno volta pro app
+    // (ex: depois de um tempo em outra aba ou app).
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') registration.update();
+    });
+  }).catch(() => {
+    console.log('Service worker não registrado (provavelmente rodando via file://).');
+  });
+
+  // Depois que o novo service worker assume o controle (só acontece quando
+  // o aluno clica em "Atualizar agora" no aviso), recarrega a página uma
+  // única vez para carregar os arquivos novos.
+  let reloading = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (reloading) return;
+    reloading = true;
+    window.location.reload();
+  });
+}
+
+function showUpdateBanner(registration) {
+  const slot = document.getElementById('update-banner-slot');
+  if (!slot || slot.dataset.shown) return; // não duplica o aviso
+  slot.dataset.shown = 'true';
+  slot.innerHTML = `
+    <div class="install-banner">
+      <span>✨ Tem uma versão nova do app disponível!</span>
+      <button id="btn-app-update">Atualizar agora</button>
+    </div>
+  `;
+  document.getElementById('btn-app-update').addEventListener('click', () => {
+    if (registration.waiting) {
+      registration.waiting.postMessage('SKIP_WAITING');
+    } else {
+      window.location.reload();
+    }
+  });
 }
 
 document.addEventListener('DOMContentLoaded', boot);

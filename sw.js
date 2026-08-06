@@ -1,10 +1,18 @@
 // Bobcat Language School — Service Worker
-// Faz o cache do "app shell" para o app abrir mesmo sem internet.
+// Faz o cache do "app shell" para o app abrir mesmo sem internet, e também
+// é o mecanismo que garante que uma atualização publicada (novo HTML, JS,
+// CSS ou uma lição nova/editada) chegue aos alunos.
+//
+// IMPORTANTE: sempre que você fizer uma alteração e publicar (deploy), suba
+// esse número — é o que avisa o navegador que existe uma versão nova do
+// service worker para instalar. Sem isso, o navegador pode continuar
+// rodando a versão antiga do service worker por bastante tempo.
+const CACHE_NAME = 'bobcat-app-v12';
 
-const CACHE_NAME = 'bobcat-app-v11';
 const APP_SHELL = [
   './',
   './index.html',
+  './teacher.html',
   './style.css',
   './app.js',
   './config.js',
@@ -12,6 +20,7 @@ const APP_SHELL = [
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
+  './lessons/nivelamento.html',
   './lessons/pronuncia-essencial.html',
   './lessons/verb-to-be.html',
   './lessons/saudacoes-apresentacoes.html',
@@ -24,33 +33,70 @@ const APP_SHELL = [
   './lessons/licao-9-revisao-completa.html',
   './lessons/licao-10-do-does-to-for.html',
   './lessons/licao-11-object-possessive-pronouns.html',
+  './lessons/licao-12-simple-present-daily-life.html',
+  './lessons/licao-13-perguntas-simple-present.html',
+  './lessons/licao-14-there-is-there-are.html',
+  './lessons/licao-15-can-cant.html',
+  './lessons/licao-16-present-continuous.html',
+  './lessons/licao-17-countable-uncountable.html',
+  './lessons/licao-18-quantities-choices.html',
+  './lessons/licao-19-quantities-distance-time.html',
+  './lessons/licao-20-survival-english.html',
+  './lessons/licao-21-simple-past-regular.html',
+  './lessons/licao-22-simple-past-irregular.html',
+  './lessons/licao-23-talking-about-the-past.html',
+  './lessons/licao-24-future-going-to.html',
+  './lessons/licao-25-future-will.html',
+  './lessons/licao-26-comparatives-superlatives.html',
+  './lessons/licao-27-present-perfect.html',
+  './lessons/licao-28-modal-verbs.html',
+  './lessons/licao-29-phrasal-verbs.html',
+  './lessons/licao-30-revisao-semestre-2.html',
 ];
+
+// Extensões tratadas como "app shell": sempre tenta buscar a versão mais
+// nova na rede primeiro. Só cai para o cache se estiver offline.
+const NETWORK_FIRST_RE = /\.(html|js|css|json)$/;
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
   );
-  self.skipWaiting();
+  // Sem self.skipWaiting() aqui de propósito: a versão nova fica esperando
+  // até o aluno confirmar clicando em "Atualizar agora" (veja app.js), pra
+  // não recarregar a página sozinha no meio de uma lição em andamento.
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data === 'SKIP_WAITING') self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+    caches.keys()
+      .then((keys) =>
+        Promise.all(
+          keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+        )
       )
-    )
+      .then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
-// Estratégia: cache primeiro, com atualização em segundo plano (stale-while-revalidate)
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      const networkFetch = fetch(event.request)
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return; // não mexe em chamadas ao Supabase, CDN etc.
+
+  const isAppShell = NETWORK_FIRST_RE.test(url.pathname) || url.pathname.endsWith('/');
+
+  if (isAppShell) {
+    // Network-first: garante que uma mudança publicada apareça já na
+    // próxima vez que a página for aberta/recarregada, enquanto o aluno
+    // estiver online. Sem internet, cai para a última versão salva em cache.
+    event.respondWith(
+      fetch(event.request)
         .then((response) => {
           if (response && response.status === 200) {
             const clone = response.clone();
@@ -58,8 +104,24 @@ self.addEventListener('fetch', (event) => {
           }
           return response;
         })
-        .catch(() => cached);
-      return cached || networkFetch;
-    })
-  );
+        .catch(() => caches.match(event.request))
+    );
+  } else {
+    // Cache-first para ícones/imagens, que praticamente nunca mudam —
+    // mantém a resposta rápida e funcionando offline.
+    event.respondWith(
+      caches.match(event.request).then((cached) => {
+        const networkFetch = fetch(event.request)
+          .then((response) => {
+            if (response && response.status === 200) {
+              const clone = response.clone();
+              caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+            }
+            return response;
+          })
+          .catch(() => cached);
+        return cached || networkFetch;
+      })
+    );
+  }
 });
