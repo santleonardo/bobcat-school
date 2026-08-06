@@ -465,7 +465,7 @@ async function afterAuthSuccess() {
 
   const profile = await getProfile();
   if (profile) {
-    enterApp();
+    await enterApp();
   } else {
     showScreen('profile-setup');
   }
@@ -504,7 +504,7 @@ function setupProfileScreen() {
     await saveProfile({ name, avatar: selectedAvatarSetup, level, createdAt: new Date().toISOString() });
     btn.disabled = false;
     btn.textContent = 'Começar a estudar';
-    enterApp();
+    await enterApp();
   });
 }
 
@@ -1026,7 +1026,28 @@ function openLesson(lesson) {
 
 // ---------- Fluxo geral do app ----------
 
-function enterApp() {
+// Lições adicionadas pelo professor pelo painel (upload de HTML) só existem
+// com Supabase configurado. Busca uma vez (por sessão do app) e mescla no
+// catálogo estático: 'lessons' entra em LESSONS (com bloqueio sequencial
+// normal), 'extras' entra em EXTRAS (sem bloqueio).
+let customLessonsLoaded = false;
+
+async function loadCustomLessonsIntoCatalog() {
+  if (customLessonsLoaded) return;
+  customLessonsLoaded = true;
+  if (!isUsingCloud()) return;
+  const custom = await getCustomLessons();
+  custom.forEach(item => {
+    if (item.section === 'extras') {
+      if (!EXTRAS.some(e => e.id === item.id)) EXTRAS.push(item);
+    } else {
+      if (!LESSONS.some(l => l.id === item.id)) LESSONS.push(item);
+    }
+  });
+}
+
+async function enterApp() {
+  await loadCustomLessonsIntoCatalog();
   document.getElementById('bottom-nav').style.display = 'flex';
   showScreen('menu');
 }
@@ -1071,7 +1092,7 @@ async function boot() {
   } else {
     const profile = await getProfile();
     if (profile) {
-      enterApp();
+      await enterApp();
     } else {
       showScreen('profile-setup');
     }

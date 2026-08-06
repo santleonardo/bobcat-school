@@ -356,6 +356,30 @@ async function getMyResetPassword() {
   return data ? data.password : null;
 }
 
+// ---------- Lições customizadas (adicionadas pelo professor pelo painel) ----------
+// Só existem com o Supabase configurado — como o app é um site estático,
+// não há como o painel "criar o arquivo" de verdade dentro de lessons/, então
+// essas lições moram no banco e são abertas por lessons/custom.html?id=...
+
+async function getCustomLessons() {
+  if (!useSupabase || !currentUserId) return [];
+  const { data, error } = await supabaseClient
+    .from('custom_lessons')
+    .select('id,name,level,icon,description,total_questions,section')
+    .order('created_at', { ascending: true });
+  if (error) { console.error(error); return []; }
+  return (data || []).map(row => ({
+    id: row.id,
+    name: row.name,
+    level: row.level,
+    icon: row.icon || '📄',
+    description: row.description || '',
+    url: 'lessons/custom.html?id=' + encodeURIComponent(row.id),
+    totalQuestions: row.total_questions || 0,
+    section: row.section
+  }));
+}
+
 // ---------- Mensagens (canal de comunicação com o professor) ----------
 // Esse recurso só existe com o Supabase configurado: sem nuvem não há como
 // a mensagem "sair" do aparelho do aluno e chegar ao painel do professor.

@@ -197,6 +197,31 @@
     .pw-row .info { flex:1 1 100%; }
     .pw-row input[type=text] { flex:1 1 100%; }
   }
+
+  /* ── ADICIONAR LIÇÃO ──────────────────────── */
+  .form-card { background:#fff; border:1px solid #eee; border-radius:12px; padding:18px 20px; margin-bottom:24px; }
+  .form-row { display:flex; gap:14px; margin-bottom:14px; flex-wrap:wrap; }
+  .form-field { flex:1; min-width:180px; display:flex; flex-direction:column; gap:5px; }
+  .form-field.small { flex:0 0 120px; min-width:100px; }
+  .form-field label { font-size:12px; font-weight:700; color:#8a7364; }
+  .form-field .hint { font-size:11px; color:#aaa; font-weight:400; }
+  .form-field input[type=text], .form-field input[type=number], .form-field select, .form-field textarea {
+    border:1px solid #ddd; border-radius:8px; padding:9px 11px; font-size:13.5px; font-family:inherit; width:100%;
+  }
+  .form-field input:focus, .form-field select:focus, .form-field textarea:focus { outline:none; border-color:var(--orange); }
+  .form-field textarea { resize:vertical; min-height:56px; }
+  .form-field input[type=file] { font-size:12.5px; }
+  .form-msg { font-size:12.5px; margin-top:8px; min-height:16px; }
+  .form-msg.ok { color:#1e6b40; }
+  .form-msg.error { color:var(--bad); }
+  .custom-lesson-item .del-btn {
+    background:none; border:none; cursor:pointer; color:var(--bad); font-size:15px; padding:4px 6px; flex-shrink:0;
+  }
+  .custom-lesson-item .del-btn:hover { opacity:0.7; }
+  .custom-lesson-item .badge {
+    font-size:10.5px; font-weight:700; color:#8a7364; background:var(--cream-2); border-radius:20px;
+    padding:3px 9px; white-space:nowrap;
+  }
 </style>
 </head>
 <body>
@@ -212,6 +237,7 @@
   <div class="tabs">
     <button class="tab-btn active" id="tab-btn-progress" onclick="switchTab('progress')">📊 Progresso da turma</button>
     <button class="tab-btn" id="tab-btn-lessons" onclick="switchTab('lessons')">📚 Todas as lições</button>
+    <button class="tab-btn" id="tab-btn-addlesson" onclick="switchTab('addlesson')">➕ Adicionar Lição</button>
     <button class="tab-btn" id="tab-btn-messages" onclick="switchTab('messages')">💬 Mensagens<span id="unread-dot" class="unread-dot hidden"></span></button>
     <button class="tab-btn" id="tab-btn-passwords" onclick="switchTab('passwords')">🔑 Senhas</button>
   </div>
@@ -234,6 +260,73 @@
   <div id="panel-lessons" class="tab-panel">
     <div class="lesson-list-meta" id="lessons-meta"></div>
     <div id="lessons-slot"></div>
+  </div>
+
+  <div id="panel-addlesson" class="tab-panel">
+    <div id="addlesson-notice-slot"></div>
+    <div id="addlesson-content" style="display:none;">
+      <h2>Adicionar nova lição</h2>
+      <p class="lesson-list-meta">
+        Envie um arquivo <code>.html</code> de lição (duplicado a partir de uma lição existente, mantendo
+        <code>LESSON_ID</code>, as tags <code>&lt;script src="../config.js"&gt;</code> /
+        <code>&lt;script src="../db-client.js"&gt;</code> / o script do Supabase, e a função <code>finishLesson()</code> —
+        exatamente como descrito no README). Ela aparece no app imediatamente, agrupada pelo nível escolhido abaixo.
+      </p>
+      <div class="form-card">
+        <div class="form-row">
+          <div class="form-field small">
+            <label for="al-section">Onde entra</label>
+            <select id="al-section">
+              <option value="lessons">📘 Lições (com bloqueio sequencial)</option>
+              <option value="extras">⭐ Extra (sem bloqueio)</option>
+            </select>
+          </div>
+          <div class="form-field small">
+            <label for="al-level">Nível</label>
+            <input type="text" id="al-level" list="al-level-options" placeholder="ex.: B2">
+            <datalist id="al-level-options">
+              <option value="Introdutório"><option value="A1"><option value="A2">
+              <option value="B1"><option value="B2"><option value="C1"><option value="C2">
+            </datalist>
+          </div>
+          <div class="form-field small">
+            <label for="al-icon">Ícone</label>
+            <input type="text" id="al-icon" placeholder="📄" maxlength="4">
+          </div>
+          <div class="form-field small">
+            <label for="al-total">Nº de questões</label>
+            <input type="number" id="al-total" min="0" step="1" placeholder="0">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="al-name">Nome da lição</label>
+            <input type="text" id="al-name" placeholder='ex.: "Lição 31 — Reported Speech"'>
+          </div>
+          <div class="form-field small">
+            <label for="al-id">ID (único, sem espaços) <span class="hint">gerado do nome</span></label>
+            <input type="text" id="al-id" placeholder="licao-31-reported-speech">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="al-desc">Descrição curta</label>
+            <textarea id="al-desc" placeholder="O que o aluno vai aprender nesta lição"></textarea>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="al-file">Arquivo .html da lição</label>
+            <input type="file" id="al-file" accept=".html,text/html">
+          </div>
+        </div>
+        <button class="btn" id="al-submit-btn" onclick="submitCustomLesson()">Adicionar lição</button>
+        <div class="form-msg" id="al-form-msg"></div>
+      </div>
+
+      <h2>Lições já enviadas pelo painel</h2>
+      <div id="custom-lessons-slot"></div>
+    </div>
   </div>
 
   <div id="panel-messages" class="tab-panel">
@@ -314,22 +407,44 @@ const LESSONS_CATALOG = [
 function switchTab(tab) {
   document.getElementById('panel-progress').classList.toggle('active', tab === 'progress');
   document.getElementById('panel-lessons').classList.toggle('active', tab === 'lessons');
+  document.getElementById('panel-addlesson').classList.toggle('active', tab === 'addlesson');
   document.getElementById('panel-messages').classList.toggle('active', tab === 'messages');
   document.getElementById('panel-passwords').classList.toggle('active', tab === 'passwords');
   document.getElementById('tab-btn-progress').classList.toggle('active', tab === 'progress');
   document.getElementById('tab-btn-lessons').classList.toggle('active', tab === 'lessons');
+  document.getElementById('tab-btn-addlesson').classList.toggle('active', tab === 'addlesson');
   document.getElementById('tab-btn-messages').classList.toggle('active', tab === 'messages');
   document.getElementById('tab-btn-passwords').classList.toggle('active', tab === 'passwords');
   if (tab === 'lessons') renderLessonsTab();
+  if (tab === 'addlesson') loadAddLessonTab();
   if (tab === 'messages') loadMessages();
   if (tab === 'passwords') loadPasswords();
 }
 
-function renderLessonsTab() {
-  const all = [...TESTS_CATALOG, ...LESSONS_CATALOG];
+// Lições customizadas (enviadas pelo painel) ficam em cache aqui, buscadas
+// do Supabase sob demanda (aba "Todas as lições" e aba "Adicionar Lição").
+let customLessonsCache = null;
+
+async function fetchCustomLessons() {
+  const client = await ensureClient();
+  if (!client) { customLessonsCache = []; return { ok: false }; }
+  const { data, error } = await client.from('custom_lessons').select('*').order('created_at', { ascending: true });
+  if (error) { customLessonsCache = []; return { ok: false, message: error.message }; }
+  customLessonsCache = data || [];
+  return { ok: true };
+}
+
+async function renderLessonsTab() {
+  const result = await fetchCustomLessons();
+  const customAsLessons = customLessonsCache
+    .filter(c => c.section !== 'extras')
+    .map(c => ({ id: c.id, name: c.name, level: c.level, icon: c.icon, description: c.description, totalQuestions: c.total_questions, custom: true }));
+
+  const all = [...TESTS_CATALOG, ...LESSONS_CATALOG, ...customAsLessons];
   const totalQuestions = all.reduce((sum, l) => sum + (l.totalQuestions || 0), 0);
   document.getElementById('lessons-meta').textContent =
-    LESSONS_CATALOG.length + ' lições + ' + TESTS_CATALOG.length + ' teste, totalizando ' + totalQuestions + ' questões.';
+    (LESSONS_CATALOG.length + customAsLessons.length) + ' lições + ' + TESTS_CATALOG.length + ' teste, totalizando ' + totalQuestions + ' questões.' +
+    (result.ok ? '' : ' (não foi possível carregar as lições enviadas pelo painel: ' + result.message + ')');
 
   // agrupa mantendo a ordem de aparição (Teste, Introdutório, A1, ...)
   const groups = [];
@@ -348,10 +463,11 @@ function renderLessonsTab() {
     html += '<div class="level-title">' + g.level + '</div>';
     html += '<div class="lesson-card-list">';
     g.items.forEach(item => {
-      html += `<a class="lesson-item" href="lessons/${item.id}.html" target="_blank" rel="noopener">
+      const href = item.custom ? 'lessons/custom.html?id=' + encodeURIComponent(item.id) : `lessons/${item.id}.html`;
+      html += `<a class="lesson-item" href="${href}" target="_blank" rel="noopener">
         <div class="icon">${item.icon}</div>
         <div class="info">
-          <div class="name">${item.name}</div>
+          <div class="name">${item.name}${item.custom ? ' <span class="badge">enviada pelo painel</span>' : ''}</div>
           <div class="desc">${item.description}</div>
         </div>
         <div class="qcount">${item.totalQuestions} questões</div>
@@ -361,6 +477,149 @@ function renderLessonsTab() {
   });
 
   document.getElementById('lessons-slot').innerHTML = html;
+}
+
+// ---------- Adicionar Lição (upload de HTML pelo painel) ----------
+
+function slugify(str) {
+  return (str || '')
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+let alIdManuallyEdited = false;
+
+async function loadAddLessonTab() {
+  const slot = document.getElementById('addlesson-notice-slot');
+  const client = await ensureClient();
+  if (!client) {
+    slot.innerHTML = '<div class="notice error">⚠️ O Supabase ainda não foi configurado — não dá pra adicionar lições pelo painel sem ele (elas ficam guardadas no banco, já que este é um site estático).</div>';
+    document.getElementById('addlesson-content').style.display = 'none';
+    return;
+  }
+  slot.innerHTML = '';
+  document.getElementById('addlesson-content').style.display = 'block';
+
+  // liga o auto-preenchimento do ID a partir do nome, só na primeira vez
+  const nameInput = document.getElementById('al-name');
+  const idInput = document.getElementById('al-id');
+  if (!nameInput.dataset.wired) {
+    nameInput.dataset.wired = '1';
+    nameInput.addEventListener('input', () => {
+      if (!alIdManuallyEdited) idInput.value = slugify(nameInput.value);
+    });
+    idInput.addEventListener('input', () => { alIdManuallyEdited = true; });
+  }
+
+  await fetchCustomLessons();
+  renderCustomLessonsList();
+}
+
+function renderCustomLessonsList() {
+  const list = customLessonsCache || [];
+  const listSlot = document.getElementById('custom-lessons-slot');
+  if (list.length === 0) {
+    listSlot.innerHTML = '<div class="empty">Nenhuma lição enviada pelo painel ainda.</div>';
+    return;
+  }
+  listSlot.innerHTML = '<div class="lesson-card-list">' + list.map(item => `
+    <div class="lesson-item custom-lesson-item">
+      <div class="icon">${item.icon}</div>
+      <div class="info">
+        <div class="name">${escapeHtml(item.name)} <span class="badge">${escapeHtml(item.level)} · ${item.section === 'extras' ? 'Extra' : 'Lição'}</span></div>
+        <div class="desc">${escapeHtml(item.description || '')}</div>
+      </div>
+      <div class="qcount">${item.total_questions} questões</div>
+      <a class="btn-icon" href="lessons/custom.html?id=${encodeURIComponent(item.id)}" target="_blank" rel="noopener" title="Abrir lição">🔗</a>
+      <button class="del-btn" title="Excluir lição" onclick="deleteCustomLessonRow('${item.id}')">🗑️</button>
+    </div>
+  `).join('') + '</div>';
+}
+
+function setAddLessonMsg(text, isError) {
+  const el = document.getElementById('al-form-msg');
+  el.textContent = text || '';
+  el.className = 'form-msg' + (text ? (isError ? ' error' : ' ok') : '');
+}
+
+async function submitCustomLesson() {
+  const section = document.getElementById('al-section').value;
+  const level = document.getElementById('al-level').value.trim();
+  const icon = document.getElementById('al-icon').value.trim() || '📄';
+  const totalQuestions = parseInt(document.getElementById('al-total').value, 10) || 0;
+  const name = document.getElementById('al-name').value.trim();
+  const id = slugify(document.getElementById('al-id').value.trim());
+  const description = document.getElementById('al-desc').value.trim();
+  const fileInput = document.getElementById('al-file');
+  const file = fileInput.files[0];
+
+  if (!name) return setAddLessonMsg('Preencha o nome da lição.', true);
+  if (!level) return setAddLessonMsg('Preencha o nível.', true);
+  if (!id) return setAddLessonMsg('Preencha um ID válido (ex.: licao-31-reported-speech).', true);
+  if (!file) return setAddLessonMsg('Selecione o arquivo .html da lição.', true);
+  if (!/\.html?$/i.test(file.name)) return setAddLessonMsg('O arquivo precisa ser um .html.', true);
+  if (file.size > 2 * 1024 * 1024) return setAddLessonMsg('Arquivo muito grande (máximo 2MB) — isso não parece uma lição comum, confira o arquivo.', true);
+
+  const existingIds = new Set([
+    ...LESSONS_CATALOG.map(l => l.id), ...TESTS_CATALOG.map(l => l.id),
+    ...(customLessonsCache || []).map(c => c.id)
+  ]);
+  if (existingIds.has(id)) return setAddLessonMsg('Já existe uma lição com este ID. Escolha outro (ou exclua a existente na lista abaixo antes).', true);
+
+  const btn = document.getElementById('al-submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Enviando...';
+  setAddLessonMsg('');
+
+  try {
+    const htmlContent = await file.text();
+    if (!/<html/i.test(htmlContent)) {
+      setAddLessonMsg('O arquivo não parece ser um HTML de lição válido (falta a tag <html>).', true);
+      return;
+    }
+
+    const client = await ensureClient();
+    if (!client) return;
+
+    const { error } = await client.from('custom_lessons').insert({
+      id, name, level, icon, description,
+      total_questions: totalQuestions,
+      section, html_content: htmlContent
+    });
+
+    if (error) { setAddLessonMsg('Não foi possível salvar: ' + error.message, true); return; }
+
+    setAddLessonMsg('✓ Lição adicionada! Já aparece no app dos alunos.', false);
+    document.getElementById('al-name').value = '';
+    document.getElementById('al-id').value = '';
+    document.getElementById('al-desc').value = '';
+    document.getElementById('al-icon').value = '';
+    document.getElementById('al-total').value = '';
+    document.getElementById('al-level').value = '';
+    fileInput.value = '';
+    alIdManuallyEdited = false;
+
+    await fetchCustomLessons();
+    renderCustomLessonsList();
+  } catch (e) {
+    console.error(e);
+    setAddLessonMsg('Não foi possível ler o arquivo selecionado.', true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Adicionar lição';
+  }
+}
+
+async function deleteCustomLessonRow(id) {
+  if (!confirm('Excluir esta lição? Isso não apaga o progresso já salvo pelos alunos nela, só remove a lição do catálogo.')) return;
+  const client = await ensureClient();
+  if (!client) return;
+  const { error } = await client.from('custom_lessons').delete().eq('id', id);
+  if (error) { alert('Não foi possível excluir: ' + error.message); return; }
+  await fetchCustomLessons();
+  renderCustomLessonsList();
 }
 
 async function ensureClient() {

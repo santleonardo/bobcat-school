@@ -97,6 +97,27 @@ lessons/
 
 ## Adicionando novas lições
 
+Tem dois jeitos de adicionar lição: **pelo painel do professor** (mais simples, não mexe em código) ou **direto nos arquivos do projeto** (o jeito "clássico", exige um novo `git push`).
+
+### Pelo painel do professor (upload de HTML, sem mexer em código)
+
+Só funciona com o Supabase configurado (a lição fica guardada no banco, já que o app é um site estático e não tem como criar arquivo novo sozinho).
+
+1. Monte o arquivo `.html` da lição do jeito de sempre: duplique `lessons/verb-to-be.html` (ou `lessons/saudacoes-apresentacoes.html`, que já tem áudio embutido) e troque o conteúdo, mantendo:
+   - a linha `const LESSON_ID = '...'` com um id novo e único (o mesmo que você vai usar no campo "ID" do painel);
+   - as três tags `<script src="../config.js">`, `<script src="../db-client.js">` e o `<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">` no `<head>`;
+   - a função `finishLesson()` (ajuste a contagem de `total` para o número de questões da nova lição).
+2. Abra `teacher.html` → aba **"➕ Adicionar Lição"**.
+3. Escolha se ela entra em **"Lições"** (agrupada pelo nível, com bloqueio sequencial normal — o aluno precisa concluir a anterior do catálogo pra desbloquear) ou **"Extra"** (libera direto, sem bloqueio, como o Manual de Português).
+4. Preencha nível (ex. `B2`), ícone, nome, descrição e número de questões, confira o ID gerado automaticamente a partir do nome (pode editar) e selecione o arquivo `.html` que você montou no passo 1.
+5. Clique em **"Adicionar lição"** — ela já aparece no app dos alunos na hora, sem precisar publicar nada de novo no GitHub/Vercel.
+
+A lição é aberta pelo endereço `lessons/custom.html?id=SEU-ID`, uma página "carregadora" que busca o HTML salvo no banco e o exibe — por isso os caminhos relativos (`../config.js`, `../index.html` etc.) dentro dela continuam funcionando normalmente. Pra excluir ou conferir as lições já enviadas, use a lista logo abaixo do formulário nessa mesma aba (excluir a lição do catálogo não apaga o progresso que os alunos já tiverem salvo nela).
+
+> É preciso rodar a nova tabela do `schema.sql` (`custom_lessons`, perto do final do arquivo) no SQL Editor do Supabase se você já tinha o banco configurado antes dessa atualização.
+
+### Direto nos arquivos do projeto (o jeito "clássico")
+
 1. Duplique `lessons/verb-to-be.html` (ou `lessons/saudacoes-apresentacoes.html`, que já tem áudio embutido), troque o conteúdo pela nova lição, mas mantenha:
    - a linha `const LESSON_ID = '...'` com um id novo e único;
    - as três tags `<script src="../config.js">`, `<script src="../db-client.js">` e o `<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">` no `<head>`;

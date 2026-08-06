@@ -174,6 +174,50 @@ create policy "Authenticated can manage reset passwords"
   with check (auth.role() = 'authenticated');
 
 -- ============================================================
+-- Lições customizadas (adicionadas pelo professor pelo painel, via upload
+-- de um arquivo .html) — aparecem no catálogo do app ao lado das lições
+-- fixas, agrupadas pelo nível escolhido. Como este é um site estático (sem
+-- servidor), não dá para "criar o arquivo" de verdade dentro da pasta
+-- lessons/ a partir do navegador — em vez disso, o conteúdo do HTML enviado
+-- fica guardado aqui no banco (coluna html_content) e é aberto por
+-- lessons/custom.html?id=..., que busca esse conteúdo e o exibe.
+create table if not exists custom_lessons (
+  id text primary key,
+  name text not null,
+  level text not null,
+  icon text not null default '📄',
+  description text not null default '',
+  total_questions int not null default 0,
+  -- 'lessons' = entra no catálogo normal (aba "Lições"), com bloqueio
+  -- sequencial igual às demais; 'extras' = entra na aba "Extra", liberada
+  -- direto, sem bloqueio nem pré-requisito.
+  section text not null default 'lessons' check (section in ('lessons', 'extras')),
+  html_content text not null,
+  created_at timestamptz not null default now()
+);
+
+alter table custom_lessons enable row level security;
+
+-- Qualquer aluno autenticado precisa conseguir LER o catálogo (para a
+-- lição aparecer na lista) e o conteúdo (para conseguir abrir a lição).
+drop policy if exists "Authenticated can view custom lessons" on custom_lessons;
+create policy "Authenticated can view custom lessons"
+  on custom_lessons for select
+  using (auth.role() = 'authenticated');
+
+-- Qualquer sessão autenticada (inclui a sessão anônima do painel do
+-- professor) pode criar, editar e apagar lições customizadas — mesmo
+-- trade-off já assumido nas outras tabelas deste projeto: como teacher.html
+-- não tem um login de professor "de verdade" (usa sessão anônima), não dá
+-- para restringir isso a um único usuário específico. Para uma turma
+-- pequena costuma ser um risco aceitável.
+drop policy if exists "Authenticated can manage custom lessons" on custom_lessons;
+create policy "Authenticated can manage custom lessons"
+  on custom_lessons for all
+  using (auth.role() = 'authenticated')
+  with check (auth.role() = 'authenticated');
+
+-- ============================================================
 -- IMPORTANTE: também é preciso habilitar login por e-mail/senha:
 -- painel do Supabase → Authentication → Providers → Email → Enable.
 -- A opção "Confirm email" é sua escolha:
