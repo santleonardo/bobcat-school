@@ -1017,12 +1017,29 @@ function renderExtras() {
   if (!list) return;
   list.innerHTML = '';
 
-  // Agrupa visualmente: Manual Básico, Manual Prático e Outros
+  const GROUP_META = {
+    'Manual Básico — Classes Gramaticais': {
+      icon: '🔤',
+      short: 'Manual Básico',
+      blurb: 'As 10 classes gramaticais — substantivo, verbo, pronome e mais, com exemplos e exercícios.'
+    },
+    'Manual Prático — Língua Portuguesa': {
+      icon: '📘',
+      short: 'Manual Prático',
+      blurb: 'Morfologia, sintaxe, concordância, crase, pontuação e interpretação — teoria e prática.'
+    },
+    'Outros': {
+      icon: '📎',
+      short: 'Outros',
+      blurb: 'Materiais extras e conteúdos em teste.'
+    }
+  };
   const GROUP_ORDER = [
     'Manual Básico — Classes Gramaticais',
     'Manual Prático — Língua Portuguesa',
     'Outros'
   ];
+
   const groups = {};
   EXTRAS.forEach(extra => {
     const g = extra.group || 'Outros';
@@ -1030,25 +1047,32 @@ function renderExtras() {
     groups[g].push(extra);
   });
 
-  GROUP_ORDER.forEach(groupName => {
+  // Se um manual está aberto, mostra só as lições dele + voltar
+  if (window._extraOpenGroup && groups[window._extraOpenGroup]) {
+    const groupName = window._extraOpenGroup;
+    const meta = GROUP_META[groupName] || { icon: '📎', short: groupName, blurb: '' };
     const items = groups[groupName];
-    if (!items || items.length === 0) return;
 
-    const section = document.createElement('div');
-    section.className = 'level-group extra-group';
+    const back = document.createElement('button');
+    back.type = 'button';
+    back.className = 'extra-back-btn';
+    back.innerHTML = '← Voltar aos manuais';
+    back.addEventListener('click', () => {
+      window._extraOpenGroup = null;
+      renderExtras();
+    });
+    list.appendChild(back);
 
-    const isBasico = groupName.startsWith('Manual Básico');
-    const isPratico = groupName.startsWith('Manual Prático');
-    const groupIcon = isBasico ? '🔤' : (isPratico ? '📘' : '📎');
-    const countLabel = items.length === 1 ? '1 lição' : items.length + ' lições';
-
-    section.innerHTML = `
-      <div class="level-group-title">
-        <span class="label">${groupIcon} ${groupName}</span>
-        <span class="line"></span>
-        <span class="count">${countLabel}</span>
+    const header = document.createElement('div');
+    header.className = 'extra-folder-header';
+    header.innerHTML = `
+      <div class="extra-folder-header-icon">${meta.icon}</div>
+      <div>
+        <div class="extra-folder-header-title">${meta.short}</div>
+        <div class="extra-folder-header-sub">${items.length} lição${items.length === 1 ? '' : 'ões'} · toque para estudar</div>
       </div>
     `;
+    list.appendChild(header);
 
     items.forEach(extra => {
       const card = document.createElement('div');
@@ -1063,11 +1087,40 @@ function renderExtras() {
         <div class="chevron">›</div>
       `;
       card.addEventListener('click', () => { window.location.href = extra.url; });
-      section.appendChild(card);
+      list.appendChild(card);
     });
+    return;
+  }
 
-    list.appendChild(section);
+  // Visão inicial: duas (ou mais) caixas de manual
+  const grid = document.createElement('div');
+  grid.className = 'extra-folder-grid';
+
+  GROUP_ORDER.forEach(groupName => {
+    const items = groups[groupName];
+    if (!items || items.length === 0) return;
+    const meta = GROUP_META[groupName] || { icon: '📎', short: groupName, blurb: '' };
+
+    const box = document.createElement('button');
+    box.type = 'button';
+    box.className = 'extra-folder-card';
+    box.innerHTML = `
+      <div class="extra-folder-card-top">
+        <span class="extra-folder-card-icon">${meta.icon}</span>
+        <span class="extra-folder-card-count">${items.length} lições</span>
+      </div>
+      <div class="extra-folder-card-title">${meta.short}</div>
+      <div class="extra-folder-card-blurb">${meta.blurb}</div>
+      <div class="extra-folder-card-cta">Abrir manual ›</div>
+    `;
+    box.addEventListener('click', () => {
+      window._extraOpenGroup = groupName;
+      renderExtras();
+    });
+    grid.appendChild(box);
   });
+
+  list.appendChild(grid);
 }
 
 // ---------- Tela Menu (página inicial) ----------

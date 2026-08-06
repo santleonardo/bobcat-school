@@ -559,3 +559,94 @@ body.on-auth-screen .topbar { display: none; }
 .modal-error { color: var(--bad, #C0392B); font-size: 12.5px; margin: 8px 0 0 0 !important; }
 .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
 .modal-actions .btn { margin-top: 0; }
+
+
+/* ── EXTRA: pastas dos manuais ───────────────── */
+.extra-folder-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.extra-folder-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: #fff;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 18px 16px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color .15s, box-shadow .15s, transform .1s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.extra-folder-card:hover {
+  border-color: var(--orange);
+  box-shadow: 0 6px 18px rgba(217,121,63,0.12);
+}
+.extra-folder-card:active { transform: scale(0.98); }
+.extra-folder-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.extra-folder-card-icon {
+  font-size: 32px;
+  width: 56px; height: 56px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--cream);
+  border-radius: 14px;
+}
+.extra-folder-card-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--orange-dark);
+  background: var(--cream);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+.extra-folder-card-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.extra-folder-card-blurb {
+  font-size: 13px;
+  color: #888;
+  line-height: 1.45;
+  margin-bottom: 12px;
+}
+.extra-folder-card-cta {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--orange-dark);
+}
+.extra-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: var(--orange-dark);
+  font-size: 13.5px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 0 0 14px 0;
+}
+.extra-back-btn:hover { text-decoration: underline; }
+.extra-folder-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, var(--orange), #E9A06E);
+  border-radius: 14px;
+  color: #fff;
+}
+.extra-folder-header-icon { font-size: 28px; }
+.extra-folder-header-title { font-size: 16px; font-weight: 800; }
+.extra-folder-header-sub { font-size: 12px; opacity: 0.9; margin-top: 2px; }
