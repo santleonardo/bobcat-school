@@ -87,7 +87,24 @@
   .tab-panel.active { display:block; }
 
   .lesson-list-meta { font-size:12.5px; color:#888; margin-bottom:14px; }
-  .level-group { margin-bottom: 22px; }
+
+  /* ── NAVEGAÇÃO POR NÍVEL ──────────────────── */
+  .level-nav {
+    display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; padding:12px 14px;
+    background:#fff; border:1px solid #eee; border-radius:10px; position:sticky; top:0; z-index:5;
+  }
+  .level-nav .level-nav-label { font-size:11.5px; font-weight:700; color:#8a7364; align-self:center; margin-right:2px; }
+  .level-chip {
+    border:1.5px solid var(--orange); background:#fff; color:var(--orange-dark); font-weight:700;
+    font-size:12.5px; padding:6px 14px; border-radius:20px; cursor:pointer; transition: background .15s, color .15s;
+  }
+  .level-chip:hover { background: var(--cream); }
+  .level-chip.active { background: var(--orange); color:#fff; }
+  .level-chip .count {
+    display:inline-block; margin-left:6px; font-size:10.5px; font-weight:800; opacity:0.85;
+  }
+
+  .level-group { margin-bottom: 22px; scroll-margin-top: 76px; }
   .level-title {
     font-size: 12.5px; font-weight:800; color:#fff; background:var(--orange);
     display:inline-block; padding:3px 12px; border-radius:20px; margin-bottom:10px;
@@ -259,6 +276,7 @@
 
   <div id="panel-lessons" class="tab-panel">
     <div class="lesson-list-meta" id="lessons-meta"></div>
+    <div class="level-nav" id="level-nav"></div>
     <div id="lessons-slot"></div>
   </div>
 
@@ -457,9 +475,12 @@ async function renderLessonsTab() {
     groups[groupIndex[item.level]].items.push(item);
   });
 
+  const slugifyLevel = (level) => 'level-anchor-' + String(level).toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
+
   let html = '';
   groups.forEach(g => {
-    html += '<div class="level-group">';
+    html += `<div class="level-group" id="${slugifyLevel(g.level)}">`;
     html += '<div class="level-title">' + g.level + '</div>';
     html += '<div class="lesson-card-list">';
     g.items.forEach(item => {
@@ -477,6 +498,22 @@ async function renderLessonsTab() {
   });
 
   document.getElementById('lessons-slot').innerHTML = html;
+
+  // Barra de acesso rápido aos níveis (Introdutório, A1, A2 ... C2 / Teste)
+  const navHtml = ['<span class="level-nav-label">Ir para o nível:</span>'].concat(
+    groups.map(g => `<button type="button" class="level-chip" data-anchor="${slugifyLevel(g.level)}">${g.level}<span class="count">${g.items.length}</span></button>`)
+  ).join('');
+  const nav = document.getElementById('level-nav');
+  nav.innerHTML = navHtml;
+  nav.querySelectorAll('.level-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const target = document.getElementById(chip.dataset.anchor);
+      if (!target) return;
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      nav.querySelectorAll('.level-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+    });
+  });
 }
 
 // ---------- Adicionar Lição (upload de HTML pelo painel) ----------
