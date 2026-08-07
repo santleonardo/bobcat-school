@@ -244,7 +244,7 @@ const LESSONS = [
     icon: '📍',
     description: 'Preposições: onde, com quem e como',
     url: 'lessons/licao-4-preposicoes.html',
-    totalQuestions: 7 // preenchimento de exercícios (prática, sem correção automática)
+    totalQuestions: 10 // design interativo
   },
   {
     id: 'licao-5-posse',
@@ -253,7 +253,7 @@ const LESSONS = [
     icon: '🎒',
     description: 'O que é isso e de quem é: posse em inglês',
     url: 'lessons/licao-5-posse.html',
-    totalQuestions: 12 // preenchimento de exercícios (prática, sem correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-6-here-there',
@@ -262,7 +262,7 @@ const LESSONS = [
     icon: '📌',
     description: 'Localização, posição e phrasal verbs básicos',
     url: 'lessons/licao-6-here-there.html',
-    totalQuestions: 7 // preenchimento de exercícios (prática, sem correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-8-to-be-passado',
@@ -271,7 +271,7 @@ const LESSONS = [
     icon: '⏳',
     description: 'O verbo to be no passado: was e were',
     url: 'lessons/licao-8-to-be-passado.html',
-    totalQuestions: 8 // preenchimento de exercícios (prática, sem correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-9-revisao-completa',
@@ -1404,12 +1404,6 @@ async function boot() {
   document.querySelectorAll('.menu-btn').forEach(btn => {
     btn.addEventListener('click', () => showScreen(btn.dataset.screen));
   });
-
-  const btnOpenLegal = document.getElementById('btn-open-legal');
-  if (btnOpenLegal) btnOpenLegal.addEventListener('click', () => showScreen('legal'));
-
-  const btnLegalBack = document.getElementById('btn-legal-back');
-  if (btnLegalBack) btnLegalBack.addEventListener('click', () => showScreen('profile-view'));
 
   const topbarHomeLink = document.getElementById('topbar-home-link');
   if (topbarHomeLink) {

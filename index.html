@@ -249,72 +249,8 @@
 
     <button class="btn" id="btn-update-profile">Salvar alterações</button>
     <button class="btn secondary" id="btn-reset-progress" style="width:100%; margin-top:10px; background:#fff; color:#C0392B; border-color:#C0392B;">Zerar progresso das lições</button>
-    <button type="button" class="link-btn" id="btn-open-legal">📄 Termos de Uso e Política de Privacidade</button>
     <button class="btn secondary hidden" id="btn-logout" style="width:100%; margin-top:10px;">Sair da conta</button>
     <p id="cloud-status" style="text-align:center; font-size:11.5px; color:#999; margin-top:14px;"></p>
-  </div>
-
-  <!-- TELA: TERMOS DE USO E POLÍTICA DE PRIVACIDADE -->
-  <div class="screen hidden" id="screen-legal">
-    <button type="button" class="link-btn" id="btn-legal-back" style="text-align:left; margin-top:0;">← Voltar ao perfil</button>
-    <h2 class="screen-title" style="margin-top:14px;">Termos de Uso e Política de Privacidade</h2>
-    <p class="legal-updated">Bobcat Language School · última atualização: agosto de 2026</p>
-
-    <div class="legal-content">
-      <p>Este documento explica, em linguagem simples, como o <strong>Bobcat Language School</strong> funciona, quais dados coletamos e quais são os seus direitos como aluno (ou responsável por um aluno menor de idade). Ao criar uma conta, você concorda com estes termos.</p>
-      <p class="legal-note">Este texto é um resumo informativo elaborado a partir de pesquisa jurídica aplicada às funcionalidades do app. Não substitui a orientação de um advogado.</p>
-
-      <h3>1. O que é o Bobcat Language School</h3>
-      <p>O Bobcat Language School é um aplicativo de ensino de inglês com lições interativas, testes de nivelamento, acompanhamento de progresso e um canal de mensagens entre aluno e professor (com possibilidade de anexar arquivos). O professor também pode adicionar lições personalizadas, que ficam disponíveis para os alunos dentro do próprio app.</p>
-
-      <h3>2. Cadastro e idade mínima</h3>
-      <ul>
-        <li>O cadastro é feito por e-mail e senha. Não cobramos nada para usar o app.</li>
-        <li>Se você tem <strong>menos de 16 anos</strong>, o cadastro e o uso do app devem ser feitos com o conhecimento e a supervisão de um responsável (pai, mãe ou responsável legal), que também pode acompanhar o progresso e as mensagens trocadas com o professor.</li>
-        <li>Pedimos que os dados de cadastro (nome, e-mail) sejam verdadeiros — isso ajuda o professor a identificar corretamente cada aluno e, se necessário, contatar o responsável.</li>
-        <li>Seguimos os princípios do <strong>Estatuto da Criança e do Adolescente Digital (Lei 15.211/2025)</strong>: qualquer conteúdo relacionado a abuso, aliciamento ou exploração de menores identificado no app será removido e comunicado imediatamente às autoridades competentes.</li>
-      </ul>
-
-      <h3>3. Seus dados e como usamos (LGPD)</h3>
-      <p>Para funcionar, o app trata os seguintes dados pessoais: nome, e-mail, avatar escolhido, nível de inglês, histórico e resultado das lições, e o conteúdo das mensagens trocadas com o professor (incluindo arquivos anexados, quando houver).</p>
-      <ul>
-        <li><strong>Base legal:</strong> tratamos esses dados para prestar o serviço de ensino a que você se cadastrou (execução de contrato) e, quando aplicável, com base no seu consentimento.</li>
-        <li><strong>Quem acessa:</strong> o professor responsável pela turma tem acesso ao seu progresso e às suas mensagens, para poder acompanhar seu aprendizado e responder suas dúvidas. Não vendemos nem compartilhamos seus dados com terceiros para fins de publicidade.</li>
-        <li><strong>Armazenamento:</strong> os dados ficam guardados em servidores de nuvem (Supabase/Postgres) usados para operar o app.</li>
-        <li><strong>Seus direitos (art. 18 da LGPD):</strong> você pode, a qualquer momento, pedir ao professor/administrador do app para acessar, corrigir ou apagar seus dados, ou revogar seu consentimento. Para isso, use o canal de mensagens dentro do app ou o contato informado na escola.</li>
-        <li>Se você é menor de 16 anos, o tratamento dos seus dados segue as regras reforçadas da LGPD (art. 14) para dados de crianças e adolescentes, sempre com participação do responsável.</li>
-      </ul>
-
-      <h3>4. Mensagens e arquivos enviados ao professor</h3>
-      <ul>
-        <li>O canal de mensagens é privado entre você e o professor — use-o para tirar dúvidas sobre as lições.</li>
-        <li>Arquivos anexados (PDF, Word, planilha, imagem etc.) devem ter relação com as atividades do curso. Não envie arquivos com conteúdo ilegal, ofensivo ou que viole direitos de terceiros.</li>
-        <li>Se qualquer conteúdo trocado no chat violar a lei ou os direitos de alguém, ele pode ser removido, e o caso pode ser encaminhado às autoridades quando exigido por lei.</li>
-      </ul>
-
-      <h3>5. Direitos autorais do material das lições</h3>
-      <ul>
-        <li>O conteúdo das lições (textos, exercícios, áudios e materiais do curso) é de titularidade do Bobcat Language School ou de seus professores, e está disponibilizado apenas para uso pessoal e educacional dos alunos matriculados.</li>
-        <li>É proibido copiar, redistribuir ou publicar esse material fora do app sem autorização.</li>
-        <li>Lições personalizadas enviadas pelo professor também seguem essa mesma proteção. Se você (professor) enviar material de terceiros, é responsável por garantir que tem autorização para usá-lo no curso.</li>
-      </ul>
-
-      <h3>6. Cancelamento e exclusão de conta</h3>
-      <p>Você pode parar de usar o app e pedir a exclusão da sua conta e dos seus dados a qualquer momento, entrando em contato pelo canal de mensagens do app ou diretamente com o professor/administrador responsável. Como este é um serviço oferecido gratuitamente, aplicam-se ainda assim as garantias do <strong>Código de Defesa do Consumidor</strong>, como informação clara sobre o serviço e facilidade para cancelar.</p>
-
-      <h3>7. Responsabilidade e uso adequado</h3>
-      <ul>
-        <li>O Bobcat Language School é uma ferramenta de apoio ao ensino de inglês; o professor é responsável pelo conteúdo pedagógico e pela correção das lições.</li>
-        <li>Pedimos que o app seja usado com respeito — tanto nas mensagens ao professor quanto no uso geral da plataforma.</li>
-        <li>Reservamo-nos o direito de suspender contas em caso de uso indevido, fraude no cadastro ou violação destes termos.</li>
-      </ul>
-
-      <h3>8. Alterações nestes termos</h3>
-      <p>Estes termos podem ser atualizados de tempos em tempos, por exemplo para refletir mudanças na legislação (como a LGPD ou o Estatuto da Criança e do Adolescente Digital) ou novas funcionalidades do app. Ao continuar usando o Bobcat Language School após uma atualização, você concorda com a versão mais recente.</p>
-
-      <h3>9. Dúvidas</h3>
-      <p>Se tiver qualquer dúvida sobre estes termos, sobre seus dados ou sobre como algo funciona no app, fale com o professor pelo canal de mensagens dentro do próprio Bobcat Language School.</p>
-    </div>
   </div>
 
   <!-- TELA: TESTES DE NIVELAMENTO -->
