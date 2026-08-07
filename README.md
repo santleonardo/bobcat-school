@@ -182,3 +182,36 @@ O botão "Zerar progresso das lições" (no perfil do aluno) agora pede uma senh
 - Assim como as outras senhas deste projeto (é um app 100% front-end), essa não é um segredo criptográfico à prova de tudo — quem souber mexer no navegador consegue contornar. Ela serve para evitar zeragem sem querer ou sem autorização, não como proteção contra alguém tecnicamente insistente.
 
 Também é preciso rodar a nova tabela do `schema.sql` (`student_reset_passwords`, perto do final do arquivo) no SQL Editor do Supabase se você já tinha o banco configurado antes dessa atualização.
+
+---
+
+## Design interativo das lições (estilo Genially)
+
+A **Lição 2** usa o novo visual interativo (HUD com XP, cartões viráveis, jogos de memória/quiz, áudio TTS, confetti).
+
+### Arquivos compartilhados
+
+- `lessons/lesson-kit.js` — HUD/XP, `speak()`, reveal on scroll, flip cards, e **ponte de progresso** com `db-client.js` (`handleLessonFinish`).
+- Inclua nos HTML de lição (nessa ordem):
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+<script src="lesson-kit.js"></script>
+```
+
+```js
+BobcatLesson.init({ lessonId: 'licao-2-perguntas-artigos', totalQuestions: 20 });
+// ao finalizar:
+await BobcatLesson.finishLesson(correct, total, 'correct'); // ou 'filled'
+```
+
+### Progresso real
+
+- Nota mínima continua **85%** (`PASSING_PCT` em `db-client.js`).
+- Na Lição 2 interativa a pontuação é composta: drag-drop (8) + quiz (6) + memória (6) = 20.
+- Fotos: Pexels & domínio público · Design interativo inspirado em Genially.
+
+Para migrar outras lições ao mesmo visual: reutilize o CSS/estrutura da Lição 2 e o `lesson-kit.js`; mantenha o mesmo `LESSON_ID` do catálogo em `app.js`.

@@ -183,9 +183,9 @@ const EXTRAS = [
   {
     id: 'licao-2-interativa',
     group: 'Outros',
-    name: '🧪 [Teste] Lição 2 — Novo Visual e Formato',
-    icon: '🧪',
-    description: 'Versão em teste da Lição 2 com um visual e formato de exercícios novos — só para avaliação',
+    name: 'Lição 2 — Visual Interativo (mesmo conteúdo)',
+    icon: '🎮',
+    description: 'Mesmo conteúdo da Lição 2 oficial, no formato Genially/jogos (progresso compartilhado)',
     url: 'lessons/licao-2-interativa.html'
   }
 
@@ -224,9 +224,9 @@ const LESSONS = [
     name: 'Lição 2 — Fazendo Perguntas e Apresentando Coisas',
     level: 'A1',
     icon: '❓',
-    description: 'Perguntas com Wh- words e o uso de a, an, the',
+    description: 'Wh- words, artigos a/an/the — design interativo (jogos, áudio, cartões)',
     url: 'lessons/licao-2-perguntas-artigos.html',
-    totalQuestions: 5 // preenchimento de exercícios (prática, sem correção automática)
+    totalQuestions: 20 // drag-drop 8 + quiz 6 + memória 6
   },
   {
     id: 'licao-3-revisao-perguntas',
@@ -235,7 +235,7 @@ const LESSONS = [
     icon: '🔁',
     description: 'Revisão das lições 1 e 2 com prática de diálogos',
     url: 'lessons/licao-3-revisao-perguntas.html',
-    totalQuestions: 11 // preenchimento de exercícios (prática, sem correção automática)
+    totalQuestions: 12 // Wh 5 + artigos 3 + MC 4 (design interativo)
   },
   {
     id: 'licao-4-preposicoes',
@@ -1404,6 +1404,12 @@ async function boot() {
   document.querySelectorAll('.menu-btn').forEach(btn => {
     btn.addEventListener('click', () => showScreen(btn.dataset.screen));
   });
+
+  const btnOpenLegal = document.getElementById('btn-open-legal');
+  if (btnOpenLegal) btnOpenLegal.addEventListener('click', () => showScreen('legal'));
+
+  const btnLegalBack = document.getElementById('btn-legal-back');
+  if (btnLegalBack) btnLegalBack.addEventListener('click', () => showScreen('profile-view'));
 
   const topbarHomeLink = document.getElementById('topbar-home-link');
   if (topbarHomeLink) {
