@@ -280,7 +280,7 @@ const LESSONS = [
     icon: '📚',
     description: 'Revisão completa das lições anteriores',
     url: 'lessons/licao-9-revisao-completa.html',
-    totalQuestions: 26 // preenchimento de exercícios (prática, sem correção automática)
+    totalQuestions: 16 // design interativo
   },
   {
     id: 'licao-10-do-does-to-for',
@@ -289,7 +289,7 @@ const LESSONS = [
     icon: '🔧',
     description: 'Verbos essenciais, DO/DOES, TO e FOR',
     url: 'lessons/licao-10-do-does-to-for.html',
-    totalQuestions: 20 // preenchimento de exercícios (prática, sem correção automática)
+    totalQuestions: 14 // design interativo
   },
   {
     id: 'licao-11-object-possessive-pronouns',
@@ -298,7 +298,7 @@ const LESSONS = [
     icon: '👥',
     description: 'Pronomes objetos, possessivos e mais de 20 verbos',
     url: 'lessons/licao-11-object-possessive-pronouns.html',
-    totalQuestions: 14 // preenchimento de exercícios (prática, sem correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-12-simple-present-daily-life',
@@ -307,7 +307,7 @@ const LESSONS = [
     icon: '🗓️',
     description: 'Simple Present, advérbios de frequência e a rotina diária',
     url: 'lessons/licao-12-simple-present-daily-life.html',
-    totalQuestions: 17 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-13-perguntas-simple-present',
@@ -316,7 +316,7 @@ const LESSONS = [
     icon: '🗣️',
     description: 'Perguntas e negativas com Do/Does no Simple Present',
     url: 'lessons/licao-13-perguntas-simple-present.html',
-    totalQuestions: 16 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-14-there-is-there-are',
@@ -325,7 +325,7 @@ const LESSONS = [
     icon: '🏠',
     description: 'Descrevendo lugares e objetos com There is/There are',
     url: 'lessons/licao-14-there-is-there-are.html',
-    totalQuestions: 17 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-15-can-cant',
