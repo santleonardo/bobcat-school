@@ -1,489 +1,106 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bobcat Language School — Lesson 31 — Past Continuous</title>
-<style>
-<style>
-:root {
-  --orange: #D9793F;
-  --orange-dark: #C9622A;
-  --cream: #FBEFE6;
-  --cream-2: #F7F1EC;
-  --ink: #2b2b2b;
-  --ok: #2E8B57;
-  --bad: #C0392B;
-  --border: #EBC9AE;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{
-  font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
-  color:var(--ink);
-  background:#fdfaf7;
-  line-height:1.55;
-}
-.app-layout{display:flex;min-height:100vh;}
-.sidebar{
-  width:280px;min-height:100vh;position:fixed;top:0;left:0;z-index:100;
-  background:#fff;border-right:2px solid var(--border);
-  display:flex;flex-direction:column;transition:transform .3s ease;
-}
-.sidebar-header{display:flex;align-items:center;gap:12px;padding:18px 20px 14px;border-bottom:3px solid var(--orange);}
-.sidebar-header .logo{font-size:32px;}
-.sidebar-header .brand{font-weight:800;font-size:16px;color:var(--orange-dark);}
-.sidebar-header .brand small{display:block;font-weight:400;font-size:11px;color:#888;font-style:italic;}
-.sidebar-progress{padding:14px 20px 10px;border-bottom:1px solid #eee;}
-.sidebar-progress .prog-label{font-size:12px;color:#888;font-weight:600;margin-bottom:6px;}
-.sidebar-progress .prog-track{width:100%;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
-.sidebar-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
-.sidebar-progress .prog-text{font-size:11px;color:#999;margin-top:4px;text-align:right;}
-.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0;}
-.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13.5px;font-weight:600;color:#555;text-decoration:none;transition:background .15s,color .15s;border-left:3px solid transparent;}
-.sidebar-nav a:hover{background:var(--cream-2);color:var(--orange-dark);}
-.sidebar-nav a.active{background:var(--cream);color:var(--orange-dark);border-left-color:var(--orange);font-weight:700;}
-.sidebar-nav a .lnum{width:26px;height:26px;border-radius:50%;background:var(--cream-2);color:var(--orange-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
-.sidebar-nav a.active .lnum{background:var(--orange);color:#fff;}
-.sidebar-nav a.completed .lnum{background:var(--ok);color:#fff;}
-.sidebar-nav a .check{margin-left:auto;font-size:14px;color:var(--ok);display:none;}
-.sidebar-nav a.completed .check{display:inline;}
-.sidebar-close{display:none;position:absolute;top:14px;right:14px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;}
-.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--orange);color:#fff;border:none;width:42px;height:42px;border-radius:10px;font-size:22px;cursor:pointer;box-shadow:0 2px 8px rgba(217,121,63,.3);}
-.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:99;}
-.main{flex:1;margin-left:280px;padding:0 0 80px 0;}
-.top-progress{position:sticky;top:0;z-index:50;background:#fdfaf7ee;backdrop-filter:blur(4px);padding:10px 20px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px;justify-content:center;font-size:13px;color:#666;}
-.top-progress .prog-track{width:220px;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
-.top-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
-.lesson{display:none;padding:28px 24px 40px;max-width:880px;margin:0 auto;}
-.lesson.active{display:block;}
-.back-link{display:inline-block;font-size:13.5px;color:var(--orange-dark);text-decoration:none;font-weight:700;margin-bottom:14px;}
-.back-link:hover{text-decoration:underline;}
-.header{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--orange);padding-bottom:14px;margin-bottom:14px;flex-wrap:wrap;}
-.header .logo-icon{font-size:48px;}
-.header .school{font-size:24px;font-weight:800;color:var(--orange-dark);}
-.header .subtitle{font-size:13px;font-style:italic;color:#666;margin-top:2px;}
-.info-bar{display:flex;gap:24px;flex-wrap:wrap;border-bottom:2px solid var(--orange);padding-bottom:14px;margin-bottom:22px;font-size:13.5px;}
-.info-bar label{display:flex;align-items:center;gap:6px;font-weight:600;color:#555;}
-.info-bar input[type=text],.info-bar input[type=date]{border:none;border-bottom:1px solid #999;background:transparent;padding:3px 2px;font-size:13.5px;min-width:150px;font-family:inherit;}
-.info-bar input:focus{outline:none;border-bottom:2px solid var(--orange);}
-h1.title{text-align:center;color:var(--orange-dark);font-size:27px;margin:6px 0 2px 0;}
-.level{text-align:center;font-style:italic;color:#666;font-size:13px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #eee;}
-.level-badge{display:inline-block;background:var(--orange);color:#fff;font-size:12px;font-weight:700;padding:3px 12px;border-radius:20px;font-style:normal;letter-spacing:.3px;}
-.section-title,.section-header{background:var(--orange);color:#fff;font-weight:700;font-size:14.5px;padding:8px 14px;border-radius:5px;margin:28px 0 10px 0;}
-.subheading{font-weight:700;font-size:13.5px;margin:14px 0 6px 0;color:var(--orange-dark);}
-p{margin:8px 0;font-size:14px;}
-.tip{background:var(--cream);border:1px solid var(--border);padding:10px 14px;font-size:13.5px;margin:10px 0;border-radius:6px;}
-.tip::before{content:"💡 ";}
-table{width:100%;border-collapse:collapse;margin:8px 0 18px 0;font-size:13.5px;}
-th{background:var(--orange);color:#fff;text-align:left;padding:8px 12px;}
-td{padding:8px 12px;border-bottom:1px solid #eee;}
-tr:nth-child(even) td{background:var(--cream-2);}
-.example{font-style:italic;color:#555;font-size:13.5px;margin:6px 0 18px 0;padding-left:12px;border-left:3px solid var(--border);}
-.dialog-box,.dialogue-box{background:var(--cream);padding:14px 16px;border-radius:8px;margin:8px 0;}
-.dialogue-box{background:var(--cream-2);border-left:4px solid var(--orange);border-radius:0 6px 6px 0;}
-.dialog-box p,.dialogue-box p{margin:4px 0;font-size:14px;}
-.body-text{margin:4px 0;line-height:1.65;color:var(--ink);font-size:14px;}
-.instruction{margin:6px 0;padding:8px 14px;background:var(--cream);border-left:4px solid var(--orange);border-radius:0 4px 4px 0;color:var(--ink);font-size:13.5px;}
-.numbered-item{margin:8px 0 4px 16px;padding:4px 0;font-size:14px;font-weight:700;color:var(--orange-dark);}
-.letter-item{margin:10px 0 6px 0;padding:4px 0;font-weight:700;font-size:14px;color:var(--orange-dark);}
-.example-line{margin:3px 0 3px 24px;font-style:italic;color:#555;font-size:13.5px;}
-.fill-blank{margin:4px 0 4px 24px;font-size:14px;color:var(--ink);}
-.check-item{margin:4px 0;padding:4px 0;font-size:14px;}
-.gabarito-box{background:#F0FFF0;border:1px solid #4CAF50;border-left:5px solid #4CAF50;border-radius:0 6px 6px 0;padding:16px 20px;margin:18px 0;display:none;}
-.gabarito-box.show{display:block;}
-.gabarito-title{font-weight:700;font-size:14px;color:#2E7D32;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
-.gabarito-line{margin:3px 0;font-size:13px;color:#333;}
-.ex-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.03);}
-.ex-intro{font-style:italic;color:#666;font-size:13.5px;margin:0 0 12px 0;}
-.fill-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 30px;}
-.fill-item{display:flex;align-items:center;gap:8px;font-size:14px;flex-wrap:wrap;}
-.fill-item input[type=text]{width:80px;padding:5px 8px;border:2px solid #ddd;border-radius:5px;font-size:14px;font-family:inherit;text-align:center;transition:border-color .15s,background .15s;}
-.fill-item input[type=text].longer{width:200px;text-align:left;}
-.fill-item input:focus{outline:none;border-color:var(--orange);}
-.fill-item input.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
-.fill-item input.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
-.mc-item{margin:14px 0;font-size:14px;}
-.mc-item .q{font-weight:700;margin-bottom:6px;}
-.mc-options{display:flex;gap:10px;flex-wrap:wrap;}
-.mc-options label{display:flex;align-items:center;gap:6px;border:2px solid #ddd;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:13.5px;transition:border-color .15s,background .15s;}
-.mc-options label:hover{border-color:var(--orange);}
-.mc-options label.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
-.mc-options label.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
-.mc-options input{accent-color:var(--orange);}
-.btn{background:var(--orange);color:#fff;border:none;padding:11px 22px;border-radius:7px;font-size:14.5px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;}
-.btn:hover{background:var(--orange-dark);}
-.btn:active{transform:scale(.98);}
-.btn.secondary{background:#fff;color:var(--orange-dark);border:2px solid var(--orange);padding:9px 20px;}
-.btn.secondary:hover{background:var(--cream);}
-.score-badge{display:inline-block;margin-left:14px;font-weight:700;font-size:14.5px;padding:6px 14px;border-radius:20px;background:var(--cream-2);color:var(--orange-dark);}
-.actions{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
-.note-italic{font-size:12px;font-style:italic;color:#777;margin-top:10px;}
-textarea{width:100%;font-family:inherit;font-size:14px;padding:8px 10px;border:2px solid #ddd;border-radius:6px;resize:vertical;min-height:80px;}
-textarea:focus{outline:none;border-color:var(--orange);}
-.footer-note{text-align:center;font-size:11.5px;color:#aaa;margin-top:40px;}
-.vocab-card{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid #eee;border-radius:8px;padding:8px 14px;margin:4px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
-.vocab-card:hover{border-color:var(--orange);}
-.vocab-card .vc-en{font-weight:700;font-size:14px;}
-.vocab-card .vc-pt{font-size:13px;color:var(--ok);display:none;}
-.vocab-card.revealed .vc-pt{display:inline;}
-.vocab-card.revealed{border-color:var(--ok);background:#EAF7EF;}
-.collapse-btn{width:100%;text-align:left;background:var(--cream);border:1px solid var(--border);padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;color:var(--orange-dark);margin:8px 0 0 0;display:flex;align-items:center;gap:8px;}
-.collapse-btn:hover{background:var(--cream-2);}
-.collapse-btn .arrow{transition:transform .2s;font-size:12px;}
-.collapse-btn.open .arrow{transform:rotate(90deg);}
-.collapse-body{display:none;padding:12px 0 4px 0;}
-.collapse-body.open{display:block;}
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;box-shadow:0 -2px 8px rgba(0,0,0,.04);z-index:80;padding:6px 0 env(safe-area-inset-bottom,6px);}
-.bottom-nav-inner{display:flex;max-width:480px;margin:0 auto;}
-.bottom-nav .bnav-btn{flex:1;border:none;background:none;padding:10px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:#999;cursor:pointer;font-weight:600;}
-.bottom-nav .bnav-btn .bnav-icon{font-size:20px;}
-.bottom-nav .bnav-btn.active{color:var(--orange-dark);font-weight:700;}
-.bottom-nav .bnav-btn:disabled{color:#ddd;cursor:default;}
-@media(max-width:768px){
-  .sidebar{transform:translateX(-100%);width:280px;}
-  .sidebar.open{transform:translateX(0);}
-  .sidebar-close{display:block;}
-  .sidebar-overlay.open{display:block;}
-  .hamburger{display:flex;align-items:center;justify-content:center;}
-  .main{margin-left:0;}
-  .lesson{padding:20px 16px 120px;}
-  .bottom-nav{display:block;}
-  .fill-grid{grid-template-columns:1fr;}
-  .top-progress{padding-left:56px;}
-}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-.lesson.active{animation:fadeIn .3s ease;}
-</style>
-</style>
-</head>
-<body>
-<div class="wrap" style="max-width:880px;margin:0 auto;padding:28px 20px;">
-<a class="back-link" href="../index.html">&larr; Voltar às Lições</a>
-<div class="header"><span class="logo-icon">🐱</span><div><div class="school">Bobcat Language School</div><div class="subtitle">Aprenda inglês no seu ritmo</div></div></div>
-<div class="info-bar"><label>👤 Aluno: <input type="text" placeholder="Seu nome"></label><label>📅 Data: <input type="date"></label></div>
-<h1 class="title">LIÇÃO 31 — Past Continuous</h1>
-<div class="level"><span class="level-badge">Nível A2</span></div>
-<div class="section-header">🎯 Objetivo da Lição</div>
-<p class="body-text">• Aprender a formar e usar o <strong>Past Continuous</strong> (was/were + verbo-ing).</p>
-<p class="body-text">• Descrever <strong>ações em progresso</strong> em um momento específico do passado.</p>
-<p class="body-text">• Usar <strong>when</strong> e <strong>while</strong> para conectar ações e contar histórias.</p>
-
-<div class="section-header">🔥 Warm-Up: O que estava acontecendo?</div>
-<p class="instruction">Pense em ontem às 20h. O que você estava fazendo? Em inglês, para descrever uma ação "em andamento" no passado, usamos o <strong>Past Continuous</strong>. Compare:</p>
-<p class="example-line">Simple Past: I watched a movie. (ação completa)</p>
-<p class="example-line">Past Continuous: I was watching a movie. (ação em progresso, sem foco no início/fim)</p>
-<div class="dialogue-box"><p>💡 Dica: Past Continuous = <strong>was/were + verbo-ing</strong>. É o "estava fazendo" em português!</p></div>
-
-<div class="section-header">🗣️ Diálogo: Last Night</div>
-<div class="dialogue-box">
-  <p><strong>Lucas:</strong> What were you doing at 9 p.m. last night? I called you three times!</p>
-  <p><strong>Ana:</strong> Sorry! I was taking a shower when you called the first time.</p>
-  <p><strong>Lucas:</strong> And the second time?</p>
-  <p><strong>Ana:</strong> I was cooking dinner. I couldn't hear the phone.</p>
-  <p><strong>Lucas:</strong> What about 9:30? I called again.</p>
-  <p><strong>Ana:</strong> Oh, I was sleeping already! I was really tired.</p>
-  <p><strong>Lucas:</strong> Ha! While you were sleeping, I was studying for my English test.</p>
-  <p><strong>Ana:</strong> Good luck with that! What were the other students doing?</p>
-  <p><strong>Lucas:</strong> Some were reviewing grammar, others were chatting in the group.</p>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Lição 31 — Past Continuous</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson-kit.css">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+</head><body>
+<div class="hud" id="hud">
+  <div class="hud-left"><span>🐾 Bobcat</span>
+    <div class="xp-track"><div class="xp-fill" id="xpBar"></div></div>
+    <span id="xpLabel" style="font-weight:700;color:var(--orange-dark)">0 XP</span>
+  </div>
+  <div class="hud-right">
+    <span class="pill" id="levelPill">⭐ Nível 1</span>
+    <span class="pill" id="starsPill">🏆 0 estrelas</span>
+  </div>
 </div>
-<div class="instruction">🔁 Repita com atenção: Leia o diálogo em voz alta. Sublinhe todos os verbos no Past Continuous!</div>
-
-<div class="section-header">📖 Vocabulário-Chave: Everyday Actions</div>
-<table>
-  <tr><th>Verbo</th><th>Tradução</th><th>-ing form</th></tr>
-  <tr><td><strong>sleep</strong></td><td>dormir</td><td>sleeping</td></tr>
-  <tr><td><strong>cook</strong></td><td>cozinhar</td><td>cooking</td></tr>
-  <tr><td><strong>study</strong></td><td>estudar</td><td>studying</td></tr>
-  <tr><td><strong>drive</strong></td><td>dirigir</td><td>driving</td></tr>
-  <tr><td><strong>work</strong></td><td>trabalhar</td><td>working</td></tr>
-  <tr><td><strong>talk</strong></td><td>conversar</td><td>talking</td></tr>
-  <tr><td><strong>rain</strong></td><td>chover</td><td>raining</td></tr>
-  <tr><td><strong>run</strong></td><td>correr</td><td>running</td></tr>
-</table>
-
-<div class="section-header">📘 Gramática em Ação: Past Continuous</div>
-
-<div class="numbered-item">1. Formação</div>
-<p class="body-text"><strong>Afirmativa:</strong> subject + was/were + verb-ing</p>
-<p class="example-line">I/He/She/It <strong>was</strong> working. | You/We/They <strong>were</strong> working.</p>
-<p class="body-text"><strong>Negativa:</strong> subject + was/were + not + verb-ing</p>
-<p class="example-line">She wasn't sleeping. | They weren't listening.</p>
-<p class="body-text"><strong>Interrogativa:</strong> Was/Were + subject + verb-ing?</p>
-<p class="example-line">Were you studying? Yes, I was. / No, I wasn't.</p>
-
-<div class="numbered-item">2. Regras de ortografia do -ing</div>
-<table>
-  <tr><th>Regra</th><th>Exemplo</th></tr>
-  <tr><td>Verbo termina em -e muda: tira o -e</td><td>make → making</td></tr>
-  <tr><td>Verbo curto CVC (consoante-vogal-consoante): dobra a última letra</td><td>run → running, sit → sitting</td></tr>
-  <tr><td>Regra geral: apenas adiciona -ing</td><td>study → studying, cook → cooking</td></tr>
-</table>
-
-<div class="numbered-item">3. Quando usar</div>
-<p class="body-text">Usamos o Past Continuous para:</p>
-<p class="example-line">a) Ação em progresso em um momento específico: At 9 p.m., I was watching TV.</p>
-<p class="example-line">b) Duas ações acontecendo ao mesmo tempo (with while): While I was cooking, she was cleaning.</p>
-<p class="example-line">c) Uma ação interrompida por outra (with when): I was sleeping when you called.</p>
-<div class="tip">Dica prática: A ação MAIS LONGA (em progresso) usa Past Continuous. A ação CURTA que interrompe usa Simple Past. "I was sleeping (longa) when the phone rang (curta)."</div>
-
-<div class="numbered-item">4. When vs While</div>
-<p class="body-text"><strong>When</strong> geralmente introduz a ação curta (Simple Past). <strong>While</strong> geralmente introduz a ação longa (Past Continuous).</p>
-<p class="example-line">While I was walking home, it started to rain.</p>
-<p class="example-line">I was walking home when it started to rain.</p>
-
-<div class="section-header">📝 Exercícios</div>
-
-<div class="letter-item">A. Complete com o Past Continuous do verbo entre parênteses.</div>
-<div class="ex-card">
-  <div class="fill-grid">
-    <div class="fill-item">I <input type="text" data-answer="was sleeping" placeholder="?"> (sleep) at midnight.</div>
-    <div class="fill-item">They <input type="text" data-answer="were watching" placeholder="?"> (watch) a movie.</div>
-    <div class="fill-item">She <input type="text" data-answer="was cooking" placeholder="?"> (cook) dinner.</div>
-    <div class="fill-item">We <input type="text" data-answer="were studying" placeholder="?"> (study) English.</div>
-    <div class="fill-item">It <input type="text" data-answer="was raining" placeholder="?"> (rain) all afternoon.</div>
+<header class="hero" id="hero" style="background:linear-gradient(180deg,rgba(43,27,18,0) 40%,rgba(43,27,18,.78) 100%),url('https://images.pexels.com/photos/4145153/pexels-photo-4145153.jpeg?auto=compress&cs=tinysrgb&w=1200') center/cover no-repeat">
+  <div class="wrap hero-inner">
+    <a class="back-link" href="../index.html" style="color:#fff;opacity:.9">← Voltar ao app</a>
+    <span class="badge">🐾 Bobcat · A2</span>
+    <h1>Past Continuous</h1>
+    <p class="lede">was/were + -ing · when e while.</p>
+    <div class="hero-cta"><a href="#objetivos" class="btn">Começar →</a></div>
   </div>
-  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</header>
+<div class="wrap" style="min-height:100vh;display:flex;flex-direction:column">
+
+<section class="section" id="objetivos">
+  <div class="section-head reveal"><span class="sec-num">1</span><div><h2 class="sec-title">🎯 Objetivos</h2><p class="sec-sub">Past Continuous — was/were + -ing</p></div></div>
+  <div class="grid-3 reveal">
+    <div class="card obj-card"><span class="ic">🎬</span><h3>Em progresso</h3><p>I was watching TV</p></div>
+    <div class="card obj-card"><span class="ic">⏰</span><h3>when / while</h3><p>Conectar ações</p></div>
+    <div class="card obj-card"><span class="ic">❓</span><h3>Perguntas</h3><p>What were you doing?</p></div>
+  </div>
+</section>
+<section class="section" id="dialogue">
+  <div class="section-head reveal"><span class="sec-num">2</span><div><h2 class="sec-title">🎧 Diálogo</h2></div></div>
+  <div class="chat reveal">
+    <div class="bubble-row"><span class="miniav anna">L</span><div class="bubble anna"><span class="who">Lucas</span>What were you doing at 9 p.m.? <button class="audio-btn" onclick="speak(this,'What were you doing at 9 p.m.?')">🔊</button></div></div>
+    <div class="bubble-row right"><span class="miniav tom">A</span><div class="bubble tom"><span class="who">Ana</span>I was taking a shower when you called. <button class="audio-btn" onclick="speak(this,'I was taking a shower when you called.')">🔊</button></div></div>
+    <div class="bubble-row"><span class="miniav anna">L</span><div class="bubble anna"><span class="who">Lucas</span>While you were sleeping, I was studying. <button class="audio-btn" onclick="speak(this,'While you were sleeping, I was studying.')">🔊</button></div></div>
+  </div>
+  <div class="card reveal" style="margin-top:12px">
+    <div class="struct-example">I/he/she/it <b>was</b> + -ing · you/we/they <b>were</b> + -ing</div>
+  </div>
+</section>
+<section class="section" id="exercises">
+  <div class="section-head reveal"><span class="sec-num">3</span><div><h2 class="sec-title">🎮 Exercícios</h2></div></div>
+<div class="game-wrap reveal"><div class="game-title"><h3>Parte 1 — was / were</h3></div><div id="p1"></div>
+    <div class="game-actions"><button class="btn sm" onclick="checkP1()">✨ Verificar</button><span class="score-badge" id="s1">0/?</span></div></div><div class="game-wrap reveal"><div class="game-title"><h3>Parte 2 — Forma -ing</h3></div><div id="p2"></div>
+    <div class="game-actions"><button class="btn sm" onclick="checkP2()">✨ Verificar</button><span class="score-badge" id="s2">0/?</span></div></div><div class="game-wrap reveal"><div class="game-title"><h3>Parte 3 — when / while</h3></div><div id="p3"></div>
+    <div class="game-actions"><button class="btn sm" onclick="checkP3()">✨ Verificar</button><span class="score-badge" id="s3">0/?</span></div></div>
+</section>
+
+<section class="section" id="homework" style="background:linear-gradient(180deg,var(--cream-3),#fff)">
+  <div class="section-head reveal"><span class="sec-num">✓</span>
+    <div><h2 class="sec-title">🏁 Finalizar</h2><p class="sec-sub">Mínimo 85% para concluir.</p></div>
+  </div>
+  <div class="game-actions reveal" style="justify-content:center">
+    <button class="btn" onclick="finishLesson()">✅ Finalizar e Salvar Progresso</button>
+  </div>
+  <div id="finishMessage" style="display:none;margin-top:12px;text-align:center;font-size:13.5px;font-weight:600"></div>
+  <div id="finishMsg" style="display:none"></div>
+</section>
 </div>
-
-<div class="letter-item">B. Escolha a opção correta.</div>
-<div class="ex-card">
-  <div class="mc-item">
-    <div class="q">I ___ TV when you called.</div>
-    <div class="mc-options">
-      <label><input type="radio" name="l31mc1" value="a" class="correct-answer"> was watching</label>
-      <label><input type="radio" name="l31mc1" value="b"> watched</label>
-      <label><input type="radio" name="l31mc1" value="c"> watch</label>
-    </div>
-  </div>
-  <div class="mc-item">
-    <div class="q">While she ___ dinner, the phone rang.</div>
-    <div class="mc-options">
-      <label><input type="radio" name="l31mc2" value="a"> cooks</label>
-      <label><input type="radio" name="l31mc2" value="b" class="correct-answer"> was cooking</label>
-      <label><input type="radio" name="l31mc2" value="c"> cooked</label>
-    </div>
-  </div>
-  <div class="mc-item">
-    <div class="q">___ you sleeping at 10 p.m.?</div>
-    <div class="mc-options">
-      <label><input type="radio" name="l31mc3" value="a" class="correct-answer"> Were</label>
-      <label><input type="radio" name="l31mc3" value="b"> Was</label>
-      <label><input type="radio" name="l31mc3" value="c"> Did</label>
-    </div>
-  </div>
-  <div class="mc-item">
-    <div class="q">They weren't ___ when I arrived.</div>
-    <div class="mc-options">
-      <label><input type="radio" name="l31mc4" value="a"> works</label>
-      <label><input type="radio" name="l31mc4" value="b" class="correct-answer"> working</label>
-      <label><input type="radio" name="l31mc4" value="c"> worked</label>
-    </div>
-  </div>
-  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
-</div>
-
-<div class="letter-item">C. Combine as ações usando when/while.</div>
-<div class="ex-card">
-  <div class="fill-grid">
-    <div class="fill-item input-long">1. (I / drive / see an accident) → <input type="text" class="longer" data-answer="I was driving when I saw an accident" placeholder="..."></div>
-    <div class="fill-item input-long">2. (they / talk / I / arrive) → <input type="text" class="longer" data-answer="They were talking when I arrived" placeholder="..."></div>
-    <div class="fill-item input-long">3. (while / study / mother / call) → <input type="text" class="longer" data-answer="While I was studying, my mother called" placeholder="..."></div>
-  </div>
-  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
-</div>
-
-<div class="letter-item">D. Verdadeiro ou Falso?</div>
-<div class="ex-card">
-  <div class="mc-item">
-    <div class="q">"Run" no -ing fica "runing".</div>
-    <div class="mc-options">
-      <label><input type="radio" name="l31tf1" value="True"> V</label>
-      <label><input type="radio" name="l31tf1" value="False" class="correct-answer"> F</label>
-    </div>
-  </div>
-  <div class="mc-item">
-    <div class="q">"While" geralmente introduz a ação mais longa.</div>
-    <div class="mc-options">
-      <label><input type="radio" name="l31tf2" value="True" class="correct-answer"> V</label>
-      <label><input type="radio" name="l31tf2" value="False"> F</label>
-    </div>
-  </div>
-  <div class="mc-item">
-    <div class="q">Past Continuous usa "did" na pergunta.</div>
-    <div class="mc-options">
-      <label><input type="radio" name="l31tf3" value="True"> V</label>
-      <label><input type="radio" name="l31tf3" value="False" class="correct-answer"> F</label>
-    </div>
-  </div>
-  <div class="mc-item">
-    <div class="q">"She was sleeping" significa "ela estava dormindo".</div>
-    <div class="mc-options">
-      <label><input type="radio" name="l31tf4" value="True" class="correct-answer"> V</label>
-      <label><input type="radio" name="l31tf4" value="False"> F</label>
-    </div>
-  </div>
-  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
-</div>
-
-<div class="section-header">🎭 Prática Oral / Role-Play</div>
-<div class="dialogue-box">
-  <p><strong>A:</strong> What were you doing at 8 p.m. yesterday?</p>
-  <p><strong>B:</strong> I was having dinner with my family. What about you?</p>
-  <p><strong>A:</strong> I was working. I was writing an important e-mail when my computer crashed!</p>
-  <p><strong>B:</strong> Oh no! What did you do?</p>
-  <p><strong>A:</strong> I called my colleague while I was trying to fix it.</p>
-</div>
-
-<div class="section-header">👅 Trava-língua</div>
-<div class="dialogue-box"><p><strong>While Wendy was walking, William was watching Wendy walking.</strong></p><p>🔁 Repita 3x rápido, sem parar!</p></div>
-
-<div class="section-header">🌍 Curiosidade Cultural: Storytelling in English</div>
-<p class="body-text">O Past Continuous é essencial para <strong>contar histórias</strong> em inglês! Filmes, livros e até piadas frequentemente começam com uma cena em progresso: "Once upon a time, a girl was walking through the forest..." Isso cria um "cenário" antes da ação principal acontecer — assim como em português usamos o pretérito imperfeito ("estava caminhando").</p>
-
-<div class="section-header">🎨 Atividade Criativa: My Yesterday at 9 p.m.</div>
-<p class="instruction">Escreva 5 frases descrevendo o que diferentes pessoas da sua família estavam fazendo ontem às 21h.</p>
-<p class="example-line">At 9 p.m. yesterday, my mother was watching TV, my brother was playing video games...</p>
-<textarea rows="6" placeholder="Escreva aqui..."></textarea>
-
-<div class="section-header">🧠 Desafio Extra</div>
-<p class="fill-blank">1. Traduza: "Eu estava trabalhando quando você ligou." → ____________________</p>
-<p class="fill-blank">2. Corrija: "She was sleep." → ____________________</p>
-<p class="fill-blank">3. Complete: While I ___ (read), my dog ___ (bark). → ____________________</p>
-<p class="fill-blank">4. Qual verbo dobra a consoante no -ing: "stop" ou "cook"? → ____________________</p>
-<p class="fill-blank">5. Escreva uma frase com "when" no Past Continuous: ____________________</p>
-
-<div class="section-header">🔁 Revisão</div>
-<p class="check-item">✅ Sei formar o Past Continuous (was/were + verbo-ing).</p>
-<p class="check-item">✅ Sei diferenciar quando usar Simple Past e Past Continuous juntos.</p>
-<p class="check-item">✅ Sei usar when/while para conectar ações no passado.</p>
-<p class="check-item">✅ Sei aplicar as regras de ortografia do -ing.</p>
-
-<div class="section-header">🏠 Tarefa de Casa</div>
-<p class="body-text">1. Escreva um pequeno parágrafo (5-6 frases) contando o que você estava fazendo ontem em três momentos diferentes do dia.</p>
-<p class="body-text">2. Crie 5 frases usando when/while + Past Continuous + Simple Past.</p>
-<p class="body-text">3. Pratique o trava-língua até conseguir falar sem errar.</p>
-<textarea rows="8" placeholder="Yesterday... Escreva aqui..."></textarea>
-
-<button class="btn secondary" onclick="this.nextElementSibling.classList.toggle('show')">📋 Ver Gabarito</button>
-<div class="gabarito-box">
-  <div class="gabarito-title">✅ Gabarito — Lição 31</div>
-  <p class="gabarito-line"><strong>A.</strong> was sleeping | were watching | was cooking | were studying | was raining</p>
-  <p class="gabarito-line"><strong>B.</strong> was watching | was cooking | Were | working</p>
-  <p class="gabarito-line"><strong>C.</strong> I was driving when I saw an accident. | They were talking when I arrived. | While I was studying, my mother called.</p>
-  <p class="gabarito-line"><strong>D.</strong> F (running) | V | F (usa was/were) | V</p>
-  <p class="gabarito-line"><strong>Desafio:</strong> I was working when you called. | She was sleeping. | was reading / was barking | stop (dobra); cook não dobra. | I was cooking when the phone rang.</p>
-</div>
-
-<div class="section-header">🏁 Conclusão</div>
-<p class="body-text">🎉 Muito bem! Agora você sabe descrever ações em progresso no passado e contar histórias com mais naturalidade! Na próxima lição vamos aprofundar o uso combinado de <strong>Simple Past e Past Continuous</strong>. See you in Lesson 32! 👋</p>
-
-<div class="actions" style="margin-top:24px;">
-  <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
-  <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
-</div>
-<p class="completion-note" style="font-size:12px;font-style:italic;color:#777;margin-top:10px;">Responda os exercícios (preenchimento e múltipla escolha) e clique em "Finalizar" para conferir sua nota. É preciso pelo menos 85% de acerto para concluir a lição.</p>
-<div class="footer-note">Bobcat Language School • Lição 31 — Past Continuous</div>
-
-</div>
+<footer class="footer">
+  <div class="school">🐾 Bobcat Language School</div>
+  <p style="margin:5px 0 0">Lição 31 — Past Continuous</p>
+  <p style="margin:2px 0 0;font-size:11px;opacity:.6">Fotos: Pexels · Design interativo inspirado em Genially</p>
+</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="lesson-kit.js"></script>
 <script>
-const LESSON_ID = 'licao-31-past-continuous';
-let finishing = false;
-
-async function prefillFromProfile() {
-  await initDataLayer();
-  const profile = await getProfile();
-  if (profile && profile.name) {
-    const nameInput = document.querySelector('.info-bar input[type=text]');
-    if (nameInput && !nameInput.value) nameInput.value = profile.name;
-  }
-  const today = new Date().toISOString().slice(0, 10);
-  const dateInput = document.querySelector('.info-bar input[type=date]');
-  if (dateInput && !dateInput.value) dateInput.value = today;
-}
-document.addEventListener('DOMContentLoaded', prefillFromProfile);
-
-function checkFills(btn) {
-  const card = btn.closest('.ex-card');
-  const inputs = card.querySelectorAll('.fill-item input[type=text]');
-  let correct = 0, total = 0;
-  inputs.forEach(inp => {
-    total++;
-    const answer = (inp.dataset.answer || '').trim().toLowerCase();
-    const val = inp.value.trim().toLowerCase();
-    const cleanVal = val.replace(/[.?!,]/g, '');
-    const cleanAnswer = answer.replace(/[.?!,]/g, '');
-    inp.classList.remove('correct', 'incorrect');
-    if (cleanVal === cleanAnswer) { inp.classList.add('correct'); correct++; }
-    else { inp.classList.add('incorrect'); }
-  });
-  const existing = card.querySelector('.score-badge');
-  if (existing) existing.remove();
-  const badge = document.createElement('span');
-  badge.className = 'score-badge';
-  badge.textContent = correct + '/' + total + ' ✅';
-  btn.parentElement.appendChild(badge);
+const LESSON_ID='licao-31-past-continuous'; const TOTAL_Q=12;
+var SCORE={correct:0,total:TOTAL_Q};
+function addXP(n){if(window.BobcatLesson)BobcatLesson.addXP(n)}
+function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[.,!?']/g,'').replace(/\s+/g,' ').trim()}
+async function finishLesson(){
+  var msg=document.getElementById('finishMessage');
+  if(msg){msg.style.display='block';msg.style.color='#888';msg.textContent='Salvando progresso...'}
+  if(window.BobcatLesson) await BobcatLesson.finishLesson(SCORE.correct,SCORE.total,'correct');
+  else if(typeof handleLessonFinish==='function') await handleLessonFinish(LESSON_ID,SCORE.correct,SCORE.total,'correct');
 }
 
-function checkMC(btn) {
-  const card = btn.closest('.ex-card');
-  const items = card.querySelectorAll('.mc-item');
-  let correct = 0, total = 0;
-  items.forEach(item => {
-    const options = item.querySelectorAll('.mc-options label');
-    const selected = item.querySelector('input[type=radio]:checked');
-    options.forEach(l => l.classList.remove('correct', 'incorrect'));
-    if (!selected) return;
-    total++;
-    const correctRadio = item.querySelector('input.correct-answer');
-    if (selected === correctRadio) { selected.parentElement.classList.add('correct'); correct++; }
-    else { selected.parentElement.classList.add('incorrect'); if (correctRadio) correctRadio.parentElement.classList.add('correct'); }
-  });
-  const existing = card.querySelector('.score-badge');
-  if (existing) existing.remove();
-  if (total > 0) {
-    const badge = document.createElement('span');
-    badge.className = 'score-badge';
-    badge.textContent = correct + '/' + total + ' ✅';
-    btn.parentElement.appendChild(badge);
-  }
-}
+function mkFill(list,id){var el=document.getElementById(id);el.innerHTML='';list.forEach(function(item,i){var row=document.createElement('div');row.className='fill-row';var p=item.s.split('___');row.innerHTML='<span>'+p[0]+'</span><input class="practice-input" id="'+id+'_'+i+'" style="max-width:140px"><span>'+(p[1]||'')+'</span>';el.appendChild(row)})}
+function mkMC(list,id){var el=document.getElementById(id);el.innerHTML='';list.forEach(function(item,i){var box=document.createElement('div');box.style.marginBottom='12px';box.innerHTML='<b>'+item.q+'</b>';var opts=document.createElement('div');opts.className='mc-options';item.opts.forEach(function(o,j){var lab=document.createElement('label');lab.innerHTML='<input type="radio" name="'+id+'_'+i+'" value="'+j+'"> '+o;opts.appendChild(lab)});box.appendChild(opts);el.appendChild(box)})}
+function chkFill(list,id,si,tot){var c=0;list.forEach(function(item,i){var inp=document.getElementById(id+'_'+i);var v=norm(inp.value);var ans=Array.isArray(item.a)?item.a:[item.a];var ok=ans.some(function(a){return norm(a)===v});inp.className='practice-input '+(ok?'correct':'incorrect');if(ok)c++});partScore[si]=c;document.getElementById('s'+(si+1)).textContent=c+'/'+tot;addXP(c*12);recalc()}
+function chkMC(list,id,si,tot){var c=0;list.forEach(function(item,i){var sel=document.querySelector('input[name="'+id+'_'+i+'"]:checked');document.querySelectorAll('input[name="'+id+'_'+i+'"]').forEach(function(r){r.parentElement.classList.remove('correct','incorrect')});if(sel){var ok=parseInt(sel.value,10)===item.a;sel.parentElement.classList.add(ok?'correct':'incorrect');if(ok)c++;document.querySelectorAll('input[name="'+id+'_'+i+'"]').forEach(function(r){if(parseInt(r.value,10)===item.a)r.parentElement.classList.add('correct')})}});partScore[si]=c;document.getElementById('s'+(si+1)).textContent=c+'/'+tot;addXP(c*12);recalc()}
+function recalc(){SCORE.correct=partScore.reduce(function(a,b){return a+b},0);if(SCORE.correct>=Math.ceil(SCORE.total*0.85)&&window.BobcatLesson)BobcatLesson.fireConfetti()}
 
-function toggleCollapse(btn) {
-  btn.classList.toggle('open');
-  const body = btn.nextElementSibling;
-  body.classList.toggle('open');
-}
+var P1=[{s:'I ___ watching TV at 8.',a:['was']},{s:'They ___ playing soccer.',a:['were']},{s:'She ___ cooking dinner.',a:['was']},{s:'___ you studying?',a:['were']}];
+var P2=[{s:'I was ___ (read) a book.',a:['reading']},{s:'He was ___ (run) in the park.',a:['running']},{s:'We were ___ (swim).',a:['swimming']},{s:'She was ___ (write) an email.',a:['writing']}];
+var P3=[{q:'I was sleeping ___ the phone rang.',opts:['when','while','during'],a:0},{q:'___ she was cooking, I was setting the table.',opts:['When','While','Did'],a:1},{q:'What ___ you doing at 10?',opts:['was','were','are'],a:1},{q:'He ___ not listening.',opts:['was','were','is'],a:0}];
+var partScore=[0,0,0]; SCORE.total=12;
+function checkP1(){chkFill(P1,'p1',0,4)} function checkP2(){chkFill(P2,'p2',1,4)} function checkP3(){chkMC(P3,'p3',2,4)}
+mkFill(P1,'p1');mkFill(P2,'p2');mkMC(P3,'p3');
 
-async function finishLesson() {
-  if (finishing) return;
-  finishing = true;
-
-  let correct = 0, total = 0;
-  document.querySelectorAll('input[data-answer]').forEach(inp => {
-    total++;
-    const answer = (inp.dataset.answer || '').trim().toLowerCase();
-    const val = inp.value.trim().toLowerCase();
-    const cleanVal = val.replace(/[.?!,]/g, '');
-    const cleanAnswer = answer.replace(/[.?!,]/g, '');
-    if (cleanVal === cleanAnswer) correct++;
-  });
-  document.querySelectorAll('.mc-item').forEach(item => {
-    total++;
-    const selected = item.querySelector('input[type=radio]:checked');
-    if (!selected) return;
-    const correctRadio = item.querySelector('input.correct-answer');
-    if (selected === correctRadio) correct++;
-  });
-
-  const safeTotal = total || 1;
-  const passed = await handleLessonFinish(LESSON_ID, correct, safeTotal, 'correct');
-  if (!passed) finishing = false;
-}
+if(window.BobcatLesson) BobcatLesson.init({lessonId:LESSON_ID,totalQuestions:TOTAL_Q});
 </script>
-
-</body>
-</html>
+</body></html>

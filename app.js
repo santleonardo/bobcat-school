@@ -442,7 +442,7 @@ const LESSONS = [
     icon: '✅',
     description: 'Introdução ao Present Perfect: have/has + particípio',
     url: 'lessons/licao-27-present-perfect.html',
-    totalQuestions: 17 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-28-modal-verbs',
@@ -451,7 +451,7 @@ const LESSONS = [
     icon: '🔑',
     description: 'Can, could, must, should e outros verbos modais',
     url: 'lessons/licao-28-modal-verbs.html',
-    totalQuestions: 17 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-29-phrasal-verbs',
@@ -460,7 +460,7 @@ const LESSONS = [
     icon: '🧩',
     description: 'Phrasal verbs mais usados no inglês do dia a dia',
     url: 'lessons/licao-29-phrasal-verbs.html',
-    totalQuestions: 17 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-30-revisao-semestre-2',
@@ -469,7 +469,7 @@ const LESSONS = [
     icon: '🎓',
     description: 'Revisão completa de todo o conteúdo do Semestre 2',
     url: 'lessons/licao-30-revisao-semestre-2.html',
-    totalQuestions: 50 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-31-past-continuous',
@@ -478,7 +478,7 @@ const LESSONS = [
     icon: '⏳',
     description: 'Ações em progresso no passado: was/were + verbo-ing',
     url: 'lessons/licao-31-past-continuous.html',
-    totalQuestions: 16 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-32-simple-past-past-continuous',
@@ -487,7 +487,7 @@ const LESSONS = [
     icon: '🔀',
     description: 'Combinando ações simultâneas e interrompidas ao contar histórias',
     url: 'lessons/licao-32-simple-past-past-continuous.html',
-    totalQuestions: 16 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-33-present-perfect-experiences',
