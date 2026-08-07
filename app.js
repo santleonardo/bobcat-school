@@ -496,7 +496,7 @@ const LESSONS = [
     icon: '🌍',
     description: 'Falando sobre experiências de vida com ever, never, before',
     url: 'lessons/licao-33-present-perfect-experiences.html',
-    totalQuestions: 15 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-34-present-perfect-simple-past',
@@ -505,7 +505,7 @@ const LESSONS = [
     icon: '⚖️',
     description: 'Quando usar cada tempo verbal: since, for, last, ago',
     url: 'lessons/licao-34-present-perfect-simple-past.html',
-    totalQuestions: 15 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-35-present-perfect-already-yet-just',
@@ -514,7 +514,7 @@ const LESSONS = [
     icon: '✅',
     description: 'Already, yet, just, still, recently e lately em contexto',
     url: 'lessons/licao-35-present-perfect-already-yet-just.html',
-    totalQuestions: 15 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-36-future-will-going-to',
@@ -523,7 +523,7 @@ const LESSONS = [
     icon: '🔮',
     description: 'Decisões espontâneas, planos e compromissos marcados',
     url: 'lessons/licao-36-future-will-going-to.html',
-    totalQuestions: 14 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-37-modal-verbs-advice-obligation',
@@ -532,7 +532,7 @@ const LESSONS = [
     icon: '🔑',
     description: 'Should, must, have to, can, may e might em contexto real',
     url: 'lessons/licao-37-modal-verbs-advice-obligation.html',
-    totalQuestions: 14 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-38-comparatives-superlatives-equality',
@@ -541,7 +541,7 @@ const LESSONS = [
     icon: '📊',
     description: 'Comparando pessoas e coisas: bigger, the best, as...as',
     url: 'lessons/licao-38-comparatives-superlatives-equality.html',
-    totalQuestions: 14 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-39-conditionals-zero-first',
@@ -550,7 +550,7 @@ const LESSONS = [
     icon: '🔀',
     description: 'Fatos gerais e possibilidades reais no futuro com if/unless',
     url: 'lessons/licao-39-conditionals-zero-first.html',
-    totalQuestions: 14 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-40-revisao-semestre-3',
@@ -559,7 +559,7 @@ const LESSONS = [
     icon: '🎓',
     description: 'Revisão completa do Semestre 3 e projeto final',
     url: 'lessons/licao-40-revisao-semestre-3.html',
-    totalQuestions: 30 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   }
   // próximas lições entram aqui, ex:
   // { id: 'present-simple', name: 'Present Simple', level: 'A1', icon: '📗', url: 'lessons/present-simple.html', totalQuestions: 15 }
