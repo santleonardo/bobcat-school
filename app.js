@@ -470,6 +470,96 @@ const LESSONS = [
     description: 'Revisão completa de todo o conteúdo do Semestre 2',
     url: 'lessons/licao-30-revisao-semestre-2.html',
     totalQuestions: 50 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-31-past-continuous',
+    name: 'Lição 31 — Past Continuous',
+    level: 'A2',
+    icon: '⏳',
+    description: 'Ações em progresso no passado: was/were + verbo-ing',
+    url: 'lessons/licao-31-past-continuous.html',
+    totalQuestions: 16 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-32-simple-past-past-continuous',
+    name: 'Lição 32 — Simple Past × Past Continuous',
+    level: 'A2',
+    icon: '🔀',
+    description: 'Combinando ações simultâneas e interrompidas ao contar histórias',
+    url: 'lessons/licao-32-simple-past-past-continuous.html',
+    totalQuestions: 16 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-33-present-perfect-experiences',
+    name: 'Lição 33 — Present Perfect: Experiences',
+    level: 'A2',
+    icon: '🌍',
+    description: 'Falando sobre experiências de vida com ever, never, before',
+    url: 'lessons/licao-33-present-perfect-experiences.html',
+    totalQuestions: 15 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-34-present-perfect-simple-past',
+    name: 'Lição 34 — Present Perfect × Simple Past',
+    level: 'B1',
+    icon: '⚖️',
+    description: 'Quando usar cada tempo verbal: since, for, last, ago',
+    url: 'lessons/licao-34-present-perfect-simple-past.html',
+    totalQuestions: 15 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-35-present-perfect-already-yet-just',
+    name: 'Lição 35 — Present Perfect: Already, Yet, Just',
+    level: 'B1',
+    icon: '✅',
+    description: 'Already, yet, just, still, recently e lately em contexto',
+    url: 'lessons/licao-35-present-perfect-already-yet-just.html',
+    totalQuestions: 15 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-36-future-will-going-to',
+    name: 'Lição 36 — Future: Will, Going to & Present Continuous',
+    level: 'B1',
+    icon: '🔮',
+    description: 'Decisões espontâneas, planos e compromissos marcados',
+    url: 'lessons/licao-36-future-will-going-to.html',
+    totalQuestions: 14 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-37-modal-verbs-advice-obligation',
+    name: 'Lição 37 — Modal Verbs: Advice, Obligation & Permission',
+    level: 'B1',
+    icon: '🔑',
+    description: 'Should, must, have to, can, may e might em contexto real',
+    url: 'lessons/licao-37-modal-verbs-advice-obligation.html',
+    totalQuestions: 14 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-38-comparatives-superlatives-equality',
+    name: 'Lição 38 — Comparatives, Superlatives & Equality',
+    level: 'B1',
+    icon: '📊',
+    description: 'Comparando pessoas e coisas: bigger, the best, as...as',
+    url: 'lessons/licao-38-comparatives-superlatives-equality.html',
+    totalQuestions: 14 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-39-conditionals-zero-first',
+    name: 'Lição 39 — Conditionals: Zero & First Conditional',
+    level: 'B1',
+    icon: '🔀',
+    description: 'Fatos gerais e possibilidades reais no futuro com if/unless',
+    url: 'lessons/licao-39-conditionals-zero-first.html',
+    totalQuestions: 14 // exercícios com gabarito (correção automática)
+  },
+  {
+    id: 'licao-40-revisao-semestre-3',
+    name: 'Lição 40 — Grande Revisão A2 → B1 🎓',
+    level: 'B1',
+    icon: '🎓',
+    description: 'Revisão completa do Semestre 3 e projeto final',
+    url: 'lessons/licao-40-revisao-semestre-3.html',
+    totalQuestions: 30 // exercícios com gabarito (correção automática)
   }
   // próximas lições entram aqui, ex:
   // { id: 'present-simple', name: 'Present Simple', level: 'A1', icon: '📗', url: 'lessons/present-simple.html', totalQuestions: 15 }

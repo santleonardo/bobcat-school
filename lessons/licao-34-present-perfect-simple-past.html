@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Lesson 34 — Present Perfect x Simple Past</title>
+<style>
+<style>
+:root {
+  --orange: #D9793F;
+  --orange-dark: #C9622A;
+  --cream: #FBEFE6;
+  --cream-2: #F7F1EC;
+  --ink: #2b2b2b;
+  --ok: #2E8B57;
+  --bad: #C0392B;
+  --border: #EBC9AE;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  color:var(--ink);
+  background:#fdfaf7;
+  line-height:1.55;
+}
+.app-layout{display:flex;min-height:100vh;}
+.sidebar{
+  width:280px;min-height:100vh;position:fixed;top:0;left:0;z-index:100;
+  background:#fff;border-right:2px solid var(--border);
+  display:flex;flex-direction:column;transition:transform .3s ease;
+}
+.sidebar-header{display:flex;align-items:center;gap:12px;padding:18px 20px 14px;border-bottom:3px solid var(--orange);}
+.sidebar-header .logo{font-size:32px;}
+.sidebar-header .brand{font-weight:800;font-size:16px;color:var(--orange-dark);}
+.sidebar-header .brand small{display:block;font-weight:400;font-size:11px;color:#888;font-style:italic;}
+.sidebar-progress{padding:14px 20px 10px;border-bottom:1px solid #eee;}
+.sidebar-progress .prog-label{font-size:12px;color:#888;font-weight:600;margin-bottom:6px;}
+.sidebar-progress .prog-track{width:100%;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.sidebar-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.sidebar-progress .prog-text{font-size:11px;color:#999;margin-top:4px;text-align:right;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0;}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;font-size:13.5px;font-weight:600;color:#555;text-decoration:none;transition:background .15s,color .15s;border-left:3px solid transparent;}
+.sidebar-nav a:hover{background:var(--cream-2);color:var(--orange-dark);}
+.sidebar-nav a.active{background:var(--cream);color:var(--orange-dark);border-left-color:var(--orange);font-weight:700;}
+.sidebar-nav a .lnum{width:26px;height:26px;border-radius:50%;background:var(--cream-2);color:var(--orange-dark);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.sidebar-nav a.active .lnum{background:var(--orange);color:#fff;}
+.sidebar-nav a.completed .lnum{background:var(--ok);color:#fff;}
+.sidebar-nav a .check{margin-left:auto;font-size:14px;color:var(--ok);display:none;}
+.sidebar-nav a.completed .check{display:inline;}
+.sidebar-close{display:none;position:absolute;top:14px;right:14px;background:none;border:none;font-size:24px;cursor:pointer;color:#999;}
+.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--orange);color:#fff;border:none;width:42px;height:42px;border-radius:10px;font-size:22px;cursor:pointer;box-shadow:0 2px 8px rgba(217,121,63,.3);}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:99;}
+.main{flex:1;margin-left:280px;padding:0 0 80px 0;}
+.top-progress{position:sticky;top:0;z-index:50;background:#fdfaf7ee;backdrop-filter:blur(4px);padding:10px 20px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:12px;justify-content:center;font-size:13px;color:#666;}
+.top-progress .prog-track{width:220px;height:8px;background:#eee;border-radius:4px;overflow:hidden;}
+.top-progress .prog-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;width:0%;}
+.lesson{display:none;padding:28px 24px 40px;max-width:880px;margin:0 auto;}
+.lesson.active{display:block;}
+.back-link{display:inline-block;font-size:13.5px;color:var(--orange-dark);text-decoration:none;font-weight:700;margin-bottom:14px;}
+.back-link:hover{text-decoration:underline;}
+.header{display:flex;align-items:center;gap:14px;border-bottom:3px solid var(--orange);padding-bottom:14px;margin-bottom:14px;flex-wrap:wrap;}
+.header .logo-icon{font-size:48px;}
+.header .school{font-size:24px;font-weight:800;color:var(--orange-dark);}
+.header .subtitle{font-size:13px;font-style:italic;color:#666;margin-top:2px;}
+.info-bar{display:flex;gap:24px;flex-wrap:wrap;border-bottom:2px solid var(--orange);padding-bottom:14px;margin-bottom:22px;font-size:13.5px;}
+.info-bar label{display:flex;align-items:center;gap:6px;font-weight:600;color:#555;}
+.info-bar input[type=text],.info-bar input[type=date]{border:none;border-bottom:1px solid #999;background:transparent;padding:3px 2px;font-size:13.5px;min-width:150px;font-family:inherit;}
+.info-bar input:focus{outline:none;border-bottom:2px solid var(--orange);}
+h1.title{text-align:center;color:var(--orange-dark);font-size:27px;margin:6px 0 2px 0;}
+.level{text-align:center;font-style:italic;color:#666;font-size:13px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #eee;}
+.level-badge{display:inline-block;background:var(--orange);color:#fff;font-size:12px;font-weight:700;padding:3px 12px;border-radius:20px;font-style:normal;letter-spacing:.3px;}
+.section-title,.section-header{background:var(--orange);color:#fff;font-weight:700;font-size:14.5px;padding:8px 14px;border-radius:5px;margin:28px 0 10px 0;}
+.subheading{font-weight:700;font-size:13.5px;margin:14px 0 6px 0;color:var(--orange-dark);}
+p{margin:8px 0;font-size:14px;}
+.tip{background:var(--cream);border:1px solid var(--border);padding:10px 14px;font-size:13.5px;margin:10px 0;border-radius:6px;}
+.tip::before{content:"💡 ";}
+table{width:100%;border-collapse:collapse;margin:8px 0 18px 0;font-size:13.5px;}
+th{background:var(--orange);color:#fff;text-align:left;padding:8px 12px;}
+td{padding:8px 12px;border-bottom:1px solid #eee;}
+tr:nth-child(even) td{background:var(--cream-2);}
+.example{font-style:italic;color:#555;font-size:13.5px;margin:6px 0 18px 0;padding-left:12px;border-left:3px solid var(--border);}
+.dialog-box,.dialogue-box{background:var(--cream);padding:14px 16px;border-radius:8px;margin:8px 0;}
+.dialogue-box{background:var(--cream-2);border-left:4px solid var(--orange);border-radius:0 6px 6px 0;}
+.dialog-box p,.dialogue-box p{margin:4px 0;font-size:14px;}
+.body-text{margin:4px 0;line-height:1.65;color:var(--ink);font-size:14px;}
+.instruction{margin:6px 0;padding:8px 14px;background:var(--cream);border-left:4px solid var(--orange);border-radius:0 4px 4px 0;color:var(--ink);font-size:13.5px;}
+.numbered-item{margin:8px 0 4px 16px;padding:4px 0;font-size:14px;font-weight:700;color:var(--orange-dark);}
+.letter-item{margin:10px 0 6px 0;padding:4px 0;font-weight:700;font-size:14px;color:var(--orange-dark);}
+.example-line{margin:3px 0 3px 24px;font-style:italic;color:#555;font-size:13.5px;}
+.fill-blank{margin:4px 0 4px 24px;font-size:14px;color:var(--ink);}
+.check-item{margin:4px 0;padding:4px 0;font-size:14px;}
+.gabarito-box{background:#F0FFF0;border:1px solid #4CAF50;border-left:5px solid #4CAF50;border-radius:0 6px 6px 0;padding:16px 20px;margin:18px 0;display:none;}
+.gabarito-box.show{display:block;}
+.gabarito-title{font-weight:700;font-size:14px;color:#2E7D32;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+.gabarito-line{margin:3px 0;font-size:13px;color:#333;}
+.ex-card{background:#fff;border:1px solid #eee;border-radius:10px;padding:18px 20px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.03);}
+.ex-intro{font-style:italic;color:#666;font-size:13.5px;margin:0 0 12px 0;}
+.fill-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 30px;}
+.fill-item{display:flex;align-items:center;gap:8px;font-size:14px;flex-wrap:wrap;}
+.fill-item input[type=text]{width:80px;padding:5px 8px;border:2px solid #ddd;border-radius:5px;font-size:14px;font-family:inherit;text-align:center;transition:border-color .15s,background .15s;}
+.fill-item input[type=text].longer{width:200px;text-align:left;}
+.fill-item input:focus{outline:none;border-color:var(--orange);}
+.fill-item input.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.fill-item input.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-item{margin:14px 0;font-size:14px;}
+.mc-item .q{font-weight:700;margin-bottom:6px;}
+.mc-options{display:flex;gap:10px;flex-wrap:wrap;}
+.mc-options label{display:flex;align-items:center;gap:6px;border:2px solid #ddd;border-radius:6px;padding:5px 12px;cursor:pointer;font-size:13.5px;transition:border-color .15s,background .15s;}
+.mc-options label:hover{border-color:var(--orange);}
+.mc-options label.correct{border-color:var(--ok);background:#EAF7EF;color:#1e6b40;font-weight:600;}
+.mc-options label.incorrect{border-color:var(--bad);background:#FBEAE8;color:var(--bad);}
+.mc-options input{accent-color:var(--orange);}
+.btn{background:var(--orange);color:#fff;border:none;padding:11px 22px;border-radius:7px;font-size:14.5px;font-weight:700;cursor:pointer;transition:background .15s,transform .1s;}
+.btn:hover{background:var(--orange-dark);}
+.btn:active{transform:scale(.98);}
+.btn.secondary{background:#fff;color:var(--orange-dark);border:2px solid var(--orange);padding:9px 20px;}
+.btn.secondary:hover{background:var(--cream);}
+.score-badge{display:inline-block;margin-left:14px;font-weight:700;font-size:14.5px;padding:6px 14px;border-radius:20px;background:var(--cream-2);color:var(--orange-dark);}
+.actions{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
+.note-italic{font-size:12px;font-style:italic;color:#777;margin-top:10px;}
+textarea{width:100%;font-family:inherit;font-size:14px;padding:8px 10px;border:2px solid #ddd;border-radius:6px;resize:vertical;min-height:80px;}
+textarea:focus{outline:none;border-color:var(--orange);}
+.footer-note{text-align:center;font-size:11.5px;color:#aaa;margin-top:40px;}
+.vocab-card{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid #eee;border-radius:8px;padding:8px 14px;margin:4px;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;}
+.vocab-card:hover{border-color:var(--orange);}
+.vocab-card .vc-en{font-weight:700;font-size:14px;}
+.vocab-card .vc-pt{font-size:13px;color:var(--ok);display:none;}
+.vocab-card.revealed .vc-pt{display:inline;}
+.vocab-card.revealed{border-color:var(--ok);background:#EAF7EF;}
+.collapse-btn{width:100%;text-align:left;background:var(--cream);border:1px solid var(--border);padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;color:var(--orange-dark);margin:8px 0 0 0;display:flex;align-items:center;gap:8px;}
+.collapse-btn:hover{background:var(--cream-2);}
+.collapse-btn .arrow{transition:transform .2s;font-size:12px;}
+.collapse-btn.open .arrow{transform:rotate(90deg);}
+.collapse-body{display:none;padding:12px 0 4px 0;}
+.collapse-body.open{display:block;}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;box-shadow:0 -2px 8px rgba(0,0,0,.04);z-index:80;padding:6px 0 env(safe-area-inset-bottom,6px);}
+.bottom-nav-inner{display:flex;max-width:480px;margin:0 auto;}
+.bottom-nav .bnav-btn{flex:1;border:none;background:none;padding:10px 0 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:#999;cursor:pointer;font-weight:600;}
+.bottom-nav .bnav-btn .bnav-icon{font-size:20px;}
+.bottom-nav .bnav-btn.active{color:var(--orange-dark);font-weight:700;}
+.bottom-nav .bnav-btn:disabled{color:#ddd;cursor:default;}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);width:280px;}
+  .sidebar.open{transform:translateX(0);}
+  .sidebar-close{display:block;}
+  .sidebar-overlay.open{display:block;}
+  .hamburger{display:flex;align-items:center;justify-content:center;}
+  .main{margin-left:0;}
+  .lesson{padding:20px 16px 120px;}
+  .bottom-nav{display:block;}
+  .fill-grid{grid-template-columns:1fr;}
+  .top-progress{padding-left:56px;}
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.lesson.active{animation:fadeIn .3s ease;}
+</style>
+</style>
+</head>
+<body>
+<div class="wrap" style="max-width:880px;margin:0 auto;padding:28px 20px;">
+<a class="back-link" href="../index.html">&larr; Voltar às Lições</a>
+<div class="header"><span class="logo-icon">🐱</span><div><div class="school">Bobcat Language School</div><div class="subtitle">Aprenda inglês no seu ritmo</div></div></div>
+<div class="info-bar"><label>👤 Aluno: <input type="text" placeholder="Seu nome"></label><label>📅 Data: <input type="date"></label></div>
+<h1 class="title">LIÇÃO 34 — Present Perfect × Simple Past</h1>
+<div class="level"><span class="level-badge">Nível A2/B1</span></div>
+<div class="section-header">🎯 Objetivo da Lição</div>
+<p class="body-text">• Entender claramente <strong>quando usar Present Perfect e quando usar Simple Past</strong>.</p>
+<p class="body-text">• Diferenciar "experiência" (sem tempo definido) de "acontecimento terminado" (tempo definido).</p>
+<p class="body-text">• Usar <strong>since, for, last, ago</strong> corretamente com cada tempo verbal.</p>
+
+<div class="section-header">🔥 Warm-Up: O maior desafio para brasileiros!</div>
+<p class="instruction">Em português, "eu visitei" e "eu tenho visitado" às vezes se confundem. Em inglês, a diferença é clara: se o tempo é <strong>específico e terminado</strong>, use Simple Past. Se o foco é a <strong>experiência, sem tempo definido</strong>, use Present Perfect.</p>
+<p class="example-line">I have visited London. (experiência — não sei quando, só sei que já fui)</p>
+<p class="example-line">I visited London in 2024. (fato específico — tempo definido e terminado)</p>
+<div class="dialogue-box"><p>💡 Dica: Se aparece uma expressão de tempo específica e terminada (yesterday, in 2020, last year), use Simple Past. Sem tempo definido? Present Perfect!</p></div>
+
+<div class="section-header">🗣️ Diálogo: When Did You...?</div>
+<div class="dialogue-box">
+  <p><strong>Bruno:</strong> I've visited London before. Have you?</p>
+  <p><strong>Marina:</strong> Yes, I have! I visited London in 2023, actually.</p>
+  <p><strong>Bruno:</strong> Nice! I've been there twice. I went there last year with my family.</p>
+  <p><strong>Marina:</strong> How long have you studied English?</p>
+  <p><strong>Bruno:</strong> I've studied English for five years. I started in 2019.</p>
+  <p><strong>Marina:</strong> I've lived here since 2020. Where did you live before that?</p>
+  <p><strong>Bruno:</strong> I lived in São Paulo for ten years before I moved here.</p>
+</div>
+<div class="instruction">🔁 Repita com atenção: Identifique quais frases têm expressões de tempo específicas (Simple Past) e quais não têm (Present Perfect).</div>
+
+<div class="section-header">📖 Vocabulário-Chave: Time Expressions</div>
+<table>
+  <tr><th>Expressão</th><th>Tempo verbal</th><th>Exemplo</th></tr>
+  <tr><td><strong>since</strong> (+ ponto no tempo)</td><td>Present Perfect</td><td>I've lived here since 2020.</td></tr>
+  <tr><td><strong>for</strong> (+ duração)</td><td>Present Perfect</td><td>I've lived here for 5 years.</td></tr>
+  <tr><td><strong>last week/year</strong></td><td>Simple Past</td><td>I traveled last year.</td></tr>
+  <tr><td><strong>... ago</strong></td><td>Simple Past</td><td>I moved here two years ago.</td></tr>
+  <tr><td><strong>in + ano</strong></td><td>Simple Past</td><td>I visited Rome in 2019.</td></tr>
+  <tr><td><strong>yesterday</strong></td><td>Simple Past</td><td>I called her yesterday.</td></tr>
+</table>
+
+<div class="section-header">📘 Gramática em Ação: Present Perfect × Simple Past</div>
+
+<div class="numbered-item">1. Regra de ouro</div>
+<p class="body-text">Tempo <strong>específico e terminado</strong> → Simple Past. Sem tempo específico, foco na <strong>experiência ou resultado</strong> → Present Perfect.</p>
+
+<div class="numbered-item">2. Since × For</div>
+<p class="body-text"><strong>Since</strong> + ponto de início (data, ano, evento): since 2020, since I was young.</p>
+<p class="body-text"><strong>For</strong> + duração/período: for 5 years, for two hours, for a long time.</p>
+<p class="example-line">I have worked here since 2018. = I have worked here for 6 years.</p>
+
+<div class="numbered-item">3. Ago x Since/For</div>
+<p class="body-text"><strong>Ago</strong> sempre acompanha Simple Past: two years ago, a week ago.</p>
+<p class="example-line">I moved here two years ago. (Simple Past) vs. I have lived here for two years. (Present Perfect)</p>
+
+<div class="numbered-item">4. Comparação lado a lado</div>
+<table>
+  <tr><th>Present Perfect</th><th>Simple Past</th></tr>
+  <tr><td>I have been to Paris.</td><td>I went to Paris in 2022.</td></tr>
+  <tr><td>She has worked here for 3 years.</td><td>She worked here for 3 years (and left).</td></tr>
+  <tr><td>Have you finished the report?</td><td>Did you finish the report yesterday?</td></tr>
+</table>
+<div class="tip">Dica prática: Present Perfect conecta o passado ao PRESENTE (ainda relevante agora). Simple Past é uma ação totalmente terminada, desconectada do presente.</div>
+
+<div class="section-header">📝 Exercícios</div>
+
+<div class="letter-item">A. Complete com Simple Past ou Present Perfect.</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item">I <input type="text" data-answer="visited" placeholder="?"> (visit) Rome in 2019.</div>
+    <div class="fill-item">She <input type="text" data-answer="has lived" placeholder="?"> (live) here for ten years.</div>
+    <div class="fill-item">We <input type="text" data-answer="moved" placeholder="?"> (move) here three years ago.</div>
+    <div class="fill-item">They <input type="text" data-answer="have never been" placeholder="?"> (never/be) to Japan.</div>
+    <div class="fill-item">He <input type="text" data-answer="called" placeholder="?"> (call) me yesterday.</div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">B. Escolha "since" ou "for".</div>
+<div class="ex-card">
+  <div class="mc-item">
+    <div class="q">I've studied English ___ 2020.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l34mc1" value="a" class="correct-answer"> since</label>
+      <label><input type="radio" name="l34mc1" value="b"> for</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">She has worked here ___ five years.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l34mc2" value="a"> since</label>
+      <label><input type="radio" name="l34mc2" value="b" class="correct-answer"> for</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">Qual frase está no Simple Past?</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l34mc3" value="a" class="correct-answer"> I visited Paris in 2018.</label>
+      <label><input type="radio" name="l34mc3" value="b"> I have visited Paris.</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">"Two years ago" pede qual tempo verbal?</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l34mc4" value="a" class="correct-answer"> Simple Past</label>
+      <label><input type="radio" name="l34mc4" value="b"> Present Perfect</label>
+    </div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">C. Traduza usando o tempo verbal correto.</div>
+<div class="ex-card">
+  <div class="fill-grid">
+    <div class="fill-item input-long">1. Eu já visitei três países. → <input type="text" class="longer" data-answer="I have visited three countries" placeholder="..."></div>
+    <div class="fill-item input-long">2. Eu visitei a Argentina em 2021. → <input type="text" class="longer" data-answer="I visited Argentina in 2021" placeholder="..."></div>
+    <div class="fill-item input-long">3. Nós moramos aqui há 5 anos (e ainda moramos). → <input type="text" class="longer" data-answer="We have lived here for 5 years" placeholder="..."></div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkFills(this)">Verificar</button></div>
+</div>
+
+<div class="letter-item">D. Verdadeiro ou Falso?</div>
+<div class="ex-card">
+  <div class="mc-item">
+    <div class="q">"Since" indica duração, não um ponto no tempo.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l34tf1" value="True"> V</label>
+      <label><input type="radio" name="l34tf1" value="False" class="correct-answer"> F</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">Datas específicas (ex: "in 2020") pedem Simple Past.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l34tf2" value="True" class="correct-answer"> V</label>
+      <label><input type="radio" name="l34tf2" value="False"> F</label>
+    </div>
+  </div>
+  <div class="mc-item">
+    <div class="q">Present Perfect é usado para ações totalmente desconectadas do presente.</div>
+    <div class="mc-options">
+      <label><input type="radio" name="l34tf3" value="True"> V</label>
+      <label><input type="radio" name="l34tf3" value="False" class="correct-answer"> F</label>
+    </div>
+  </div>
+  <div class="actions"><button class="btn" onclick="checkMC(this)">Verificar</button></div>
+</div>
+
+<div class="section-header">🎭 Prática Oral / Role-Play</div>
+<div class="dialogue-box">
+  <p><strong>A:</strong> How long have you lived in this city?</p>
+  <p><strong>B:</strong> I've lived here since 2015. I moved here nine years ago.</p>
+  <p><strong>A:</strong> Have you ever thought about moving somewhere else?</p>
+  <p><strong>B:</strong> Yes, I visited Portugal last year and I loved it!</p>
+</div>
+
+<div class="section-header">🌍 Curiosidade Cultural: A Common Mistake</div>
+<p class="body-text">Falantes de português frequentemente dizem "I have visited Paris last year" — mas isso está errado! Se há um tempo específico (last year), o correto é Simple Past: "I visited Paris last year." Esse é um dos erros mais comuns entre brasileiros aprendendo inglês, então preste bastante atenção!</p>
+
+<div class="section-header">🎨 Atividade Criativa: Timeline of My Life</div>
+<p class="instruction">Escreva 3 frases no Present Perfect (experiências gerais) e 3 frases no Simple Past (fatos com data específica).</p>
+<textarea rows="6" placeholder="Escreva aqui..."></textarea>
+
+<div class="section-header">🧠 Desafio Extra</div>
+<p class="fill-blank">1. Corrija: "I have visited Paris last year." → ____________________</p>
+<p class="fill-blank">2. Complete: I ___ (work) here since 2019. → ____________________</p>
+<p class="fill-blank">3. Complete: I ___ (start) this job three years ago. → ____________________</p>
+<p class="fill-blank">4. "For two hours" pede since ou for? → ____________________</p>
+<p class="fill-blank">5. Traduza: "Ela nunca esteve nos Estados Unidos." → ____________________</p>
+
+<div class="section-header">🔁 Revisão</div>
+<p class="check-item">✅ Sei diferenciar Present Perfect e Simple Past pela presença de tempo específico.</p>
+<p class="check-item">✅ Sei usar since (ponto) e for (duração) corretamente.</p>
+<p class="check-item">✅ Sei que "ago" sempre acompanha Simple Past.</p>
+<p class="check-item">✅ Consigo evitar o erro comum de brasileiros com essa estrutura.</p>
+
+<div class="section-header">🏠 Tarefa de Casa</div>
+<p class="body-text">1. Escreva 5 frases sobre sua vida usando Present Perfect + since/for.</p>
+<p class="body-text">2. Escreva 5 frases sobre fatos específicos do seu passado usando Simple Past.</p>
+<textarea rows="8" placeholder="Escreva aqui..."></textarea>
+
+<button class="btn secondary" onclick="this.nextElementSibling.classList.toggle('show')">📋 Ver Gabarito</button>
+<div class="gabarito-box">
+  <div class="gabarito-title">✅ Gabarito — Lição 34</div>
+  <p class="gabarito-line"><strong>A.</strong> visited | has lived | moved | have never been | called</p>
+  <p class="gabarito-line"><strong>B.</strong> since | for | I visited Paris in 2018. | Simple Past</p>
+  <p class="gabarito-line"><strong>C.</strong> I have visited three countries. | I visited Argentina in 2021. | We have lived here for 5 years.</p>
+  <p class="gabarito-line"><strong>D.</strong> F (indica ponto no tempo) | V | F (é usado quando ainda relevante agora)</p>
+  <p class="gabarito-line"><strong>Desafio:</strong> I visited Paris last year. | have worked | started | for | She has never been to the United States.</p>
+</div>
+
+<div class="section-header">🏁 Conclusão</div>
+<p class="body-text">🎉 Muito bem! Você agora domina uma das diferenças mais importantes do inglês intermediário! Na próxima lição vamos ver <strong>already, yet, just, still</strong> — palavras que dão mais naturalidade ao Present Perfect. See you in Lesson 35! 👋</p>
+
+<div class="actions" style="margin-top:24px;">
+  <button class="btn" onclick="finishLesson()">Finalizar e salvar progresso</button>
+  <span id="finishMessage" style="display:none; font-size:13.5px;"></span>
+</div>
+<p class="completion-note" style="font-size:12px;font-style:italic;color:#777;margin-top:10px;">Responda os exercícios (preenchimento e múltipla escolha) e clique em "Finalizar" para conferir sua nota. É preciso pelo menos 85% de acerto para concluir a lição.</p>
+<div class="footer-note">Bobcat Language School • Lição 34 — Present Perfect × Simple Past</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<script>
+const LESSON_ID = 'licao-34-present-perfect-simple-past';
+let finishing = false;
+
+async function prefillFromProfile() {
+  await initDataLayer();
+  const profile = await getProfile();
+  if (profile && profile.name) {
+    const nameInput = document.querySelector('.info-bar input[type=text]');
+    if (nameInput && !nameInput.value) nameInput.value = profile.name;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const dateInput = document.querySelector('.info-bar input[type=date]');
+  if (dateInput && !dateInput.value) dateInput.value = today;
+}
+document.addEventListener('DOMContentLoaded', prefillFromProfile);
+
+function checkFills(btn) {
+  const card = btn.closest('.ex-card');
+  const inputs = card.querySelectorAll('.fill-item input[type=text]');
+  let correct = 0, total = 0;
+  inputs.forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    inp.classList.remove('correct', 'incorrect');
+    if (cleanVal === cleanAnswer) { inp.classList.add('correct'); correct++; }
+    else { inp.classList.add('incorrect'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  const badge = document.createElement('span');
+  badge.className = 'score-badge';
+  badge.textContent = correct + '/' + total + ' ✅';
+  btn.parentElement.appendChild(badge);
+}
+
+function checkMC(btn) {
+  const card = btn.closest('.ex-card');
+  const items = card.querySelectorAll('.mc-item');
+  let correct = 0, total = 0;
+  items.forEach(item => {
+    const options = item.querySelectorAll('.mc-options label');
+    const selected = item.querySelector('input[type=radio]:checked');
+    options.forEach(l => l.classList.remove('correct', 'incorrect'));
+    if (!selected) return;
+    total++;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) { selected.parentElement.classList.add('correct'); correct++; }
+    else { selected.parentElement.classList.add('incorrect'); if (correctRadio) correctRadio.parentElement.classList.add('correct'); }
+  });
+  const existing = card.querySelector('.score-badge');
+  if (existing) existing.remove();
+  if (total > 0) {
+    const badge = document.createElement('span');
+    badge.className = 'score-badge';
+    badge.textContent = correct + '/' + total + ' ✅';
+    btn.parentElement.appendChild(badge);
+  }
+}
+
+function toggleCollapse(btn) {
+  btn.classList.toggle('open');
+  const body = btn.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+async function finishLesson() {
+  if (finishing) return;
+  finishing = true;
+
+  let correct = 0, total = 0;
+  document.querySelectorAll('input[data-answer]').forEach(inp => {
+    total++;
+    const answer = (inp.dataset.answer || '').trim().toLowerCase();
+    const val = inp.value.trim().toLowerCase();
+    const cleanVal = val.replace(/[.?!,]/g, '');
+    const cleanAnswer = answer.replace(/[.?!,]/g, '');
+    if (cleanVal === cleanAnswer) correct++;
+  });
+  document.querySelectorAll('.mc-item').forEach(item => {
+    total++;
+    const selected = item.querySelector('input[type=radio]:checked');
+    if (!selected) return;
+    const correctRadio = item.querySelector('input.correct-answer');
+    if (selected === correctRadio) correct++;
+  });
+
+  const safeTotal = total || 1;
+  const passed = await handleLessonFinish(LESSON_ID, correct, safeTotal, 'correct');
+  if (!passed) finishing = false;
+}
+</script>
+
+</body>
+</html>
