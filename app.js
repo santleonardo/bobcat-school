@@ -388,7 +388,7 @@ const LESSONS = [
     icon: '⏮️',
     description: 'Formação e uso do Simple Past com verbos regulares',
     url: 'lessons/licao-21-simple-past-regular.html',
-    totalQuestions: 17 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-22-simple-past-irregular',
@@ -397,7 +397,7 @@ const LESSONS = [
     icon: '📖',
     description: 'Verbos irregulares mais comuns no Simple Past',
     url: 'lessons/licao-22-simple-past-irregular.html',
-    totalQuestions: 17 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-23-talking-about-the-past',
@@ -406,7 +406,7 @@ const LESSONS = [
     icon: '🕰️',
     description: 'Perguntas, negativas e expressões de tempo no passado',
     url: 'lessons/licao-23-talking-about-the-past.html',
-    totalQuestions: 13 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-24-future-going-to',
@@ -415,7 +415,7 @@ const LESSONS = [
     icon: '🎯',
     description: 'Planos e intenções futuras com Going To',
     url: 'lessons/licao-24-future-going-to.html',
-    totalQuestions: 17 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-25-future-will',
@@ -424,7 +424,7 @@ const LESSONS = [
     icon: '🔮',
     description: 'Previsões, decisões espontâneas e promessas com Will',
     url: 'lessons/licao-25-future-will.html',
-    totalQuestions: 17 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-26-comparatives-superlatives',
@@ -433,7 +433,7 @@ const LESSONS = [
     icon: '⚖️',
     description: 'Comparando pessoas e coisas em inglês',
     url: 'lessons/licao-26-comparatives-superlatives.html',
-    totalQuestions: 17 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-27-present-perfect',
