@@ -334,7 +334,7 @@ const LESSONS = [
     icon: '🙌',
     description: "Habilidades e permissões com Can/Can't",
     url: 'lessons/licao-15-can-cant.html',
-    totalQuestions: 18 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-16-present-continuous',
@@ -343,7 +343,7 @@ const LESSONS = [
     icon: '🏃',
     description: 'Ações em andamento com o Present Continuous',
     url: 'lessons/licao-16-present-continuous.html',
-    totalQuestions: 17 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-17-countable-uncountable',
@@ -352,7 +352,7 @@ const LESSONS = [
     icon: '🍎',
     description: 'Countable/uncountable nouns, some, any e much/many',
     url: 'lessons/licao-17-countable-uncountable.html',
-    totalQuestions: 21 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-18-quantities-choices',
@@ -361,7 +361,7 @@ const LESSONS = [
     icon: '🛒',
     description: 'Expressando quantidades e fazendo escolhas em inglês',
     url: 'lessons/licao-18-quantities-choices.html',
-    totalQuestions: 17 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-19-quantities-distance-time',
@@ -370,7 +370,7 @@ const LESSONS = [
     icon: '📏',
     description: 'How much/how many, distância e tempo',
     url: 'lessons/licao-19-quantities-distance-time.html',
-    totalQuestions: 18 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-20-survival-english',
@@ -379,7 +379,7 @@ const LESSONS = [
     icon: '🌍',
     description: 'Frases essenciais para se virar em situações reais',
     url: 'lessons/licao-20-survival-english.html',
-    totalQuestions: 19 // exercícios com gabarito (correção automática)
+    totalQuestions: 12 // design interativo
   },
   {
     id: 'licao-21-simple-past-regular',
