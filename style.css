@@ -268,6 +268,47 @@ body.on-auth-screen .topbar { display: none; }
 .lesson-card .badge.done { background: #EAF7EF; color: #1e6b40; }
 .lesson-card .chevron { font-size: 18px; color: #ccc; }
 
+/* ── PERSONALIDADES DE IA (Praticar com a IA) ────────────────── */
+.persona-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: box-shadow .15s, transform .1s;
+}
+.persona-card:hover { box-shadow: 0 3px 10px rgba(0,0,0,0.06); transform: translateY(-1px); }
+.persona-card .icon {
+  font-size: 24px;
+  width: 46px; height: 46px;
+  background: var(--cream);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.persona-card .info { flex: 1; min-width: 0; }
+.persona-card .name { font-weight: 700; font-size: 14.5px; }
+.persona-card .personality-preview {
+  font-size: 11.5px; color: #888; margin-top: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.persona-card .chevron { font-size: 18px; color: #ccc; }
+.persona-emoji-btn {
+  width: 40px; height: 40px; font-size: 19px;
+  border-radius: 50%; border: 2px solid var(--border);
+  background: var(--cream); cursor: pointer; padding: 0;
+}
+.persona-emoji-btn.selected { border-color: var(--orange); background: var(--cream-2); transform: scale(1.08); }
+#input-persona-personality {
+  width: 100%; resize: vertical; border: 2px solid var(--border);
+  border-radius: 10px; padding: 10px 12px; font-size: 13.5px; font-family: inherit;
+}
+#input-persona-personality:focus { outline: none; border-color: var(--orange); }
+
 /* Lições bloqueadas (aguardando conclusão da lição anterior) */
 .lesson-card.locked { cursor: pointer; opacity: 0.6; }
 .lesson-card.locked:hover { box-shadow: none; transform: none; }

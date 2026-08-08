@@ -1543,10 +1543,10 @@ function showUpdateBanner(registration) {
   });
 }
 
-// ─── PRATICAR COM IA (chat de conversação) ──────────────────
-let aiChatHistory = []; // [{role:'user'|'model', text}]
+// ─── PRATICAR COM IA (chat de conversação com personalidades criadas pelo aluno) ──
+let aiChatHistory = []; // [{role:'user'|'model', text}] — da personalidade aberta no momento
 let aiChatBusy = false;
-let aiChatStarted = false;
+let aiChatCurrentPersonaId = null; // id da personalidade aberta na tela de conversa
 
 // Áudio: gravação (aluno fala) e leitura em voz (TTS do navegador, sem custo de IA)
 let aiChatMediaRecorder = null;
@@ -1556,38 +1556,29 @@ const AI_CHAT_MAX_RECORD_MS = 30000; // 30s é suficiente pra prática e mantém
 let aiChatRecordTimeout = null;
 let aiChatTtsEnabled = localStorage.getItem('aiChatTtsEnabled') === '1';
 
-// Personalidades: cada uma muda o jeito da IA falar (o prompt de verdade fica no servidor,
-// aqui só guardamos a saudação de cada uma pra tela não ficar em branco esperando a IA)
-const AI_CHAT_PERSONAS = {
-  tutor: { greeting: (studentName, aiName) => `Hi${studentName ? ' ' + studentName : ''}! 👋 I'm ${aiName}, your English conversation partner. We can talk about anything — your day, hobbies, movies, whatever! I'll help fix your mistakes along the way. So... how are you today?` },
-  kid: { greeting: (studentName, aiName) => `Hiii${studentName ? ' ' + studentName : ''}! 🧒🎈 I'm ${aiName}, and I'm 9 years old! Do you like games? Or animals? Let's talk in English, it's gonna be fun! What's your favorite toy?` },
-  teen: { greeting: (studentName, aiName) => `Heyy${studentName ? ' ' + studentName : ''} 🧑🎧 what's up! I'm ${aiName}, kinda obsessed with games and music rn. Wanna chat in English about whatever — shows, school, anything. So... what have you been up to?` },
-  professional: { greeting: (studentName, aiName) => `Good day${studentName ? ', ' + studentName : ''}. 💼 I'm ${aiName}, and I'll be your English conversation partner for workplace and professional contexts — meetings, emails, small talk with colleagues. Shall we start? Tell me, what do you do?` },
-  elder: { greeting: (studentName, aiName) => `Well hello there${studentName ? ', ' + studentName : ''}! 👴☕ I'm ${aiName}, and I've got a few stories to tell. Why don't we sit and chat a while in English? Tell me, how has your day been?` }
-};
-const AI_CHAT_DEFAULT_NAME = 'Bobcat';
+const PERSONA_EMOJIS = ['🤖', '🐱', '🧒', '🧑', '💼', '👴', '🦸', '🧑‍🚀', '🐉', '🎸', '⚽', '📚'];
+let personaEmojiSelected = PERSONA_EMOJIS[0];
 
-function aiChatCurrentPersona() {
-  const id = localStorage.getItem('aiChatPersona') || 'tutor';
-  return AI_CHAT_PERSONAS[id] ? id : 'tutor';
+// ---------- Armazenamento das personalidades (localStorage, por aluno/aparelho) ----------
+
+function getAiChatPersonas() {
+  try { return JSON.parse(localStorage.getItem('aiChatPersonas') || '[]') || []; }
+  catch (e) { return []; }
 }
 
-function aiChatPersonaNames() {
-  try { return JSON.parse(localStorage.getItem('aiChatPersonaNames') || '{}') || {}; }
-  catch (e) { return {}; }
+function saveAiChatPersonas(list) {
+  localStorage.setItem('aiChatPersonas', JSON.stringify(list));
 }
 
-function aiChatCurrentAiName() {
-  const names = aiChatPersonaNames();
-  const custom = (names[aiChatCurrentPersona()] || '').trim();
-  return custom || AI_CHAT_DEFAULT_NAME;
+function aiChatHistoryKey(id) { return 'aiChatHistory_' + id; }
+
+function getAiChatHistoryFor(id) {
+  try { return JSON.parse(localStorage.getItem(aiChatHistoryKey(id)) || '[]') || []; }
+  catch (e) { return []; }
 }
 
-function aiChatSetPersonaName(personaId, name) {
-  const names = aiChatPersonaNames();
-  const clean = String(name || '').trim().slice(0, 30);
-  if (clean) names[personaId] = clean; else delete names[personaId];
-  localStorage.setItem('aiChatPersonaNames', JSON.stringify(names));
+function saveAiChatHistoryFor(id, hist) {
+  localStorage.setItem(aiChatHistoryKey(id), JSON.stringify(hist));
 }
 
 function aiChatEscapeHtml(s) {
@@ -1676,7 +1667,8 @@ async function aiChatToggleRecording() {
 function aiChatRenderThread() {
   const thread = document.getElementById('ai-chat-thread');
   if (!thread) return;
-  const aiName = aiChatCurrentAiName();
+  const persona = getAiChatPersonas().find(p => p.id === aiChatCurrentPersonaId);
+  const aiName = (persona && persona.name) || 'IA';
   thread.innerHTML = aiChatHistory.map(m => {
     const cls = m.role === 'user' ? 'student' : 'teacher';
     const label = m.role === 'user' ? 'Você' : `🤖 ${aiName}`;
@@ -1686,34 +1678,133 @@ function aiChatRenderThread() {
   thread.scrollTop = thread.scrollHeight;
 }
 
-async function aiChatStartIfNeeded() {
-  if (aiChatStarted) return;
-  aiChatStarted = true;
-  let profile = {};
-  try { profile = (await getProfile()) || {}; } catch (e) { /* sem perfil ainda */ }
-  const studentName = profile.name || '';
-  const persona = AI_CHAT_PERSONAS[aiChatCurrentPersona()];
-  aiChatHistory = [{
-    role: 'model',
-    text: persona.greeting(studentName, aiChatCurrentAiName())
-  }];
+function aiChatGreetingFor(persona, studentName) {
+  const hi = studentName ? `, ${studentName}` : '';
+  return `${persona.emoji || '🤖'} Hi${hi}! I'm ${persona.name}. Let's practice English together — ask me anything or tell me about your day. What would you like to talk about?`;
+}
+
+// ---------- Navegação entre as 3 sub-telas de "Praticar com a IA" ----------
+
+function aiChatShowListView() {
+  document.getElementById('ai-chat-conversation-view').classList.add('hidden');
+  document.getElementById('ai-chat-create-view').classList.add('hidden');
+  document.getElementById('ai-chat-list-view').classList.remove('hidden');
+  aiChatCurrentPersonaId = null;
+  renderAiChatPersonaList();
+}
+
+function aiChatShowCreateView() {
+  document.getElementById('ai-chat-list-view').classList.add('hidden');
+  document.getElementById('ai-chat-conversation-view').classList.add('hidden');
+  document.getElementById('ai-chat-create-view').classList.remove('hidden');
+  document.getElementById('input-persona-name').value = '';
+  document.getElementById('input-persona-personality').value = '';
+  personaEmojiSelected = PERSONA_EMOJIS[0];
+  renderPersonaEmojiPicker();
+}
+
+async function aiChatOpenPersona(id) {
+  const persona = getAiChatPersonas().find(p => p.id === id);
+  if (!persona) return;
+  aiChatCurrentPersonaId = id;
+
+  document.getElementById('ai-chat-list-view').classList.add('hidden');
+  document.getElementById('ai-chat-create-view').classList.add('hidden');
+  document.getElementById('ai-chat-conversation-view').classList.remove('hidden');
+  document.getElementById('ai-chat-conv-title').textContent = `${persona.emoji || '🤖'} ${persona.name}`;
+
+  aiChatHistory = getAiChatHistoryFor(id);
+  if (aiChatHistory.length === 0) {
+    let profile = {};
+    try { profile = (await getProfile()) || {}; } catch (e) { /* sem perfil ainda */ }
+    aiChatHistory = [{ role: 'model', text: aiChatGreetingFor(persona, profile.name || '') }];
+    saveAiChatHistoryFor(id, aiChatHistory);
+  }
   aiChatRenderThread();
-  aiChatSpeak(aiChatHistory[0].text);
+}
+
+function renderAiChatPersonaList() {
+  const list = document.getElementById('ai-chat-persona-list');
+  if (!list) return;
+  const personas = getAiChatPersonas();
+  if (personas.length === 0) {
+    list.innerHTML = '<div class="chat-empty" style="background:var(--cream-2); border-radius:12px; padding:18px 12px;">Você ainda não criou nenhuma personalidade. Toque em "➕ Criar nova personalidade" para começar sua primeira conversa! 🎉</div>';
+    return;
+  }
+  list.innerHTML = personas.map(p => `
+    <div class="persona-card" data-id="${p.id}">
+      <div class="icon">${p.emoji || '🤖'}</div>
+      <div class="info">
+        <div class="name">${aiChatEscapeHtml(p.name)}</div>
+        <div class="personality-preview">${aiChatEscapeHtml(p.personality || '')}</div>
+      </div>
+      <div class="chevron">›</div>
+    </div>
+  `).join('');
+  list.querySelectorAll('.persona-card').forEach(card => {
+    card.addEventListener('click', () => aiChatOpenPersona(card.dataset.id));
+  });
+}
+
+function renderPersonaEmojiPicker() {
+  const picker = document.getElementById('persona-emoji-picker');
+  if (!picker) return;
+  picker.innerHTML = PERSONA_EMOJIS.map(e =>
+    `<button type="button" class="persona-emoji-btn${e === personaEmojiSelected ? ' selected' : ''}" data-emoji="${e}">${e}</button>`
+  ).join('');
+  picker.querySelectorAll('.persona-emoji-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      personaEmojiSelected = btn.dataset.emoji;
+      renderPersonaEmojiPicker();
+    });
+  });
+}
+
+function aiChatCreatePersonaFromForm() {
+  const name = document.getElementById('input-persona-name').value.trim().slice(0, 30);
+  const personality = document.getElementById('input-persona-personality').value.trim().slice(0, 300);
+  if (!name) { alert('Dê um nome para a personalidade.'); return; }
+  if (!personality) { alert('Descreva um pouco a personalidade dela.'); return; }
+
+  const persona = {
+    id: 'p_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8),
+    name,
+    personality,
+    emoji: personaEmojiSelected,
+    createdAt: new Date().toISOString()
+  };
+  const list = getAiChatPersonas();
+  list.push(persona);
+  saveAiChatPersonas(list);
+  aiChatOpenPersona(persona.id);
+}
+
+function aiChatDeleteCurrentPersona() {
+  if (!aiChatCurrentPersonaId) return;
+  if (!confirm('Excluir essa personalidade e toda a conversa com ela? Essa ação não pode ser desfeita.')) return;
+  const list = getAiChatPersonas().filter(p => p.id !== aiChatCurrentPersonaId);
+  saveAiChatPersonas(list);
+  localStorage.removeItem(aiChatHistoryKey(aiChatCurrentPersonaId));
+  aiChatShowListView();
 }
 
 function aiChatResetConversation() {
-  aiChatStarted = false;
+  if (!aiChatCurrentPersonaId) return;
+  localStorage.removeItem(aiChatHistoryKey(aiChatCurrentPersonaId));
   aiChatHistory = [];
-  aiChatStartIfNeeded();
+  aiChatOpenPersona(aiChatCurrentPersonaId);
 }
 
 async function aiChatSend(audioPayload) {
-  if (aiChatBusy) return;
+  if (aiChatBusy || !aiChatCurrentPersonaId) return;
   const input = document.getElementById('ai-chat-input');
   const typing = document.getElementById('ai-chat-typing');
   if (!input) return;
   const text = input.value.trim();
   if (!text && !audioPayload) return;
+
+  const persona = getAiChatPersonas().find(p => p.id === aiChatCurrentPersonaId);
+  if (!persona) return;
 
   let profile = {};
   try { profile = (await getProfile()) || {}; } catch (e) { /* sem perfil ainda */ }
@@ -1724,6 +1815,7 @@ async function aiChatSend(audioPayload) {
   aiChatHistory.push({ role: 'user', text: displayText, viaAudio: !!audioPayload });
   input.value = '';
   aiChatRenderThread();
+  saveAiChatHistoryFor(persona.id, aiChatHistory);
 
   aiChatBusy = true;
   if (typing) typing.classList.remove('hidden');
@@ -1734,8 +1826,8 @@ async function aiChatSend(audioPayload) {
       history: aiChatHistory.slice(0, -1), // tudo exceto a mensagem que acabou de entrar
       level: profile.level || 'A1',
       name: profile.name || '',
-      persona: aiChatCurrentPersona(),
-      aiName: aiChatCurrentAiName()
+      personality: persona.personality,
+      aiName: persona.name
     };
     if (audioPayload) body.audio = audioPayload;
 
@@ -1758,6 +1850,7 @@ async function aiChatSend(audioPayload) {
     aiChatBusy = false;
     if (typing) typing.classList.add('hidden');
     aiChatRenderThread();
+    if (aiChatCurrentPersonaId) saveAiChatHistoryFor(aiChatCurrentPersonaId, aiChatHistory);
   }
 }
 
@@ -1767,8 +1860,11 @@ function setupAiChat() {
   const btnReset = document.getElementById('btn-ai-chat-reset');
   const btnMic = document.getElementById('btn-ai-chat-mic');
   const chkTts = document.getElementById('chk-ai-chat-tts');
-  const selectPersona = document.getElementById('select-ai-chat-persona');
-  const inputPersonaName = document.getElementById('input-ai-chat-persona-name');
+  const btnNewPersona = document.getElementById('btn-ai-chat-new-persona');
+  const btnCreateBack = document.getElementById('btn-ai-chat-create-back');
+  const btnCreateSubmit = document.getElementById('btn-ai-chat-create-submit');
+  const btnConvBack = document.getElementById('btn-ai-chat-conv-back');
+  const btnDeletePersona = document.getElementById('btn-ai-chat-delete-persona');
   if (!btnSend || !input) return; // tela não presente nesta versão
 
   btnSend.addEventListener('click', () => aiChatSend());
@@ -1780,30 +1876,18 @@ function setupAiChat() {
   });
   if (btnReset) btnReset.addEventListener('click', aiChatResetConversation);
   if (btnMic) btnMic.addEventListener('click', aiChatToggleRecording);
-  if (selectPersona) {
-    selectPersona.value = aiChatCurrentPersona();
-    if (inputPersonaName) {
-      const names = aiChatPersonaNames();
-      inputPersonaName.value = names[selectPersona.value] || '';
-      inputPersonaName.placeholder = `Ex: Max, Sofia... (padrão: ${AI_CHAT_DEFAULT_NAME})`;
-    }
-    selectPersona.addEventListener('change', () => {
-      localStorage.setItem('aiChatPersona', selectPersona.value);
-      if (inputPersonaName) {
-        const names = aiChatPersonaNames();
-        inputPersonaName.value = names[selectPersona.value] || '';
-      }
-      // Trocar de personalidade no meio da conversa confundiria o contexto — melhor recomeçar
-      aiChatResetConversation();
+  if (btnNewPersona) btnNewPersona.addEventListener('click', aiChatShowCreateView);
+  if (btnCreateBack) btnCreateBack.addEventListener('click', aiChatShowListView);
+  if (btnCreateSubmit) btnCreateSubmit.addEventListener('click', aiChatCreatePersonaFromForm);
+  if (btnConvBack) btnConvBack.addEventListener('click', aiChatShowListView);
+  if (btnDeletePersona) btnDeletePersona.addEventListener('click', aiChatDeleteCurrentPersona);
+
+  document.querySelectorAll('.persona-suggestion').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('input-persona-personality').value = btn.dataset.personality;
     });
-  }
-  if (inputPersonaName) {
-    inputPersonaName.addEventListener('change', () => {
-      aiChatSetPersonaName(aiChatCurrentPersona(), inputPersonaName.value);
-      // O nome muda a apresentação da IA, então recomeça a conversa pra ficar coerente
-      aiChatResetConversation();
-    });
-  }
+  });
+
   if (chkTts) {
     chkTts.checked = aiChatTtsEnabled;
     chkTts.addEventListener('change', () => {
@@ -1813,9 +1897,9 @@ function setupAiChat() {
     });
   }
 
-  // Inicia a conversa (mensagem de boas-vindas) na primeira vez que a tela abrir
+  // Sempre que o aluno entra na tela "Praticar com a IA", volta pra lista de personalidades
   const aiChatMenuBtn = document.querySelector('.menu-btn[data-screen="ai-chat"]');
-  if (aiChatMenuBtn) aiChatMenuBtn.addEventListener('click', aiChatStartIfNeeded);
+  if (aiChatMenuBtn) aiChatMenuBtn.addEventListener('click', aiChatShowListView);
 }
 
 document.addEventListener('DOMContentLoaded', boot);

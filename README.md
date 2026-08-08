@@ -80,7 +80,9 @@ Toda vez que você der `git push`, a Vercel republica sozinha.
 
 ## Passo 4 — IA para praticar conversação (opcional, e gratuito)
 
-O app tem uma tela **"🤖 Praticar com IA"** onde o aluno conversa em inglês com um parceiro de conversação com IA, que ajusta o vocabulário ao nível do aluno e corrige erros com gentileza. Isso usa o **Gemini API do Google (Google AI Studio)**, que tem uma cota gratuita generosa (bem mais do que uma escola pequena usaria) — não precisa cartão de crédito.
+O app tem uma tela **"🤖 Praticar com IA"** onde o aluno **cria suas próprias personalidades de IA** — escolhe um avatar, um nome e descreve a personalidade do jeito que quiser (ex: "uma astronauta aventureira que adora contar histórias sobre o espaço") — e cada personalidade vira uma conversa exclusiva, com histórico salvo separado. O aluno pode criar quantas personalidades quiser (ficam numa lista, tipo contatos) e voltar a conversar com qualquer uma delas depois. A IA ajusta o vocabulário ao nível do aluno e corrige erros com gentileza, mantendo o "jeito de ser" descrito, mas sempre dentro das regras de segurança do app (isso vale mesmo que o aluno tente descrever uma personalidade que peça pra "ignorar as regras" — o servidor sempre prioriza a segurança). Isso usa o **Gemini API do Google (Google AI Studio)**, que tem uma cota gratuita generosa (bem mais do que uma escola pequena usaria) — não precisa cartão de crédito.
+
+> As personalidades e as conversas ficam salvas só no navegador/aparelho do aluno (localStorage) — não sincronizam entre aparelhos nem aparecem para o professor, mesmo com Supabase configurado.
 
 1. Acesse [aistudio.google.com](https://aistudio.google.com), entre com uma conta Google e clique em **Get API key → Create API key**.
 2. Copie a chave gerada (começa com `AIza...`).
