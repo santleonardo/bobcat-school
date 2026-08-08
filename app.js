@@ -784,8 +784,8 @@ async function renderProfileView() {
   const cloudNote = document.getElementById('cloud-status');
   if (cloudNote) {
     cloudNote.textContent = isUsingCloud()
-      ? '☁️ Conta na nuvem (Supabase) — funciona em qualquer aparelho'
-      : '💾 Salvo apenas neste navegador (sem Supabase configurado)';
+      ? '☁️ Conta na nuvem — funciona em qualquer aparelho'
+      : '💾 Salvo apenas neste navegador';
   }
 
   const logoutBtn = document.getElementById('btn-logout');
@@ -860,7 +860,7 @@ async function renderMessages() {
   if (!thread) return;
 
   if (!messagingAvailable()) {
-    notice.innerHTML = '<div class="chat-empty" style="background:var(--cream-2); border-radius:10px; padding:12px;">💾 Esse canal só funciona com conta na nuvem (Supabase). Crie uma conta com e-mail e senha para poder falar com o professor.</div>';
+    notice.innerHTML = '<div class="chat-empty" style="background:var(--cream-2); border-radius:10px; padding:12px;">💾 Esse canal só funciona com conta na nuvem. Crie uma conta com e-mail e senha para poder falar com o professor.</div>';
     thread.innerHTML = '';
     input.disabled = true;
     sendBtn.disabled = true;

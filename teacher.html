@@ -694,7 +694,7 @@ async function loadAddLessonTab() {
   const slot = document.getElementById('addlesson-notice-slot');
   const client = await ensureClient();
   if (!client) {
-    slot.innerHTML = '<div class="notice error">⚠️ O Supabase ainda não foi configurado — não dá pra adicionar lições pelo painel sem ele (elas ficam guardadas no banco, já que este é um site estático).</div>';
+    slot.innerHTML = '<div class="notice error">⚠️ A conta na nuvem ainda não foi configurada — não dá pra adicionar lições pelo painel sem ela (elas ficam guardadas no banco, já que este é um site estático).</div>';
     document.getElementById('addlesson-content').style.display = 'none';
     return;
   }
@@ -825,7 +825,7 @@ async function ensureClient() {
   const cfg = window.SUPABASE_CONFIG;
   const configured = cfg && cfg.url && cfg.anonKey && !cfg.url.includes('SEU-PROJETO');
   if (!configured || !window.supabase) {
-    showNotice('⚠️ O Supabase ainda não foi configurado em <code>config.js</code> (ou a biblioteca não carregou — verifique sua conexão). Sem isso, este painel não tem de onde puxar os dados da turma — ele só funciona com Supabase (não existe versão "local" do painel do professor, já que o objetivo aqui é ver todos os alunos juntos).', true);
+    showNotice('⚠️ A conexão com a nuvem ainda não foi configurada em <code>config.js</code> (ou a biblioteca não carregou — verifique sua conexão). Sem isso, este painel não tem de onde puxar os dados da turma — ele só funciona com conta na nuvem configurada (não existe versão "local" do painel do professor, já que o objetivo aqui é ver todos os alunos juntos).', true);
     return null;
   }
   const client = window.supabase.createClient(cfg.url, cfg.anonKey);
@@ -833,7 +833,7 @@ async function ensureClient() {
   if (!session) {
     const { error } = await client.auth.signInAnonymously();
     if (error) {
-      showNotice('⚠️ Não foi possível conectar ao Supabase: ' + error.message, true);
+      showNotice('⚠️ Não foi possível conectar à nuvem: ' + error.message, true);
       return null;
     }
   }
@@ -906,7 +906,7 @@ async function loadData() {
   const { data: progress, error: gErr } = await client.from('progress').select('*');
 
   if (pErr || gErr) {
-    showNotice('⚠️ Erro ao consultar o Supabase: ' + ((pErr && pErr.message) || (gErr && gErr.message)), true);
+    showNotice('⚠️ Erro ao consultar a nuvem: ' + ((pErr && pErr.message) || (gErr && gErr.message)), true);
     return;
   }
 
@@ -1104,7 +1104,7 @@ async function loadMessages() {
   const client = await ensureClient();
   const slot = document.getElementById('messages-notice-slot');
   if (!client) {
-    slot.innerHTML = '<div class="notice error">⚠️ O Supabase ainda não foi configurado — o canal de mensagens não funciona sem ele.</div>';
+    slot.innerHTML = '<div class="notice error">⚠️ A conta na nuvem ainda não foi configurada — o canal de mensagens não funciona sem ela.</div>';
     document.getElementById('messages-content').style.display = 'none';
     return;
   }
@@ -1113,7 +1113,7 @@ async function loadMessages() {
   const { data: messages, error: mErr } = await client.from('messages').select('*').order('created_at', { ascending: true });
 
   if (pErr || mErr) {
-    slot.innerHTML = '<div class="notice error">⚠️ Erro ao consultar o Supabase: ' + ((pErr && pErr.message) || (mErr && mErr.message)) + '</div>';
+    slot.innerHTML = '<div class="notice error">⚠️ Erro ao consultar a nuvem: ' + ((pErr && pErr.message) || (mErr && mErr.message)) + '</div>';
     return;
   }
 
@@ -1274,7 +1274,7 @@ async function loadPasswords() {
   const client = await ensureClient();
   const slot = document.getElementById('passwords-notice-slot');
   if (!client) {
-    slot.innerHTML = '<div class="notice error">⚠️ O Supabase ainda não foi configurado — não dá pra cadastrar senhas por aluno sem ele.</div>';
+    slot.innerHTML = '<div class="notice error">⚠️ A conta na nuvem ainda não foi configurada — não dá pra cadastrar senhas por aluno sem ela.</div>';
     document.getElementById('passwords-content').style.display = 'none';
     return;
   }
@@ -1283,7 +1283,7 @@ async function loadPasswords() {
   const { data: passwords, error: pwErr } = await client.from('student_reset_passwords').select('*');
 
   if (pErr || pwErr) {
-    slot.innerHTML = '<div class="notice error">⚠️ Erro ao consultar o Supabase: ' + ((pErr && pErr.message) || (pwErr && pwErr.message)) + '</div>';
+    slot.innerHTML = '<div class="notice error">⚠️ Erro ao consultar a nuvem: ' + ((pErr && pErr.message) || (pwErr && pwErr.message)) + '</div>';
     return;
   }
 

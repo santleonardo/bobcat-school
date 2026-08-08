@@ -55,7 +55,7 @@ function isLoggedIn() {
 
 // Retorna { ok: true } ou { ok: false, message: '...', needsConfirmation: true|false }
 async function signUpStudent(email, password) {
-  if (!useSupabase) return { ok: false, message: 'Cadastro só está disponível com Supabase configurado.' };
+  if (!useSupabase) return { ok: false, message: 'Cadastro só está disponível com conta na nuvem configurada.' };
   email = (email || '').trim().toLowerCase();
   if (!isValidEmail(email)) return { ok: false, message: 'Digite um e-mail válido.' };
   if (!password || password.length < 6) return { ok: false, message: 'A senha precisa ter pelo menos 6 caracteres.' };
@@ -79,7 +79,7 @@ async function signUpStudent(email, password) {
 }
 
 async function signInStudent(email, password) {
-  if (!useSupabase) return { ok: false, message: 'Login só está disponível com Supabase configurado.' };
+  if (!useSupabase) return { ok: false, message: 'Login só está disponível com conta na nuvem configurada.' };
   email = (email || '').trim().toLowerCase();
   const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
   if (error) {
@@ -93,7 +93,7 @@ async function signInStudent(email, password) {
 }
 
 async function resetPasswordForEmail(email) {
-  if (!useSupabase) return { ok: false, message: 'Só disponível com Supabase configurado.' };
+  if (!useSupabase) return { ok: false, message: 'Só disponível com conta na nuvem configurada.' };
   email = (email || '').trim().toLowerCase();
   if (!isValidEmail(email)) return { ok: false, message: 'Digite um e-mail válido para recuperar a senha.' };
   const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
@@ -410,7 +410,7 @@ function isAllowedMessageFile(file) {
 // Faz upload de um arquivo anexado ao bucket do Supabase Storage e devolve
 // os metadados para salvar junto da mensagem.
 async function uploadMessageFile(file) {
-  if (!messagingAvailable()) return { ok: false, message: 'Esse recurso precisa de uma conta na nuvem (Supabase) para funcionar.' };
+  if (!messagingAvailable()) return { ok: false, message: 'Esse recurso precisa de uma conta na nuvem para funcionar.' };
   if (!file) return { ok: false, message: 'Nenhum arquivo selecionado.' };
   if (file.size > MAX_MESSAGE_FILE_SIZE) return { ok: false, message: 'Arquivo muito grande (máximo 10MB).' };
   if (!isAllowedMessageFile(file)) return { ok: false, message: 'Tipo de arquivo não permitido. Envie PDF, Word, texto, planilha, apresentação ou imagem.' };
@@ -440,7 +440,7 @@ async function getMyMessages() {
 // Envia uma mensagem do aluno para o professor. `file`, se passado (um
 // objeto File do input), é enviado como anexo — pode ir sozinho, sem texto.
 async function sendMessageToTeacher(body, file) {
-  if (!messagingAvailable()) return { ok: false, message: 'Esse recurso precisa de uma conta na nuvem (Supabase) para funcionar.' };
+  if (!messagingAvailable()) return { ok: false, message: 'Esse recurso precisa de uma conta na nuvem para funcionar.' };
   const text = (body || '').trim();
   if (!text && !file) return { ok: false, message: 'Escreva algo ou anexe um arquivo antes de enviar.' };
 

@@ -70,7 +70,7 @@ module.exports = async function handler(req, res) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     res.status(500).json({
-      error: 'GEMINI_API_KEY não configurada no servidor. Veja o README para configurar na Vercel.'
+      error: 'A IA ainda não foi configurada no servidor. Veja o README para configurar na Vercel.'
     });
     return;
   }
