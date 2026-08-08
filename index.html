@@ -35,9 +35,42 @@
   <!-- TELA: LOGIN / CADASTRO (só aparece quando o Supabase está configurado) -->
   <div class="screen hidden" id="screen-auth">
     <div class="auth-hero">
-      <img src="./icons/icon-192.png" alt="Bobcat Language School" class="auth-hero-logo">
-      <div class="auth-hero-title">Bobcat Language School</div>
-      <div class="auth-hero-sub">Aprenda inglês no seu ritmo</div>
+      <div class="auth-hero-top">
+        <img src="./icons/icon-192.png" alt="Bobcat Language School" class="auth-hero-logo">
+        <p class="auth-eyebrow">Bobcat Language School</p>
+        <h1 class="auth-hero-title">Inglês aprendido com clareza.</h1>
+        <p class="auth-hero-sub">Lições estruturadas, prática de conversação com IA e acompanhamento real do seu progresso — tudo em um único lugar.</p>
+      </div>
+
+      <div class="auth-features">
+        <div class="auth-feature">
+          <span class="auth-feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11a2 2 0 0 1 2 2v14a1.5 1.5 0 0 0-1.5-1.5H4Z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13a2 2 0 0 0-2 2v14a1.5 1.5 0 0 1 1.5-1.5H20Z"/></svg>
+          </span>
+          <div class="auth-feature-copy">
+            <div class="auth-feature-title">Lições guiadas</div>
+            <div class="auth-feature-sub">Do A1 ao C1, passo a passo</div>
+          </div>
+        </div>
+        <div class="auth-feature">
+          <span class="auth-feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8.5L4 19.5Z"/><path d="M8 9.5h8M8 12.5h5"/></svg>
+          </span>
+          <div class="auth-feature-copy">
+            <div class="auth-feature-title">Prática com IA</div>
+            <div class="auth-feature-sub">Converse em inglês quando quiser</div>
+          </div>
+        </div>
+        <div class="auth-feature">
+          <span class="auth-feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M11 20V4M18 20v-7"/><path d="M3 20h18"/></svg>
+          </span>
+          <div class="auth-feature-copy">
+            <div class="auth-feature-title">Progresso real</div>
+            <div class="auth-feature-sub">Veja sua evolução lição a lição</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="auth-card">
@@ -125,27 +158,57 @@
       </div>
     </div>
 
-    <h2 class="screen-title" style="margin:20px 0 12px 0;">O que você quer fazer?</h2>
+    <h2 class="screen-title menu-section-title">O que você quer fazer?</h2>
     <div class="menu-grid">
       <button class="menu-btn" data-screen="home">
-        <span class="menu-btn-icon">📖</span>
-        <span class="menu-btn-label">Lições</span>
+        <span class="menu-btn-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11a2 2 0 0 1 2 2v14a1.5 1.5 0 0 0-1.5-1.5H4Z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13a2 2 0 0 0-2 2v14a1.5 1.5 0 0 1 1.5-1.5H20Z"/></svg>
+        </span>
+        <span class="menu-btn-text">
+          <span class="menu-btn-label">Lições</span>
+          <span class="menu-btn-desc">Estude passo a passo, no seu nível</span>
+        </span>
+        <span class="menu-btn-chevron" aria-hidden="true">›</span>
       </button>
       <button class="menu-btn" data-screen="ai-chat">
-        <span class="menu-btn-icon">🤖</span>
-        <span class="menu-btn-label">Praticar com IA</span>
+        <span class="menu-btn-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8.5L4 19.5Z"/><path d="M8 9.5h8M8 12.5h5"/></svg>
+        </span>
+        <span class="menu-btn-text">
+          <span class="menu-btn-label">Praticar com IA</span>
+          <span class="menu-btn-desc">Converse em inglês quando quiser</span>
+        </span>
+        <span class="menu-btn-chevron" aria-hidden="true">›</span>
       </button>
       <button class="menu-btn" data-screen="tests">
-        <span class="menu-btn-icon">🎯</span>
-        <span class="menu-btn-label">Testes</span>
+        <span class="menu-btn-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></svg>
+        </span>
+        <span class="menu-btn-text">
+          <span class="menu-btn-label">Testes</span>
+          <span class="menu-btn-desc">Descubra seu nível de inglês</span>
+        </span>
+        <span class="menu-btn-chevron" aria-hidden="true">›</span>
       </button>
       <button class="menu-btn" data-screen="extra">
-        <span class="menu-btn-icon">📘</span>
-        <span class="menu-btn-label">Extra</span>
+        <span class="menu-btn-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H17a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2Z"/></svg>
+        </span>
+        <span class="menu-btn-text">
+          <span class="menu-btn-label">Extra</span>
+          <span class="menu-btn-desc">Materiais e gramática sem pré-requisito</span>
+        </span>
+        <span class="menu-btn-chevron" aria-hidden="true">›</span>
       </button>
       <button class="menu-btn" data-screen="profile-view">
-        <span class="menu-btn-icon">👤</span>
-        <span class="menu-btn-label">Perfil</span>
+        <span class="menu-btn-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.6 4-5.5 7-5.5s5.8 1.9 7 5.5"/></svg>
+        </span>
+        <span class="menu-btn-text">
+          <span class="menu-btn-label">Perfil</span>
+          <span class="menu-btn-desc">Seu progresso e suas conquistas</span>
+        </span>
+        <span class="menu-btn-chevron" aria-hidden="true">›</span>
       </button>
     </div>
   </div>
