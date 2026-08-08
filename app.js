@@ -1548,10 +1548,95 @@ let aiChatHistory = []; // [{role:'user'|'model', text}]
 let aiChatBusy = false;
 let aiChatStarted = false;
 
+// Áudio: gravação (aluno fala) e leitura em voz (TTS do navegador, sem custo de IA)
+let aiChatMediaRecorder = null;
+let aiChatAudioChunks = [];
+let aiChatRecording = false;
+const AI_CHAT_MAX_RECORD_MS = 30000; // 30s é suficiente pra prática e mantém o áudio leve
+let aiChatRecordTimeout = null;
+let aiChatTtsEnabled = localStorage.getItem('aiChatTtsEnabled') === '1';
+
 function aiChatEscapeHtml(s) {
   const div = document.createElement('div');
   div.textContent = s;
   return div.innerHTML;
+}
+
+function aiChatSpeak(text) {
+  if (!aiChatTtsEnabled || !text) return;
+  if (!('speechSynthesis' in window)) return;
+  try {
+    window.speechSynthesis.cancel(); // corta qualquer fala anterior antes de começar a nova
+    // Remove marcações que não fazem sentido faladas (ex: parênteses de tradução ficam, mas emojis somem)
+    const clean = text.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '').trim();
+    if (!clean) return;
+    const utter = new SpeechSynthesisUtterance(clean);
+    utter.lang = 'en-US';
+    utter.rate = 0.95;
+    window.speechSynthesis.speak(utter);
+  } catch (e) { /* TTS não é essencial — falha silenciosa */ }
+}
+
+function aiChatBlobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result.split(',')[1] || '');
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function aiChatToggleRecording() {
+  const micBtn = document.getElementById('btn-ai-chat-mic');
+  const status = document.getElementById('ai-chat-recording-status');
+
+  if (aiChatRecording) {
+    // Toque de novo = parar e enviar
+    if (aiChatMediaRecorder && aiChatMediaRecorder.state !== 'inactive') aiChatMediaRecorder.stop();
+    return;
+  }
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    alert('Seu navegador não permite gravar áudio aqui. Tente digitar a mensagem.');
+    return;
+  }
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    aiChatAudioChunks = [];
+    const mimeType = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : '';
+    aiChatMediaRecorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+
+    aiChatMediaRecorder.addEventListener('dataavailable', (e) => {
+      if (e.data && e.data.size > 0) aiChatAudioChunks.push(e.data);
+    });
+
+    aiChatMediaRecorder.addEventListener('stop', async () => {
+      stream.getTracks().forEach(t => t.stop());
+      aiChatRecording = false;
+      if (aiChatRecordTimeout) { clearTimeout(aiChatRecordTimeout); aiChatRecordTimeout = null; }
+      if (micBtn) { micBtn.textContent = '🎤'; micBtn.style.background = ''; }
+      if (status) status.classList.add('hidden');
+
+      if (aiChatAudioChunks.length === 0) return;
+      const blob = new Blob(aiChatAudioChunks, { type: aiChatMediaRecorder.mimeType || 'audio/webm' });
+      const base64 = await aiChatBlobToBase64(blob);
+      aiChatSend({ mimeType: blob.type || 'audio/webm', data: base64 });
+    });
+
+    aiChatMediaRecorder.start();
+    aiChatRecording = true;
+    if (micBtn) { micBtn.textContent = '⏹️'; micBtn.style.background = '#f5c6c6'; }
+    if (status) status.classList.remove('hidden');
+
+    // Corta automaticamente depois de um tempo, pra não gravar áudio gigante sem querer
+    aiChatRecordTimeout = setTimeout(() => {
+      if (aiChatMediaRecorder && aiChatMediaRecorder.state !== 'inactive') aiChatMediaRecorder.stop();
+    }, AI_CHAT_MAX_RECORD_MS);
+  } catch (e) {
+    console.error('Erro ao acessar microfone:', e);
+    alert('Não consegui acessar o microfone. Verifique a permissão do navegador.');
+  }
 }
 
 function aiChatRenderThread() {
@@ -1560,7 +1645,8 @@ function aiChatRenderThread() {
   thread.innerHTML = aiChatHistory.map(m => {
     const cls = m.role === 'user' ? 'student' : 'teacher';
     const label = m.role === 'user' ? 'Você' : '🤖 Bobcat AI';
-    return `<div class="chat-bubble ${cls}"><span class="chat-meta">${label}</span>${aiChatEscapeHtml(m.text).replace(/\n/g, '<br>')}</div>`;
+    const prefix = m.viaAudio ? '🎤 ' : '';
+    return `<div class="chat-bubble ${cls}"><span class="chat-meta">${label}</span>${prefix}${aiChatEscapeHtml(m.text).replace(/\n/g, '<br>')}</div>`;
   }).join('');
   thread.scrollTop = thread.scrollHeight;
 }
@@ -1577,6 +1663,7 @@ async function aiChatStartIfNeeded() {
     text: `Hi${name ? ' ' + name : ''}! 👋 I'm Bobcat AI, your English conversation partner. We can talk about anything — your day, hobbies, movies, whatever! I'll help fix your mistakes along the way. So... how are you today?`
   }];
   aiChatRenderThread();
+  aiChatSpeak(aiChatHistory[0].text);
 }
 
 function aiChatResetConversation() {
@@ -1585,18 +1672,21 @@ function aiChatResetConversation() {
   aiChatStartIfNeeded();
 }
 
-async function aiChatSend() {
+async function aiChatSend(audioPayload) {
   if (aiChatBusy) return;
   const input = document.getElementById('ai-chat-input');
   const typing = document.getElementById('ai-chat-typing');
   if (!input) return;
   const text = input.value.trim();
-  if (!text) return;
+  if (!text && !audioPayload) return;
 
   let profile = {};
   try { profile = (await getProfile()) || {}; } catch (e) { /* sem perfil ainda */ }
 
-  aiChatHistory.push({ role: 'user', text });
+  // Se veio de gravação, ainda não sabemos o que o aluno disse (a transcrição acontece do lado da IA),
+  // então mostramos um rótulo genérico na bolha; a IA recebe o áudio de verdade na requisição.
+  const displayText = audioPayload ? (text || '(mensagem em áudio)') : text;
+  aiChatHistory.push({ role: 'user', text: displayText, viaAudio: !!audioPayload });
   input.value = '';
   aiChatRenderThread();
 
@@ -1604,21 +1694,25 @@ async function aiChatSend() {
   if (typing) typing.classList.remove('hidden');
 
   try {
+    const body = {
+      message: text, // pode vir vazio quando é só áudio — o servidor aceita
+      history: aiChatHistory.slice(0, -1), // tudo exceto a mensagem que acabou de entrar
+      level: profile.level || 'A1',
+      name: profile.name || ''
+    };
+    if (audioPayload) body.audio = audioPayload;
+
     const resp = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: text,
-        history: aiChatHistory.slice(0, -1), // tudo exceto a mensagem que acabou de entrar
-        level: profile.level || 'A1',
-        name: profile.name || ''
-      })
+      body: JSON.stringify(body)
     });
     const data = await resp.json().catch(() => ({}));
     if (!resp.ok || !data.reply) {
       aiChatHistory.push({ role: 'model', text: '⚠️ ' + (data.error || 'Não consegui responder agora. Tente novamente em instantes.') });
     } else {
       aiChatHistory.push({ role: 'model', text: data.reply });
+      aiChatSpeak(data.reply);
     }
   } catch (err) {
     console.error(err);
@@ -1634,9 +1728,11 @@ function setupAiChat() {
   const btnSend = document.getElementById('btn-send-ai-message');
   const input = document.getElementById('ai-chat-input');
   const btnReset = document.getElementById('btn-ai-chat-reset');
+  const btnMic = document.getElementById('btn-ai-chat-mic');
+  const chkTts = document.getElementById('chk-ai-chat-tts');
   if (!btnSend || !input) return; // tela não presente nesta versão
 
-  btnSend.addEventListener('click', aiChatSend);
+  btnSend.addEventListener('click', () => aiChatSend());
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -1644,6 +1740,15 @@ function setupAiChat() {
     }
   });
   if (btnReset) btnReset.addEventListener('click', aiChatResetConversation);
+  if (btnMic) btnMic.addEventListener('click', aiChatToggleRecording);
+  if (chkTts) {
+    chkTts.checked = aiChatTtsEnabled;
+    chkTts.addEventListener('change', () => {
+      aiChatTtsEnabled = chkTts.checked;
+      localStorage.setItem('aiChatTtsEnabled', aiChatTtsEnabled ? '1' : '0');
+      if (!aiChatTtsEnabled && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+    });
+  }
 
   // Inicia a conversa (mensagem de boas-vindas) na primeira vez que a tela abrir
   const aiChatMenuBtn = document.querySelector('.menu-btn[data-screen="ai-chat"]');
