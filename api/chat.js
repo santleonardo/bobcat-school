@@ -27,14 +27,16 @@ const PERSONAS = {
   elder: `Personality: You are a warm, patient grandparent figure who loves a good chat. Speak a little more slowly and thoughtfully, occasionally share a short anecdote or life reflection, and show genuine interest in the student's life, family, and day-to-day routine. Tone is gentle, wise, and unhurried.`
 };
 
-function systemPromptFor(level, name, personaId) {
+function systemPromptFor(level, name, personaId, aiName) {
   const lvl = (level || 'A1').toUpperCase();
   const persona = PERSONAS[personaId] || PERSONAS.tutor;
-  return `You are "Bobcat", an AI English conversation partner inside a language-learning app for Brazilian students. You are chatting with a student named ${name || 'the student'}, whose self-reported English level is ${lvl} (CEFR scale).
+  const botName = (aiName || 'Bobcat').trim() || 'Bobcat';
+  return `You are "${botName}", an AI English conversation partner inside a language-learning app for Brazilian students. You are chatting with a student named ${name || 'the student'}, whose self-reported English level is ${lvl} (CEFR scale).
 
 ${persona}
 
 Rules:
+- Your name is ${botName} — introduce yourself and refer to yourself as ${botName} if it comes up, never as "Bobcat" unless that happens to be your name.
 - Keep replies SHORT: 2 to 4 sentences max.
 - Match the student's level (${lvl}). For A1/A2, use very simple vocabulary and short sentences, and you may add a short Portuguese translation in parentheses for a key word or phrase when it helps. For B1+, reply mostly in English with little to no Portuguese.
 - Gently correct any clear grammar or vocabulary mistakes: show the corrected sentence, briefly explain the fix in one short line, then continue the conversation naturally. Don't correct every tiny thing — focus on the most useful fix per message.
@@ -65,6 +67,7 @@ module.exports = async function handler(req, res) {
     const level = String(body.level || 'A1').slice(0, 10);
     const name = String(body.name || '').slice(0, 60);
     const persona = String(body.persona || 'tutor').slice(0, 20);
+    const aiName = String(body.aiName || '').slice(0, 30).trim();
     const history = Array.isArray(body.history) ? body.history.slice(-MAX_HISTORY_MESSAGES) : [];
 
     // Áudio é opcional: o aluno pode gravar a voz em vez de digitar.
@@ -104,7 +107,7 @@ module.exports = async function handler(req, res) {
     contents.push({ role: 'user', parts: currentParts });
 
     const payload = {
-      system_instruction: { parts: [{ text: systemPromptFor(level, name, persona) }] },
+      system_instruction: { parts: [{ text: systemPromptFor(level, name, persona, aiName) }] },
       contents,
       generationConfig: {
         maxOutputTokens: 250,
