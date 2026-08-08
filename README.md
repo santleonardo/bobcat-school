@@ -78,16 +78,36 @@ Toda vez que você der `git push`, a Vercel republica sozinha.
 
 ---
 
+## Passo 4 — IA para praticar conversação (opcional, e gratuito)
+
+O app tem uma tela **"🤖 Praticar com IA"** onde o aluno conversa em inglês com um parceiro de conversação com IA, que ajusta o vocabulário ao nível do aluno e corrige erros com gentileza. Isso usa o **Gemini API do Google (Google AI Studio)**, que tem uma cota gratuita generosa (bem mais do que uma escola pequena usaria) — não precisa cartão de crédito.
+
+1. Acesse [aistudio.google.com](https://aistudio.google.com), entre com uma conta Google e clique em **Get API key → Create API key**.
+2. Copie a chave gerada (começa com `AIza...`).
+3. No painel da Vercel, abra o projeto do app → **Settings → Environment Variables**.
+4. Adicione uma variável:
+   - **Name:** `GEMINI_API_KEY`
+   - **Value:** cole a chave que você copiou
+   - Marque para os ambientes **Production** (e Preview, se usar).
+5. Clique em **Save**, depois vá em **Deployments** e clique em **Redeploy** no último deploy (para a variável nova entrar em vigor).
+
+Pronto — a chave fica só no servidor da Vercel, nunca aparece no navegador do aluno. Se você não configurar essa variável, a tela de chat continua no app mas mostra um aviso avisando que a IA não está configurada, sem quebrar o resto do app.
+
+> **Sobre custo:** o Gemini 2.5 Flash-Lite (modelo usado por padrão, veja `api/chat.js`) tem uma cota diária gratuita alta o bastante para o uso normal de uma turma. Se um dia a escola crescer muito e passar da cota grátis, dá pra ativar faturamento no Google AI Studio (paga só pelo excedente) — mas isso é opcional e você decide se/quando fazer isso.
+
+---
+
 ## Estrutura do projeto
 
 ```
-index.html          → tela de perfil + lista de lições (o app em si)
-app.js               → lógica de navegação e telas
-db-client.js         → decide entre Supabase (nuvem) e localStorage (offline)
-config.js            → suas chaves do Supabase (edite aqui)
-style.css            → visual do app
-manifest.json        → deixa o app instalável
-sw.js                → cache offline (service worker)
+index.html           → tela de perfil + lista de lições (o app em si)
+app.js                → lógica de navegação e telas
+db-client.js          → decide entre Supabase (nuvem) e localStorage (offline)
+config.js             → suas chaves do Supabase (edite aqui)
+api/chat.js            → função serverless (Vercel) que fala com a IA — a GEMINI_API_KEY fica aqui, como variável de ambiente, nunca neste arquivo
+style.css             → visual do app
+manifest.json         → deixa o app instalável
+sw.js                 → cache offline (service worker)
 schema.sql            → script para criar as tabelas no Supabase
 teacher.html         → painel do professor (só funciona com Supabase configurado)
 icons/               → ícones do app

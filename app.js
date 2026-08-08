@@ -332,9 +332,9 @@ const LESSONS = [
     name: "Lição 15 — Can, Can't e Comunicação do Dia a Dia",
     level: 'A1',
     icon: '🙌',
-    description: "Habilidades e permissões com Can/Can't",
+    description: "Teoria completa, diálogo, cultura, vocabulário e exercícios sobre Can/Can't",
     url: 'lessons/licao-15-can-cant.html',
-    totalQuestions: 12 // design interativo
+    totalQuestions: 38 // teoria + vocab + 6 partes de exercícios
   },
   {
     id: 'licao-16-present-continuous',
@@ -1405,6 +1405,8 @@ async function boot() {
     btn.addEventListener('click', () => showScreen(btn.dataset.screen));
   });
 
+  setupAiChat();
+
   const topbarHomeLink = document.getElementById('topbar-home-link');
   if (topbarHomeLink) {
     const goHome = () => {
@@ -1539,6 +1541,113 @@ function showUpdateBanner(registration) {
       window.location.reload();
     }
   });
+}
+
+// ─── PRATICAR COM IA (chat de conversação) ──────────────────
+let aiChatHistory = []; // [{role:'user'|'model', text}]
+let aiChatBusy = false;
+let aiChatStarted = false;
+
+function aiChatEscapeHtml(s) {
+  const div = document.createElement('div');
+  div.textContent = s;
+  return div.innerHTML;
+}
+
+function aiChatRenderThread() {
+  const thread = document.getElementById('ai-chat-thread');
+  if (!thread) return;
+  thread.innerHTML = aiChatHistory.map(m => {
+    const cls = m.role === 'user' ? 'student' : 'teacher';
+    const label = m.role === 'user' ? 'Você' : '🤖 Bobcat AI';
+    return `<div class="chat-bubble ${cls}"><span class="chat-meta">${label}</span>${aiChatEscapeHtml(m.text).replace(/\n/g, '<br>')}</div>`;
+  }).join('');
+  thread.scrollTop = thread.scrollHeight;
+}
+
+async function aiChatStartIfNeeded() {
+  if (aiChatStarted) return;
+  aiChatStarted = true;
+  let profile = {};
+  try { profile = (await getProfile()) || {}; } catch (e) { /* sem perfil ainda */ }
+  const name = profile.name || '';
+  const level = profile.level || 'A1';
+  aiChatHistory = [{
+    role: 'model',
+    text: `Hi${name ? ' ' + name : ''}! 👋 I'm Bobcat AI, your English conversation partner. We can talk about anything — your day, hobbies, movies, whatever! I'll help fix your mistakes along the way. So... how are you today?`
+  }];
+  aiChatRenderThread();
+}
+
+function aiChatResetConversation() {
+  aiChatStarted = false;
+  aiChatHistory = [];
+  aiChatStartIfNeeded();
+}
+
+async function aiChatSend() {
+  if (aiChatBusy) return;
+  const input = document.getElementById('ai-chat-input');
+  const typing = document.getElementById('ai-chat-typing');
+  if (!input) return;
+  const text = input.value.trim();
+  if (!text) return;
+
+  let profile = {};
+  try { profile = (await getProfile()) || {}; } catch (e) { /* sem perfil ainda */ }
+
+  aiChatHistory.push({ role: 'user', text });
+  input.value = '';
+  aiChatRenderThread();
+
+  aiChatBusy = true;
+  if (typing) typing.classList.remove('hidden');
+
+  try {
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: text,
+        history: aiChatHistory.slice(0, -1), // tudo exceto a mensagem que acabou de entrar
+        level: profile.level || 'A1',
+        name: profile.name || ''
+      })
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok || !data.reply) {
+      aiChatHistory.push({ role: 'model', text: '⚠️ ' + (data.error || 'Não consegui responder agora. Tente novamente em instantes.') });
+    } else {
+      aiChatHistory.push({ role: 'model', text: data.reply });
+    }
+  } catch (err) {
+    console.error(err);
+    aiChatHistory.push({ role: 'model', text: '⚠️ Erro de conexão. Verifique sua internet e tente de novo.' });
+  } finally {
+    aiChatBusy = false;
+    if (typing) typing.classList.add('hidden');
+    aiChatRenderThread();
+  }
+}
+
+function setupAiChat() {
+  const btnSend = document.getElementById('btn-send-ai-message');
+  const input = document.getElementById('ai-chat-input');
+  const btnReset = document.getElementById('btn-ai-chat-reset');
+  if (!btnSend || !input) return; // tela não presente nesta versão
+
+  btnSend.addEventListener('click', aiChatSend);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      aiChatSend();
+    }
+  });
+  if (btnReset) btnReset.addEventListener('click', aiChatResetConversation);
+
+  // Inicia a conversa (mensagem de boas-vindas) na primeira vez que a tela abrir
+  const aiChatMenuBtn = document.querySelector('.menu-btn[data-screen="ai-chat"]');
+  if (aiChatMenuBtn) aiChatMenuBtn.addEventListener('click', aiChatStartIfNeeded);
 }
 
 document.addEventListener('DOMContentLoaded', boot);

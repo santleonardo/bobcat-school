@@ -128,6 +128,10 @@
         <span class="menu-btn-icon">📖</span>
         <span class="menu-btn-label">Lições</span>
       </button>
+      <button class="menu-btn" data-screen="ai-chat">
+        <span class="menu-btn-icon">🤖</span>
+        <span class="menu-btn-label">Praticar com IA</span>
+      </button>
       <button class="menu-btn" data-screen="tests">
         <span class="menu-btn-icon">🎯</span>
         <span class="menu-btn-label">Testes</span>
@@ -251,6 +255,26 @@
     <button class="btn secondary" id="btn-reset-progress" style="width:100%; margin-top:10px; background:#fff; color:#C0392B; border-color:#C0392B;">Zerar progresso das lições</button>
     <button class="btn secondary hidden" id="btn-logout" style="width:100%; margin-top:10px;">Sair da conta</button>
     <p id="cloud-status" style="text-align:center; font-size:11.5px; color:#999; margin-top:14px;"></p>
+  </div>
+
+  <!-- TELA: PRATICAR CONVERSAÇÃO COM IA -->
+  <div class="screen hidden" id="screen-ai-chat">
+    <h2 class="screen-title">🤖 Praticar com a IA</h2>
+    <p style="font-size:13px; color:#888; margin-bottom:14px;">Converse em inglês com a Bobcat AI. Ela ajusta a conversa ao seu nível e corrige seus erros com gentileza. É só um parceiro de prática — não substitui as aulas com o professor.</p>
+
+    <div class="chat-box" id="ai-chat-box" style="overflow:visible;">
+      <div class="chat-panel" style="padding:0 0 12px 0;">
+        <div class="chat-thread" id="ai-chat-thread" style="max-height:52vh;"></div>
+        <div id="ai-chat-typing" class="chat-empty hidden" style="text-align:left; padding:2px 8px;">🤖 Bobcat está digitando...</div>
+        <div class="chat-input-row">
+          <div class="chat-input-main">
+            <textarea id="ai-chat-input" rows="2" placeholder="Escreva algo em inglês (ou português, se travar)..."></textarea>
+          </div>
+          <button class="btn" id="btn-send-ai-message" title="Enviar mensagem" aria-label="Enviar mensagem">➤</button>
+        </div>
+      </div>
+    </div>
+    <button type="button" class="link-btn" id="btn-ai-chat-reset" style="margin-top:10px;">🔄 Começar uma nova conversa</button>
   </div>
 
   <!-- TELA: TESTES DE NIVELAMENTO -->
