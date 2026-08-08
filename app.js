@@ -1706,10 +1706,44 @@ function aiChatRenderThread() {
   thread.scrollTop = thread.scrollHeight;
 }
 
+/** Retorna 'morning' | 'afternoon' | 'evening' | 'night' conforme o horário local do aluno. */
+function aiChatTimeOfDay() {
+  const h = new Date().getHours();
+  if (h >= 5 && h < 12) return 'morning';
+  if (h >= 12 && h < 18) return 'afternoon';
+  if (h >= 18 && h < 22) return 'evening';
+  return 'night';
+}
+
 function aiChatGreetingFor(persona, studentName) {
   const hi = studentName ? `, ${studentName}` : '';
-  return `${persona.emoji || '🤖'} Hi${hi}! I'm ${persona.name}. Let's practice English together — ask me anything or tell me about your day. What would you like to talk about?`;
+  const name = persona.name || 'IA';
+  const emoji = persona.emoji || '🤖';
+  const tod = aiChatTimeOfDay();
+  const greetings = {
+    morning: [
+      `${emoji} Good morning${hi}! I'm ${name}. How are you today?`,
+      `${emoji} Morning${hi}! Ready to practice a little English with me?`
+    ],
+    afternoon: [
+      `${emoji} Good afternoon${hi}! I'm ${name}. How's your day going?`,
+      `${emoji} Hey${hi}! Want to chat for a bit and practice English?`
+    ],
+    evening: [
+      `${emoji} Good evening${hi}! I'm ${name}. How was your day?`,
+      `${emoji} Hi${hi}! Nice to see you this evening. What would you like to talk about?`
+    ],
+    night: [
+      `${emoji} Hi${hi}! I'm ${name}. Still awake? Let's practice a little English.`,
+      `${emoji} Hello${hi}! Quiet night — perfect for a short chat. How are you?`
+    ]
+  };
+  const list = greetings[tod] || greetings.afternoon;
+  return list[Math.floor(Math.random() * list.length)];
 }
+
+/** Quantas horas sem mensagem para a IA "puxar" conversa de novo ao abrir o chat. */
+const AI_PROACTIVE_AFTER_HOURS = 4;
 
 // ---------- Navegação entre as 3 sub-telas de "Praticar com a IA" ----------
 
@@ -1765,10 +1799,20 @@ async function aiChatOpenPersona(id) {
   if (aiChatHistory.length === 0) {
     let profile = {};
     try { profile = (await getProfile()) || {}; } catch (e) { /* sem perfil ainda */ }
-    aiChatHistory = [{ role: 'model', text: aiChatGreetingFor(persona, profile.name || '') }];
+    aiChatHistory = [{ role: 'model', text: aiChatGreetingFor(persona, profile.name || ''), ts: Date.now() }];
     saveAiChatHistoryFor(id, aiChatHistory);
+    aiChatRenderThread();
+  } else {
+    aiChatRenderThread();
+    // Se a conversa está "fria" (última mensagem antiga), a IA puxa assunto sozinha.
+    const last = aiChatHistory[aiChatHistory.length - 1];
+    const lastTs = last && typeof last.ts === 'number' ? last.ts : 0;
+    const hoursSince = lastTs ? (Date.now() - lastTs) / (1000 * 60 * 60) : Infinity;
+    if (hoursSince >= AI_PROACTIVE_AFTER_HOURS) {
+      // Não espera o aluno escrever — gera uma mensagem proativa.
+      aiChatSendProactive();
+    }
   }
-  aiChatRenderThread();
 }
 function renderAiChatPersonaList() {
   const list = document.getElementById('ai-chat-persona-list');
@@ -1880,7 +1924,7 @@ async function aiChatSend(audioPayload) {
   // Se veio de gravação, ainda não sabemos o que o aluno disse (a transcrição acontece do lado da IA),
   // então mostramos um rótulo genérico na bolha; a IA recebe o áudio de verdade na requisição.
   const displayText = audioPayload ? (text || '(mensagem em áudio)') : text;
-  aiChatHistory.push({ role: 'user', text: displayText, viaAudio: !!audioPayload });
+  aiChatHistory.push({ role: 'user', text: displayText, viaAudio: !!audioPayload, ts: Date.now() });
   input.value = '';
   aiChatRenderThread();
   saveAiChatHistoryFor(persona.id, aiChatHistory);
@@ -1910,14 +1954,67 @@ async function aiChatSend(audioPayload) {
     });
     const data = await resp.json().catch(() => ({}));
     if (!resp.ok || !data.reply) {
-      aiChatHistory.push({ role: 'model', text: '⚠️ ' + (data.error || 'Não consegui responder agora. Tente novamente em instantes.') });
+      aiChatHistory.push({ role: 'model', text: '⚠️ ' + (data.error || 'Não consegui responder agora. Tente novamente em instantes.'), ts: Date.now() });
     } else {
-      aiChatHistory.push({ role: 'model', text: data.reply });
+      aiChatHistory.push({ role: 'model', text: data.reply, ts: Date.now() });
       aiChatSpeak(data.reply, persona.gender);
     }
   } catch (err) {
     console.error(err);
-    aiChatHistory.push({ role: 'model', text: '⚠️ Erro de conexão. Verifique sua internet e tente de novo.' });
+    aiChatHistory.push({ role: 'model', text: '⚠️ Erro de conexão. Verifique sua internet e tente de novo.', ts: Date.now() });
+  } finally {
+    aiChatBusy = false;
+    if (typing) typing.classList.add('hidden');
+    aiChatRenderThread();
+    if (aiChatCurrentPersonaId) saveAiChatHistoryFor(aiChatCurrentPersonaId, aiChatHistory);
+  }
+}
+
+/**
+ * A IA inicia a conversa sozinha (quando o aluno abre o chat depois de várias horas).
+ * Usa o modo proactive do /api/chat — a mensagem sintética não entra no histórico do aluno.
+ */
+async function aiChatSendProactive() {
+  if (aiChatBusy || !aiChatCurrentPersonaId) return;
+  const persona = getAiChatPersonas().find(p => p.id === aiChatCurrentPersonaId);
+  if (!persona) return;
+
+  const typing = document.getElementById('ai-chat-typing');
+  let profile = {};
+  try { profile = (await getProfile()) || {}; } catch (e) { /* sem perfil ainda */ }
+
+  aiChatBusy = true;
+  if (typing) {
+    typing.innerHTML = `<span class="ai-msg-avatar" aria-hidden="true">${persona.emoji || '🤖'}</span><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>`;
+    typing.classList.remove('hidden');
+  }
+
+  try {
+    const body = {
+      proactive: true,
+      timeOfDay: aiChatTimeOfDay(),
+      history: aiChatHistory.slice(-12), // contexto recente
+      level: profile.level || 'A1',
+      name: profile.name || '',
+      personality: persona.personality,
+      aiName: persona.name,
+      gender: persona.gender === 'male' ? 'male' : 'female'
+    };
+
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (resp.ok && data.reply) {
+      aiChatHistory.push({ role: 'model', text: data.reply, ts: Date.now(), proactive: true });
+      aiChatSpeak(data.reply, persona.gender);
+    }
+    // Se falhar (sem chave Gemini, offline, etc.), silenciosamente não adiciona nada —
+    // o aluno ainda vê o histórico anterior e pode escrever normalmente.
+  } catch (err) {
+    console.error('Proactive message failed:', err);
   } finally {
     aiChatBusy = false;
     if (typing) typing.classList.add('hidden');
