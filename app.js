@@ -1406,6 +1406,7 @@ async function boot() {
   });
 
   setupAiChat();
+  setupVocabCard();
 
   const topbarHomeLink = document.getElementById('topbar-home-link');
   if (topbarHomeLink) {
@@ -1829,6 +1830,26 @@ function aiChatEscapeHtml(s) {
   return div.innerHTML;
 }
 
+/**
+ * Mapa de Vocabulário Clicável: envolve cada palavra do texto (inglês ou
+ * português) num <span class="vocab-word"> tocável, sem mexer no resto
+ * (pontuação, espaços, quebras de linha). Escapa cada pedaço individualmente
+ * pra não correr risco de quebrar uma entidade HTML (&amp; etc) ao inserir
+ * as tags no meio do texto.
+ */
+function aiChatWrapVocab(text) {
+  const parts = String(text == null ? '' : text).split(/([A-Za-zÀ-ÖØ-öø-ÿ]+(?:'[A-Za-zÀ-ÖØ-öø-ÿ]+)*)/);
+  return parts.map((part, i) => {
+    const isWord = i % 2 === 1; // grupos capturados ficam nos índices ímpares
+    if (isWord && part.length >= 2) {
+      const safe = aiChatEscapeHtml(part);
+      const key = aiChatEscapeHtml(part.toLowerCase());
+      return `<span class="vocab-word" data-word="${key}">${safe}</span>`;
+    }
+    return aiChatEscapeHtml(part);
+  }).join('');
+}
+
 // Tenta achar uma voz em inglês compatível com o gênero escolhido pro aluno (melhor esforço:
 // o navegador nem sempre expõe o gênero, então usamos nomes comuns de vozes femininas/masculinas).
 const TTS_FEMALE_HINTS = ['female', 'zira', 'samantha', 'victoria', 'karen', 'moira', 'tessa', 'fiona', 'susan', 'amy', 'salli', 'joanna'];
@@ -1938,13 +1959,205 @@ function aiChatRenderThread() {
     const cls = m.role === 'user' ? 'student' : 'teacher';
     const label = m.role === 'user' ? 'Você' : aiName;
     const prefix = m.viaAudio ? '🎤 ' : '';
-    const bubble = `<div class="chat-bubble ${cls}"><span class="chat-meta">${label}</span>${prefix}${aiChatEscapeHtml(m.text).replace(/\n/g, '<br>')}</div>`;
+    // Só as falas da IA viram vocabulário clicável — a mensagem do próprio
+    // aluno não precisa disso, e mexer nela também atrapalharia a leitura
+    // do que ele mesmo escreveu.
+    const body = cls === 'teacher' ? aiChatWrapVocab(m.text) : aiChatEscapeHtml(m.text);
+    const bubble = `<div class="chat-bubble ${cls}" ${cls === 'teacher' ? `data-vocab-context="${aiChatEscapeHtml(m.text).replace(/"/g, '&quot;')}"` : ''}><span class="chat-meta">${label}</span>${prefix}${body.replace(/\n/g, '<br>')}</div>`;
     if (cls === 'teacher') {
       return `<div class="ai-msg-row"><span class="ai-msg-avatar" aria-hidden="true">${aiEmoji}</span>${bubble}</div>`;
     }
     return bubble;
   }).join('');
   thread.scrollTop = thread.scrollHeight;
+}
+
+// ---------- Mapa de Vocabulário Clicável ----------
+// Toca numa palavra da fala da IA → mini-cartão com tradução, pronúncia e
+// exemplos. Resultado fica em cache no localStorage por palavra+nível pra
+// não gastar chamada de IA de novo em palavras já vistas.
+
+let vocabCardCurrentWord = null;
+let vocabCardCurrentContext = '';
+let vocabCardCurrentLevel = 'A1';
+
+function vocabCacheKey(word, level) {
+  return 'vocabCache_' + level + '_' + word;
+}
+
+function vocabCacheGet(word, level) {
+  try {
+    const raw = localStorage.getItem(vocabCacheKey(word, level));
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) { return null; }
+}
+
+function vocabCacheSet(word, level, data) {
+  try { localStorage.setItem(vocabCacheKey(word, level), JSON.stringify(data)); } catch (e) { /* cache não é essencial */ }
+}
+
+function setupVocabWordClicks() {
+  const thread = document.getElementById('ai-chat-thread');
+  if (!thread) return;
+  thread.addEventListener('click', (e) => {
+    const span = e.target.closest('.vocab-word');
+    if (!span) return;
+    const word = span.dataset.word;
+    if (!word) return;
+    const bubble = span.closest('.chat-bubble');
+    const context = bubble ? (bubble.dataset.vocabContext || '') : '';
+    vocabCardOpen(word, context);
+  });
+}
+
+async function vocabCardOpen(word, context) {
+  const overlay = document.getElementById('vocab-card-overlay');
+  if (!overlay) return;
+
+  let profile = {};
+  try { profile = (await getProfile()) || {}; } catch (e) { /* sem perfil ainda */ }
+  const level = profile.level || 'A1';
+
+  vocabCardCurrentWord = word;
+  vocabCardCurrentContext = context;
+  vocabCardCurrentLevel = level;
+
+  overlay.classList.remove('hidden');
+
+  const cached = vocabCacheGet(word, level);
+  if (cached) {
+    vocabCardRender(cached);
+    return;
+  }
+
+  await vocabCardFetchAndRender(word, context, level);
+}
+
+async function vocabCardFetchAndRender(word, context, level) {
+  const loading = document.getElementById('vocab-card-loading');
+  const content = document.getElementById('vocab-card-content');
+  const errorBox = document.getElementById('vocab-card-error');
+  if (loading) loading.classList.remove('hidden');
+  if (content) content.classList.add('hidden');
+  if (errorBox) errorBox.classList.add('hidden');
+
+  try {
+    const resp = await fetch('/api/vocab-lookup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ word, context, level })
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok || !data.translation) {
+      vocabCardShowError(data.error);
+      return;
+    }
+    vocabCacheSet(word, level, data);
+    vocabCardRender(data);
+  } catch (err) {
+    console.error('Erro em vocabCardFetchAndRender:', err);
+    vocabCardShowError('Erro de conexão. Verifique sua internet.');
+  }
+}
+
+function vocabCardShowError(msg) {
+  const loading = document.getElementById('vocab-card-loading');
+  const content = document.getElementById('vocab-card-content');
+  const errorBox = document.getElementById('vocab-card-error');
+  const errorText = document.getElementById('vocab-card-error-text');
+  if (loading) loading.classList.add('hidden');
+  if (content) content.classList.add('hidden');
+  if (errorBox) errorBox.classList.remove('hidden');
+  if (errorText) errorText.textContent = msg || 'Não consegui buscar essa palavra agora.';
+}
+
+function vocabCardRender(data) {
+  const loading = document.getElementById('vocab-card-loading');
+  const content = document.getElementById('vocab-card-content');
+  const errorBox = document.getElementById('vocab-card-error');
+  const wordEl = document.getElementById('vocab-card-word');
+  const posEl = document.getElementById('vocab-card-pos');
+  const pronEl = document.getElementById('vocab-card-pron');
+  const translationEl = document.getElementById('vocab-card-translation');
+  const examplesEl = document.getElementById('vocab-card-examples');
+  if (!content) return;
+
+  if (loading) loading.classList.add('hidden');
+  if (errorBox) errorBox.classList.add('hidden');
+  content.classList.remove('hidden');
+
+  if (wordEl) wordEl.textContent = data.word || vocabCardCurrentWord || '';
+  if (posEl) {
+    if (data.partOfSpeech) {
+      posEl.textContent = data.partOfSpeech;
+      posEl.classList.remove('hidden');
+    } else {
+      posEl.classList.add('hidden');
+    }
+  }
+
+  if (pronEl) {
+    const pronBits = [];
+    if (data.pronunciationIpa) pronBits.push(`<span class="ipa">${aiChatEscapeHtml(data.pronunciationIpa)}</span>`);
+    if (data.pronunciationEasy) pronBits.push(`<span class="easy">${aiChatEscapeHtml(data.pronunciationEasy)}</span>`);
+    pronEl.innerHTML = pronBits.join(' &middot; ');
+  }
+
+  if (translationEl) translationEl.textContent = data.translation || '';
+
+  if (examplesEl) {
+    const examples = Array.isArray(data.examples) ? data.examples : [];
+    examplesEl.innerHTML = examples.map(ex => `
+      <div class="vocab-example">
+        <div class="en">${aiChatEscapeHtml(ex.en || '')}</div>
+        ${ex.pt ? `<div class="pt">${aiChatEscapeHtml(ex.pt)}</div>` : ''}
+      </div>
+    `).join('');
+  }
+}
+
+function vocabCardClose() {
+  const overlay = document.getElementById('vocab-card-overlay');
+  if (overlay) overlay.classList.add('hidden');
+  if ('speechSynthesis' in window) {
+    try { window.speechSynthesis.cancel(); } catch (e) { /* TTS não é essencial */ }
+  }
+}
+
+function vocabCardSpeakCurrent() {
+  if (!vocabCardCurrentWord) return;
+  if (!('speechSynthesis' in window)) return;
+  try {
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(vocabCardCurrentWord);
+    utter.lang = 'en-US';
+    utter.rate = 0.9;
+    const voice = aiChatPickVoice('female');
+    if (voice) utter.voice = voice;
+    window.speechSynthesis.speak(utter);
+  } catch (e) { /* TTS não é essencial — falha silenciosa */ }
+}
+
+function setupVocabCard() {
+  setupVocabWordClicks();
+  const overlay = document.getElementById('vocab-card-overlay');
+  const closeBtn = document.getElementById('vocab-card-close');
+  const listenBtn = document.getElementById('vocab-card-listen');
+  const retryBtn = document.getElementById('vocab-card-retry');
+  if (closeBtn) closeBtn.addEventListener('click', vocabCardClose);
+  if (overlay) {
+    overlay.addEventListener('click', (e) => {
+      if (e.target.id === 'vocab-card-overlay') vocabCardClose();
+    });
+  }
+  if (listenBtn) listenBtn.addEventListener('click', vocabCardSpeakCurrent);
+  if (retryBtn) {
+    retryBtn.addEventListener('click', () => {
+      if (vocabCardCurrentWord) {
+        vocabCardFetchAndRender(vocabCardCurrentWord, vocabCardCurrentContext, vocabCardCurrentLevel);
+      }
+    });
+  }
 }
 
 /**

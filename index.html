@@ -523,6 +523,32 @@
     </div>
   </div>
 
+  <!-- MAPA DE VOCABULÁRIO CLICÁVEL: mini-cartão de palavra do chat com a IA -->
+  <div class="vocab-card-overlay hidden" id="vocab-card-overlay">
+    <div class="vocab-card" id="vocab-card">
+      <button type="button" class="vocab-card-close" id="vocab-card-close" aria-label="Fechar">✕</button>
+      <div class="vocab-card-body" id="vocab-card-body">
+        <div class="vocab-card-loading" id="vocab-card-loading">
+          <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+        </div>
+        <div class="vocab-card-content hidden" id="vocab-card-content">
+          <div class="vocab-card-head">
+            <span class="vocab-card-word" id="vocab-card-word"></span>
+            <span class="vocab-card-pos hidden" id="vocab-card-pos"></span>
+            <button type="button" class="vocab-card-listen" id="vocab-card-listen" aria-label="Ouvir pronúncia" title="Ouvir pronúncia">🔊</button>
+          </div>
+          <div class="vocab-card-pron" id="vocab-card-pron"></div>
+          <div class="vocab-card-translation" id="vocab-card-translation"></div>
+          <div class="vocab-card-examples" id="vocab-card-examples"></div>
+        </div>
+        <div class="vocab-card-error hidden" id="vocab-card-error">
+          <p id="vocab-card-error-text">Não consegui buscar essa palavra agora.</p>
+          <button type="button" class="btn secondary" id="vocab-card-retry">Tentar de novo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
