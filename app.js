@@ -1556,6 +1556,20 @@ const AI_CHAT_MAX_RECORD_MS = 30000; // 30s é suficiente pra prática e mantém
 let aiChatRecordTimeout = null;
 let aiChatTtsEnabled = localStorage.getItem('aiChatTtsEnabled') === '1';
 
+// Personalidades: cada uma muda o jeito da IA falar (o prompt de verdade fica no servidor,
+// aqui só guardamos a saudação de cada uma pra tela não ficar em branco esperando a IA)
+const AI_CHAT_PERSONAS = {
+  tutor: { greeting: name => `Hi${name ? ' ' + name : ''}! 👋 I'm Bobcat AI, your English conversation partner. We can talk about anything — your day, hobbies, movies, whatever! I'll help fix your mistakes along the way. So... how are you today?` },
+  kid: { greeting: name => `Hiii${name ? ' ' + name : ''}! 🧒🎈 I'm Bobcat, and I'm 9 years old! Do you like games? Or animals? Let's talk in English, it's gonna be fun! What's your favorite toy?` },
+  teen: { greeting: name => `Heyy${name ? ' ' + name : ''} 🧑🎧 what's up! I'm Bobcat, kinda obsessed with games and music rn. Wanna chat in English about whatever — shows, school, anything. So... what have you been up to?` },
+  professional: { greeting: name => `Good day${name ? ', ' + name : ''}. 💼 I'm Bobcat, and I'll be your English conversation partner for workplace and professional contexts — meetings, emails, small talk with colleagues. Shall we start? Tell me, what do you do?` },
+  elder: { greeting: name => `Well hello there${name ? ', ' + name : ''}! 👴☕ I'm Bobcat, and I've got a few stories to tell. Why don't we sit and chat a while in English? Tell me, how has your day been?` }
+};
+function aiChatCurrentPersona() {
+  const id = localStorage.getItem('aiChatPersona') || 'tutor';
+  return AI_CHAT_PERSONAS[id] ? id : 'tutor';
+}
+
 function aiChatEscapeHtml(s) {
   const div = document.createElement('div');
   div.textContent = s;
@@ -1657,10 +1671,10 @@ async function aiChatStartIfNeeded() {
   let profile = {};
   try { profile = (await getProfile()) || {}; } catch (e) { /* sem perfil ainda */ }
   const name = profile.name || '';
-  const level = profile.level || 'A1';
+  const persona = AI_CHAT_PERSONAS[aiChatCurrentPersona()];
   aiChatHistory = [{
     role: 'model',
-    text: `Hi${name ? ' ' + name : ''}! 👋 I'm Bobcat AI, your English conversation partner. We can talk about anything — your day, hobbies, movies, whatever! I'll help fix your mistakes along the way. So... how are you today?`
+    text: persona.greeting(name)
   }];
   aiChatRenderThread();
   aiChatSpeak(aiChatHistory[0].text);
@@ -1698,7 +1712,8 @@ async function aiChatSend(audioPayload) {
       message: text, // pode vir vazio quando é só áudio — o servidor aceita
       history: aiChatHistory.slice(0, -1), // tudo exceto a mensagem que acabou de entrar
       level: profile.level || 'A1',
-      name: profile.name || ''
+      name: profile.name || '',
+      persona: aiChatCurrentPersona()
     };
     if (audioPayload) body.audio = audioPayload;
 
@@ -1730,6 +1745,7 @@ function setupAiChat() {
   const btnReset = document.getElementById('btn-ai-chat-reset');
   const btnMic = document.getElementById('btn-ai-chat-mic');
   const chkTts = document.getElementById('chk-ai-chat-tts');
+  const selectPersona = document.getElementById('select-ai-chat-persona');
   if (!btnSend || !input) return; // tela não presente nesta versão
 
   btnSend.addEventListener('click', () => aiChatSend());
@@ -1741,6 +1757,14 @@ function setupAiChat() {
   });
   if (btnReset) btnReset.addEventListener('click', aiChatResetConversation);
   if (btnMic) btnMic.addEventListener('click', aiChatToggleRecording);
+  if (selectPersona) {
+    selectPersona.value = aiChatCurrentPersona();
+    selectPersona.addEventListener('change', () => {
+      localStorage.setItem('aiChatPersona', selectPersona.value);
+      // Trocar de personalidade no meio da conversa confundiria o contexto — melhor recomeçar
+      aiChatResetConversation();
+    });
+  }
   if (chkTts) {
     chkTts.checked = aiChatTtsEnabled;
     chkTts.addEventListener('change', () => {
