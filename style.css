@@ -1155,6 +1155,7 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
   line-height: 1.4;
 }
 .btn-small {
+  width: auto;
   flex-shrink: 0;
   padding: 8px 14px;
   font-size: 13px;
