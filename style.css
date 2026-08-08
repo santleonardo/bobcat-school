@@ -516,13 +516,52 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .persona-card .chevron { font-size: 18px; color: var(--ink-faint); }
+
+/* Preview ao vivo na tela de nova personalidade */
+.persona-preview {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--cream-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 18px;
+}
+.persona-preview-avatar {
+  flex-shrink: 0;
+  width: 54px; height: 54px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #fff, var(--cream));
+  border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  transition: transform .15s;
+}
+.persona-preview-name {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.persona-preview-sub { font-size: 11.5px; color: var(--ink-soft); margin-top: 1px; }
+
+.persona-form-section { margin-bottom: 18px; }
+.persona-form-hint { font-size: 11.5px; color: var(--ink-faint); margin-top: 5px; line-height: 1.5; }
+.persona-form-hint-inline { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-faint); }
+
+.persona-emoji-grid { display: flex; gap: 8px; flex-wrap: wrap; }
 .persona-emoji-btn {
-  width: 40px; height: 40px; font-size: 18px;
+  width: 42px; height: 42px; font-size: 19px;
   border-radius: 50%; border: 1.5px solid var(--border);
   background: var(--cream); cursor: pointer; padding: 0;
-  transition: border-color .15s, transform .12s;
+  transition: border-color .15s, transform .12s, box-shadow .15s;
 }
-.persona-emoji-btn.selected { border-color: var(--terracotta); background: #fff; box-shadow: 0 0 0 3px rgba(217,123,84,0.16); transform: scale(1.06); }
+.persona-emoji-btn:hover { transform: translateY(-1px); }
+.persona-emoji-btn.selected { border-color: var(--terracotta); background: #fff; box-shadow: 0 0 0 3px rgba(217,123,84,0.16); transform: scale(1.08); }
+
+.persona-gender-row { display: flex; gap: 10px; }
 .persona-gender-btn {
   flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
   padding: 10px 12px; font-size: 13.5px; font-weight: 600; font-family: inherit;
@@ -531,6 +570,30 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
 }
 .persona-gender-btn.selected { border-color: var(--terracotta); background: var(--cream); color: var(--terracotta-deep); }
 .persona-card .gender-badge { font-size: 11px; margin-left: 4px; }
+
+.persona-suggestion-grid { display: flex; flex-direction: column; gap: 8px; }
+.persona-suggestion-chip {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%;
+  padding: 10px 13px;
+  font-size: 13px; font-weight: 600; font-family: inherit;
+  color: var(--ink);
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .15s, background .15s, transform .1s;
+}
+.persona-suggestion-chip .emoji {
+  flex-shrink: 0;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--cream);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+}
+.persona-suggestion-chip:hover { border-color: var(--terracotta); background: var(--cream-2); transform: translateY(-1px); }
 
 /* Cabeçalho da conversa com a IA */
 .ai-conv-header {

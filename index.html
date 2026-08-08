@@ -366,30 +366,61 @@
       <button type="button" class="link-btn" id="btn-ai-chat-create-back" style="margin-bottom:10px;">← Voltar</button>
       <h2 class="screen-title">Nova personalidade</h2>
 
-      <label class="field-label" for="input-persona-emoji" style="margin-top:0;">Avatar</label>
-      <div id="persona-emoji-picker" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;"></div>
-
-      <label class="field-label" for="input-persona-name">Nome</label>
-      <input type="text" id="input-persona-name" maxlength="30" placeholder="Ex: Max, Sofia, Capitã Estrela...">
-
-      <label class="field-label" style="margin-top:0;">Gênero da IA</label>
-      <div id="persona-gender-picker" style="display:flex; gap:10px; margin-bottom:14px;"></div>
-
-      <label class="field-label" for="input-persona-personality">Personalidade</label>
-      <textarea id="input-persona-personality" rows="4" maxlength="300" placeholder="Descreva como essa personalidade é: o jeito de falar, o que gosta de conversar... Ex: uma astronauta aventureira, animada, que adora contar histórias sobre o espaço."></textarea>
-      <p style="font-size:11.5px; color:var(--ink-faint); margin-top:4px; line-height:1.5;">Dica: quanto mais detalhes, mais a IA vai manter esse jeito de ser durante a conversa. As regras de segurança do app continuam valendo, não importa o que for descrito aqui.</p>
-
-      <p style="font-size:12px; color:var(--ink-soft); margin:14px 0 6px 0;">Ideias rápidas (toque para usar):</p>
-      <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:16px;">
-        <button type="button" class="link-btn persona-suggestion" data-personality="You are a warm, encouraging English tutor and conversation partner — patient, friendly, upbeat. You're happy to talk about anything: daily life, hobbies, movies, school, travel.">🐱 Tutor gentil e paciente</button>
-        <button type="button" class="link-btn persona-suggestion" data-personality="You are a playful 9-year-old talking to a friend. Use short, very simple sentences and everyday words a child would use. Be silly and enthusiastic, and love talking about toys, games, cartoons, animals, and school.">🧒 Amigo criança, brincalhão</button>
-        <button type="button" class="link-btn persona-suggestion" data-personality="You are a laid-back teenager chatting with a friend. Casual, friendly tone, enthusiastic about games, music, movies, social media, and school life.">🧑 Colega adolescente, descontraído</button>
-        <button type="button" class="link-btn persona-suggestion" data-personality="You are a polite, professional colleague helping the student practice workplace English — small talk with coworkers, meetings, emails, job interviews.">💼 Colega de trabalho profissional</button>
-        <button type="button" class="link-btn persona-suggestion" data-personality="You are a warm, patient grandparent figure who loves a good chat. Speak thoughtfully, share short anecdotes, and show genuine interest in the student's day-to-day life.">👴 Vovô contador de histórias</button>
+      <div class="persona-preview">
+        <div class="persona-preview-avatar" id="persona-preview-avatar">🤖</div>
+        <div class="persona-preview-info">
+          <div class="persona-preview-name" id="persona-preview-name">Sua nova personalidade</div>
+          <div class="persona-preview-sub">é assim que ela vai aparecer na sua lista</div>
+        </div>
       </div>
 
-      <button type="button" class="btn" id="btn-ai-chat-create-submit" style="width:100%;">Criar e começar a conversar</button>
+      <div class="persona-form-section">
+        <label class="field-label" for="input-persona-emoji" style="margin-top:0;">Avatar</label>
+        <div id="persona-emoji-picker" class="persona-emoji-grid"></div>
+      </div>
+
+      <div class="persona-form-section">
+        <label class="field-label" for="input-persona-name" style="margin-top:0;">Nome</label>
+        <input type="text" id="input-persona-name" maxlength="30" placeholder="Ex: Max, Sofia, Capitã Estrela...">
+      </div>
+
+      <div class="persona-form-section">
+        <label class="field-label" style="margin-top:0;">Gênero da IA</label>
+        <div id="persona-gender-picker" class="persona-gender-row"></div>
+      </div>
+
+      <div class="persona-form-section">
+        <label class="field-label" for="input-persona-personality" style="margin-top:0;">Personalidade</label>
+        <textarea id="input-persona-personality" rows="4" maxlength="300" placeholder="Descreva como essa personalidade é: o jeito de falar, o que gosta de conversar... Ex: uma astronauta aventureira, animada, que adora contar histórias sobre o espaço."></textarea>
+        <p class="persona-form-hint">Dica: quanto mais detalhes, mais a IA vai manter esse jeito de ser durante a conversa. As regras de segurança do app continuam valendo, não importa o que for descrito aqui.</p>
+      </div>
+
+      <div class="persona-form-section">
+        <label class="field-label" style="margin-top:0;">Ideias rápidas <span class="persona-form-hint-inline">(toque para usar)</span></label>
+        <div class="persona-suggestion-grid">
+          <button type="button" class="persona-suggestion-chip" data-personality="You are a warm, encouraging English tutor and conversation partner — patient, friendly, upbeat. You're happy to talk about anything: daily life, hobbies, movies, school, travel.">
+            <span class="emoji">🐱</span>Tutor gentil e paciente
+          </button>
+          <button type="button" class="persona-suggestion-chip" data-personality="You are a playful 9-year-old talking to a friend. Use short, very simple sentences and everyday words a child would use. Be silly and enthusiastic, and love talking about toys, games, cartoons, animals, and school.">
+            <span class="emoji">🧒</span>Amigo criança, brincalhão
+          </button>
+          <button type="button" class="persona-suggestion-chip" data-personality="You are a laid-back teenager chatting with a friend. Casual, friendly tone, enthusiastic about games, music, movies, social media, and school life.">
+            <span class="emoji">🧑</span>Colega adolescente, descontraído
+          </button>
+          <button type="button" class="persona-suggestion-chip" data-personality="You are a polite, professional colleague helping the student practice workplace English — small talk with coworkers, meetings, emails, job interviews.">
+            <span class="emoji">💼</span>Colega de trabalho profissional
+          </button>
+          <button type="button" class="persona-suggestion-chip" data-personality="You are a warm, patient grandparent figure who loves a good chat. Speak thoughtfully, share short anecdotes, and show genuine interest in the student's day-to-day life.">
+            <span class="emoji">👴</span>Vovô contador de histórias
+          </button>
+        </div>
+      </div>
+
+      <button type="button" class="btn" id="btn-ai-chat-create-submit" style="width:100%;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px; margin-right:6px;" aria-hidden="true"><path d="M4 5h16v11H8.5L4 19.5Z"/></svg>Criar e começar a conversar
+      </button>
     </div>
+
 
     <!-- SUB-TELA: conversa com a personalidade escolhida -->
     <div id="ai-chat-conversation-view" class="hidden">

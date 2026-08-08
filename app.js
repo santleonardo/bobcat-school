@@ -1731,6 +1731,18 @@ function aiChatShowCreateView() {
   personaGenderSelected = 'female';
   renderPersonaEmojiPicker();
   renderPersonaGenderPicker();
+  aiChatUpdatePersonaPreview();
+}
+
+function aiChatUpdatePersonaPreview() {
+  const avatarEl = document.getElementById('persona-preview-avatar');
+  const nameEl = document.getElementById('persona-preview-name');
+  if (avatarEl) avatarEl.textContent = personaEmojiSelected;
+  if (nameEl) {
+    const nameInput = document.getElementById('input-persona-name');
+    const typed = nameInput ? nameInput.value.trim() : '';
+    nameEl.textContent = typed || 'Sua nova personalidade';
+  }
 }
 
 async function aiChatOpenPersona(id) {
@@ -1795,6 +1807,7 @@ function renderPersonaGenderPicker() {
     btn.addEventListener('click', () => {
       personaGenderSelected = btn.dataset.gender;
       renderPersonaGenderPicker();
+      aiChatUpdatePersonaPreview();
     });
   });
 }
@@ -1809,6 +1822,7 @@ function renderPersonaEmojiPicker() {
     btn.addEventListener('click', () => {
       personaEmojiSelected = btn.dataset.emoji;
       renderPersonaEmojiPicker();
+      aiChatUpdatePersonaPreview();
     });
   });
 }
@@ -1940,7 +1954,10 @@ function setupAiChat() {
   if (btnConvBack) btnConvBack.addEventListener('click', aiChatShowListView);
   if (btnDeletePersona) btnDeletePersona.addEventListener('click', aiChatDeleteCurrentPersona);
 
-  document.querySelectorAll('.persona-suggestion').forEach(btn => {
+  const inputPersonaName = document.getElementById('input-persona-name');
+  if (inputPersonaName) inputPersonaName.addEventListener('input', aiChatUpdatePersonaPreview);
+
+  document.querySelectorAll('.persona-suggestion-chip').forEach(btn => {
     btn.addEventListener('click', () => {
       document.getElementById('input-persona-personality').value = btn.dataset.personality;
     });
