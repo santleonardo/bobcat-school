@@ -325,6 +325,10 @@ async function handleLessonFinish(lessonId, correct, total, kind) {
     msg.style.color = '#C0392B';
     msg.textContent = '📌 Você ' + verb + ' ' + correct + ' de ' + total + ' ' + noun +
       ' (' + roundedPct + '%). É preciso pelo menos ' + PASSING_PCT + '% (nota 8,5) para concluir a lição e desbloquear a próxima. Revise as respostas e tente novamente!' + cloudNote;
+    // Lição não concluída: mostra a Trilha de Erro para ajudar o aluno a
+    // entender o que errou antes de tentar de novo (só quando há gabarito
+    // real, kind === 'correct' — lições "filled" não têm certo/errado).
+    if (kind !== 'filled') renderErrorTrail(msg, answers);
   }
 
   return completed;
@@ -557,4 +561,179 @@ async function syncAiChatLastConversation(persona, history) {
   } catch (e) {
     console.error('syncAiChatLastConversation:', e);
   }
+}
+
+// ---------- Trilha de Erro (explicações da IA para questões erradas) ----------
+// Aparece na tela de "Finalizar lição" quando o aluno não atinge a nota
+// mínima: pega as questões marcadas como erradas por collectLessonAnswers()
+// e deixa o aluno pedir, uma a uma, uma explicação curta da IA — e depois,
+// se quiser, mais alguns exemplos daquele mesmo ponto. Cada card só chama a
+// IA quando o aluno pede (nada é gerado automaticamente), e cada card só
+// permite pedir "mais exemplos" duas vezes, pra manter o custo baixo.
+
+const ERROR_TRAIL_MAX_ITEMS = 4;
+const ERROR_TRAIL_MAX_MORE_CLICKS = 2;
+let errorTrailStylesInjected = false;
+
+function injectErrorTrailStyles() {
+  if (errorTrailStylesInjected) return;
+  errorTrailStylesInjected = true;
+  const style = document.createElement('style');
+  style.textContent = `
+    .bcerr-wrap{margin-top:22px;text-align:left;font-family:"Inter","Segoe UI",sans-serif}
+    .bcerr-title{font-size:14px;font-weight:700;color:#3a3226;margin-bottom:10px;text-align:center}
+    .bcerr-card{background:#fff;border:1px solid #EBC9AE;border-radius:14px;padding:14px 16px;margin-bottom:10px;box-shadow:0 2px 10px rgba(180,120,80,.08)}
+    .bcerr-q{font-size:13px;color:#2b2b2b;margin-bottom:8px;line-height:1.5}
+    .bcerr-q b{color:#C0392B}
+    .bcerr-btn{background:#D9793F;color:#fff;border:none;border-radius:99px;padding:7px 14px;font-size:12.5px;font-weight:700;cursor:pointer}
+    .bcerr-btn:disabled{opacity:.6;cursor:default}
+    .bcerr-btn.ghost{background:transparent;color:#D9793F;border:1px solid #D9793F;margin-top:8px}
+    .bcerr-explain{font-size:13px;color:#2b2b2b;line-height:1.55;margin-top:10px;padding-top:10px;border-top:1px dashed #EBC9AE}
+    .bcerr-examples{margin:8px 0 0;padding-left:18px}
+    .bcerr-examples li{font-size:12.5px;color:#555;margin-bottom:4px;line-height:1.5}
+    .bcerr-error{font-size:12.5px;color:#C0392B;margin-top:8px}
+  `;
+  document.head.appendChild(style);
+}
+
+async function callExplainError(payload) {
+  const res = await fetch('/api/explain-error', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok || data.error) throw new Error(data.error || 'Erro ao consultar a IA.');
+  return data;
+}
+
+function renderErrorTrail(anchorEl, answers) {
+  if (!anchorEl || !Array.isArray(answers)) return;
+  const wrong = answers.filter(a => a && a.status === 'incorrect').slice(0, ERROR_TRAIL_MAX_ITEMS);
+  if (wrong.length === 0) return;
+
+  injectErrorTrailStyles();
+
+  // Evita duplicar se o aluno clicar em "Finalizar" mais de uma vez
+  const existing = anchorEl.parentNode.querySelector('.bcerr-wrap');
+  if (existing) existing.remove();
+
+  const wrap = document.createElement('div');
+  wrap.className = 'bcerr-wrap';
+  wrap.innerHTML = '<div class="bcerr-title">🔎 Vamos entender o que você errou?</div>';
+
+  wrong.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'bcerr-card';
+
+    const q = document.createElement('div');
+    q.className = 'bcerr-q';
+    q.innerHTML = escapeHtmlLite(item.question) +
+      '<br><b>Sua resposta:</b> ' + escapeHtmlLite(item.studentAnswer) +
+      (item.correctAnswer ? '<br><b>Resposta certa:</b> ' + escapeHtmlLite(item.correctAnswer) : '');
+    card.appendChild(q);
+
+    const btn = document.createElement('button');
+    btn.className = 'bcerr-btn';
+    btn.type = 'button';
+    btn.textContent = '💡 Entender esse erro';
+
+    const body = document.createElement('div');
+    let moreClicks = 0;
+    const shownExamples = [];
+
+    async function loadExplanation() {
+      btn.disabled = true;
+      btn.textContent = 'Pensando...';
+      try {
+        const profile = await getProfile().catch(() => null);
+        const level = (profile && profile.level) || 'A1';
+        const data = await callExplainError({
+          mode: 'explain',
+          question: item.question,
+          studentAnswer: item.studentAnswer,
+          correctAnswer: item.correctAnswer,
+          level,
+          lessonTitle: document.title
+        });
+        renderExplanationBody(data, level);
+        btn.remove();
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = '💡 Entender esse erro';
+        const errEl = document.createElement('div');
+        errEl.className = 'bcerr-error';
+        errEl.textContent = '⚠️ ' + (err.message || 'Não foi possível consultar a IA agora.');
+        body.appendChild(errEl);
+      }
+    }
+
+    function renderExplanationBody(data, level) {
+      const explainEl = document.createElement('div');
+      explainEl.className = 'bcerr-explain';
+      explainEl.textContent = data.explanation || '';
+      body.appendChild(explainEl);
+
+      if (data.examples && data.examples.length) {
+        const ul = document.createElement('ul');
+        ul.className = 'bcerr-examples';
+        data.examples.forEach(ex => {
+          shownExamples.push(ex);
+          const li = document.createElement('li');
+          li.textContent = ex;
+          ul.appendChild(li);
+        });
+        body.appendChild(ul);
+      }
+
+      if (moreClicks < ERROR_TRAIL_MAX_MORE_CLICKS) {
+        const moreBtn = document.createElement('button');
+        moreBtn.className = 'bcerr-btn ghost';
+        moreBtn.type = 'button';
+        moreBtn.textContent = '➕ Mais exemplos';
+        moreBtn.onclick = async () => {
+          moreBtn.disabled = true;
+          moreBtn.textContent = 'Gerando...';
+          try {
+            const data2 = await callExplainError({
+              mode: 'more',
+              question: item.question,
+              studentAnswer: item.studentAnswer,
+              correctAnswer: item.correctAnswer,
+              level,
+              lessonTitle: document.title,
+              previousExamples: shownExamples
+            });
+            moreClicks++;
+            moreBtn.remove();
+            renderExplanationBody(data2, level);
+          } catch (err) {
+            moreBtn.disabled = false;
+            moreBtn.textContent = '➕ Mais exemplos';
+          }
+        };
+        body.appendChild(moreBtn);
+      }
+    }
+
+    btn.onclick = loadExplanation;
+    card.appendChild(btn);
+    card.appendChild(body);
+    wrap.appendChild(card);
+  });
+
+  if (answers.filter(a => a && a.status === 'incorrect').length > ERROR_TRAIL_MAX_ITEMS) {
+    const note = document.createElement('div');
+    note.style.cssText = 'font-size:12px;color:#8a8171;text-align:center;margin-top:2px';
+    note.textContent = 'Mostrando as primeiras ' + ERROR_TRAIL_MAX_ITEMS + ' questões erradas.';
+    wrap.appendChild(note);
+  }
+
+  anchorEl.parentNode.insertBefore(wrap, anchorEl.nextSibling);
+}
+
+function escapeHtmlLite(str) {
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : String(str);
+  return div.innerHTML;
 }
