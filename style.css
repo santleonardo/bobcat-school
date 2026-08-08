@@ -118,7 +118,11 @@ h2.screen-title {
   color: var(--pine-deep);
   margin: 4px 0 18px 0;
   letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 9px;
 }
+.screen-title .title-icon { width: 21px; height: 21px; flex-shrink: 0; color: var(--terracotta-deep); }
 
 /* Profile screen */
 .avatar-picker {
@@ -555,7 +559,8 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
   font-family: inherit;
   transition: color .15s;
 }
-.nav-btn .nav-icon { font-size: 19px; }
+.nav-btn .nav-icon { display: flex; }
+.nav-btn .nav-icon svg { width: 19px; height: 19px; }
 .nav-btn.active { color: var(--terracotta-deep); }
 
 .install-banner {
@@ -596,6 +601,8 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
   cursor: pointer;
   font-family: inherit;
 }
+.chat-toggle-label { display: inline-flex; align-items: center; gap: 8px; }
+.chat-toggle-label svg { width: 16px; height: 16px; flex-shrink: 0; }
 .chat-toggle-icon { font-size: 12px; color: var(--ink-faint); transition: transform 0.2s ease; }
 .chat-toggle.open .chat-toggle-icon { transform: rotate(180deg); }
 .chat-panel { padding: 0 12px 12px 12px; }
@@ -667,7 +674,9 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
   border-radius: 10px;
   flex-shrink: 0;
   box-shadow: none;
+  display: flex; align-items: center; justify-content: center;
 }
+.chat-input-row .btn svg { width: 16px; height: 16px; }
 .btn-icon {
   background: var(--cream);
   border: 1.5px solid var(--border);
@@ -678,8 +687,11 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
   cursor: pointer;
   flex-shrink: 0;
   padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--terracotta-deep);
   transition: background .15s;
 }
+.btn-icon svg { width: 17px; height: 17px; }
 .btn-icon:hover { background: var(--paper-alt); }
 
 .chat-file-preview { margin-bottom: 6px; }
@@ -788,7 +800,8 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
   max-width: 320px;
   box-shadow: var(--shadow-warm);
 }
-.modal-card h3 { margin: 0 0 8px 0; font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 17px; color: var(--pine-deep); }
+.modal-card h3 { margin: 0 0 8px 0; font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 17px; color: var(--pine-deep); display: flex; align-items: center; gap: 8px; }
+.modal-card h3 .modal-icon { width: 19px; height: 19px; flex-shrink: 0; color: var(--terracotta-deep); }
 .modal-card p { margin: 0 0 14px 0; font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
 .modal-card input[type=password] {
   width: 100%;

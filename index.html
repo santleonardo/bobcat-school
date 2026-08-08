@@ -248,7 +248,10 @@
 
     <div class="chat-box" id="chat-box">
       <button class="chat-toggle" id="chat-toggle">
-        <span>💬 Fale com o professor</span>
+        <span class="chat-toggle-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H8.5L4 19.5Z"/></svg>
+          Fale com o professor
+        </span>
         <span class="chat-toggle-icon" id="chat-toggle-icon">▾</span>
       </button>
       <div class="chat-panel hidden" id="chat-panel">
@@ -260,8 +263,12 @@
             <textarea id="chat-input" rows="2" placeholder="Escreva sua dúvida ou mensagem para o professor..."></textarea>
           </div>
           <input type="file" id="chat-file-input" class="hidden" accept=".pdf,.doc,.docx,.odt,.rtf,.txt,.xls,.xlsx,.csv,.ppt,.pptx,.jpg,.jpeg,.png">
-          <button class="btn-icon" id="btn-attach-file" type="button" title="Anexar arquivo (PDF, Word, texto, planilha, imagem...)">📎</button>
-          <button class="btn" id="btn-send-message" title="Enviar mensagem" aria-label="Enviar mensagem">➤</button>
+          <button class="btn-icon" id="btn-attach-file" type="button" title="Anexar arquivo (PDF, Word, texto, planilha, imagem...)" aria-label="Anexar arquivo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 7.5 9.5 15A3 3 0 1 1 5 10.5L13 2.5a4.5 4.5 0 1 1 6 6.7L11 17"/></svg>
+          </button>
+          <button class="btn" id="btn-send-message" title="Enviar mensagem" aria-label="Enviar mensagem">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 11.5 20.5 4 13 21.5l-2.4-7.1L3 11.5Z"/></svg>
+          </button>
         </div>
       </div>
     </div>
@@ -320,7 +327,7 @@
     <button class="btn" id="btn-update-profile">Salvar alterações</button>
     <button class="btn secondary" id="btn-reset-progress" style="width:100%; margin-top:10px; background:#fff; color:#B23B2E; border-color:#B23B2E;">Zerar progresso das lições</button>
     <button class="btn secondary hidden" id="btn-logout" style="width:100%; margin-top:10px;">Sair da conta</button>
-    <p id="cloud-status" style="text-align:center; font-size:11.5px; color:#999; margin-top:14px;"></p>
+    <p id="cloud-status" style="text-align:center; font-size:11.5px; color:var(--ink-faint); margin-top:14px;"></p>
   </div>
 
   <!-- TELA: PRATICAR CONVERSAÇÃO COM IA -->
@@ -328,10 +335,15 @@
 
     <!-- SUB-TELA: lista de personalidades criadas -->
     <div id="ai-chat-list-view">
-      <h2 class="screen-title">🤖 Praticar com a IA</h2>
-      <p style="font-size:13px; color:#888; margin-bottom:14px;">Crie personalidades com o nome e o jeito de ser que você quiser, e converse em inglês com cada uma delas. Cada personalidade tem sua própria conversa, guardada separada. É só um parceiro de prática — não substitui as aulas com o professor.</p>
+      <h2 class="screen-title">
+        <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H8.5L4 19.5Z"/><path d="M8 9.5h8M8 12.5h5"/></svg>
+        Praticar com a IA
+      </h2>
+      <p style="font-size:13px; color:var(--ink-soft); margin-bottom:14px; line-height:1.5;">Crie personalidades com o nome e o jeito de ser que você quiser, e converse em inglês com cada uma delas. Cada personalidade tem sua própria conversa, guardada separada. É só um parceiro de prática — não substitui as aulas com o professor.</p>
 
-      <button type="button" class="btn" id="btn-ai-chat-new-persona" style="width:100%; margin-bottom:16px;">➕ Criar nova personalidade</button>
+      <button type="button" class="btn" id="btn-ai-chat-new-persona" style="width:100%; margin-bottom:16px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:-3px; margin-right:6px;" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Criar nova personalidade
+      </button>
 
       <div id="ai-chat-persona-list"></div>
     </div>
@@ -339,7 +351,7 @@
     <!-- SUB-TELA: criar/editar personalidade -->
     <div id="ai-chat-create-view" class="hidden">
       <button type="button" class="link-btn" id="btn-ai-chat-create-back" style="margin-bottom:10px;">← Voltar</button>
-      <h2 class="screen-title">✨ Nova personalidade</h2>
+      <h2 class="screen-title">Nova personalidade</h2>
 
       <label class="field-label" for="input-persona-emoji" style="margin-top:0;">Avatar</label>
       <div id="persona-emoji-picker" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;"></div>
@@ -352,9 +364,9 @@
 
       <label class="field-label" for="input-persona-personality">Personalidade</label>
       <textarea id="input-persona-personality" rows="4" maxlength="300" placeholder="Descreva como essa personalidade é: o jeito de falar, o que gosta de conversar... Ex: uma astronauta aventureira, animada, que adora contar histórias sobre o espaço."></textarea>
-      <p style="font-size:11.5px; color:#999; margin-top:4px;">Dica: quanto mais detalhes, mais a IA vai manter esse jeito de ser durante a conversa. As regras de segurança do app continuam valendo, não importa o que for descrito aqui.</p>
+      <p style="font-size:11.5px; color:var(--ink-faint); margin-top:4px; line-height:1.5;">Dica: quanto mais detalhes, mais a IA vai manter esse jeito de ser durante a conversa. As regras de segurança do app continuam valendo, não importa o que for descrito aqui.</p>
 
-      <p style="font-size:12px; color:#888; margin:14px 0 6px 0;">Ideias rápidas (toque para usar):</p>
+      <p style="font-size:12px; color:var(--ink-soft); margin:14px 0 6px 0;">Ideias rápidas (toque para usar):</p>
       <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:16px;">
         <button type="button" class="link-btn persona-suggestion" data-personality="You are a warm, encouraging English tutor and conversation partner — patient, friendly, upbeat. You're happy to talk about anything: daily life, hobbies, movies, school, travel.">🐱 Tutor gentil e paciente</button>
         <button type="button" class="link-btn persona-suggestion" data-personality="You are a playful 9-year-old talking to a friend. Use short, very simple sentences and everyday words a child would use. Be silly and enthusiastic, and love talking about toys, games, cartoons, animals, and school.">🧒 Amigo criança, brincalhão</button>
@@ -369,30 +381,39 @@
     <!-- SUB-TELA: conversa com a personalidade escolhida -->
     <div id="ai-chat-conversation-view" class="hidden">
       <button type="button" class="link-btn" id="btn-ai-chat-conv-back" style="margin-bottom:6px;">← Minhas personalidades</button>
-      <h2 class="screen-title" id="ai-chat-conv-title" style="margin-bottom:10px;">🤖 Conversa</h2>
+      <h2 class="screen-title" id="ai-chat-conv-title" style="margin-bottom:10px;">Conversa</h2>
 
-      <label style="display:flex; align-items:center; gap:6px; font-size:12.5px; color:#888; margin-bottom:10px; user-select:none;">
+      <label style="display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--ink-soft); margin-bottom:10px; user-select:none;">
         <input type="checkbox" id="chk-ai-chat-tts" style="width:16px; height:16px; margin:0;">
-        🔊 Ler as respostas da IA em voz alta
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:15px;height:15px;flex-shrink:0;"><path d="M5 9v6h4l5 4V5L9 9H5Z"/><path d="M17.5 9a4.5 4.5 0 0 1 0 6"/></svg>
+        Ler as respostas da IA em voz alta
       </label>
 
       <div class="chat-box" id="ai-chat-box" style="overflow:visible;">
         <div class="chat-panel" style="padding:0 0 12px 0;">
           <div class="chat-thread" id="ai-chat-thread" style="max-height:52vh;"></div>
-          <div id="ai-chat-typing" class="chat-empty hidden" style="text-align:left; padding:2px 8px;">🤖 digitando...</div>
-          <div id="ai-chat-recording-status" class="chat-empty hidden" style="text-align:left; padding:2px 8px; color:#B23B2E;">🎙️ Gravando... toque no microfone de novo para enviar</div>
+          <div id="ai-chat-typing" class="chat-empty hidden" style="text-align:left; padding:2px 8px;">digitando...</div>
+          <div id="ai-chat-recording-status" class="chat-empty hidden" style="text-align:left; padding:2px 8px; color:#B23B2E;">Gravando... toque no microfone de novo para enviar</div>
           <div class="chat-input-row">
             <div class="chat-input-main">
               <textarea id="ai-chat-input" rows="2" placeholder="Escreva algo em inglês (ou português, se travar)..."></textarea>
             </div>
-            <button type="button" class="btn-icon" id="btn-ai-chat-mic" title="Gravar áudio" aria-label="Gravar áudio">🎤</button>
-            <button class="btn" id="btn-send-ai-message" title="Enviar mensagem" aria-label="Enviar mensagem">➤</button>
+            <button type="button" class="btn-icon" id="btn-ai-chat-mic" title="Gravar áudio" aria-label="Gravar áudio">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+            </button>
+            <button class="btn" id="btn-send-ai-message" title="Enviar mensagem" aria-label="Enviar mensagem">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 11.5 20.5 4 13 21.5l-2.4-7.1L3 11.5Z"/></svg>
+            </button>
           </div>
         </div>
       </div>
       <div style="display:flex; justify-content:space-between; margin-top:10px;">
-        <button type="button" class="link-btn" id="btn-ai-chat-reset">🔄 Começar uma nova conversa</button>
-        <button type="button" class="link-btn" id="btn-ai-chat-delete-persona" style="color:#B23B2E;">🗑️ Excluir personalidade</button>
+        <button type="button" class="link-btn" id="btn-ai-chat-reset">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px; margin-right:4px;" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg>Nova conversa
+        </button>
+        <button type="button" class="link-btn" id="btn-ai-chat-delete-persona" style="color:#B23B2E;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px; margin-right:4px;" aria-hidden="true"><path d="M5 7h14M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-8 0 1 12.5a1 1 0 0 0 1 .5h4a1 1 0 0 0 1-.5L17 7"/></svg>Excluir personalidade
+        </button>
       </div>
     </div>
 
@@ -401,20 +422,20 @@
   <!-- TELA: TESTES DE NIVELAMENTO -->
   <div class="screen hidden" id="screen-tests">
     <h2 class="screen-title">Testes de Nivelamento</h2>
-    <p style="font-size:13px; color:#888; margin-bottom:18px;">Descubra seu nível de inglês com o teste adaptativo. O teste muda a cada tentativa — são 3 variações diferentes!</p>
+    <p style="font-size:13px; color:var(--ink-soft); margin-bottom:18px; line-height:1.5;">Descubra seu nível de inglês com o teste adaptativo. O teste muda a cada tentativa — são 3 variações diferentes!</p>
     <div id="tests-list"></div>
   </div>
 
   <!-- TELA: EXTRA (matérias extras, sem requisito de desbloqueio) -->
   <div class="screen hidden" id="screen-extra">
     <h2 class="screen-title">Matéria Extra</h2>
-    <p style="font-size:13px; color:#888; margin-bottom:18px;">Escolha um manual para ver as lições — sem pré-requisitos.</p>
+    <p style="font-size:13px; color:var(--ink-soft); margin-bottom:18px; line-height:1.5;">Escolha um manual para ver as lições — sem pré-requisitos.</p>
     <div id="extra-list"></div>
   </div>
 
   <div class="bottom-nav single" id="bottom-nav" style="display:none;">
     <button class="nav-btn active" data-screen="menu">
-      <span class="nav-icon">🏠</span>
+      <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9.5a.5.5 0 0 0 .5.5H10v-6h4v6h3.5a.5.5 0 0 0 .5-.5V10"/></svg></span>
       <span>Início</span>
     </button>
   </div>
@@ -422,7 +443,7 @@
   <!-- MODAL: senha para zerar progresso -->
   <div class="modal-overlay hidden" id="reset-password-modal">
     <div class="modal-card">
-      <h3>🔒 Confirmar com senha</h3>
+      <h3><svg class="modal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Confirmar com senha</h3>
       <p>Zerar o progresso apaga o resultado de todas as lições. Digite a senha cadastrada pelo professor para o seu perfil.</p>
       <input type="password" id="reset-password-input" placeholder="Senha" autocomplete="off">
       <p class="modal-error hidden" id="reset-password-error">Senha incorreta.</p>
