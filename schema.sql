@@ -260,3 +260,32 @@ drop policy if exists "Authenticated can view all push subscriptions" on push_su
 create policy "Authenticated can view all push subscriptions"
   on push_subscriptions for select
   using (auth.role() = 'authenticated');
+
+-- ============================================================
+-- Resumo da última conversa com a IA — usado só para personalizar o
+-- texto do lembrete (push). Guarda as últimas mensagens da conversa mais
+-- recente do aluno (com qualquer personalidade), sobrescritas a cada
+-- turno novo. Não é o histórico completo (esse continua só no aparelho,
+-- em localStorage) — é só o suficiente para o servidor (api/push-send.js)
+-- montar um lembrete com o Gemini que "lembra" do assunto.
+-- Uma linha por aluno (a conversa mais recente substitui a anterior).
+-- ============================================================
+create table if not exists ai_chat_last_conversation (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  persona_name text,
+  persona_emoji text,
+  persona_gender text,
+  messages jsonb not null default '[]'::jsonb, -- últimas ~8 mensagens: [{role:'user'|'model', text}]
+  updated_at timestamptz not null default now()
+);
+
+alter table ai_chat_last_conversation enable row level security;
+
+-- Só o próprio aluno grava/lê o resumo da própria conversa. O servidor
+-- (api/push-send.js) usa a service role key, que ignora RLS — não precisa
+-- de política extra para o professor ler isso.
+drop policy if exists "Students manage own ai chat summary" on ai_chat_last_conversation;
+create policy "Students manage own ai chat summary"
+  on ai_chat_last_conversation for all
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);

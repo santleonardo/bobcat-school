@@ -126,6 +126,7 @@ Na tela **Praticar com IA** o aluno pode ativar **Lembretes de prática**. Isso 
 | `VAPID_SUBJECT` | `mailto:seu-email@escola.com` |
 | `SUPABASE_URL` | (opcional) URL do projeto Supabase — para enviar à turma inteira |
 | `SUPABASE_SERVICE_ROLE_KEY` | (opcional) service role do Supabase — só no servidor |
+| `GEMINI_API_KEY` | (opcional, mesma chave do `api/chat.js`) com Supabase + essa chave, o lembrete vira personalizado com base na última conversa (veja abaixo) |
 | `PUSH_SEND_SECRET` | (opcional) senha que o cron/painel deve mandar no header `x-push-secret` |
 
 3. Rode de novo o `schema.sql` no Supabase (a tabela `push_subscriptions` é criada de forma segura).
@@ -151,6 +152,18 @@ Para agendar (ex.: 8h e 18h), use **Vercel Cron** apontando para essa rota, ou u
 - **iPhone (Safari/PWA):** Web Push em PWA no iOS exige iOS 16.4+ e o app instalado na tela inicial; o suporte ainda é mais limitado que no Android.
 - **Android + Chrome:** funciona bem com o app instalado ou aberto no navegador.
 - A notificação em si é um lembrete genérico; ao abrir o chat, a mensagem proativa da personalidade (já implementada) continua gerando o “bom dia / como você está?” no tom da IA.
+
+### Lembrete personalizado com a última conversa
+
+Se **Supabase** e **`GEMINI_API_KEY`** estiverem configurados na Vercel, o `/api/push-send` personaliza automaticamente o título/corpo do lembrete de cada aluno com base no final da última conversa dele com a IA — algo como *"Mia 🐱 — Ready to talk about that trip to Rio?"* em vez do texto genérico.
+
+Como funciona:
+- A cada resposta da IA no chat, o app grava um resumo (últimas ~8 mensagens) na tabela `ai_chat_last_conversation` do Supabase — só isso, não o histórico completo (que continua só no aparelho do aluno).
+- Ao enviar o lembrete, o servidor busca esse resumo por aluno e pede pro Gemini gerar um `title`/`body` curtos referenciando o assunto.
+- Sem conversa registrada, sem `GEMINI_API_KEY`, ou se o Gemini falhar nesse aluno em particular, cai automaticamente no `title`/`body` genérico enviado no `curl`/cron.
+- Para desligar a personalização em um envio específico (ex.: um aviso igual pra turma toda), mande `"personalize": false` no body do POST.
+- Por segurança de custo, um mesmo envio gera no máximo 60 lembretes personalizados (turmas maiores que isso recebem o texto genérico para o excedente).
+- Exige rodar de novo o `schema.sql` no Supabase (cria a tabela `ai_chat_last_conversation`).
 
 ---
 

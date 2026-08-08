@@ -520,3 +520,41 @@ function getLocalPushSubscription() {
     return null;
   }
 }
+
+// ---------- Resumo da última conversa com a IA (só para personalizar o lembrete) ----------
+
+const AI_LAST_CONVO_MAX_MESSAGES = 8; // suficiente pra dar contexto ao Gemini sem pesar o payload
+const AI_LAST_CONVO_MAX_CHARS = 400; // por mensagem, corta mensagens muito longas
+
+// Chamado depois de cada turno do chat com a IA. Só faz algo em modo Supabase
+// (é o único jeito de o servidor de push, que não vê o localStorage do aluno,
+// saber do que foi a última conversa). Falha em silêncio: isso é só um "plus"
+// do lembrete, nunca deve travar o chat em si.
+async function syncAiChatLastConversation(persona, history) {
+  if (!useSupabase || !supabaseClient || !currentUserId) return;
+  if (!persona || !Array.isArray(history) || history.length === 0) return;
+
+  const recent = history
+    .slice(-AI_LAST_CONVO_MAX_MESSAGES)
+    .filter(m => m && typeof m.text === 'string' && (m.role === 'user' || m.role === 'model'))
+    .map(m => ({ role: m.role, text: m.text.slice(0, AI_LAST_CONVO_MAX_CHARS) }));
+  if (recent.length === 0) return;
+
+  const row = {
+    user_id: currentUserId,
+    persona_name: (persona.name || '').slice(0, 60),
+    persona_emoji: (persona.emoji || '').slice(0, 10),
+    persona_gender: persona.gender === 'male' ? 'male' : 'female',
+    messages: recent,
+    updated_at: new Date().toISOString()
+  };
+
+  try {
+    const { error } = await supabaseClient
+      .from('ai_chat_last_conversation')
+      .upsert(row, { onConflict: 'user_id' });
+    if (error) console.error('syncAiChatLastConversation:', error);
+  } catch (e) {
+    console.error('syncAiChatLastConversation:', e);
+  }
+}

@@ -2207,6 +2207,11 @@ async function aiChatSend(audioPayload) {
     if (typing) typing.classList.add('hidden');
     aiChatRenderThread();
     if (aiChatCurrentPersonaId) saveAiChatHistoryFor(aiChatCurrentPersonaId, aiChatHistory);
+    // "Fire and forget" — atualiza o resumo da conversa no Supabase (se configurado)
+    // pra permitir lembretes personalizados. Nunca bloqueia nem quebra o chat.
+    if (typeof syncAiChatLastConversation === 'function') {
+      syncAiChatLastConversation(persona, aiChatHistory).catch(() => {});
+    }
   }
 }
 
@@ -2260,6 +2265,9 @@ async function aiChatSendProactive() {
     if (typing) typing.classList.add('hidden');
     aiChatRenderThread();
     if (aiChatCurrentPersonaId) saveAiChatHistoryFor(aiChatCurrentPersonaId, aiChatHistory);
+    if (typeof syncAiChatLastConversation === 'function') {
+      syncAiChatLastConversation(persona, aiChatHistory).catch(() => {});
+    }
   }
 }
 
