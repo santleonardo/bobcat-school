@@ -3,11 +3,11 @@
 // É aqui (e só aqui) que a chave da IA fica guardada, na variável de ambiente
 // GEMINI_API_KEY (configurada no painel da Vercel, nunca neste arquivo).
 //
-// Usa o Gemini 2.5 Flash-Lite (Google AI Studio), que tem cota gratuita
+// Usa o Gemini 3.5 Flash-Lite (Google AI Studio), que tem cota gratuita
 // generosa o suficiente para uma escola pequena (na prática, R$ 0 de custo).
 // Se quiser trocar de modelo depois, basta mudar a constante MODEL abaixo.
 
-const MODEL = 'gemini-2.5-flash-lite';
+const MODEL = 'gemini-3.5-flash-lite';
 const GEMINI_URL =
   `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
