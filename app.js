@@ -1559,15 +1559,35 @@ let aiChatTtsEnabled = localStorage.getItem('aiChatTtsEnabled') === '1';
 // Personalidades: cada uma muda o jeito da IA falar (o prompt de verdade fica no servidor,
 // aqui só guardamos a saudação de cada uma pra tela não ficar em branco esperando a IA)
 const AI_CHAT_PERSONAS = {
-  tutor: { greeting: name => `Hi${name ? ' ' + name : ''}! 👋 I'm Bobcat AI, your English conversation partner. We can talk about anything — your day, hobbies, movies, whatever! I'll help fix your mistakes along the way. So... how are you today?` },
-  kid: { greeting: name => `Hiii${name ? ' ' + name : ''}! 🧒🎈 I'm Bobcat, and I'm 9 years old! Do you like games? Or animals? Let's talk in English, it's gonna be fun! What's your favorite toy?` },
-  teen: { greeting: name => `Heyy${name ? ' ' + name : ''} 🧑🎧 what's up! I'm Bobcat, kinda obsessed with games and music rn. Wanna chat in English about whatever — shows, school, anything. So... what have you been up to?` },
-  professional: { greeting: name => `Good day${name ? ', ' + name : ''}. 💼 I'm Bobcat, and I'll be your English conversation partner for workplace and professional contexts — meetings, emails, small talk with colleagues. Shall we start? Tell me, what do you do?` },
-  elder: { greeting: name => `Well hello there${name ? ', ' + name : ''}! 👴☕ I'm Bobcat, and I've got a few stories to tell. Why don't we sit and chat a while in English? Tell me, how has your day been?` }
+  tutor: { greeting: (studentName, aiName) => `Hi${studentName ? ' ' + studentName : ''}! 👋 I'm ${aiName}, your English conversation partner. We can talk about anything — your day, hobbies, movies, whatever! I'll help fix your mistakes along the way. So... how are you today?` },
+  kid: { greeting: (studentName, aiName) => `Hiii${studentName ? ' ' + studentName : ''}! 🧒🎈 I'm ${aiName}, and I'm 9 years old! Do you like games? Or animals? Let's talk in English, it's gonna be fun! What's your favorite toy?` },
+  teen: { greeting: (studentName, aiName) => `Heyy${studentName ? ' ' + studentName : ''} 🧑🎧 what's up! I'm ${aiName}, kinda obsessed with games and music rn. Wanna chat in English about whatever — shows, school, anything. So... what have you been up to?` },
+  professional: { greeting: (studentName, aiName) => `Good day${studentName ? ', ' + studentName : ''}. 💼 I'm ${aiName}, and I'll be your English conversation partner for workplace and professional contexts — meetings, emails, small talk with colleagues. Shall we start? Tell me, what do you do?` },
+  elder: { greeting: (studentName, aiName) => `Well hello there${studentName ? ', ' + studentName : ''}! 👴☕ I'm ${aiName}, and I've got a few stories to tell. Why don't we sit and chat a while in English? Tell me, how has your day been?` }
 };
+const AI_CHAT_DEFAULT_NAME = 'Bobcat';
+
 function aiChatCurrentPersona() {
   const id = localStorage.getItem('aiChatPersona') || 'tutor';
   return AI_CHAT_PERSONAS[id] ? id : 'tutor';
+}
+
+function aiChatPersonaNames() {
+  try { return JSON.parse(localStorage.getItem('aiChatPersonaNames') || '{}') || {}; }
+  catch (e) { return {}; }
+}
+
+function aiChatCurrentAiName() {
+  const names = aiChatPersonaNames();
+  const custom = (names[aiChatCurrentPersona()] || '').trim();
+  return custom || AI_CHAT_DEFAULT_NAME;
+}
+
+function aiChatSetPersonaName(personaId, name) {
+  const names = aiChatPersonaNames();
+  const clean = String(name || '').trim().slice(0, 30);
+  if (clean) names[personaId] = clean; else delete names[personaId];
+  localStorage.setItem('aiChatPersonaNames', JSON.stringify(names));
 }
 
 function aiChatEscapeHtml(s) {
@@ -1656,9 +1676,10 @@ async function aiChatToggleRecording() {
 function aiChatRenderThread() {
   const thread = document.getElementById('ai-chat-thread');
   if (!thread) return;
+  const aiName = aiChatCurrentAiName();
   thread.innerHTML = aiChatHistory.map(m => {
     const cls = m.role === 'user' ? 'student' : 'teacher';
-    const label = m.role === 'user' ? 'Você' : '🤖 Bobcat AI';
+    const label = m.role === 'user' ? 'Você' : `🤖 ${aiName}`;
     const prefix = m.viaAudio ? '🎤 ' : '';
     return `<div class="chat-bubble ${cls}"><span class="chat-meta">${label}</span>${prefix}${aiChatEscapeHtml(m.text).replace(/\n/g, '<br>')}</div>`;
   }).join('');
@@ -1670,11 +1691,11 @@ async function aiChatStartIfNeeded() {
   aiChatStarted = true;
   let profile = {};
   try { profile = (await getProfile()) || {}; } catch (e) { /* sem perfil ainda */ }
-  const name = profile.name || '';
+  const studentName = profile.name || '';
   const persona = AI_CHAT_PERSONAS[aiChatCurrentPersona()];
   aiChatHistory = [{
     role: 'model',
-    text: persona.greeting(name)
+    text: persona.greeting(studentName, aiChatCurrentAiName())
   }];
   aiChatRenderThread();
   aiChatSpeak(aiChatHistory[0].text);
@@ -1713,7 +1734,8 @@ async function aiChatSend(audioPayload) {
       history: aiChatHistory.slice(0, -1), // tudo exceto a mensagem que acabou de entrar
       level: profile.level || 'A1',
       name: profile.name || '',
-      persona: aiChatCurrentPersona()
+      persona: aiChatCurrentPersona(),
+      aiName: aiChatCurrentAiName()
     };
     if (audioPayload) body.audio = audioPayload;
 
@@ -1746,6 +1768,7 @@ function setupAiChat() {
   const btnMic = document.getElementById('btn-ai-chat-mic');
   const chkTts = document.getElementById('chk-ai-chat-tts');
   const selectPersona = document.getElementById('select-ai-chat-persona');
+  const inputPersonaName = document.getElementById('input-ai-chat-persona-name');
   if (!btnSend || !input) return; // tela não presente nesta versão
 
   btnSend.addEventListener('click', () => aiChatSend());
@@ -1759,9 +1782,25 @@ function setupAiChat() {
   if (btnMic) btnMic.addEventListener('click', aiChatToggleRecording);
   if (selectPersona) {
     selectPersona.value = aiChatCurrentPersona();
+    if (inputPersonaName) {
+      const names = aiChatPersonaNames();
+      inputPersonaName.value = names[selectPersona.value] || '';
+      inputPersonaName.placeholder = `Ex: Max, Sofia... (padrão: ${AI_CHAT_DEFAULT_NAME})`;
+    }
     selectPersona.addEventListener('change', () => {
       localStorage.setItem('aiChatPersona', selectPersona.value);
+      if (inputPersonaName) {
+        const names = aiChatPersonaNames();
+        inputPersonaName.value = names[selectPersona.value] || '';
+      }
       // Trocar de personalidade no meio da conversa confundiria o contexto — melhor recomeçar
+      aiChatResetConversation();
+    });
+  }
+  if (inputPersonaName) {
+    inputPersonaName.addEventListener('change', () => {
+      aiChatSetPersonaName(aiChatCurrentPersona(), inputPersonaName.value);
+      // O nome muda a apresentação da IA, então recomeça a conversa pra ficar coerente
       aiChatResetConversation();
     });
   }
