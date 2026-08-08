@@ -67,7 +67,8 @@ module.exports = async function handler(req, res) {
       contents,
       generationConfig: {
         maxOutputTokens: 250,
-        temperature: 0.7
+        temperature: 0.7,
+        thinking_level: 'low' // resposta de chat simples não precisa de raciocínio pesado — isso corta boa parte da demora
       }
     };
 
