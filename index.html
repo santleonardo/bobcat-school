@@ -4,21 +4,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bobcat Language School</title>
-<meta name="theme-color" content="#D9793F">
+<meta name="theme-color" content="#33473B">
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Bobcat">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
 <div id="app">
 
-  <div id="boot-loading" style="position:fixed; inset:0; z-index:999; background:#fdfaf7; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;">
-    <img src="./icons/icon-192.png" alt="Bobcat" style="height:64px;">
-    <div style="color:#C9622A; font-weight:700; font-size:14px;">Carregando...</div>
+  <div id="boot-loading" style="position:fixed; inset:0; z-index:999; background:#FBF6EC; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;">
+    <img src="./icons/icon-192.png" alt="Bobcat" style="height:64px; border-radius:14px;">
+    <div style="color:#B75E3D; font-weight:600; font-family:'Fraunces', Georgia, serif; font-size:14px;">Carregando...</div>
   </div>
 
   <div class="topbar" id="topbar-home-link" role="button" tabindex="0">
@@ -252,7 +255,7 @@
     </select>
 
     <button class="btn" id="btn-update-profile">Salvar alterações</button>
-    <button class="btn secondary" id="btn-reset-progress" style="width:100%; margin-top:10px; background:#fff; color:#C0392B; border-color:#C0392B;">Zerar progresso das lições</button>
+    <button class="btn secondary" id="btn-reset-progress" style="width:100%; margin-top:10px; background:#fff; color:#B23B2E; border-color:#B23B2E;">Zerar progresso das lições</button>
     <button class="btn secondary hidden" id="btn-logout" style="width:100%; margin-top:10px;">Sair da conta</button>
     <p id="cloud-status" style="text-align:center; font-size:11.5px; color:#999; margin-top:14px;"></p>
   </div>
@@ -314,7 +317,7 @@
         <div class="chat-panel" style="padding:0 0 12px 0;">
           <div class="chat-thread" id="ai-chat-thread" style="max-height:52vh;"></div>
           <div id="ai-chat-typing" class="chat-empty hidden" style="text-align:left; padding:2px 8px;">🤖 digitando...</div>
-          <div id="ai-chat-recording-status" class="chat-empty hidden" style="text-align:left; padding:2px 8px; color:#C0392B;">🎙️ Gravando... toque no microfone de novo para enviar</div>
+          <div id="ai-chat-recording-status" class="chat-empty hidden" style="text-align:left; padding:2px 8px; color:#B23B2E;">🎙️ Gravando... toque no microfone de novo para enviar</div>
           <div class="chat-input-row">
             <div class="chat-input-main">
               <textarea id="ai-chat-input" rows="2" placeholder="Escreva algo em inglês (ou português, se travar)..."></textarea>
@@ -326,7 +329,7 @@
       </div>
       <div style="display:flex; justify-content:space-between; margin-top:10px;">
         <button type="button" class="link-btn" id="btn-ai-chat-reset">🔄 Começar uma nova conversa</button>
-        <button type="button" class="link-btn" id="btn-ai-chat-delete-persona" style="color:#C0392B;">🗑️ Excluir personalidade</button>
+        <button type="button" class="link-btn" id="btn-ai-chat-delete-persona" style="color:#B23B2E;">🗑️ Excluir personalidade</button>
       </div>
     </div>
 

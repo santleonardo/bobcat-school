@@ -1072,10 +1072,10 @@ async function renderTests() {
           <div class="level">${test.description}</div>
           <div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
             <span style="display:inline-block;color:#fff;padding:2px 10px;border-radius:4px;font-size:12px;font-weight:700;background:${lColor};">${detail.level} — ${detail.levelName}</span>
-            <span style="font-size:13px;font-weight:700;color:#C9622A;">${detail.score}/${detail.total} (${detail.pct}%)</span>
+            <span style="font-size:13px;font-weight:700;color:#B75E3D;">${detail.score}/${detail.total} (${detail.pct}%)</span>
           </div>
           <div style="margin-top:4px;font-size:11.5px;color:#888;">${detail.variation || ''} • Tentativa ${detail.attempt}/${detail.maxAttempts}${dateStr ? ' • ' + dateStr : ''}</div>
-          <div style="margin-top:4px;font-size:11.5px;color:${canRetake ? '#2E8B57' : '#C0392B'};">${canRetake ? 'Você pode refazer o teste mais uma vez' : 'Todas as tentativas utilizadas'}</div>
+          <div style="margin-top:4px;font-size:11.5px;color:${canRetake ? '#3C7A52' : '#B23B2E'};">${canRetake ? 'Você pode refazer o teste mais uma vez' : 'Todas as tentativas utilizadas'}</div>
           <div class="progress-track" style="margin-top:6px;"><div class="progress-fill" style="width:${pct}%;"></div></div>
         </div>
         <div class="badge ${done ? 'done' : ''}">${done ? '✓ ' + pct + '%' : attempts}</div>
