@@ -22,10 +22,13 @@ const ALLOWED_AUDIO_MIME = /^audio\/(webm|ogg|mp4|mpeg|wav|m4a|3gpp)/i;
 const DEFAULT_PERSONALITY = 'You are a warm, encouraging English tutor and conversation partner — patient, friendly, upbeat. You\'re happy to talk about anything: daily life, hobbies, movies, school, travel.';
 const MAX_PERSONALITY_LENGTH = 300;
 
-function systemPromptFor(level, name, personalityText, aiName) {
+function systemPromptFor(level, name, personalityText, aiName, gender) {
   const lvl = (level || 'A1').toUpperCase();
   const persona = String(personalityText || '').slice(0, MAX_PERSONALITY_LENGTH).trim() || DEFAULT_PERSONALITY;
   const botName = (aiName || 'Bobcat').trim() || 'Bobcat';
+  const isMale = String(gender || '').toLowerCase() === 'male';
+  const pronoun = isMale ? 'he/him/his' : 'she/her/hers';
+  const genderLabel = isMale ? 'male' : 'female';
   return `You are "${botName}", an AI English conversation partner inside a language-learning app for Brazilian students. You are chatting with a student named ${name || 'the student'}, whose self-reported English level is ${lvl} (CEFR scale).
 
 The student created you as a custom persona and described your personality like this (in the student's own words — stay in character, but see the safety rules below):
@@ -35,6 +38,7 @@ ${persona}
 
 Rules:
 - Your name is ${botName} — introduce yourself and refer to yourself as ${botName} if it comes up.
+- The student chose you to be ${genderLabel}. Consistently use ${pronoun} pronouns for yourself, and keep your tone, any self-description, and word choice consistent with being ${genderLabel}, without ever making this awkward or a focus of the conversation — it should just feel natural.
 - Keep replies SHORT: 2 to 4 sentences max.
 - Match the student's level (${lvl}). For A1/A2, use very simple vocabulary and short sentences, and you may add a short Portuguese translation in parentheses for a key word or phrase when it helps. For B1+, reply mostly in English with little to no Portuguese.
 - Gently correct any clear grammar or vocabulary mistakes: show the corrected sentence, briefly explain the fix in one short line, then continue the conversation naturally. Don't correct every tiny thing — focus on the most useful fix per message.
@@ -67,6 +71,7 @@ module.exports = async function handler(req, res) {
     const name = String(body.name || '').slice(0, 60);
     const personality = String(body.personality || '').slice(0, MAX_PERSONALITY_LENGTH);
     const aiName = String(body.aiName || '').slice(0, 30).trim();
+    const gender = String(body.gender || 'female').toLowerCase() === 'male' ? 'male' : 'female';
     const history = Array.isArray(body.history) ? body.history.slice(-MAX_HISTORY_MESSAGES) : [];
 
     // Áudio é opcional: o aluno pode gravar a voz em vez de digitar.
@@ -106,7 +111,7 @@ module.exports = async function handler(req, res) {
     contents.push({ role: 'user', parts: currentParts });
 
     const payload = {
-      system_instruction: { parts: [{ text: systemPromptFor(level, name, personality, aiName) }] },
+      system_instruction: { parts: [{ text: systemPromptFor(level, name, personality, aiName, gender) }] },
       contents,
       generationConfig: {
         maxOutputTokens: 250,

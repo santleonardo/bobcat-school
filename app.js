@@ -1558,6 +1558,7 @@ let aiChatTtsEnabled = localStorage.getItem('aiChatTtsEnabled') === '1';
 
 const PERSONA_EMOJIS = ['🤖', '🐱', '🧒', '🧑', '💼', '👴', '🦸', '🧑‍🚀', '🐉', '🎸', '⚽', '📚'];
 let personaEmojiSelected = PERSONA_EMOJIS[0];
+let personaGenderSelected = 'female'; // 'female' | 'male' — obrigatório escolher um dos dois
 
 // ---------- Armazenamento das personalidades (localStorage, por aluno/aparelho) ----------
 
@@ -1587,7 +1588,21 @@ function aiChatEscapeHtml(s) {
   return div.innerHTML;
 }
 
-function aiChatSpeak(text) {
+// Tenta achar uma voz em inglês compatível com o gênero escolhido pro aluno (melhor esforço:
+// o navegador nem sempre expõe o gênero, então usamos nomes comuns de vozes femininas/masculinas).
+const TTS_FEMALE_HINTS = ['female', 'zira', 'samantha', 'victoria', 'karen', 'moira', 'tessa', 'fiona', 'susan', 'amy', 'salli', 'joanna'];
+const TTS_MALE_HINTS = ['male', 'david', 'alex', 'daniel', 'fred', 'thomas', 'oliver', 'james', 'george', 'matthew', 'guy'];
+
+function aiChatPickVoice(gender) {
+  if (!('speechSynthesis' in window)) return null;
+  const voices = window.speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang));
+  if (voices.length === 0) return null;
+  const hints = gender === 'male' ? TTS_MALE_HINTS : TTS_FEMALE_HINTS;
+  const match = voices.find(v => hints.some(h => v.name.toLowerCase().includes(h)));
+  return match || voices[0];
+}
+
+function aiChatSpeak(text, gender) {
   if (!aiChatTtsEnabled || !text) return;
   if (!('speechSynthesis' in window)) return;
   try {
@@ -1598,6 +1613,8 @@ function aiChatSpeak(text) {
     const utter = new SpeechSynthesisUtterance(clean);
     utter.lang = 'en-US';
     utter.rate = 0.95;
+    const voice = aiChatPickVoice(gender || 'female');
+    if (voice) utter.voice = voice;
     window.speechSynthesis.speak(utter);
   } catch (e) { /* TTS não é essencial — falha silenciosa */ }
 }
@@ -1700,7 +1717,9 @@ function aiChatShowCreateView() {
   document.getElementById('input-persona-name').value = '';
   document.getElementById('input-persona-personality').value = '';
   personaEmojiSelected = PERSONA_EMOJIS[0];
+  personaGenderSelected = 'female';
   renderPersonaEmojiPicker();
+  renderPersonaGenderPicker();
 }
 
 async function aiChatOpenPersona(id) {
@@ -1722,7 +1741,6 @@ async function aiChatOpenPersona(id) {
   }
   aiChatRenderThread();
 }
-
 function renderAiChatPersonaList() {
   const list = document.getElementById('ai-chat-persona-list');
   if (!list) return;
@@ -1735,7 +1753,7 @@ function renderAiChatPersonaList() {
     <div class="persona-card" data-id="${p.id}">
       <div class="icon">${p.emoji || '🤖'}</div>
       <div class="info">
-        <div class="name">${aiChatEscapeHtml(p.name)}</div>
+        <div class="name">${aiChatEscapeHtml(p.name)} <span class="gender-badge">${p.gender === 'male' ? '♂️' : '♀️'}</span></div>
         <div class="personality-preview">${aiChatEscapeHtml(p.personality || '')}</div>
       </div>
       <div class="chevron">›</div>
@@ -1743,6 +1761,24 @@ function renderAiChatPersonaList() {
   `).join('');
   list.querySelectorAll('.persona-card').forEach(card => {
     card.addEventListener('click', () => aiChatOpenPersona(card.dataset.id));
+  });
+}
+
+function renderPersonaGenderPicker() {
+  const picker = document.getElementById('persona-gender-picker');
+  if (!picker) return;
+  const options = [
+    { id: 'female', label: '♀️ Feminino' },
+    { id: 'male', label: '♂️ Masculino' }
+  ];
+  picker.innerHTML = options.map(o =>
+    `<button type="button" class="persona-gender-btn${o.id === personaGenderSelected ? ' selected' : ''}" data-gender="${o.id}">${o.label}</button>`
+  ).join('');
+  picker.querySelectorAll('.persona-gender-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      personaGenderSelected = btn.dataset.gender;
+      renderPersonaGenderPicker();
+    });
   });
 }
 
@@ -1771,6 +1807,7 @@ function aiChatCreatePersonaFromForm() {
     name,
     personality,
     emoji: personaEmojiSelected,
+    gender: personaGenderSelected,
     createdAt: new Date().toISOString()
   };
   const list = getAiChatPersonas();
@@ -1827,7 +1864,8 @@ async function aiChatSend(audioPayload) {
       level: profile.level || 'A1',
       name: profile.name || '',
       personality: persona.personality,
-      aiName: persona.name
+      aiName: persona.name,
+      gender: persona.gender === 'male' ? 'male' : 'female'
     };
     if (audioPayload) body.audio = audioPayload;
 
@@ -1841,7 +1879,7 @@ async function aiChatSend(audioPayload) {
       aiChatHistory.push({ role: 'model', text: '⚠️ ' + (data.error || 'Não consegui responder agora. Tente novamente em instantes.') });
     } else {
       aiChatHistory.push({ role: 'model', text: data.reply });
-      aiChatSpeak(data.reply);
+      aiChatSpeak(data.reply, persona.gender);
     }
   } catch (err) {
     console.error(err);
