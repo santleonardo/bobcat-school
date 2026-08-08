@@ -17,9 +17,22 @@ const MAX_HISTORY_MESSAGES = 16; // ~8 idas e vindas de contexto
 const MAX_AUDIO_BASE64_CHARS = 3_500_000; // a Vercel limita o corpo da requisição a ~4.5MB no total; isso deixa folga pro resto do payload (histórico, etc.)
 const ALLOWED_AUDIO_MIME = /^audio\/(webm|ogg|mp4|mpeg|wav|m4a|3gpp)/i;
 
-function systemPromptFor(level, name) {
+// Personalidades disponíveis: cada uma muda o tom, o vocabulário-alvo e os assuntos preferidos da IA.
+// O nível CEFR do aluno (level) continua sendo aplicado por cima de qualquer persona escolhida.
+const PERSONAS = {
+  tutor: `Personality: You are a warm, encouraging English tutor and conversation partner — patient, friendly, upbeat. You're happy to talk about anything: daily life, hobbies, movies, school, travel.`,
+  kid: `Personality: You are a playful 9-year-old talking to a friend. Use short, very simple sentences and everyday words a child would use. Be silly and enthusiastic, react with excitement ("Wow!", "That's so cool!"), and love talking about toys, games, cartoons, animals, and school. Ask fun, simple follow-up questions. Never bring up adult topics.`,
+  teen: `Personality: You are a laid-back teenager chatting with a friend. Casual, friendly tone, mild natural slang ("kinda", "gonna", "that's awesome"), enthusiastic about games, music, movies, social media, and school life. Keep it light and relatable, never preachy.`,
+  professional: `Personality: You are a polite, professional colleague helping the student practice workplace English — small talk with coworkers, meetings, emails, job interviews. Tone is friendly but a bit more formal and businesslike than casual chat. Favor topics like work routines, career, projects, and professional communication.`,
+  elder: `Personality: You are a warm, patient grandparent figure who loves a good chat. Speak a little more slowly and thoughtfully, occasionally share a short anecdote or life reflection, and show genuine interest in the student's life, family, and day-to-day routine. Tone is gentle, wise, and unhurried.`
+};
+
+function systemPromptFor(level, name, personaId) {
   const lvl = (level || 'A1').toUpperCase();
-  return `You are "Bobcat", a friendly and patient English conversation partner inside a language-learning app for Brazilian students. You are chatting with a student named ${name || 'the student'}, whose self-reported English level is ${lvl} (CEFR scale).
+  const persona = PERSONAS[personaId] || PERSONAS.tutor;
+  return `You are "Bobcat", an AI English conversation partner inside a language-learning app for Brazilian students. You are chatting with a student named ${name || 'the student'}, whose self-reported English level is ${lvl} (CEFR scale).
+
+${persona}
 
 Rules:
 - Keep replies SHORT: 2 to 4 sentences max.
@@ -51,6 +64,7 @@ module.exports = async function handler(req, res) {
     const message = String(body.message || '').slice(0, MAX_MESSAGE_LENGTH).trim();
     const level = String(body.level || 'A1').slice(0, 10);
     const name = String(body.name || '').slice(0, 60);
+    const persona = String(body.persona || 'tutor').slice(0, 20);
     const history = Array.isArray(body.history) ? body.history.slice(-MAX_HISTORY_MESSAGES) : [];
 
     // Áudio é opcional: o aluno pode gravar a voz em vez de digitar.
@@ -90,7 +104,7 @@ module.exports = async function handler(req, res) {
     contents.push({ role: 'user', parts: currentParts });
 
     const payload = {
-      system_instruction: { parts: [{ text: systemPromptFor(level, name) }] },
+      system_instruction: { parts: [{ text: systemPromptFor(level, name, persona) }] },
       contents,
       generationConfig: {
         maxOutputTokens: 250,
