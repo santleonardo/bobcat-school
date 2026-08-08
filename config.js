@@ -15,5 +15,9 @@ window.SUPABASE_CONFIG = {
 // da página); serve para evitar que o próprio aluno zere sem querer/sem
 // autorização, não para proteger contra alguém tecnicamente curioso.
 window.APP_CONFIG = {
-  resetProgressPassword: 'bobcat123'
+  resetProgressPassword: 'bobcat123',
+  // Chave pública VAPID (Web Push). A privada fica só na Vercel (VAPID_PRIVATE_KEY).
+  // Gere um par novo com: npx web-push generate-vapid-keys
+  // Depois cole a pública aqui e a privada + pública nas env vars da Vercel.
+  vapidPublicKey: 'BHNlwYeJUkJDdeCCjYwc9_ZxGDiCuRcT05fqwH67X7YqGQg9J9B9xRnSCLbq1gc-td89JGQZbDXHuc26L3eomaQ'
 };

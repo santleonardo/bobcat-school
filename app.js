@@ -1438,6 +1438,8 @@ async function boot() {
 
   setupInstallPrompt();
   registerServiceWorker();
+  // Deep link de notificação (?screen=ai-chat) — só depois do app estar pronto
+  setTimeout(handleDeepLinkScreen, 300);
 }
 
 function showLoadingState(loading) {
@@ -1522,6 +1524,16 @@ function registerServiceWorker() {
     reloading = true;
     window.location.reload();
   });
+
+  // Clique em notificação push → abre a tela de Praticar com IA
+  navigator.serviceWorker.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'NOTIFICATION_CLICK') {
+      try {
+        showScreen('ai-chat');
+        if (typeof aiChatShowListView === 'function') aiChatShowListView();
+      } catch (e) { /* tela ainda não pronta */ }
+    }
+  });
 }
 
 function showUpdateBanner(registration) {
@@ -1541,6 +1553,234 @@ function showUpdateBanner(registration) {
       window.location.reload();
     }
   });
+}
+
+// ─── Web Push (lembretes de prática) ───────────────────────────────────────
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const raw = atob(base64);
+  const out = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
+  return out;
+}
+
+function pushSupported() {
+  return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+}
+
+async function getPushRegistration() {
+  if (!('serviceWorker' in navigator)) return null;
+  return navigator.serviceWorker.ready;
+}
+
+async function isPushSubscribed() {
+  try {
+    const reg = await getPushRegistration();
+    if (!reg) return false;
+    const sub = await reg.pushManager.getSubscription();
+    return !!sub;
+  } catch (e) {
+    return false;
+  }
+}
+
+async function updatePushRemindersUI() {
+  const statusEl = document.getElementById('push-reminders-status');
+  const btn = document.getElementById('btn-push-toggle');
+  const testBtn = document.getElementById('btn-push-test');
+  if (!btn) return;
+
+  if (!pushSupported()) {
+    if (statusEl) statusEl.textContent = 'Seu navegador não suporta notificações push.';
+    btn.disabled = true;
+    btn.textContent = 'Indisponível';
+    if (testBtn) testBtn.classList.add('hidden');
+    return;
+  }
+
+  const permission = Notification.permission;
+  const subscribed = await isPushSubscribed();
+
+  if (permission === 'denied') {
+    if (statusEl) statusEl.textContent = 'Notificações bloqueadas. Libere nas configurações do navegador/celular.';
+    btn.textContent = 'Bloqueado';
+    btn.disabled = true;
+    btn.classList.remove('is-on');
+    if (testBtn) testBtn.classList.add('hidden');
+    return;
+  }
+
+  btn.disabled = false;
+  if (subscribed) {
+    if (statusEl) statusEl.textContent = 'Lembretes ativos neste aparelho. Você receberá toques para praticar.';
+    btn.textContent = 'Desativar';
+    btn.classList.add('is-on');
+    if (testBtn) testBtn.classList.remove('hidden');
+  } else {
+    if (statusEl) statusEl.textContent = 'Receba um toque no celular para praticar com a IA ao longo do dia.';
+    btn.textContent = 'Ativar';
+    btn.classList.remove('is-on');
+    if (testBtn) testBtn.classList.add('hidden');
+  }
+}
+
+async function enablePushReminders() {
+  if (!pushSupported()) {
+    alert('Seu navegador não suporta notificações push.');
+    return;
+  }
+  const vapidKey = (window.APP_CONFIG && window.APP_CONFIG.vapidPublicKey) || '';
+  if (!vapidKey || vapidKey.includes('COLE')) {
+    alert('Chave VAPID pública não configurada em config.js. Veja o README.');
+    return;
+  }
+
+  const permission = await Notification.requestPermission();
+  if (permission !== 'granted') {
+    alert('Você precisa permitir notificações para ativar os lembretes.');
+    await updatePushRemindersUI();
+    return;
+  }
+
+  try {
+    const reg = await getPushRegistration();
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) {
+      sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(vapidKey)
+      });
+    }
+    if (typeof savePushSubscription === 'function') {
+      await savePushSubscription(sub);
+    } else {
+      try {
+        localStorage.setItem('bobcat_push_subscription', JSON.stringify(sub.toJSON()));
+      } catch (e) { /* ignore */ }
+    }
+    localStorage.setItem('bobcat_push_enabled', '1');
+  } catch (err) {
+    console.error(err);
+    alert('Não foi possível ativar as notificações. Tente de novo ou use Chrome/Edge no Android.');
+  }
+  await updatePushRemindersUI();
+}
+
+async function disablePushReminders() {
+  try {
+    const reg = await getPushRegistration();
+    const sub = reg ? await reg.pushManager.getSubscription() : null;
+    const endpoint = sub ? sub.endpoint : null;
+    if (sub) await sub.unsubscribe();
+    if (typeof removePushSubscription === 'function') {
+      await removePushSubscription(endpoint);
+    } else {
+      try { localStorage.removeItem('bobcat_push_subscription'); } catch (e) { /* ignore */ }
+    }
+    localStorage.setItem('bobcat_push_enabled', '0');
+  } catch (err) {
+    console.error(err);
+  }
+  await updatePushRemindersUI();
+}
+
+async function togglePushReminders() {
+  const subscribed = await isPushSubscribed();
+  if (subscribed) await disablePushReminders();
+  else await enablePushReminders();
+}
+
+/** Notificação local de teste (não passa pelo servidor). */
+async function sendLocalTestNotification() {
+  if (!pushSupported() || Notification.permission !== 'granted') {
+    alert('Ative os lembretes primeiro.');
+    return;
+  }
+  const reg = await getPushRegistration();
+  if (!reg || !reg.active) {
+    new Notification('Bobcat — hora de praticar! 🐱', {
+      body: 'Toque para abrir o chat com a IA e treinar um pouco de inglês.',
+      icon: './icons/icon-192.png',
+      tag: 'bobcat-test'
+    });
+    return;
+  }
+  reg.active.postMessage({
+    type: 'SHOW_LOCAL_NOTIFICATION',
+    title: 'Bobcat — hora de praticar! 🐱',
+    body: 'Toque para abrir o chat com a IA e treinar um pouco de inglês.',
+    url: './index.html?screen=ai-chat',
+    tag: 'bobcat-test'
+  });
+}
+
+/**
+ * Envia push de verdade via /api/push-send (usa a subscription deste aparelho).
+ * Útil para validar VAPID + servidor depois do deploy.
+ */
+async function sendServerTestPush() {
+  const local = (typeof getLocalPushSubscription === 'function' && getLocalPushSubscription()) || null;
+  let subJson = local;
+  if (!subJson) {
+    try {
+      const reg = await getPushRegistration();
+      const sub = reg && await reg.pushManager.getSubscription();
+      if (sub) subJson = sub.toJSON();
+    } catch (e) { /* ignore */ }
+  }
+  if (!subJson) {
+    alert('Nenhuma subscription encontrada. Ative os lembretes primeiro.');
+    return;
+  }
+  try {
+    const resp = await fetch('/api/push-send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: 'Bobcat — hora de praticar! 🐱',
+        body: 'Sua personalidade de IA quer conversar. Abra o app e pratique!',
+        url: './index.html?screen=ai-chat',
+        tag: 'bobcat-test',
+        subscription: subJson
+      })
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) {
+      alert('Falha no push do servidor: ' + (data.error || resp.status));
+    } else {
+      alert('Push enviado! Se não aparecer, confira se o app está em segundo plano e as chaves VAPID na Vercel.');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Erro de conexão ao chamar /api/push-send.');
+  }
+}
+
+function setupPushRemindersUI() {
+  const btn = document.getElementById('btn-push-toggle');
+  const testBtn = document.getElementById('btn-push-test');
+  if (btn) btn.addEventListener('click', () => togglePushReminders());
+  if (testBtn) {
+    testBtn.addEventListener('click', (e) => {
+      if (e.shiftKey) sendServerTestPush();
+      else sendLocalTestNotification();
+    });
+  }
+  updatePushRemindersUI();
+}
+
+/** Abre a tela pedida por ?screen=... (ex.: notificação push). */
+function handleDeepLinkScreen() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const screen = params.get('screen');
+    if (screen === 'ai-chat') {
+      showScreen('ai-chat');
+      if (typeof aiChatShowListView === 'function') aiChatShowListView();
+    }
+  } catch (e) { /* ignore */ }
 }
 
 // ─── PRATICAR COM IA (chat de conversação com personalidades criadas pelo aluno) ──
@@ -2072,6 +2312,8 @@ function setupAiChat() {
   // Sempre que o aluno entra na tela "Praticar com a IA", volta pra lista de personalidades
   const aiChatMenuBtn = document.querySelector('.menu-btn[data-screen="ai-chat"]');
   if (aiChatMenuBtn) aiChatMenuBtn.addEventListener('click', aiChatShowListView);
+
+  setupPushRemindersUI();
 }
 
 document.addEventListener('DOMContentLoaded', boot);

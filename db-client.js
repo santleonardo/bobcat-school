@@ -463,3 +463,60 @@ async function sendMessageToTeacher(body, file) {
   if (error) { console.error(error); return { ok: false, message: 'Não foi possível enviar. Tente novamente.' }; }
   return { ok: true };
 }
+
+// ---------- Web Push subscriptions ----------
+
+async function savePushSubscription(subscription) {
+  if (!subscription || !subscription.endpoint) return { ok: false };
+  const json = typeof subscription.toJSON === 'function' ? subscription.toJSON() : subscription;
+  const endpoint = json.endpoint;
+  const p256dh = json.keys && json.keys.p256dh;
+  const auth = json.keys && json.keys.auth;
+  if (!endpoint || !p256dh || !auth) return { ok: false, message: 'Subscription inválida.' };
+
+  // Sempre guarda local (funciona sem Supabase)
+  try {
+    localStorage.setItem('bobcat_push_subscription', JSON.stringify({ endpoint, keys: { p256dh, auth } }));
+  } catch (e) { /* ignore quota */ }
+
+  if (!useSupabase || !supabaseClient || !currentUserId) {
+    return { ok: true, localOnly: true };
+  }
+
+  const row = {
+    user_id: currentUserId,
+    endpoint,
+    p256dh,
+    auth,
+    user_agent: (typeof navigator !== 'undefined' && navigator.userAgent) ? navigator.userAgent.slice(0, 300) : null,
+    updated_at: new Date().toISOString()
+  };
+
+  const { error } = await supabaseClient
+    .from('push_subscriptions')
+    .upsert(row, { onConflict: 'endpoint' });
+  if (error) {
+    console.error('savePushSubscription:', error);
+    return { ok: false, message: error.message };
+  }
+  return { ok: true };
+}
+
+async function removePushSubscription(endpoint) {
+  try { localStorage.removeItem('bobcat_push_subscription'); } catch (e) { /* ignore */ }
+  if (!useSupabase || !supabaseClient || !endpoint) return { ok: true };
+  const { error } = await supabaseClient
+    .from('push_subscriptions')
+    .delete()
+    .eq('endpoint', endpoint);
+  if (error) console.error('removePushSubscription:', error);
+  return { ok: true };
+}
+
+function getLocalPushSubscription() {
+  try {
+    return JSON.parse(localStorage.getItem('bobcat_push_subscription') || 'null');
+  } catch (e) {
+    return null;
+  }
+}

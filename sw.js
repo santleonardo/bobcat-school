@@ -7,7 +7,7 @@
 // esse número — é o que avisa o navegador que existe uma versão nova do
 // service worker para instalar. Sem isso, o navegador pode continuar
 // rodando a versão antiga do service worker por bastante tempo.
-const CACHE_NAME = 'bobcat-app-v27';
+const CACHE_NAME = 'bobcat-app-v28';
 
 const APP_SHELL = [
   './',
@@ -90,6 +90,20 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('message', (event) => {
   if (event.data === 'SKIP_WAITING') self.skipWaiting();
+  // Permite o app pedir uma notificação local de teste (sem passar pelo servidor).
+  if (event.data && event.data.type === 'SHOW_LOCAL_NOTIFICATION') {
+    const d = event.data;
+    event.waitUntil(
+      self.registration.showNotification(d.title || 'Bobcat', {
+        body: d.body || '',
+        icon: d.icon || './icons/icon-192.png',
+        badge: './icons/icon-192.png',
+        tag: d.tag || 'bobcat-local',
+        data: { url: d.url || './index.html?screen=ai-chat' },
+        renotify: true
+      })
+    );
+  }
 });
 
 self.addEventListener('activate', (event) => {
@@ -145,4 +159,54 @@ self.addEventListener('fetch', (event) => {
       })
     );
   }
+});
+
+// ─── Web Push ───────────────────────────────────────────────────────────────
+// O servidor (ou um cron) envia um push; aqui só exibimos a notificação.
+// Payload esperado (JSON): { title, body, url?, tag? }
+
+self.addEventListener('push', (event) => {
+  let data = { title: 'Bobcat Language School', body: 'Hora de praticar inglês! 🐱', url: './index.html?screen=ai-chat', tag: 'bobcat-practice' };
+  try {
+    if (event.data) {
+      const parsed = event.data.json();
+      data = { ...data, ...parsed };
+    }
+  } catch (e) {
+    try {
+      const text = event.data && event.data.text();
+      if (text) data.body = text;
+    } catch (_) { /* ignore */ }
+  }
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: './icons/icon-192.png',
+      badge: './icons/icon-192.png',
+      tag: data.tag || 'bobcat-practice',
+      data: { url: data.url || './index.html?screen=ai-chat' },
+      renotify: true,
+      vibrate: [120, 60, 120]
+    })
+  );
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const targetUrl = (event.notification.data && event.notification.data.url) || './index.html?screen=ai-chat';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if ('focus' in client) {
+          client.postMessage({ type: 'NOTIFICATION_CLICK', url: targetUrl });
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow(targetUrl);
+      }
+    })
+  );
 });

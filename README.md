@@ -99,19 +99,76 @@ Pronto — a chave fica só no servidor da Vercel, nunca aparece no navegador do
 
 ---
 
+## Lembretes por notificação (Web Push)
+
+Na tela **Praticar com IA** o aluno pode ativar **Lembretes de prática**. Isso usa Web Push + Service Worker: mesmo com o app fechado, o celular pode receber um toque do tipo “Hora de praticar inglês!”.
+
+### O que já funciona no app
+- Botão **Ativar / Desativar** lembretes
+- Pedido de permissão de notificação
+- Inscrição Push (subscription) salva no aparelho e, com Supabase, também na tabela `push_subscriptions`
+- Service Worker exibe a notificação e, ao tocar, abre a tela de Praticar com IA
+- **Notificação de teste** (local, sem servidor)
+- Com Shift + clique no teste: envia push de verdade via `/api/push-send` (precisa das chaves VAPID na Vercel)
+
+### Configuração na Vercel (obrigatória para push real)
+
+1. As chaves VAPID do projeto já estão pareadas:
+   - **Pública** → em `config.js` (`APP_CONFIG.vapidPublicKey`)
+   - **Privada** → só na Vercel (nunca no código)
+
+2. No painel da Vercel → **Settings → Environment Variables**, adicione:
+
+| Name | Value |
+|------|--------|
+| `VAPID_PUBLIC_KEY` | a mesma pública de `config.js` |
+| `VAPID_PRIVATE_KEY` | `A4LhDtBYLHCFdB1TC8znW78xCxwfappz6Wtp4-L_rxA` |
+| `VAPID_SUBJECT` | `mailto:seu-email@escola.com` |
+| `SUPABASE_URL` | (opcional) URL do projeto Supabase — para enviar à turma inteira |
+| `SUPABASE_SERVICE_ROLE_KEY` | (opcional) service role do Supabase — só no servidor |
+| `PUSH_SEND_SECRET` | (opcional) senha que o cron/painel deve mandar no header `x-push-secret` |
+
+3. Rode de novo o `schema.sql` no Supabase (a tabela `push_subscriptions` é criada de forma segura).
+
+4. **Redeploy** o projeto na Vercel (para instalar a dependência `web-push` do `package.json`).
+
+> Se quiser gerar **outro** par de chaves: `npx web-push generate-vapid-keys` — atualize a pública em `config.js` e a pública+privada nas env vars.
+
+### Enviar lembrete para a turma (manual ou cron)
+
+```bash
+curl -X POST https://SEU-SITE.vercel.app/api/push-send \
+  -H "Content-Type: application/json" \
+  -H "x-push-secret: SUA_SENHA_SE_CONFIGUROU" \
+  -d '{"title":"Bobcat 🐱","body":"Hora de praticar inglês com a IA!","url":"./index.html?screen=ai-chat"}'
+```
+
+Isso exige `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` configurados. Sem isso, o endpoint ainda aceita uma `subscription` avulsa no body (como o botão de teste com Shift faz).
+
+Para agendar (ex.: 8h e 18h), use **Vercel Cron** apontando para essa rota, ou um serviço externo de cron.
+
+### Limitações
+- **iPhone (Safari/PWA):** Web Push em PWA no iOS exige iOS 16.4+ e o app instalado na tela inicial; o suporte ainda é mais limitado que no Android.
+- **Android + Chrome:** funciona bem com o app instalado ou aberto no navegador.
+- A notificação em si é um lembrete genérico; ao abrir o chat, a mensagem proativa da personalidade (já implementada) continua gerando o “bom dia / como você está?” no tom da IA.
+
+---
+
 ## Estrutura do projeto
 
 ```
 index.html           → tela de perfil + lista de lições (o app em si)
 app.js                → lógica de navegação e telas
 db-client.js          → decide entre Supabase (nuvem) e localStorage (offline)
-config.js             → suas chaves do Supabase (edite aqui)
+config.js             → suas chaves do Supabase + VAPID pública (edite aqui)
 api/chat.js            → função serverless (Vercel) que fala com a IA — a GEMINI_API_KEY fica aqui, como variável de ambiente, nunca neste arquivo
+api/push-send.js       → envia notificações Web Push (VAPID + opcionalmente Supabase)
 style.css             → visual do app
 manifest.json         → deixa o app instalável
-sw.js                 → cache offline (service worker)
+sw.js                 → cache offline + handlers de push/notificationclick
 schema.sql            → script para criar as tabelas no Supabase
 teacher.html         → painel do professor (só funciona com Supabase configurado)
+package.json          → dependência web-push (Vercel instala no deploy)
 icons/               → ícones do app
 lessons/
   verb-to-be.html    → lição interativa "Verb To Be"
