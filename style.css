@@ -857,6 +857,27 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
   gap: 6px;
   align-items: flex-end;
 }
+.ai-chat-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 2px 2px 8px;
+}
+.ai-chat-suggestion-chip {
+  background: var(--paper-alt);
+  border: 1.5px solid var(--terracotta);
+  color: var(--terracotta-deep);
+  border-radius: 99px;
+  padding: 6px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s ease, transform .1s ease;
+  font-family: inherit;
+}
+.ai-chat-suggestion-chip:hover { background: var(--terracotta); color: #fff; }
+.ai-chat-suggestion-chip:active { transform: scale(0.96); }
+.ai-chat-suggestion-chip:disabled { opacity: .5; cursor: default; }
 .chat-input-main { flex: 1; min-width: 0; }
 .chat-input-row textarea {
   width: 100%;

@@ -1787,6 +1787,7 @@ function handleDeepLinkScreen() {
 let aiChatHistory = []; // [{role:'user'|'model', text}] — da personalidade aberta no momento
 let aiChatBusy = false;
 let aiChatCurrentPersonaId = null; // id da personalidade aberta na tela de conversa
+let aiChatSuggestions = []; // sugestões de próxima fala (ramificação de conversa), vindas da última resposta da IA
 
 // Áudio: gravação (aluno fala) e leitura em voz (TTS do navegador, sem custo de IA)
 let aiChatMediaRecorder = null;
@@ -1946,6 +1947,36 @@ function aiChatRenderThread() {
   thread.scrollTop = thread.scrollHeight;
 }
 
+/**
+ * Ramificação de conversação: mostra 2-3 sugestões clicáveis do que o aluno
+ * poderia responder em seguida (vindas da última fala da IA). Clicar numa
+ * sugestão envia ela na hora, como se o aluno tivesse digitado — baixa a
+ * barreira pra quem trava sem saber o que escrever.
+ */
+function aiChatRenderSuggestions() {
+  const box = document.getElementById('ai-chat-suggestions');
+  if (!box) return;
+  if (!aiChatSuggestions.length) {
+    box.classList.add('hidden');
+    box.innerHTML = '';
+    return;
+  }
+  box.classList.remove('hidden');
+  box.innerHTML = aiChatSuggestions.map((s, i) =>
+    `<button type="button" class="ai-chat-suggestion-chip" data-idx="${i}">${aiChatEscapeHtml(s)}</button>`
+  ).join('');
+  box.querySelectorAll('.ai-chat-suggestion-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      if (aiChatBusy) return;
+      const text = aiChatSuggestions[Number(chip.dataset.idx)];
+      if (!text) return;
+      const input = document.getElementById('ai-chat-input');
+      if (input) input.value = text;
+      aiChatSend();
+    });
+  });
+}
+
 /** Retorna 'morning' | 'afternoon' | 'evening' | 'night' conforme o horário local do aluno. */
 function aiChatTimeOfDay() {
   const h = new Date().getHours();
@@ -2036,14 +2067,17 @@ async function aiChatOpenPersona(id) {
   `;
 
   aiChatHistory = getAiChatHistoryFor(id);
+  aiChatSuggestions = [];
   if (aiChatHistory.length === 0) {
     let profile = {};
     try { profile = (await getProfile()) || {}; } catch (e) { /* sem perfil ainda */ }
     aiChatHistory = [{ role: 'model', text: aiChatGreetingFor(persona, profile.name || ''), ts: Date.now() }];
     saveAiChatHistoryFor(id, aiChatHistory);
     aiChatRenderThread();
+    aiChatRenderSuggestions();
   } else {
     aiChatRenderThread();
+    aiChatRenderSuggestions();
     // Se a conversa está "fria" (última mensagem antiga), a IA puxa assunto sozinha.
     const last = aiChatHistory[aiChatHistory.length - 1];
     const lastTs = last && typeof last.ts === 'number' ? last.ts : 0;
@@ -2166,6 +2200,8 @@ async function aiChatSend(audioPayload) {
   const displayText = audioPayload ? (text || '(mensagem em áudio)') : text;
   aiChatHistory.push({ role: 'user', text: displayText, viaAudio: !!audioPayload, ts: Date.now() });
   input.value = '';
+  aiChatSuggestions = [];
+  aiChatRenderSuggestions();
   aiChatRenderThread();
   saveAiChatHistoryFor(persona.id, aiChatHistory);
 
@@ -2195,9 +2231,11 @@ async function aiChatSend(audioPayload) {
     const data = await resp.json().catch(() => ({}));
     if (!resp.ok || !data.reply) {
       aiChatHistory.push({ role: 'model', text: '⚠️ ' + (data.error || 'Não consegui responder agora. Tente novamente em instantes.'), ts: Date.now() });
+      aiChatSuggestions = [];
     } else {
       aiChatHistory.push({ role: 'model', text: data.reply, ts: Date.now() });
       aiChatSpeak(data.reply, persona.gender);
+      aiChatSuggestions = Array.isArray(data.suggestions) ? data.suggestions : [];
     }
   } catch (err) {
     console.error(err);
@@ -2206,6 +2244,7 @@ async function aiChatSend(audioPayload) {
     aiChatBusy = false;
     if (typing) typing.classList.add('hidden');
     aiChatRenderThread();
+    aiChatRenderSuggestions();
     if (aiChatCurrentPersonaId) saveAiChatHistoryFor(aiChatCurrentPersonaId, aiChatHistory);
     // "Fire and forget" — atualiza o resumo da conversa no Supabase (se configurado)
     // pra permitir lembretes personalizados. Nunca bloqueia nem quebra o chat.
@@ -2255,6 +2294,7 @@ async function aiChatSendProactive() {
     if (resp.ok && data.reply) {
       aiChatHistory.push({ role: 'model', text: data.reply, ts: Date.now(), proactive: true });
       aiChatSpeak(data.reply, persona.gender);
+      aiChatSuggestions = Array.isArray(data.suggestions) ? data.suggestions : [];
     }
     // Se falhar (sem chave Gemini, offline, etc.), silenciosamente não adiciona nada —
     // o aluno ainda vê o histórico anterior e pode escrever normalmente.
@@ -2264,6 +2304,7 @@ async function aiChatSendProactive() {
     aiChatBusy = false;
     if (typing) typing.classList.add('hidden');
     aiChatRenderThread();
+    aiChatRenderSuggestions();
     if (aiChatCurrentPersonaId) saveAiChatHistoryFor(aiChatCurrentPersonaId, aiChatHistory);
     if (typeof syncAiChatLastConversation === 'function') {
       syncAiChatLastConversation(persona, aiChatHistory).catch(() => {});
