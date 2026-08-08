@@ -334,6 +334,7 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
 }
 .link-btn:hover { text-decoration: underline; }
 .link-btn.hidden { display: none; }
+.link-btn svg { width: 15px; height: 15px; }
 
 .btn {
   background: var(--terracotta);
