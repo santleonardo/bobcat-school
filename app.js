@@ -1631,6 +1631,8 @@ function aiChatBlobToBase64(blob) {
 async function aiChatToggleRecording() {
   const micBtn = document.getElementById('btn-ai-chat-mic');
   const status = document.getElementById('ai-chat-recording-status');
+  const micIdle = micBtn ? micBtn.querySelector('.mic-icon-idle') : null;
+  const micRec = micBtn ? micBtn.querySelector('.mic-icon-recording') : null;
 
   if (aiChatRecording) {
     // Toque de novo = parar e enviar
@@ -1657,7 +1659,9 @@ async function aiChatToggleRecording() {
       stream.getTracks().forEach(t => t.stop());
       aiChatRecording = false;
       if (aiChatRecordTimeout) { clearTimeout(aiChatRecordTimeout); aiChatRecordTimeout = null; }
-      if (micBtn) { micBtn.textContent = '🎤'; micBtn.style.background = ''; }
+      if (micBtn) micBtn.classList.remove('recording');
+      if (micIdle) micIdle.classList.remove('hidden');
+      if (micRec) micRec.classList.add('hidden');
       if (status) status.classList.add('hidden');
 
       if (aiChatAudioChunks.length === 0) return;
@@ -1668,7 +1672,9 @@ async function aiChatToggleRecording() {
 
     aiChatMediaRecorder.start();
     aiChatRecording = true;
-    if (micBtn) { micBtn.textContent = '⏹️'; micBtn.style.background = '#f5c6c6'; }
+    if (micBtn) micBtn.classList.add('recording');
+    if (micIdle) micIdle.classList.add('hidden');
+    if (micRec) micRec.classList.remove('hidden');
     if (status) status.classList.remove('hidden');
 
     // Corta automaticamente depois de um tempo, pra não gravar áudio gigante sem querer
@@ -1686,11 +1692,16 @@ function aiChatRenderThread() {
   if (!thread) return;
   const persona = getAiChatPersonas().find(p => p.id === aiChatCurrentPersonaId);
   const aiName = (persona && persona.name) || 'IA';
+  const aiEmoji = (persona && persona.emoji) || '🤖';
   thread.innerHTML = aiChatHistory.map(m => {
     const cls = m.role === 'user' ? 'student' : 'teacher';
-    const label = m.role === 'user' ? 'Você' : `🤖 ${aiName}`;
+    const label = m.role === 'user' ? 'Você' : aiName;
     const prefix = m.viaAudio ? '🎤 ' : '';
-    return `<div class="chat-bubble ${cls}"><span class="chat-meta">${label}</span>${prefix}${aiChatEscapeHtml(m.text).replace(/\n/g, '<br>')}</div>`;
+    const bubble = `<div class="chat-bubble ${cls}"><span class="chat-meta">${label}</span>${prefix}${aiChatEscapeHtml(m.text).replace(/\n/g, '<br>')}</div>`;
+    if (cls === 'teacher') {
+      return `<div class="ai-msg-row"><span class="ai-msg-avatar" aria-hidden="true">${aiEmoji}</span>${bubble}</div>`;
+    }
+    return bubble;
   }).join('');
   thread.scrollTop = thread.scrollHeight;
 }
@@ -1730,7 +1741,13 @@ async function aiChatOpenPersona(id) {
   document.getElementById('ai-chat-list-view').classList.add('hidden');
   document.getElementById('ai-chat-create-view').classList.add('hidden');
   document.getElementById('ai-chat-conversation-view').classList.remove('hidden');
-  document.getElementById('ai-chat-conv-title').textContent = `${persona.emoji || '🤖'} ${persona.name}`;
+  document.getElementById('ai-chat-conv-title').innerHTML = `
+    <span class="ai-conv-avatar">${persona.emoji || '🤖'}</span>
+    <span class="ai-conv-info">
+      <span class="ai-conv-name">${aiChatEscapeHtml(persona.name)}</span>
+      <span class="ai-conv-status"><span class="ai-conv-status-dot"></span>disponível para conversar</span>
+    </span>
+  `;
 
   aiChatHistory = getAiChatHistoryFor(id);
   if (aiChatHistory.length === 0) {
@@ -1746,7 +1763,7 @@ function renderAiChatPersonaList() {
   if (!list) return;
   const personas = getAiChatPersonas();
   if (personas.length === 0) {
-    list.innerHTML = '<div class="chat-empty" style="background:var(--cream-2); border-radius:12px; padding:18px 12px;">Você ainda não criou nenhuma personalidade. Toque em "➕ Criar nova personalidade" para começar sua primeira conversa! 🎉</div>';
+    list.innerHTML = '<div class="chat-empty" style="background:var(--cream-2); border-radius:12px; padding:18px 12px;">Você ainda não criou nenhuma personalidade. Toque em "Criar nova personalidade" acima para começar sua primeira conversa! 🎉</div>';
     return;
   }
   list.innerHTML = personas.map(p => `
@@ -1855,7 +1872,10 @@ async function aiChatSend(audioPayload) {
   saveAiChatHistoryFor(persona.id, aiChatHistory);
 
   aiChatBusy = true;
-  if (typing) typing.classList.remove('hidden');
+  if (typing) {
+    typing.innerHTML = `<span class="ai-msg-avatar" aria-hidden="true">${persona.emoji || '🤖'}</span><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>`;
+    typing.classList.remove('hidden');
+  }
 
   try {
     const body = {

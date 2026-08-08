@@ -451,6 +451,32 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
 .lesson-card .chevron { font-size: 18px; color: var(--ink-faint); }
 
 /* ── PERSONALIDADES DE IA (Praticar com a IA) ────────────────── */
+.ai-persona-create-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  background: var(--cream-2);
+  border: 1.5px dashed var(--terracotta);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: background .15s, border-color .15s, transform .12s, box-shadow .15s;
+}
+.ai-persona-create-btn:hover { background: #fff; transform: translateY(-1px); box-shadow: var(--shadow-soft); }
+.ai-persona-create-btn .icon-wrap {
+  flex-shrink: 0;
+  width: 46px; height: 46px;
+  color: var(--terracotta-deep);
+}
+.ai-persona-create-btn .icon-wrap svg { width: 46px; height: 46px; }
+.ai-persona-create-btn .label { flex: 1; min-width: 0; }
+.ai-persona-create-btn .label .title { display: block; font-weight: 700; font-size: 14.5px; color: var(--ink); }
+.ai-persona-create-btn .label .sub { display: block; font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; }
+
 .persona-card {
   background: #fff;
   border: 1px solid var(--border);
@@ -466,11 +492,22 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
 .persona-card:hover { box-shadow: var(--shadow-soft); transform: translateY(-1px); border-color: #DCCBAE; }
 .persona-card .icon {
   font-size: 22px;
-  width: 46px; height: 46px;
-  background: var(--cream);
+  width: 48px; height: 48px;
+  background: radial-gradient(circle at 32% 28%, #fff, var(--cream));
+  border: 1.5px solid var(--border);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
+  position: relative;
+}
+.persona-card .icon::after {
+  content: '';
+  position: absolute;
+  right: -1px; bottom: -1px;
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: var(--ok);
+  border: 2px solid #fff;
 }
 .persona-card .info { flex: 1; min-width: 0; }
 .persona-card .name { font-weight: 600; font-size: 14.5px; color: var(--ink); }
@@ -494,6 +531,70 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
 }
 .persona-gender-btn.selected { border-color: var(--terracotta); background: var(--cream); color: var(--terracotta-deep); }
 .persona-card .gender-badge { font-size: 11px; margin-left: 4px; }
+
+/* Cabeçalho da conversa com a IA */
+.ai-conv-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.ai-conv-avatar {
+  flex-shrink: 0;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #fff, var(--cream));
+  border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 21px;
+}
+.ai-conv-info { display: flex; flex-direction: column; min-width: 0; }
+.ai-conv-name { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 17px; color: var(--ink); }
+.ai-conv-status { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--ink-soft); margin-top: 1px; }
+.ai-conv-status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); flex-shrink: 0; }
+
+/* Toggle de "ler em voz alta" */
+.ai-tts-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-bottom: 12px;
+  user-select: none;
+  cursor: pointer;
+}
+.ai-tts-toggle input { position: absolute; opacity: 0; width: 0; height: 0; }
+.ai-tts-toggle-track {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--cream);
+  border: 1.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-faint);
+  transition: background .15s, border-color .15s, color .15s;
+}
+.ai-tts-toggle-track svg { width: 14px; height: 14px; }
+.ai-tts-toggle input:checked + .ai-tts-toggle-track {
+  background: var(--terracotta);
+  border-color: var(--terracotta);
+  color: #fff;
+}
+.ai-tts-toggle input:focus-visible + .ai-tts-toggle-track { box-shadow: 0 0 0 3px rgba(217,123,84,0.25); }
+
+/* Estado de gravação do microfone */
+#btn-ai-chat-mic.recording {
+  background: #FCE3E0;
+  border-color: #E8A6A0;
+  color: #B23B2E;
+  animation: mic-pulse 1.4s infinite;
+}
+#btn-ai-chat-mic .mic-icon-recording { color: #B23B2E; }
+@keyframes mic-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(178,59,46,0.25); }
+  50% { box-shadow: 0 0 0 6px rgba(178,59,46,0); }
+}
 #input-persona-personality {
   width: 100%; resize: vertical; border: 1.5px solid var(--border);
   border-radius: var(--radius-sm); padding: 11px 12px; font-size: 13.5px; font-family: inherit;
@@ -627,13 +728,26 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
   border: 1px solid var(--border);
 }
 .chat-empty { text-align: center; color: var(--ink-soft); font-size: 12.5px; padding: 18px 8px; line-height: 1.5; }
+.ai-msg-row { display: flex; align-items: flex-end; gap: 6px; align-self: flex-start; max-width: 100%; }
+.ai-msg-avatar {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--cream);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+}
 .typing-indicator {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 10px 14px;
+  gap: 6px;
+  padding: 6px 0;
   margin: 2px 0 4px 2px;
 }
+.typing-indicator .typing-dot:nth-child(2) { animation-delay: 0.15s; }
+.typing-indicator .typing-dot:nth-child(3) { animation-delay: 0.3s; }
+.typing-indicator .typing-dot:nth-child(4) { animation-delay: 0.45s; }
 .typing-dot {
   width: 6px; height: 6px;
   border-radius: 50%;
@@ -641,8 +755,6 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
   opacity: 0.4;
   animation: typing-bounce 1.2s infinite ease-in-out;
 }
-.typing-dot:nth-child(2) { animation-delay: 0.15s; }
-.typing-dot:nth-child(3) { animation-delay: 0.3s; }
 @keyframes typing-bounce {
   0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
   30% { transform: translateY(-4px); opacity: 1; }

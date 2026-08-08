@@ -341,8 +341,21 @@
       </h2>
       <p style="font-size:13px; color:var(--ink-soft); margin-bottom:14px; line-height:1.5;">Crie personalidades com o nome e o jeito de ser que você quiser, e converse em inglês com cada uma delas. Cada personalidade tem sua própria conversa, guardada separada. É só um parceiro de prática — não substitui as aulas com o professor.</p>
 
-      <button type="button" class="btn" id="btn-ai-chat-new-persona" style="width:100%; margin-bottom:16px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:-3px; margin-right:6px;" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Criar nova personalidade
+      <button type="button" class="ai-persona-create-btn" id="btn-ai-chat-new-persona">
+        <span class="icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle cx="10.5" cy="10.5" r="8" stroke="currentColor" stroke-width="1.6"/>
+            <circle cx="7.8" cy="9.1" r="1.1" fill="currentColor"/>
+            <circle cx="13.2" cy="9.1" r="1.1" fill="currentColor"/>
+            <path d="M7.3 12.6c.95 1.05 2.15 1.55 3.2 1.55s2.25-.5 3.2-1.55" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="17.5" cy="16.5" r="5.2" fill="var(--terracotta)" stroke="#fff" stroke-width="1.6"/>
+            <path d="M17.5 14.3v4.4M15.3 16.5h4.4" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="label">
+          <span class="title">Criar nova personalidade</span>
+          <span class="sub">Escolha um rosto, um nome e um jeito de ser</span>
+        </span>
       </button>
 
       <div id="ai-chat-persona-list"></div>
@@ -380,12 +393,15 @@
 
     <!-- SUB-TELA: conversa com a personalidade escolhida -->
     <div id="ai-chat-conversation-view" class="hidden">
-      <button type="button" class="link-btn" id="btn-ai-chat-conv-back" style="margin-bottom:6px;">← Minhas personalidades</button>
-      <h2 class="screen-title" id="ai-chat-conv-title" style="margin-bottom:10px;">Conversa</h2>
+      <button type="button" class="link-btn" id="btn-ai-chat-conv-back" style="margin-bottom:10px;">← Minhas personalidades</button>
 
-      <label style="display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--ink-soft); margin-bottom:10px; user-select:none;">
-        <input type="checkbox" id="chk-ai-chat-tts" style="width:16px; height:16px; margin:0;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:15px;height:15px;flex-shrink:0;"><path d="M5 9v6h4l5 4V5L9 9H5Z"/><path d="M17.5 9a4.5 4.5 0 0 1 0 6"/></svg>
+      <div class="ai-conv-header" id="ai-chat-conv-title"></div>
+
+      <label class="ai-tts-toggle">
+        <input type="checkbox" id="chk-ai-chat-tts">
+        <span class="ai-tts-toggle-track" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5Z"/><path d="M17.5 9a4.5 4.5 0 0 1 0 6"/></svg>
+        </span>
         Ler as respostas da IA em voz alta
       </label>
 
@@ -401,7 +417,8 @@
               <textarea id="ai-chat-input" rows="2" placeholder="Escreva algo em inglês (ou português, se travar)..."></textarea>
             </div>
             <button type="button" class="btn-icon" id="btn-ai-chat-mic" title="Gravar áudio" aria-label="Gravar áudio">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+              <svg class="mic-icon-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+              <svg class="mic-icon-recording hidden" viewBox="0 0 24 24" fill="currentColor"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>
             </button>
             <button class="btn" id="btn-send-ai-message" title="Enviar mensagem" aria-label="Enviar mensagem">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 11.5 20.5 4 13 21.5l-2.4-7.1L3 11.5Z"/></svg>
