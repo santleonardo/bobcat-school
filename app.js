@@ -784,8 +784,8 @@ async function renderProfileView() {
   const cloudNote = document.getElementById('cloud-status');
   if (cloudNote) {
     cloudNote.textContent = isUsingCloud()
-      ? '☁️ Conta na nuvem — funciona em qualquer aparelho'
-      : '💾 Salvo apenas neste navegador';
+      ? '☁️ Conta na nuvem'
+      : '💾 Salvo neste navegador';
   }
 
   const logoutBtn = document.getElementById('btn-logout');

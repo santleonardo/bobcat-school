@@ -310,7 +310,7 @@ async function handleLessonFinish(lessonId, correct, total, kind) {
   const { completed, pct } = await saveLessonProgressData(lessonId, correct, total, answers);
   const roundedPct = Math.round(pct);
 
-  const cloudNote = isUsingCloud() ? ' (sincronizado na nuvem ☁️)' : ' (salvo neste navegador 💾)';
+  const cloudNote = isUsingCloud() ? ' (☁️)' : ' (💾)';
   const verb = kind === 'filled' ? 'preencheu' : 'acertou';
   const noun = kind === 'filled' ? 'exercícios' : (total === 1 ? 'questão' : 'questões');
 
