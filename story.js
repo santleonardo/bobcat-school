@@ -7,9 +7,22 @@
 // Sky Metropolis): nenhuma lógica de tela aqui, só o "mundo"
 // como dados que app.js / lesson-kit.js podem consultar.
 //
-// Cobre só o ATO 1 (A1 + A2) por enquanto. Atos 2 e 3 (B1→C2)
-// entram depois, quando o catálogo de lições chegar lá — hoje
-// o Bobcat só tem lições até B1 (ver app.js, LESSONS).
+// Cobre os TRÊS atos agora. O Ato 1 (A1+A2) usa lições que já
+// existem como páginas reais (ver app.js, LESSONS_CATALOG). Os
+// Atos 2 e 3 (B1→C2) usam o ROADMAP_CATALOG do teacher.html —
+// lições 41 a 70, ainda só planejadas, sem página própria no ar.
+// Por isso os checkpoints dos Atos 2/3 apontam pra `lessonId`
+// no MESMO padrão de slug (licao-N-nome-do-topico) que as lições
+// já existentes usam, mas essas páginas ainda precisam ser
+// criadas antes desses checkpoints funcionarem de verdade.
+//
+// Achado importante ao cruzar com o roadmap: os projetos finais
+// dos semestres 4, 5 e 6 já SÃO os beats centrais da história —
+// "The Story of My Life" (sem. 4) = o Midpoint; "An Issue Worth
+// Discussing" (sem. 5) = a Provação Central; "The Big Argument"
+// (sem. 6) = a própria Cena Obrigatória do clímax. Não foi preciso
+// inventar missão nenhuma pra esses três pontos — o currículo já
+// pedia exatamente essas entregas.
 // ============================================================
 
 // --- Tema central (seção 1 do MD) ---------------------------
@@ -53,6 +66,58 @@ const LOCATIONS = {
     description: 'Onde a decisão sem volta acontece — aceitar a vaga, o emprego, o lugar.',
     clue: null,
   },
+
+  // --- Locais do Ato 2 (B1→B2) — mapa: mapa-bobcat-ville.png ------
+  bairro_comercial: {
+    id: 'bairro_comercial',
+    name: 'Bairro comercial',
+    icon: '🏪',
+    description: 'Lojas, o motorista de sempre, o primeiro mal-entendido de cobrança.',
+    clue: null, // fio do mistério só começa a valer no B2 (seção 6 do MD)
+  },
+  centro_eventos: {
+    id: 'centro_eventos',
+    name: 'Business & Convention Center',
+    icon: '🎤',
+    description: 'Onde a grande oportunidade (e a apresentação "The Story of My Life") acontece.',
+    clue: null,
+  },
+
+  // --- Locais do Ato 2B (C1) ---------------------------------------
+  museu_historico: {
+    id: 'museu_historico',
+    name: 'Museu / Centro Histórico',
+    icon: '🏛️',
+    description: 'Arquivos antigos da cidade — a primeira pista documental sobre Kessler.',
+    clue: 'Registros antigos de "serviços de adaptação" prestados a recém-chegados — os nomes não batem com nada oficial.',
+  },
+  corporate_center: {
+    id: 'corporate_center',
+    name: 'Corporate Center',
+    icon: '🏙️',
+    description: 'Sede da fusão. Salas de reunião, e Kessler observando de longe.',
+    clue: 'Uma contradição no discurso de Kessler sobre a própria chegada à cidade, décadas atrás.',
+  },
+  hospital: {
+    id: 'hospital',
+    name: 'Hospital',
+    icon: '🏥',
+    description: 'Onde Idris é internado — e onde Priya se revela.',
+    clue: null,
+  },
+
+  // --- Local do Ato 3 (C2) — PENDENTE no mapa atual -----------------
+  // O mapa enviado não tem um marco único de "prédio mais alto".
+  // Local provisório até decidirem se reaproveitam o Corporate/
+  // Technology Center existente ou pedem uma ilustração nova.
+  torre: {
+    id: 'torre',
+    name: '(pendente) A Torre',
+    icon: '🗼',
+    description: 'PENDENTE — precisa de um marco visual único no mapa pro clímax (ver decisões em aberto do documento de história).',
+    clue: null,
+    pending: true,
+  },
 };
 
 // --- PNJs (seção 3) -------------------------------------------
@@ -85,6 +150,43 @@ const NPCS = {
     role: 'recepcionista',
     location: 'taxi_alojamento',
     recurring: true, // reaparece ao longo do jogo (A1–A2)
+  },
+
+  // --- PNJs do Ato 2 (B1→B2) --------------------------------------
+  officer_reyes: {
+    id: 'officer_reyes',
+    name: 'Officer Reyes',
+    role: 'policial',
+    location: 'bairro_comercial',
+  },
+
+  // --- PNJs do Ato 2B/3 (C1→C2) — elenco principal (seção 3 do MD) --
+  priya: {
+    id: 'priya',
+    name: 'Priya Chen',
+    role: 'rival',
+    arcType: 'shapeshifter', // Vogler: lealdade ambígua até o C1
+    location: 'corporate_center',
+  },
+  kessler: {
+    id: 'kessler',
+    name: 'Nathaniel Kessler',
+    role: 'vilao',
+    arcType: 'queda', // Weiland: Arco de Queda — nunca supera a própria Lie
+    lie: 'Nunca mais posso depender de aprender algo em público — depender é fraqueza.',
+    location: 'corporate_center',
+  },
+  guia_turistico: {
+    id: 'guia_turistico',
+    name: 'Guia turístico misterioso',
+    role: 'pista_do_misterio',
+    location: 'museu_historico',
+  },
+  informante: {
+    id: 'informante',
+    name: 'Informante',
+    role: 'pista_do_misterio',
+    location: 'corporate_center',
   },
 };
 
@@ -153,13 +255,146 @@ const ACT1_CHECKPOINTS = [
   },
 ];
 
+// --- Checkpoints do Ato 2 (B1 → B2, lições 31-50) -----------------
+// "Testes, Aliados e Inimigos" + Midpoint (seção 5 do MD).
+// Lições 31-40 já existem como página real. Lições 41-50 são do
+// ROADMAP_CATALOG (teacher.html) — ainda sem página própria.
+const ACT2_CHECKPOINTS = [
+  {
+    id: 'mal_entendido_cobranca',
+    stage: 'Testes, Aliados e Inimigos (parte 1)',
+    lessonId: 'licao-32-simple-past-past-continuous', // já existe
+    trigger: 'after',
+    location: 'bairro_comercial',
+    npc: 'officer_reyes',
+    line_pt: 'Uma cobrança errada, um mal-entendido — e você precisa contar exatamente o que aconteceu, na ordem certa.',
+    line_en: 'I was paying when the machine charged me twice.',
+  },
+  {
+    id: 'primeira_transacao',
+    stage: 'Testes, Aliados e Inimigos (parte 1)',
+    lessonId: 'licao-38-comparatives-superlatives-equality', // já existe
+    trigger: 'after',
+    location: 'bairro_comercial',
+    npc: null, // PNJ genérico de loja — pode virar prompt de IA
+    line_pt: 'Primeira negociação de verdade: comparar preços, defender o que você quer pagar.',
+    line_en: 'This one is cheaper, but that one is better.',
+  },
+  {
+    id: 'midpoint_historia_de_vida',
+    stage: 'Midpoint — vitória aparente esconde a 1ª pista',
+    lessonId: 'licao-50-revisao-semestre-4', // ROADMAP — projeto final "The Story of My Life"
+    trigger: 'after',
+    location: 'centro_eventos',
+    npc: 'idris',
+    line_pt: 'A grande oportunidade: contar sua própria história pra uma sala cheia de gente. Você é aplaudido — e não percebe, ainda, o que ouviu de relance sobre a fusão da Kessler & Co.',
+    line_en: null, // conteúdo do próprio aluno (é o projeto final do semestre)
+    midpoint: true,
+    projectTitle: 'The Story of My Life',
+  },
+];
+
+// --- Checkpoints do Ato 2B (C1, lições 46-60) ----------------------
+// Aproximação da Caverna + Provação Central + All Is Lost (seção 5).
+const ACT2B_CHECKPOINTS = [
+  {
+    id: 'documentos_arquivo',
+    stage: 'Aproximação da Caverna Mais Profunda',
+    lessonId: 'licao-46-passive-voice', // ROADMAP, semestre 4
+    trigger: 'after',
+    location: 'museu_historico',
+    npc: 'guia_turistico',
+    line_pt: 'Documentos antigos, escritos naquele jeito impessoal de relatório — "foram prestados serviços a...". Ninguém quis dizer por quem.',
+    line_en: 'It is believed that dozens of newcomers were affected.',
+  },
+  {
+    id: 'passado_de_kessler',
+    stage: 'Aproximação da Caverna Mais Profunda',
+    lessonId: 'licao-51-third-conditional-mixed', // ROADMAP, semestre 5
+    trigger: 'after',
+    location: 'corporate_center',
+    npc: 'informante',
+    line_pt: 'Se as coisas tivessem sido diferentes pra ele, décadas atrás, talvez nada disso tivesse acontecido. Quase dá pena. Quase.',
+    line_en: 'If he had been treated differently back then, he might have become someone else.',
+  },
+  {
+    id: 'issue_worth_discussing',
+    stage: 'Provação Central',
+    lessonId: 'licao-60-revisao-semestre-5', // ROADMAP — projeto final "An Issue Worth Discussing"
+    trigger: 'after',
+    location: 'centro_eventos',
+    npc: 'kessler',
+    line_pt: 'Você tenta levantar o assunto formalmente, com evidências. Kessler sorri, educado, e vira o jogo contra você na frente de todo mundo.',
+    line_en: null, // conteúdo do próprio aluno (é o projeto final do semestre)
+    projectTitle: 'An Issue Worth Discussing',
+  },
+  {
+    id: 'priya_revelacao',
+    stage: 'Recompensa + Caminho de Volta — All Is Lost',
+    lessonId: 'licao-47-reported-speech', // ROADMAP, semestre 4 — a gramática da própria cena
+    trigger: 'after',
+    location: 'hospital',
+    npc: 'priya',
+    line_pt: 'Idris foi atingido. E Priya finalmente conta o que fez — e o que esconde pra consertar.',
+    line_en: "I told him what you found. He said he'd make sure I never worked again.",
+    sceneRef: 'Seção 8.3 do documento de história — "O Que Ela Escondeu"',
+    allIsLost: true,
+  },
+];
+
+// --- Checkpoints do Ato 3 (C2, lições 61-70) -----------------------
+// Ressurreição + Retorno com o Elixir (seção 5).
+const ACT3_CHECKPOINTS = [
+  {
+    id: 'preparando_argumento',
+    stage: 'Ressurreição (preparação)',
+    lessonId: 'licao-69-rhetoric-argumentation-persuasion', // ROADMAP, semestre 6
+    trigger: 'after',
+    location: 'campus_escritorio',
+    npc: 'priya',
+    line_pt: 'Com a Priya, você organiza tudo que descobriu numa linha de raciocínio que aguenta ser questionada.',
+    line_en: null,
+  },
+  {
+    id: 'confronto_final',
+    stage: 'Ressurreição',
+    lessonId: 'licao-70-revisao-semestre-6', // ROADMAP — projeto final "The Big Argument"
+    trigger: 'after',
+    location: 'torre', // PENDENTE — ver LOCATIONS.torre
+    npc: 'kessler',
+    line_pt: 'O topo da torre. A sala cheia. E, pela primeira vez, você fala — imperfeito, mas real — e é ouvido.',
+    line_en: null, // conteúdo do próprio aluno (é o projeto final do semestre)
+    sceneRef: 'Seção 8.4 do documento de história — "O Topo da Torre"',
+    climax: true,
+    projectTitle: 'The Big Argument',
+  },
+  {
+    id: 'retorno_com_elixir',
+    stage: 'Retorno com o Elixir',
+    lessonId: null, // não gated a uma lição — epílogo
+    trigger: null,
+    location: 'mercado_bairro', // fecha o ciclo, de volta ao início
+    npc: 'idris',
+    line_pt: 'De volta ao mercado onde tudo começou — só que agora é você quem ajuda alguém recém-chegado a montar a primeira frase.',
+    line_en: null,
+    epilogue: true,
+  },
+];
+
 // --- Helpers de consulta ------------------------------------------
 // Puramente leitura de dados — a lógica de "quando mostrar" fica em
 // app.js / lesson-kit.js, igual ao Sky Metropolis: constants.tsx nunca
 // decide quando renderizar, só descreve o que existe.
 
+const ALL_CHECKPOINTS = [
+  ...ACT1_CHECKPOINTS,
+  ...ACT2_CHECKPOINTS,
+  ...ACT2B_CHECKPOINTS,
+  ...ACT3_CHECKPOINTS,
+];
+
 function getCheckpointForLesson(lessonId, trigger) {
-  return ACT1_CHECKPOINTS.find(
+  return ALL_CHECKPOINTS.find(
     (c) => c.lessonId === lessonId && c.trigger === trigger
   ) || null;
 }
@@ -192,6 +427,10 @@ var BOBCAT_VILLE_STORY = {
   npcs: NPCS,
   themeScene: THEME_SCENE,
   act1Checkpoints: ACT1_CHECKPOINTS,
+  act2Checkpoints: ACT2_CHECKPOINTS,
+  act2bCheckpoints: ACT2B_CHECKPOINTS,
+  act3Checkpoints: ACT3_CHECKPOINTS,
+  allCheckpoints: ALL_CHECKPOINTS,
   getCheckpointForLesson: getCheckpointForLesson,
   getSceneData: getSceneData,
 };
