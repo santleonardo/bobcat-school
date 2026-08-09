@@ -1006,6 +1006,17 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
 .menu-btn[data-screen="ai-chat"] .menu-btn-icon,
 .menu-btn[data-screen="tests"] .menu-btn-icon { background: var(--cream); color: var(--terracotta-deep); }
 
+a.menu-btn {
+  text-decoration: none;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+a.menu-btn#btn-bobcat-ville .menu-btn-icon {
+  background: #E8F0E4;
+  color: #3D6B4F;
+}
+
+
 /* ── MODAL DE SENHA (zerar progresso) ────────── */
 .modal-overlay {
   position: fixed;

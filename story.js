@@ -1,7 +1,7 @@
 // ============================================================
-// HAVENPORT — story.js
+// BOBCAT VILLE — story.js
 // Dados narrativos do jogo, separados da lógica de UI.
-// Baseado em havenport-historia.md.
+// História de Bobcat Ville.
 //
 // Papel deste arquivo (igual ao types.ts + constants.tsx do
 // Sky Metropolis): nenhuma lógica de tela aqui, só o "mundo"
@@ -13,7 +13,7 @@
 // ============================================================
 
 // --- Tema central (seção 1 do MD) ---------------------------
-const HAVENPORT_THEME = 'Inglês é liberdade.';
+const BOBCAT_VILLE_THEME = 'Inglês é liberdade.';
 
 // --- Dilema moral do elenco (seção 4) ------------------------
 const MORAL_DILEMMA =
@@ -21,13 +21,13 @@ const MORAL_DILEMMA =
   'ou se arriscar e crescer mesmo com medo?';
 
 // --- Locais (seção 5, coluna "Local" + seção 6, fio do mistério) ---
-// Cada local é um "tile" do futuro mapa de Havenport.
+// Cada local é um "tile" do futuro mapa de Bobcat Ville.
 // clue: null enquanto o local ainda não solta pista sobre Kessler
 // (isso só começa a valer a partir do B2, seção 6 do MD).
 const LOCATIONS = {
   aeroporto: {
     id: 'aeroporto',
-    name: 'Aeroporto de Havenport',
+    name: 'Aeroporto de Bobcat Ville',
     icon: '✈️',
     description: 'Onde tudo começa. Filas, formulários, e ninguém te entende.',
     clue: null,
@@ -185,8 +185,8 @@ function getSceneData(checkpoint) {
 // no navegador na ordem: config.js -> db-client.js -> story.js -> app.js
 // (ou lesson-kit.js). Segue o mesmo padrão de config.js (window.APP_CONFIG,
 // window.SUPABASE_CONFIG): tudo pendurado em um único objeto global.
-var HAVENPORT_STORY = {
-  theme: HAVENPORT_THEME,
+var BOBCAT_VILLE_STORY = {
+  theme: BOBCAT_VILLE_THEME,
   moralDilemma: MORAL_DILEMMA,
   locations: LOCATIONS,
   npcs: NPCS,
@@ -197,11 +197,11 @@ var HAVENPORT_STORY = {
 };
 
 if (typeof window !== 'undefined') {
-  window.HAVENPORT_STORY = HAVENPORT_STORY;
+  window.BOBCAT_VILLE_STORY = BOBCAT_VILLE_STORY;
 }
 
 // Mantido só para permitir testar este arquivo isoladamente com Node
 // (ex.: `node -e "require('./story.js')"`), fora do navegador.
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = HAVENPORT_STORY;
+  module.exports = BOBCAT_VILLE_STORY;
 }

@@ -1401,7 +1401,7 @@ async function boot() {
     btn.addEventListener('click', () => showScreen(btn.dataset.screen));
   });
 
-  document.querySelectorAll('.menu-btn').forEach(btn => {
+  document.querySelectorAll('.menu-btn[data-screen]').forEach(btn => {
     btn.addEventListener('click', () => showScreen(btn.dataset.screen));
   });
 

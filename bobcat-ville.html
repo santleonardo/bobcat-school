@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<title>Bobcat Ville — Protótipo da história</title>
+<style>
+  :root{
+    --orange:#D9793F;--orange-dark:#C9622A;--orange-light:#F2A06A;
+    --cream:#FBEFE6;--cream-2:#F7F1EC;--cream-3:#FDF7F1;
+    --ink:#2b2b2b;--ink-soft:#555;
+    --border:#EBC9AE;--teal:#2A7F8C;--plum:#8C4A6A;
+    --shadow:0 4px 16px rgba(180,120,80,.08);
+    --radius:14px;
+    --vh:1vh;
+  }
+  *{box-sizing:border-box}
+  html,body{
+    margin:0;padding:0;height:100%;overflow:hidden;
+    font-family:"Inter","Segoe UI",sans-serif;color:var(--ink);
+    background:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;
+    overscroll-behavior:none;
+  }
+
+  .game-screen{
+    position:fixed;inset:0;
+    height:calc(var(--vh, 1vh) * 100);
+    width:100%;
+    background:#1a1a1a;
+    display:flex;align-items:center;justify-content:center;
+    overflow:hidden;
+    touch-action:none;
+  }
+
+  .map-stage{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+
+  .map-canvas{
+    position:relative;
+    width:100%;
+    height:100%;
+    max-width:100%;
+    max-height:100%;
+  }
+
+  .map-img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    object-position:center;
+    user-select:none;
+    pointer-events:none;
+    -webkit-user-drag:none;
+  }
+
+  .map-overlay{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+  }
+
+  .map-overlay-inner{
+    position:absolute;
+    pointer-events:none;
+  }
+
+  /* ─── Marcadores ─── */
+  .map-marker{
+    position:absolute;
+    transform:translate(-50%, -100%);
+    pointer-events:auto;
+    cursor:pointer;
+    z-index:5;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+    transition:transform .15s ease;
+  }
+  .map-marker:hover,
+  .map-marker:active{
+    transform:translate(-50%, -100%) scale(1.08);
+  }
+  .map-marker.active .marker-pin{
+    box-shadow:0 0 0 4px rgba(255,255,255,.95), 0 4px 14px rgba(0,0,0,.35);
+  }
+
+  .marker-pin{
+    width:36px;height:36px;
+    border-radius:50% 50% 50% 0;
+    transform:rotate(-45deg);
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+    box-shadow:0 3px 10px rgba(0,0,0,.35);
+    display:flex;align-items:center;justify-content:center;
+    border:2.5px solid #fff;
+  }
+  .marker-num{
+    transform:rotate(45deg);
+    font-family:"Poppins",sans-serif;
+    font-weight:900;
+    font-size:14px;
+    color:#fff;
+    line-height:1;
+  }
+
+  .marker-label{
+    background:rgba(43,43,43,.82);
+    color:#fff;
+    font-size:11px;
+    font-weight:700;
+    padding:4px 10px;
+    border-radius:12px;
+    white-space:nowrap;
+    max-width:140px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    box-shadow:0 2px 8px rgba(0,0,0,.25);
+    text-align:center;
+  }
+
+  .player-token{
+    position:absolute;
+    width:22px;height:22px;
+    border-radius:50%;
+    background:#fff;
+    border:3px solid var(--ink);
+    box-shadow:0 2px 10px rgba(0,0,0,.4);
+    transform:translate(-50%, -50%);
+    pointer-events:none;
+    z-index:6;
+    transition:left .5s ease, top .5s ease;
+    animation:playerBob 1.1s ease-in-out infinite;
+  }
+  @keyframes playerBob{
+    0%,100%{margin-top:0}
+    50%{margin-top:-4px}
+  }
+
+  /* ─── Balão de diálogo (dentro do mapa) ─── */
+  .dialogue-bubble{
+    position:absolute;
+    z-index:12;
+    width:min(320px, 86vw);
+    max-height:min(52vh, 420px);
+    background:var(--cream-3);
+    border:2.5px solid var(--ink);
+    border-radius:18px;
+    box-shadow:
+      0 8px 28px rgba(0,0,0,.32),
+      0 0 0 1px rgba(255,255,255,.4) inset;
+    padding:14px 14px 12px;
+    pointer-events:auto;
+    opacity:0;
+    visibility:hidden;
+    transform:scale(0.92) translateY(8px);
+    transition:opacity .22s ease, transform .22s cubic-bezier(.2,.8,.3,1), visibility .22s;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  .dialogue-bubble.open{
+    opacity:1;
+    visibility:visible;
+    transform:scale(1) translateY(0);
+  }
+
+  /* Cauda do balão (apontando para o marcador) */
+  .dialogue-bubble::after{
+    content:"";
+    position:absolute;
+    width:16px;height:16px;
+    background:var(--cream-3);
+    border-right:2.5px solid var(--ink);
+    border-bottom:2.5px solid var(--ink);
+    transform:rotate(45deg);
+    bottom:-9px;
+    left:var(--tail-left, 50%);
+    margin-left:-8px;
+  }
+  .dialogue-bubble.tail-top::after{
+    bottom:auto;
+    top:-9px;
+    border-right:none;
+    border-bottom:none;
+    border-left:2.5px solid var(--ink);
+    border-top:2.5px solid var(--ink);
+  }
+
+  .dialogue-close{
+    position:absolute;top:8px;right:8px;
+    width:26px;height:26px;border-radius:50%;border:none;
+    background:var(--cream);color:var(--ink-soft);font-size:13px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    line-height:1;
+  }
+  .dialogue-close:active{background:#f0e0d0}
+
+  .dialogue-stage{
+    font-size:10px;font-weight:800;color:var(--orange-dark);
+    text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;
+    padding-right:28px;
+  }
+  .dialogue-loc{
+    font-size:12px;font-weight:700;color:var(--ink-soft);
+    margin-bottom:8px;display:flex;align-items:center;gap:5px;
+  }
+  .dialogue-npc{
+    font-family:"Poppins",sans-serif;font-weight:900;font-size:15px;
+    color:var(--orange-dark);margin-bottom:6px;
+  }
+  .dialogue-pt{font-size:13.5px;margin:0 0 8px;line-height:1.45}
+  .dialogue-en{
+    font-size:12.5px;font-style:italic;color:var(--teal);
+    background:var(--cream);border-radius:10px;padding:8px 10px;
+    margin:0 0 8px;display:flex;align-items:center;gap:8px;justify-content:space-between;
+  }
+  .audio-btn{
+    flex-shrink:0;background:#fff;border:1.5px solid var(--teal);color:var(--teal);
+    border-radius:20px;padding:3px 9px;font-size:11px;font-weight:700;cursor:pointer;
+  }
+  .audio-btn:hover{background:var(--teal);color:#fff}
+  .dialogue-theme{
+    font-size:12px;color:var(--plum);border-left:3px solid var(--plum);
+    padding-left:8px;margin:0 0 10px;font-style:italic;
+  }
+  .dialogue-decision{
+    font-size:11px;font-weight:700;color:#fff;background:var(--plum);
+    display:inline-block;border-radius:20px;padding:3px 10px;margin:0 0 10px;
+  }
+  .lesson-link{
+    display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;
+    color:#fff;text-decoration:none;
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+    border-radius:20px;padding:8px 14px;box-shadow:var(--shadow);
+  }
+
+  /* ─── HUD ─── */
+  .hud-top{
+    position:absolute;top:calc(14px + env(safe-area-inset-top));left:calc(14px + env(safe-area-inset-left));
+    z-index:20;pointer-events:none;
+    display:flex;align-items:center;gap:10px;
+  }
+  .hud-back{
+    pointer-events:auto;
+    display:flex;align-items:center;justify-content:center;
+    width:38px;height:38px;border-radius:12px;
+    background:rgba(43,43,43,.55);backdrop-filter:blur(6px);
+    color:#fff;text-decoration:none;font-size:16px;
+    box-shadow:var(--shadow);flex-shrink:0;
+  }
+  .hud-back:active{background:rgba(43,43,43,.75)}
+  .hud-badge{
+    pointer-events:none;
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+    color:#fff;border-radius:12px;padding:7px 14px;box-shadow:var(--shadow);
+  }
+  .hud-badge .tag{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;opacity:.85}
+  .hud-badge h1{margin:0;font-family:"Poppins",sans-serif;font-size:16px;line-height:1.15}
+
+  .hud-menu-btn{
+    position:absolute;top:calc(14px + env(safe-area-inset-top));right:calc(14px + env(safe-area-inset-right));
+    z-index:20;
+    display:flex;align-items:center;gap:6px;
+    background:rgba(43,43,43,.55);backdrop-filter:blur(6px);color:#fff;
+    border:none;border-radius:12px;padding:9px 13px;font-size:12.5px;font-weight:700;
+    cursor:pointer;box-shadow:var(--shadow);font-family:inherit;
+  }
+  .hud-menu-btn:active{background:rgba(43,43,43,.75)}
+
+  .hud-hint{
+    position:absolute;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+    z-index:15;
+    background:rgba(43,43,43,.6);backdrop-filter:blur(6px);color:#fff;
+    font-size:12.5px;font-weight:600;padding:8px 16px;border-radius:20px;
+    box-shadow:var(--shadow);pointer-events:none;
+    transition:opacity .3s ease, transform .3s ease;
+    white-space:nowrap;
+  }
+  .hud-hint.hidden{opacity:0;transform:translate(-50%,8px)}
+
+  /* ─── Menu lateral ─── */
+  .menu-overlay{
+    position:absolute;inset:0;z-index:30;
+    background:rgba(20,16,12,.55);backdrop-filter:blur(2px);
+    opacity:0;pointer-events:none;transition:opacity .25s ease;
+  }
+  .menu-overlay.open{opacity:1;pointer-events:auto}
+  .menu-panel{
+    position:absolute;top:0;right:0;bottom:0;width:min(400px,88%);
+    background:var(--cream-3);box-shadow:-8px 0 28px rgba(0,0,0,.25);
+    padding:calc(20px + env(safe-area-inset-top)) 18px 20px;
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
+    transform:translateX(100%);transition:transform .3s cubic-bezier(.2,.8,.3,1);
+  }
+  .menu-overlay.open .menu-panel{transform:translateX(0)}
+  .menu-close{
+    position:absolute;top:calc(14px + env(safe-area-inset-top));right:14px;
+    width:30px;height:30px;border-radius:50%;border:none;background:var(--cream);
+    color:var(--ink-soft);font-size:14px;cursor:pointer;
+  }
+  .menu-title{font-family:"Poppins",sans-serif;font-weight:900;font-size:18px;color:var(--orange-dark);margin:0 0 4px}
+  .menu-theme{font-style:italic;font-size:13px;color:var(--ink-soft);margin:0 0 20px}
+  .section-title{font-family:"Poppins",sans-serif;font-weight:800;font-size:13px;color:var(--orange-dark);text-transform:uppercase;letter-spacing:.04em;margin:22px 0 10px}
+  .section-title:first-of-type{margin-top:0}
+
+  .checkpoint-row{
+    display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:12px;cursor:pointer;
+    border:1px solid #f0e6da;background:#fff;margin-bottom:8px;box-shadow:var(--shadow);
+  }
+  .checkpoint-num{width:26px;height:26px;flex-shrink:0;border-radius:8px;background:var(--orange);color:#fff;font-weight:900;font-size:12px;display:flex;align-items:center;justify-content:center}
+  .checkpoint-row-text{flex:1;min-width:0}
+  .checkpoint-stage{font-size:10px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.03em}
+  .checkpoint-loc{font-size:13.5px;font-weight:700}
+
+  .locations-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+  .location-card{background:#fff;border:1px solid #f0e6da;border-radius:12px;padding:12px 14px;box-shadow:var(--shadow)}
+  .location-icon{font-size:20px;margin-bottom:4px}
+  .location-name{font-weight:700;font-size:12.5px;margin-bottom:2px}
+  .location-desc{font-size:11px;color:var(--ink-soft)}
+
+  .dilemma-box{background:var(--cream);border:1px solid var(--border);border-radius:14px;padding:14px 16px;font-size:13px;color:var(--ink-soft)}
+  .proto-note{background:var(--cream);border:1px dashed var(--border);border-radius:12px;padding:10px 14px;font-size:11.5px;color:var(--ink-soft);margin-top:22px}
+</style>
+</head>
+<body>
+
+<div class="game-screen">
+
+  <div class="map-stage">
+    <div class="map-canvas" id="mapCanvas">
+      <img class="map-img" id="mapImg" src="mapa-bobcat-ville.png" alt="Mapa de Bobcat Ville" draggable="false">
+      <div class="map-overlay">
+        <div class="map-overlay-inner" id="mapOverlayInner">
+          <!-- marcadores + player + balão de diálogo -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HUD superior -->
+  <div class="hud-top">
+    <a class="hud-back" href="index.html" aria-label="Voltar para o app">←</a>
+    <div class="hud-badge">
+      <div class="tag">Ato 1 · protótipo</div>
+      <h1>Bobcat Ville</h1>
+    </div>
+  </div>
+
+  <button class="hud-menu-btn" id="menuBtn">☰ Menu</button>
+
+  <div class="hud-hint" id="hudHint">Toque em um local do mapa para começar</div>
+
+  <!-- Menu lateral -->
+  <div class="menu-overlay" id="menuOverlay">
+    <div class="menu-panel">
+      <button class="menu-close" id="menuClose" aria-label="Fechar menu">✕</button>
+      <div class="menu-title">Bobcat Ville</div>
+      <div class="menu-theme">"Inglês é liberdade."</div>
+
+      <div class="section-title">Linha do tempo — Ato 1</div>
+      <div id="checkpoints"></div>
+
+      <div class="section-title">Locais de Bobcat Ville</div>
+      <div class="locations-grid" id="locations"></div>
+
+      <div class="section-title">Dilema moral do elenco</div>
+      <div class="dilemma-box" id="dilemma"></div>
+
+      <div class="proto-note">
+        🧪 Esta página é um protótipo isolado. Ela só lê <code>story.js</code> —
+        não salva progresso, não afeta notas e não altera nenhuma lição existente.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="./story.js"></script>
+<script>
+  function setVh() {
+    document.documentElement.style.setProperty('--vh', (window.innerHeight * 0.01) + 'px');
+  }
+  setVh();
+  window.addEventListener('resize', setVh);
+  window.addEventListener('orientationchange', setVh);
+
+  function speak(text) {
+    if (!('speechSynthesis' in window)) return;
+    window.speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-US';
+    u.rate = 0.92;
+    window.speechSynthesis.speak(u);
+  }
+
+  function escapeHtml(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  /* Posições % dos locais sobre o mapa real */
+  var WAYPOINTS = {
+    aeroporto:         { x: 11.5, y: 87.5 },
+    taxi_alojamento:   { x: 37.5, y: 86.0 },
+    mercado_bairro:    { x: 54.5, y: 47.5 },
+    campus_escritorio: { x: 88.5, y: 45.0 },
+  };
+
+  function render() {
+    var story = window.BOBCAT_VILLE_STORY;
+    var overlayInner = document.getElementById('mapOverlayInner');
+    var mapImg = document.getElementById('mapImg');
+    var mapCanvas = document.getElementById('mapCanvas');
+    var checkpointsEl = document.getElementById('checkpoints');
+    var locationsEl = document.getElementById('locations');
+    var dilemmaEl = document.getElementById('dilemma');
+    var hudHint = document.getElementById('hudHint');
+    var menuBtn = document.getElementById('menuBtn');
+    var menuOverlay = document.getElementById('menuOverlay');
+    var menuClose = document.getElementById('menuClose');
+
+    if (!story) {
+      hudHint.textContent = 'story.js não carregou.';
+      return;
+    }
+
+    dilemmaEl.textContent = story.moralDilemma;
+
+    // ─── Área real da imagem (object-fit: contain) ───
+    function syncOverlayToImage() {
+      var canvasW = mapCanvas.clientWidth;
+      var canvasH = mapCanvas.clientHeight;
+      var natW = mapImg.naturalWidth || 1536;
+      var natH = mapImg.naturalHeight || 1024;
+      var scale = Math.min(canvasW / natW, canvasH / natH);
+      var dispW = natW * scale;
+      var dispH = natH * scale;
+      var offsetX = (canvasW - dispW) / 2;
+      var offsetY = (canvasH - dispH) / 2;
+
+      overlayInner.style.left = offsetX + 'px';
+      overlayInner.style.top = offsetY + 'px';
+      overlayInner.style.width = dispW + 'px';
+      overlayInner.style.height = dispH + 'px';
+    }
+
+    // ─── Cria balão de diálogo ───
+    var bubble = document.createElement('div');
+    bubble.className = 'dialogue-bubble';
+    bubble.id = 'dialogueBubble';
+    bubble.innerHTML =
+      '<button class="dialogue-close" id="dialogueClose" aria-label="Fechar">✕</button>' +
+      '<div class="dialogue-stage" id="dialogueStage"></div>' +
+      '<div class="dialogue-loc" id="dialogueLoc"></div>' +
+      '<div class="dialogue-npc" id="dialogueNpc"></div>' +
+      '<p class="dialogue-pt" id="dialoguePt"></p>' +
+      '<div class="dialogue-en" id="dialogueEn" style="display:none">' +
+      '  <span id="dialogueEnText"></span>' +
+      '  <button type="button" class="audio-btn" id="dialogueAudioBtn">🔊</button>' +
+      '</div>' +
+      '<div class="dialogue-theme" id="dialogueTheme" style="display:none"></div>' +
+      '<div class="dialogue-decision" id="dialogueDecision" style="display:none">⚡ Decisão sem volta</div>' +
+      '<a class="lesson-link" id="dialogueLessonLink" href="#">Abrir lição vinculada →</a>';
+    overlayInner.appendChild(bubble);
+
+    // ─── Token do jogador ───
+    var playerEl = document.createElement('div');
+    playerEl.className = 'player-token';
+    playerEl.id = 'playerToken';
+    overlayInner.appendChild(playerEl);
+
+    // ─── Marcadores ───
+    story.act1Checkpoints.forEach(function (checkpoint, i) {
+      var loc = story.locations[checkpoint.location];
+      var wp = WAYPOINTS[checkpoint.location];
+      if (!loc || !wp) return;
+
+      var marker = document.createElement('div');
+      marker.className = 'map-marker';
+      marker.setAttribute('data-index', i);
+      marker.style.left = wp.x + '%';
+      marker.style.top = wp.y + '%';
+      marker.innerHTML =
+        '<div class="marker-pin"><span class="marker-num">' + (i + 1) + '</span></div>' +
+        '<div class="marker-label">' + escapeHtml(loc.name) + '</div>';
+      overlayInner.appendChild(marker);
+    });
+
+    function movePlayerTo(locId) {
+      var wp = WAYPOINTS[locId];
+      if (!wp || !playerEl) return;
+      playerEl.style.left = wp.x + '%';
+      playerEl.style.top = (wp.y - 4) + '%';
+    }
+
+    if (story.act1Checkpoints.length) {
+      movePlayerTo(story.act1Checkpoints[0].location);
+    }
+
+    /**
+     * Posiciona o balão perto do marcador, evitando sair da tela.
+     * Preferência: acima do pin; se não couber, abaixo.
+     */
+    function positionBubble(locId) {
+      var wp = WAYPOINTS[locId];
+      if (!wp) return;
+
+      var ow = overlayInner.clientWidth;
+      var oh = overlayInner.clientHeight;
+      var bw = bubble.offsetWidth || 300;
+      var bh = bubble.offsetHeight || 200;
+
+      // posição do pin em pixels dentro do overlay
+      var pinX = (wp.x / 100) * ow;
+      var pinY = (wp.y / 100) * oh;
+
+      // tenta colocar o balão ACIMA do pin
+      var left = pinX - bw / 2;
+      var top = pinY - bh - 48; // 48px de espaço pro pin + cauda
+      var tailTop = false;
+
+      // se não cabe em cima, coloca embaixo
+      if (top < 8) {
+        top = pinY + 28;
+        tailTop = true;
+      }
+
+      // clamp horizontal
+      left = Math.max(8, Math.min(left, ow - bw - 8));
+      // clamp vertical
+      top = Math.max(8, Math.min(top, oh - bh - 8));
+
+      bubble.style.left = left + 'px';
+      bubble.style.top = top + 'px';
+      bubble.style.right = 'auto';
+      bubble.style.bottom = 'auto';
+
+      // posição da cauda relativa ao balão
+      var tailX = pinX - left;
+      tailX = Math.max(18, Math.min(tailX, bw - 18));
+      bubble.style.setProperty('--tail-left', tailX + 'px');
+
+      if (tailTop) {
+        bubble.classList.add('tail-top');
+      } else {
+        bubble.classList.remove('tail-top');
+      }
+    }
+
+    function openCheckpoint(i) {
+      var checkpoint = story.act1Checkpoints[i];
+      var scene = story.getSceneData(checkpoint);
+      if (!scene) return;
+
+      hudHint.classList.add('hidden');
+      movePlayerTo(checkpoint.location);
+
+      overlayInner.querySelectorAll('.map-marker').forEach(function (m) {
+        m.classList.remove('active');
+      });
+      var active = overlayInner.querySelector('.map-marker[data-index="' + i + '"]');
+      if (active) active.classList.add('active');
+
+      document.getElementById('dialogueStage').textContent = checkpoint.stage;
+      document.getElementById('dialogueLoc').textContent = scene.location
+        ? (scene.location.icon + ' ' + scene.location.name)
+        : '';
+      document.getElementById('dialogueNpc').textContent = scene.npc
+        ? scene.npc.name
+        : '';
+      document.getElementById('dialoguePt').textContent = checkpoint.line_pt || '';
+
+      var enBox = document.getElementById('dialogueEn');
+      if (checkpoint.line_en) {
+        document.getElementById('dialogueEnText').textContent = checkpoint.line_en;
+        document.getElementById('dialogueAudioBtn').setAttribute('data-speak', checkpoint.line_en);
+        enBox.style.display = 'flex';
+      } else {
+        enBox.style.display = 'none';
+      }
+
+      var themeBox = document.getElementById('dialogueTheme');
+      if (scene.theme) {
+        themeBox.textContent = '"' + scene.theme.line_pt + '"';
+        themeBox.style.display = 'block';
+      } else {
+        themeBox.style.display = 'none';
+      }
+
+      document.getElementById('dialogueDecision').style.display = checkpoint.decision ? 'inline-block' : 'none';
+      document.getElementById('dialogueLessonLink').href = 'lessons/' + encodeURIComponent(checkpoint.lessonId) + '.html';
+
+      // abre e posiciona
+      bubble.classList.add('open');
+      // precisa estar visível para medir altura
+      requestAnimationFrame(function () {
+        positionBubble(checkpoint.location);
+      });
+    }
+
+    function closeDialogue() {
+      bubble.classList.remove('open');
+      overlayInner.querySelectorAll('.map-marker').forEach(function (m) {
+        m.classList.remove('active');
+      });
+    }
+
+    overlayInner.querySelectorAll('.map-marker').forEach(function (marker) {
+      marker.addEventListener('click', function (e) {
+        e.stopPropagation();
+        openCheckpoint(parseInt(marker.getAttribute('data-index'), 10));
+      });
+    });
+
+    document.getElementById('dialogueClose').addEventListener('click', function (e) {
+      e.stopPropagation();
+      closeDialogue();
+    });
+
+    document.getElementById('dialogueAudioBtn').addEventListener('click', function (e) {
+      e.stopPropagation();
+      speak(e.currentTarget.getAttribute('data-speak'));
+    });
+
+    // clicar fora do balão fecha
+    mapCanvas.addEventListener('click', function (e) {
+      if (!bubble.contains(e.target) && !e.target.closest('.map-marker')) {
+        closeDialogue();
+      }
+    });
+
+    // ─── Timeline no menu ───
+    story.act1Checkpoints.forEach(function (checkpoint, i) {
+      var location = story.locations[checkpoint.location];
+      var row = document.createElement('div');
+      row.className = 'checkpoint-row';
+      row.innerHTML =
+        '<div class="checkpoint-num">' + (i + 1) + '</div>' +
+        '<div class="checkpoint-row-text">' +
+        '  <div class="checkpoint-stage">' + escapeHtml(checkpoint.stage) + '</div>' +
+        '  <div class="checkpoint-loc">' + (location ? location.icon + ' ' + escapeHtml(location.name) : '') + '</div>' +
+        '</div>';
+      row.addEventListener('click', function () {
+        closeMenu();
+        openCheckpoint(i);
+      });
+      checkpointsEl.appendChild(row);
+    });
+
+    Object.keys(story.locations).forEach(function (id) {
+      var loc = story.locations[id];
+      var card = document.createElement('div');
+      card.className = 'location-card';
+      card.innerHTML =
+        '<div class="location-icon">' + loc.icon + '</div>' +
+        '<div class="location-name">' + escapeHtml(loc.name) + '</div>' +
+        '<div class="location-desc">' + escapeHtml(loc.description) + '</div>';
+      locationsEl.appendChild(card);
+    });
+
+    function openMenu() { menuOverlay.classList.add('open'); }
+    function closeMenu() { menuOverlay.classList.remove('open'); }
+
+    menuBtn.addEventListener('click', openMenu);
+    menuClose.addEventListener('click', closeMenu);
+    menuOverlay.addEventListener('click', function (e) {
+      if (e.target === menuOverlay) closeMenu();
+    });
+
+    function onLayout() {
+      syncOverlayToImage();
+      // se o balão estiver aberto, reposiciona
+      if (bubble.classList.contains('open')) {
+        var active = overlayInner.querySelector('.map-marker.active');
+        if (active) {
+          var idx = parseInt(active.getAttribute('data-index'), 10);
+          var cp = story.act1Checkpoints[idx];
+          if (cp) positionBubble(cp.location);
+        }
+      }
+    }
+
+    if (mapImg.complete) {
+      onLayout();
+    } else {
+      mapImg.addEventListener('load', onLayout);
+    }
+    window.addEventListener('resize', onLayout);
+    window.addEventListener('orientationchange', function () {
+      setTimeout(onLayout, 100);
+    });
+  }
+
+  render();
+</script>
+</body>
+</html>
