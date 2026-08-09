@@ -58,10 +58,33 @@
 
   .map-canvas{
     position:absolute;
-    top:0;left:0;
-    width:100%;
-    height:100%;
+    /* margem interna para a borda aparecer dentro da tela */
+    top:10px;left:10px;right:10px;bottom:10px;
+    width:auto;
+    height:auto;
     background:#0a0a0a;
+    border:3px solid rgba(255,255,255,.92);
+    border-radius:12px;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,.5),
+      0 0 0 4px rgba(217,121,63,.25),
+      0 10px 32px rgba(0,0,0,.45);
+    overflow:hidden;
+  }
+  @media (min-width: 700px) {
+    .map-canvas{
+      top:14px;left:14px;right:14px;bottom:14px;
+      border-width:4px;
+      border-radius:14px;
+    }
+  }
+  /* no celular deitado, borda um pouco mais fina para ganhar área útil */
+  @media (orientation: landscape) and (max-height: 500px) {
+    .map-canvas{
+      top:6px;left:6px;right:6px;bottom:6px;
+      border-width:2.5px;
+      border-radius:8px;
+    }
   }
 
   .map-img{
@@ -70,8 +93,8 @@
     width:100%;
     height:100%;
     display:block;
-    /* Sempre o mapa INTEIRO — nunca corta aeroporto / borda inferior */
-    object-fit:contain;
+    /* Preenche o quadro inteiro SEM cortar (pode esticar um pouco) */
+    object-fit:fill;
     object-position:center center;
     user-select:none;
     pointer-events:none;
@@ -86,24 +109,13 @@
     pointer-events:none;
   }
 
-  /* Moldura exatamente em cima da área visível da imagem */
   .map-overlay-inner{
     position:absolute;
+    top:0;left:0;
+    width:100%;
+    height:100%;
     pointer-events:none;
-    box-sizing:border-box;
-    border:3px solid rgba(255,255,255,.88);
-    border-radius:10px;
-    box-shadow:
-      0 0 0 1px rgba(0,0,0,.45),
-      0 8px 28px rgba(0,0,0,.45),
-      inset 0 0 0 1px rgba(217,121,63,.35);
     overflow:visible;
-  }
-  @media (min-width: 700px) {
-    .map-overlay-inner{
-      border-width:4px;
-      border-radius:12px;
-    }
   }
 
   /* ─── Marcadores ─── */
@@ -493,8 +505,8 @@
 
   /* Posições % dos locais sobre o mapa real */
   var WAYPOINTS = {
-    aeroporto:         { x: 11.5, y: 84.5 },
-    taxi_alojamento:   { x: 37.5, y: 83.0 },
+    aeroporto:         { x: 11.5, y: 87.0 },
+    taxi_alojamento:   { x: 37.5, y: 85.5 },
     mercado_bairro:    { x: 54.5, y: 47.5 },
     campus_escritorio: { x: 88.5, y: 45.0 },
   };
@@ -524,22 +536,11 @@
 
     // ─── Área real da imagem (object-fit: contain) ───
     function syncOverlayToImage() {
-      var canvasW = mapCanvas.clientWidth || window.innerWidth;
-      var canvasH = mapCanvas.clientHeight || window.innerHeight;
-      var natW = mapImg.naturalWidth || 1536;
-      var natH = mapImg.naturalHeight || 1024;
-
-      // Sempre contain: mapa completo visível (aeroporto na base não corta)
-      var scale = Math.min(canvasW / natW, canvasH / natH);
-      var dispW = natW * scale;
-      var dispH = natH * scale;
-      var offsetX = (canvasW - dispW) / 2;
-      var offsetY = (canvasH - dispH) / 2;
-
-      overlayInner.style.left = offsetX + 'px';
-      overlayInner.style.top = offsetY + 'px';
-      overlayInner.style.width = dispW + 'px';
-      overlayInner.style.height = dispH + 'px';
+      // Imagem preenche 100% do quadro (object-fit: fill) — overlay acompanha
+      overlayInner.style.left = '0';
+      overlayInner.style.top = '0';
+      overlayInner.style.width = '100%';
+      overlayInner.style.height = '100%';
     }
 
     // ─── Cria balão de diálogo ───
