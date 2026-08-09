@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#000000">
 <title>Bobcat Ville — Protótipo da história</title>
 <style>
   :root{
@@ -32,8 +36,11 @@
   .game-screen{
     position:fixed;
     top:0;left:0;right:0;bottom:0;
+    width:100%;
     width:100vw;
     width:100dvw;
+    width:calc(var(--vw, 1vw) * 100);
+    height:100%;
     height:100vh;
     height:100dvh;
     height:calc(var(--vh, 1vh) * 100);
@@ -416,27 +423,50 @@
 
 <script src="./story.js"></script>
 <script>
-  function setVh() {
-    var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
-    var w = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
-    document.documentElement.style.setProperty('--vh', (h * 0.01) + 'px');
-    // Classe controlada por JS (mais confiável que @media orientation em alguns browsers)
-    if (w > h) {
-      document.documentElement.classList.add('is-landscape');
-    } else {
-      document.documentElement.classList.remove('is-landscape');
+  // Libera rotação nesta página (manifest antigo podia travar em portrait)
+  try {
+    if (screen.orientation && screen.orientation.unlock) {
+      screen.orientation.unlock();
     }
+  } catch (e) {}
+
+  function setVh() {
+    var vv = window.visualViewport;
+    var h = (vv && vv.height) ? vv.height : window.innerHeight;
+    var w = (vv && vv.width) ? vv.width : window.innerWidth;
+    // iOS PWA às vezes reporta innerHeight errado logo após rotacionar
+    if (window.screen && window.screen.height && window.screen.width) {
+      var sh = Math.min(window.screen.height, window.screen.width);
+      var sw = Math.max(window.screen.height, window.screen.width);
+      // se estamos em landscape de verdade, garanta w > h
+      if (Math.abs(window.orientation) === 90 || (window.screen.orientation && String(window.screen.orientation.type || '').indexOf('landscape') >= 0)) {
+        if (w < h) { var t = w; w = h; h = t; }
+      }
+    }
+    document.documentElement.style.setProperty('--vh', (h * 0.01) + 'px');
+    document.documentElement.style.setProperty('--vw', (w * 0.01) + 'px');
+
+    var landscape = w > h;
+    document.documentElement.classList.toggle('is-landscape', landscape);
+    document.body.classList.toggle('is-landscape', landscape);
   }
   setVh();
   window.addEventListener('resize', setVh);
   window.addEventListener('orientationchange', function () {
     setTimeout(setVh, 50);
-    setTimeout(setVh, 200);
-    setTimeout(setVh, 500);
+    setTimeout(setVh, 150);
+    setTimeout(setVh, 350);
+    setTimeout(setVh, 700);
   });
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', setVh);
     window.visualViewport.addEventListener('scroll', setVh);
+  }
+  if (screen.orientation && screen.orientation.addEventListener) {
+    screen.orientation.addEventListener('change', function () {
+      setTimeout(setVh, 50);
+      setTimeout(setVh, 300);
+    });
   }
 
   function speak(text) {
