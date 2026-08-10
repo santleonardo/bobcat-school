@@ -174,16 +174,18 @@
 
   .player-token{
     position:absolute;
-    width:22px;height:22px;
+    width:26px;height:26px;
     border-radius:50%;
-    background:#fff;
-    border:3px solid var(--ink);
-    box-shadow:0 2px 10px rgba(0,0,0,.4);
+    background:var(--player-color, #fff);
+    border:3px solid #fff;
+    box-shadow:0 0 0 1.5px var(--ink), 0 2px 10px rgba(0,0,0,.4);
     transform:translate(-50%, -50%);
     pointer-events:none;
     z-index:6;
     transition:left .5s ease, top .5s ease;
     animation:playerBob 1.1s ease-in-out infinite;
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;line-height:1;
   }
   @keyframes playerBob{
     0%,100%{margin-top:0}
@@ -387,9 +389,128 @@
 
   .dilemma-box{background:var(--cream);border:1px solid var(--border);border-radius:14px;padding:14px 16px;font-size:13px;color:var(--ink-soft)}
   .proto-note{background:var(--cream);border:1px dashed var(--border);border-radius:12px;padding:10px 14px;font-size:11.5px;color:var(--ink-soft);margin-top:22px}
+
+  /* ─── Tela de criação de personagem ─── */
+  .char-screen{
+    position:fixed;inset:0;z-index:50;
+    background:linear-gradient(160deg,var(--cream-3) 0%,var(--cream) 100%);
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
+    padding:calc(28px + env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom));
+  }
+  .char-screen.hidden{display:none}
+  .char-wrap{max-width:440px;margin:0 auto}
+  .char-eyebrow{
+    font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--orange-dark);text-align:center;margin:0 0 6px;
+  }
+  .char-title{
+    font-family:"Poppins",sans-serif;font-weight:900;font-size:24px;
+    color:var(--ink);text-align:center;margin:0 0 4px;
+  }
+  .char-theme{
+    font-style:italic;font-size:13.5px;color:var(--ink-soft);
+    text-align:center;margin:0 0 26px;
+  }
+
+  .char-preview{
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    margin:0 0 26px;
+  }
+  .char-avatar{
+    width:76px;height:76px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:32px;color:#fff;
+    border:3px solid #fff;
+    box-shadow:0 6px 18px rgba(0,0,0,.18);
+    background:var(--orange);
+    transition:background .2s ease;
+  }
+  .char-preview-name{font-weight:800;font-size:14.5px;color:var(--ink);min-height:18px}
+
+  .char-section-label{
+    font-family:"Poppins",sans-serif;font-weight:800;font-size:12px;
+    color:var(--orange-dark);text-transform:uppercase;letter-spacing:.05em;
+    margin:0 0 10px;
+  }
+
+  .char-name-input{
+    width:100%;box-sizing:border-box;
+    padding:12px 14px;border-radius:12px;border:1.5px solid var(--border);
+    font-size:14.5px;font-family:inherit;background:#fff;color:var(--ink);
+    margin-bottom:24px;
+  }
+  .char-name-input:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(217,121,63,.14)}
+
+  .char-identity-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;
+  }
+  .char-identity-card{
+    background:#fff;border:2px solid var(--border);border-radius:14px;
+    padding:14px 12px;text-align:left;cursor:pointer;
+    font-family:inherit;box-shadow:var(--shadow);
+    transition:border-color .15s ease, transform .1s ease;
+  }
+  .char-identity-card:active{transform:scale(.97)}
+  .char-identity-card.selected{
+    border-color:var(--orange);
+    background:linear-gradient(160deg,#fff 60%,var(--cream) 100%);
+  }
+  .char-identity-icon{font-size:24px;margin-bottom:6px}
+  .char-identity-name{font-weight:800;font-size:13.5px;color:var(--ink);margin-bottom:3px}
+  .char-identity-tagline{font-size:11px;color:var(--ink-soft);line-height:1.35}
+
+  .char-color-row{
+    display:flex;gap:10px;flex-wrap:wrap;margin-bottom:30px;
+  }
+  .char-color-swatch{
+    width:38px;height:38px;border-radius:50%;
+    border:3px solid transparent;cursor:pointer;
+    box-shadow:0 2px 8px rgba(0,0,0,.15);
+    transition:transform .1s ease, border-color .15s ease;
+  }
+  .char-color-swatch:active{transform:scale(.9)}
+  .char-color-swatch.selected{border-color:var(--ink)}
+
+  .char-start-btn{
+    width:100%;border:none;border-radius:16px;padding:15px;
+    font-family:"Poppins",sans-serif;font-weight:800;font-size:15px;color:#fff;
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));
+    box-shadow:var(--shadow);cursor:pointer;
+  }
+  .char-start-btn:disabled{
+    opacity:.45;cursor:not-allowed;
+  }
+  .char-hint{
+    text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:12px;
+  }
 </style>
 </head>
 <body>
+
+<div class="char-screen" id="charScreen">
+  <div class="char-wrap">
+    <p class="char-eyebrow">Antes de começar</p>
+    <h1 class="char-title">Crie seu personagem</h1>
+    <p class="char-theme">"Inglês é liberdade."</p>
+
+    <div class="char-preview">
+      <div class="char-avatar" id="charAvatarPreview">🙂</div>
+      <div class="char-preview-name" id="charNamePreview"></div>
+    </div>
+
+    <p class="char-section-label">Seu nome em Bobcat Ville</p>
+    <input type="text" class="char-name-input" id="charNameInput" maxlength="24" placeholder="Como quer ser chamado?" autocomplete="off">
+
+    <p class="char-section-label">Quem é você nessa história?</p>
+    <div class="char-identity-grid" id="charIdentityGrid"></div>
+
+    <p class="char-section-label">Escolha uma cor</p>
+    <div class="char-color-row" id="charColorRow"></div>
+
+    <button type="button" class="char-start-btn" id="charStartBtn" disabled>Começar a jornada</button>
+    <p class="char-hint">Dá pra trocar isso depois, no menu ☰</p>
+  </div>
+</div>
 
 <div class="game-screen">
 
@@ -432,6 +553,15 @@
 
       <div class="section-title">Dilema moral do elenco</div>
       <div class="dilemma-box" id="dilemma"></div>
+
+      <div class="section-title">Seu personagem</div>
+      <div class="checkpoint-row" id="menuChangeCharRow" style="cursor:pointer">
+        <div class="checkpoint-num" id="menuCharAvatar">🙂</div>
+        <div class="checkpoint-row-text">
+          <div class="checkpoint-stage" id="menuCharIdentity">—</div>
+          <div class="checkpoint-loc" id="menuCharName">—</div>
+        </div>
+      </div>
 
       <div class="proto-note">
         🧪 Esta página é um protótipo isolado. Ela só lê <code>story.js</code> —
@@ -567,6 +697,7 @@
     playerEl.className = 'player-token';
     playerEl.id = 'playerToken';
     overlayInner.appendChild(playerEl);
+    applyPlayerAppearance(playerEl);
 
     // ─── Marcadores ───
     story.act1Checkpoints.forEach(function (checkpoint, i) {
@@ -791,7 +922,165 @@
     });
   }
 
+  // ─── Personagem do jogador (identidade + nome + cor) ───
+  // Guardado só no localStorage deste dispositivo — fase 1 é
+  // standalone, sem gate no profile.level real (ver decisões
+  // em aberto do documento de história).
+  var PLAYER_KEY = 'bobcatVillePlayer';
+  var CHAR_COLORS = ['#D9793F', '#2A7F8C', '#8C4A6A', '#5B8C4A', '#4067C4', '#C4527A'];
+
+  function getPlayer() {
+    try {
+      var raw = localStorage.getItem(PLAYER_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+  }
+
+  function setPlayer(p) {
+    try { localStorage.setItem(PLAYER_KEY, JSON.stringify(p)); } catch (e) { /* segue sem salvar */ }
+  }
+
+  function applyPlayerAppearance(el) {
+    if (!el) return;
+    var p = getPlayer();
+    var story = window.BOBCAT_VILLE_STORY;
+    var identity = p && story && story.identities[p.identityId];
+    el.style.setProperty('--player-color', (p && p.color) || '#D9793F');
+    el.textContent = identity ? identity.icon : '🙂';
+  }
+
+  function updateMenuCharChip(p) {
+    var story = window.BOBCAT_VILLE_STORY;
+    var identity = p && story && story.identities[p.identityId];
+    var avatarEl = document.getElementById('menuCharAvatar');
+    var identityEl = document.getElementById('menuCharIdentity');
+    var nameEl = document.getElementById('menuCharName');
+    if (!avatarEl) return;
+    avatarEl.textContent = identity ? identity.icon : '🙂';
+    avatarEl.style.background = (p && p.color) || 'var(--orange)';
+    identityEl.textContent = identity ? identity.name : 'Nenhum personagem ainda';
+    nameEl.textContent = p ? p.name : 'Toque para criar';
+  }
+
+  function setupCharScreen() {
+    var story = window.BOBCAT_VILLE_STORY;
+    var screen = document.getElementById('charScreen');
+    var nameInput = document.getElementById('charNameInput');
+    var identityGrid = document.getElementById('charIdentityGrid');
+    var colorRow = document.getElementById('charColorRow');
+    var startBtn = document.getElementById('charStartBtn');
+    var avatarPreview = document.getElementById('charAvatarPreview');
+    var namePreview = document.getElementById('charNamePreview');
+
+    var selectedIdentity = null;
+    var selectedColor = null;
+
+    function updatePreview() {
+      avatarPreview.style.background = selectedColor || '#c9c2b8';
+      avatarPreview.textContent = selectedIdentity ? story.identities[selectedIdentity].icon : '🙂';
+      namePreview.textContent = nameInput.value.trim();
+      startBtn.disabled = !(nameInput.value.trim() && selectedIdentity && selectedColor);
+    }
+
+    // grade de identidades
+    identityGrid.innerHTML = '';
+    Object.keys(story.identities).forEach(function (id) {
+      var identity = story.identities[id];
+      var card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'char-identity-card';
+      card.setAttribute('data-id', id);
+      card.innerHTML =
+        '<div class="char-identity-icon">' + identity.icon + '</div>' +
+        '<div class="char-identity-name">' + escapeHtml(identity.name) + '</div>' +
+        '<div class="char-identity-tagline">' + escapeHtml(identity.tagline) + '</div>';
+      card.addEventListener('click', function () {
+        selectedIdentity = id;
+        identityGrid.querySelectorAll('.char-identity-card').forEach(function (c) {
+          c.classList.toggle('selected', c === card);
+        });
+        updatePreview();
+      });
+      identityGrid.appendChild(card);
+    });
+
+    // linha de cores
+    colorRow.innerHTML = '';
+    CHAR_COLORS.forEach(function (color) {
+      var swatch = document.createElement('button');
+      swatch.type = 'button';
+      swatch.className = 'char-color-swatch';
+      swatch.style.background = color;
+      swatch.setAttribute('aria-label', 'Cor ' + color);
+      swatch.addEventListener('click', function () {
+        selectedColor = color;
+        colorRow.querySelectorAll('.char-color-swatch').forEach(function (s) {
+          s.classList.toggle('selected', s === swatch);
+        });
+        updatePreview();
+      });
+      colorRow.appendChild(swatch);
+    });
+
+    nameInput.addEventListener('input', updatePreview);
+
+    // se já existe personagem salvo, pré-preenche pra edição
+    var existing = getPlayer();
+    if (existing) {
+      nameInput.value = existing.name || '';
+      selectedIdentity = existing.identityId;
+      selectedColor = existing.color;
+      var idCard = identityGrid.querySelector('[data-id="' + existing.identityId + '"]');
+      if (idCard) idCard.classList.add('selected');
+      var colorSwatches = colorRow.querySelectorAll('.char-color-swatch');
+      colorSwatches.forEach(function (s) {
+        if (s.style.background === existing.color || rgbToHex(s.style.background) === existing.color) {
+          s.classList.add('selected');
+        }
+      });
+    }
+    updatePreview();
+
+    startBtn.addEventListener('click', function () {
+      if (startBtn.disabled) return;
+      var player = {
+        name: nameInput.value.trim(),
+        identityId: selectedIdentity,
+        color: selectedColor,
+      };
+      setPlayer(player);
+      screen.classList.add('hidden');
+      updateMenuCharChip(player);
+      applyPlayerAppearance(document.getElementById('playerToken'));
+    });
+
+    // "Trocar personagem" no menu lateral
+    var changeRow = document.getElementById('menuChangeCharRow');
+    if (changeRow) {
+      changeRow.addEventListener('click', function () {
+        document.getElementById('menuOverlay').classList.remove('open');
+        screen.classList.remove('hidden');
+      });
+    }
+  }
+
+  // navegadores antigos podem devolver rgb(...) em vez de hex no style lido de volta —
+  // esse helper evita falso-negativo ao tentar re-selecionar a cor salva
+  function rgbToHex(rgb) {
+    var m = /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/.exec(rgb || '');
+    if (!m) return rgb;
+    return '#' + [m[1], m[2], m[3]].map(function (n) {
+      var h = parseInt(n, 10).toString(16);
+      return h.length === 1 ? '0' + h : h;
+    }).join('');
+  }
+
   render();
+  setupCharScreen();
+  updateMenuCharChip(getPlayer());
+  if (getPlayer()) {
+    document.getElementById('charScreen').classList.add('hidden');
+  }
 </script>
 </body>
 </html>

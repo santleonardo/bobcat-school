@@ -28,6 +28,42 @@
 // --- Tema central (seção 1 do MD) ---------------------------
 const BOBCAT_VILLE_THEME = 'Inglês é liberdade.';
 
+// --- Identidades do jogador (seção 1 do MD) -------------------
+// Escolhida na criação do personagem. Muda só o tom e o desejo
+// pessoal (seção 3.1: "Desejo... varia com a identidade") — a
+// estrutura da história (checkpoints, PNJs, locais) é a mesma
+// pra todo mundo.
+const IDENTITIES = {
+  turista: {
+    id: 'turista',
+    name: 'Turista',
+    icon: '🎒',
+    tagline: 'Veio viver Bobcat Ville por um tempo, sem pressa de ficar.',
+    desejo: 'Aproveitar cada ponto turístico da cidade antes de ir embora.',
+  },
+  intercambista: {
+    id: 'intercambista',
+    name: 'Intercambista',
+    icon: '🎓',
+    tagline: 'Chegou pra estudar — o campus é o novo mundo.',
+    desejo: 'Se formar bem no Campus de Bobcat Ville.',
+  },
+  imigrante: {
+    id: 'imigrante',
+    name: 'Imigrante',
+    icon: '🧳',
+    tagline: 'Veio construir uma vida nova aqui, do zero.',
+    desejo: 'Se estabelecer de vez em Bobcat Ville.',
+  },
+  executivo: {
+    id: 'executivo',
+    name: 'Executivo(a)',
+    icon: '💼',
+    tagline: 'Veio fechar um grande negócio — não pretende ficar mais que o necessário.',
+    desejo: 'Fechar a fusão corporativa antes do prazo.',
+  },
+};
+
 // --- Dilema moral do elenco (seção 4) ------------------------
 const MORAL_DILEMMA =
   'Vale mais a pena se proteger evitando o risco de errar, ' +
@@ -422,6 +458,7 @@ function getSceneData(checkpoint) {
 // window.SUPABASE_CONFIG): tudo pendurado em um único objeto global.
 var BOBCAT_VILLE_STORY = {
   theme: BOBCAT_VILLE_THEME,
+  identities: IDENTITIES,
   moralDilemma: MORAL_DILEMMA,
   locations: LOCATIONS,
   npcs: NPCS,
