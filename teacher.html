@@ -284,7 +284,7 @@
 
   <div class="online-banner">
     🌐 <strong>Painel online</strong> — acesse de qualquer dispositivo pelo mesmo link do site
-    (<code>…/teacher.html</code>). Aba <strong>Currículo</strong> e <strong>Próximos Semestres</strong> funcionam sem login.
+    (<code>…/teacher.html</code>). Abas <strong>Currículo</strong> e <strong>Todos os semestres</strong> funcionam sem login.
     Progresso, mensagens e senhas precisam do Supabase configurado.
   </div>
 
@@ -292,7 +292,7 @@
     <button class="tab-btn active" id="tab-btn-progress" onclick="switchTab('progress')">📊 Progresso da turma</button>
     <button class="tab-btn" id="tab-btn-lessons" onclick="switchTab('lessons')">📚 Todas as lições</button>
     <button class="tab-btn" id="tab-btn-curriculo" onclick="switchTab('curriculo')">📋 Currículo completo</button>
-    <button class="tab-btn" id="tab-btn-roadmap" onclick="switchTab('roadmap')">🗺️ Próximos Semestres</button>
+    <button class="tab-btn" id="tab-btn-roadmap" onclick="switchTab('roadmap')">🗓️ Todos os semestres</button>
     <button class="tab-btn" id="tab-btn-addlesson" onclick="switchTab('addlesson')">➕ Adicionar Lição</button>
     <button class="tab-btn" id="tab-btn-messages" onclick="switchTab('messages')">💬 Mensagens<span id="unread-dot" class="unread-dot hidden"></span></button>
     <button class="tab-btn" id="tab-btn-passwords" onclick="switchTab('passwords')">🔑 Senhas</button>
@@ -333,7 +333,10 @@
 
   <div id="panel-roadmap" class="tab-panel">
     <div class="notice">
-      📝 <strong>Planejamento — ainda não criado no app.</strong> Roteiro dos Semestres 4 (B2) e 5 (C1→C2 em duas fases). Conteúdo limpo de overlap com A1–B1: First Conditional, will/going to, Present Perfect simples e modais básicos não são reensinados. Semestre 5 junta C1 e C2 com fase explícita.</div>
+      🗓️ <strong>Todos os semestres</strong> — visão completa do curso (1 a 5).
+      Semestres 1–3 já existem no app; 4–5 estão no planejamento (sem overlap com A1–B1).
+      Semestre 5 junta C1 e C2 em duas fases.
+    </div>
     <div id="roadmap-slot"></div>
   </div>
 
@@ -1186,7 +1189,7 @@ function renderCurriculoTab() {
 
     <p class="lesson-list-meta">
       ✅ = página em <code>lessons/</code> · 📝 = roadmap (ainda não criada) ·
-      IDs estáveis (progresso antigo válido) · Detalhes de planejamento também na aba <strong>Próximos Semestres</strong>.
+      IDs estáveis (progresso antigo válido) · Detalhes por semestre também na aba <strong>Todos os semestres</strong>.
     </p>
   `;
 
@@ -1194,21 +1197,92 @@ function renderCurriculoTab() {
 }
 
 
-// ---------- Próximos Semestres (planejamento — Lições 41–70, ainda não criadas) ----------
+// ---------- Todos os semestres (1–5: existentes + planejados) ----------
 
 function renderRoadmapTab() {
-  const totalLessons = ROADMAP_CATALOG.reduce((sum, s) => sum + s.lessons.length, 0);
-  let html = `<p class="lesson-list-meta">${ROADMAP_CATALOG.length} semestres planejados, ${totalLessons} lições ao todo (Lições 41–70). Sem overlap com A1–B1 · nenhuma página criada ainda.</p>`;
+  const existingByLevel = {
+    'Introdutório': LESSONS_CATALOG.filter(l => l.level === 'Introdutório'),
+    'A1': LESSONS_CATALOG.filter(l => l.level === 'A1'),
+    'A2': LESSONS_CATALOG.filter(l => l.level === 'A2'),
+    'B1': LESSONS_CATALOG.filter(l => l.level === 'B1')
+  };
 
-  ROADMAP_CATALOG.forEach(sem => {
+  const semesters = [
+    {
+      semester: 1,
+      levelRange: 'A1 (+ Introdutório)',
+      lessonRange: 'Pronúncia + Lições 1–18',
+      status: 'existing',
+      goal: 'Conversação básica: se apresentar, perguntar sobre pessoas, presente, passado e futuro.',
+      finalProjectTitle: 'Revisão A1: Conversação Básica',
+      finalProjectDetails: ['Projeto final do Semestre 1 — apresentação, rotina, ontem e planos'],
+      lessons: [...existingByLevel['Introdutório'], ...existingByLevel['A1']].map((l, i) => ({
+        num: l.level === 'Introdutório' ? 0 : i,
+        title: l.name,
+        topics: [l.description || ''],
+        existing: true,
+        id: l.id,
+        totalQuestions: l.totalQuestions
+      })),
+      parallel: {}
+    },
+    {
+      semester: 2,
+      levelRange: 'A2',
+      lessonRange: 'Lições 19–29',
+      status: 'existing',
+      goal: 'Expansão do dia a dia: continuous, quantidades, survival, comparativos, modais e phrasal verbs.',
+      finalProjectTitle: 'Revisão Geral do Semestre 2',
+      finalProjectDetails: [],
+      lessons: existingByLevel['A2'].map((l, i) => ({
+        num: 19 + i,
+        title: l.name,
+        topics: [l.description || ''],
+        existing: true,
+        id: l.id,
+        totalQuestions: l.totalQuestions
+      })),
+      parallel: {}
+    },
+    {
+      semester: 3,
+      levelRange: 'B1',
+      lessonRange: 'Lições 30–40',
+      status: 'existing',
+      goal: 'Narrativa e experiência: Past Continuous, Present Perfect, futuro consolidado, modais B1, First Conditional.',
+      finalProjectTitle: 'Grande Revisão A2 → B1',
+      finalProjectDetails: [],
+      lessons: existingByLevel['B1'].map((l, i) => ({
+        num: 30 + i,
+        title: l.name,
+        topics: [l.description || ''],
+        existing: true,
+        id: l.id,
+        totalQuestions: l.totalQuestions
+      })),
+      parallel: {}
+    },
+    ...ROADMAP_CATALOG.map(s => ({ ...s, status: 'planned' }))
+  ];
+
+  const totalLessons = semesters.reduce((sum, s) => sum + s.lessons.length, 0);
+  const existingCount = semesters.filter(s => s.status === 'existing').reduce((sum, s) => sum + s.lessons.length, 0);
+  const plannedCount = totalLessons - existingCount;
+
+  let html = `<p class="lesson-list-meta">${semesters.length} semestres · ${totalLessons} lições (${existingCount} existentes ✅ · ${plannedCount} planejadas 📝). Sem overlap A1–B1 no roadmap avançado.</p>`;
+
+  semesters.forEach(sem => {
+    const statusLabel = sem.status === 'existing' ? '✅ no app' : '📝 planejado';
     html += '<div class="roadmap-semester">';
     html += `<div class="roadmap-semester-header">
       <div class="roadmap-semester-title">Semestre ${sem.semester} — ${escapeHtml(sem.lessonRange)}</div>
-      <div class="roadmap-semester-level">${escapeHtml(sem.levelRange)}</div>
+      <div class="roadmap-semester-level">${escapeHtml(sem.levelRange)} · ${statusLabel}</div>
     </div>`;
-    html += `<div class="lesson-list-meta" style="margin-bottom:14px;">${sem.lessons.length} lições planejadas · nenhuma criada ainda</div>`;
+    if (sem.goal) {
+      html += `<div class="lesson-list-meta" style="margin-bottom:10px;">${escapeHtml(sem.goal)}</div>`;
+    }
+    html += `<div class="lesson-list-meta" style="margin-bottom:14px;">${sem.lessons.length} lições · ${sem.status === 'existing' ? 'disponíveis no app' : 'nenhuma página criada ainda'}</div>`;
 
-    // Fases (ex.: C1 / C2 no Semestre 5)
     if (sem.phases && sem.phases.length) {
       html += '<div class="roadmap-parallel" style="margin-bottom:14px;">';
       html += '<div class="roadmap-parallel-title">Fases do semestre</div>';
@@ -1225,31 +1299,36 @@ function renderRoadmapTab() {
       if (l.phase && l.phase !== lastPhase) {
         lastPhase = l.phase;
         const phaseMeta = (sem.phases || []).find(p => p.id === l.phase);
-        const label = phaseMeta ? phaseMeta.label : l.phase.toUpperCase();
+        const label = phaseMeta ? phaseMeta.label : l.phase;
         html += `<div class="lesson-list-meta" style="margin:14px 0 6px;font-weight:700;color:var(--orange-dark);">${escapeHtml(label)}</div>`;
       }
+      const badge = l.existing
+        ? '<span class="pending-badge" style="color:#1e6b40;background:#EAF7EF;">✅ no app</span>'
+        : '<span class="pending-badge">📝 planejada</span>';
       const phaseBadge = l.phase ? ` <span class="pending-badge">${escapeHtml(String(l.phase).toUpperCase())}</span>` : '';
+      const q = l.totalQuestions != null ? ` · ${l.totalQuestions} questões` : '';
+      const idHint = l.id ? ` <code style="font-size:11px;background:#f0ebe3;padding:1px 5px;border-radius:4px;">${escapeHtml(l.id)}</code>` : '';
       html += `<div class="roadmap-lesson">
         <div class="roadmap-lesson-title">
-          <span class="roadmap-lesson-num">Lição ${l.num}</span>${escapeHtml(l.title)}
-          <span class="pending-badge">📝 planejada</span>${phaseBadge}
+          <span class="roadmap-lesson-num">Lição ${l.num}</span>${escapeHtml(l.title)}${idHint}${q}
+          ${badge}${phaseBadge}
         </div>
-        <div class="roadmap-topics">${l.topics.map(t => `<span class="roadmap-tag">${escapeHtml(t)}</span>`).join('')}</div>
+        <div class="roadmap-topics">${(l.topics || []).filter(Boolean).map(t => `<span class="roadmap-tag">${escapeHtml(t)}</span>`).join('')}</div>
       </div>`;
     });
     html += '</div>';
 
-    // Projeto final do semestre
-    html += `<div class="roadmap-project">
-      <strong>🎓 Projeto final — ${escapeHtml(sem.finalProjectTitle)}</strong>`;
-    if (sem.finalProjectDetails && sem.finalProjectDetails.length) {
-      html += '<ul style="margin:6px 0 0 18px; padding:0;">' +
-        sem.finalProjectDetails.map(d => `<li style="margin-bottom:4px;">${escapeHtml(d)}</li>`).join('') +
-        '</ul>';
+    if (sem.finalProjectTitle) {
+      html += `<div class="roadmap-project">
+        <strong>🎓 Projeto final — ${escapeHtml(sem.finalProjectTitle)}</strong>`;
+      if (sem.finalProjectDetails && sem.finalProjectDetails.length) {
+        html += '<ul style="margin:6px 0 0 18px; padding:0;">' +
+          sem.finalProjectDetails.map(d => `<li style="margin-bottom:4px;">${escapeHtml(d)}</li>`).join('') +
+          '</ul>';
+      }
+      html += '</div>';
     }
-    html += '</div>';
 
-    // Conteúdos paralelos
     const parallelCats = Object.keys(sem.parallel || {});
     if (parallelCats.length) {
       html += '<div class="roadmap-parallel">';
@@ -1265,7 +1344,7 @@ function renderRoadmapTab() {
       html += '</div></div>';
     }
 
-    html += '</div>'; // .roadmap-semester
+    html += '</div>';
   });
 
   document.getElementById('roadmap-slot').innerHTML = html;
