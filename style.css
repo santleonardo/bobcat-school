@@ -303,70 +303,76 @@ body.on-auth-screen.on-landing-screen .topbar { display: none; }
   opacity: 0.9;
 }
 
-/* o que você vai conseguir fazer */
-.landing-skills { padding: 6px 18px 30px; background: var(--land-bg); }
+/* currículo resumido */
+.landing-curriculum { padding: 6px 18px 30px; background: var(--land-bg); }
 .landing-section-title {
-  margin: 0 0 20px;
+  margin: 0 0 10px;
   font-family: "Fraunces", Georgia, serif;
   font-weight: 700;
   font-size: 1.35rem;
   color: #fff;
   text-align: center;
-  position: relative;
 }
 .landing-section-title span { color: var(--land-red-glow); }
-.landing-skills-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+.landing-curriculum-sub {
+  margin: -10px 0 24px;
+  text-align: center;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--land-ink-faint);
+  max-width: 34ch;
+  margin-left: auto;
+  margin-right: auto;
 }
-.landing-skill {
+.landing-timeline { position: relative; }
+.landing-tl-item {
   position: relative;
-  background: var(--land-card);
-  border: 1px solid var(--land-line);
-  border-radius: 16px;
-  padding: 30px 12px 14px;
+  display: flex;
+  gap: 14px;
+  padding-bottom: 22px;
+  padding-left: 2px;
 }
-.landing-skill-wide { grid-column: 1 / -1; }
-.landing-skill-n {
+.landing-tl-item::before {
+  content: "";
   position: absolute;
-  top: -11px; left: 12px;
-  width: 24px; height: 24px;
-  border-radius: 50%;
+  top: 30px; bottom: -2px; left: 20px;
+  width: 1px;
+  background: var(--land-line);
+}
+.landing-tl-last::before { display: none; }
+.landing-tl-badge {
+  flex-shrink: 0;
+  width: 41px; height: 26px;
+  border-radius: 999px;
   background: linear-gradient(135deg, var(--land-red-glow), var(--land-red-2));
   color: #fff;
-  font-size: 11.5px;
+  font-size: 10.5px;
   font-weight: 800;
-  display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 10px rgba(198,40,26,0.5);
-}
-.landing-skill-icon {
+  letter-spacing: 0.01em;
   display: flex;
-  width: 32px; height: 32px;
-  color: var(--land-red-glow);
-  margin-bottom: 10px;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(198,40,26,0.4);
+  z-index: 1;
 }
-.landing-skill-icon svg { width: 100%; height: 100%; }
-.landing-skill-title {
+.landing-tl-body {
+  background: var(--land-card);
+  border: 1px solid var(--land-line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  flex: 1;
+}
+.landing-tl-title {
   font-family: "Fraunces", Georgia, serif;
   font-weight: 600;
   font-size: 14.5px;
   color: #fff;
-  line-height: 1.25;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
-.landing-skill-desc {
-  font-size: 12px;
+.landing-tl-desc {
+  font-size: 12.5px;
+  line-height: 1.45;
   color: var(--land-ink-faint);
-  line-height: 1.4;
-}
-.landing-skill::after {
-  content: "";
-  display: block;
-  width: 22px; height: 2px;
-  margin-top: 10px;
-  background: var(--land-red);
-  border-radius: 2px;
 }
 
 /* lições guiadas */
