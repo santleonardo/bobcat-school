@@ -591,7 +591,7 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
 .mbti-option-btn.selected { border-color: var(--terracotta); background: var(--cream); color: var(--terracotta-deep); font-weight: 600; }
 .mbti-result {
   margin-top: 14px;
-  padding: 12px 13px;
+  padding: 14px 15px;
   background: var(--cream);
   border: 1.5px solid var(--terracotta);
   border-radius: var(--radius-sm);
@@ -599,7 +599,17 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
   color: var(--ink);
   line-height: 1.5;
 }
-.mbti-result strong { color: var(--terracotta-deep); }
+.mbti-result-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.mbti-result-emoji {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+}
+.mbti-result-header strong { font-family: 'Fraunces', Georgia, serif; font-size: 15px; color: var(--terracotta-deep); }
+.mbti-result-desc { margin: 0; color: var(--ink-soft); }
 
 /* Cabeçalho da conversa com a IA */
 .ai-conv-header {
