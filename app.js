@@ -11,7 +11,7 @@ const TESTS = [
     id: 'nivelamento',
     name: 'Teste de Nivelamento',
     icon: '🎯',
-    description: 'Descubra seu nível de inglês (A1–C2) — diferente a cada tentativa!',
+    description: 'Descubra sua fase no inglês (A1–C2) — diferente a cada tentativa!',
     url: 'lessons/nivelamento.html',
     totalQuestions: 30
   }
@@ -431,7 +431,7 @@ const LESSONS = [
     name: "Lição 26 — Comparativos e Superlativos",
     level: "A2",
     icon: "⚖️",
-    description: "Comparando pessoas e coisas em inglês (nível A2)",
+    description: "Comparando pessoas e coisas em inglês (fase A2)",
     url: "lessons/licao-26-comparatives-superlatives.html",
     totalQuestions: 12
   },
@@ -539,7 +539,7 @@ const LESSONS = [
     name: "Lição 38 — Comparativos, Superlativos e Igualdade",
     level: "B1",
     icon: "📊",
-    description: "Bigger, the best, as...as — nível B1",
+    description: "Bigger, the best, as...as — fase B1",
     url: "lessons/licao-38-comparatives-superlatives-equality.html",
     totalQuestions: 12
   },
@@ -762,7 +762,7 @@ async function renderProfileView() {
 
   document.getElementById('profile-avatar').textContent = profile.avatar;
   document.getElementById('profile-name-display').textContent = profile.name;
-  document.getElementById('profile-level-display').textContent = 'Nível ' + profile.level;
+  document.getElementById('profile-level-display').textContent = 'Fase ' + profile.level;
 
   const progress = await getProgress();
   const stats = computeProgressStats(progress);
@@ -1220,7 +1220,7 @@ async function renderMenu() {
 
   document.getElementById('menu-avatar').textContent = profile.avatar;
   document.getElementById('menu-greeting').textContent = 'Olá, ' + profile.name + '!';
-  document.getElementById('menu-level-sub').textContent = 'Nível ' + profile.level + ' • o que vamos fazer hoje?';
+  document.getElementById('menu-level-sub').textContent = 'Fase ' + profile.level + ' • o que vamos fazer hoje?';
 }
 
 // ---------- Tela Home / lista de lições ----------
@@ -1231,7 +1231,7 @@ async function renderHome() {
 
   document.getElementById('home-avatar').textContent = profile.avatar;
   document.getElementById('home-greeting').textContent = 'Olá, ' + profile.name + '!';
-  document.getElementById('home-level-sub').textContent = 'Nível ' + profile.level + ' • continue praticando';
+  document.getElementById('home-level-sub').textContent = 'Fase ' + profile.level + ' • continue praticando';
 
   const progress = await getProgress();
   const stats = computeProgressStats(progress);
