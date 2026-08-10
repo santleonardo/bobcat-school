@@ -1803,6 +1803,100 @@ const PERSONA_EMOJIS = ['🤖', '🐱', '🧒', '🧑', '💼', '👴', '🦸', 
 let personaEmojiSelected = PERSONA_EMOJIS[0];
 let personaGenderSelected = 'female'; // 'female' | 'male' — obrigatório escolher um dos dois
 
+// ---------- Quiz MBTI (gera a personalidade a partir de 4 perguntas) ----------
+// Não é um teste psicológico de verdade — é só um jeito divertido e guiado de
+// o aluno chegar numa personalidade variada para a IA, baseado nas 4 letras
+// clássicas do MBTI (E/I, S/N, T/F, J/P). O texto de cada tipo já vem pronto
+// para o prompt da IA (em inglês, dentro do limite de 300 caracteres).
+const MBTI_QUESTIONS = [
+  { key: 'EI', text: 'Você prefere...', options: [
+      { letter: 'E', label: 'Conversar bastante e conhecer gente nova' },
+      { letter: 'I', label: 'Ficar mais quieto(a) e pensar antes de falar' }
+    ] },
+  { key: 'SN', text: 'Você presta mais atenção em...', options: [
+      { letter: 'S', label: 'Fatos e detalhes reais' },
+      { letter: 'N', label: 'Ideias e possibilidades novas' }
+    ] },
+  { key: 'TF', text: 'Na hora de decidir algo, você pensa mais em...', options: [
+      { letter: 'T', label: 'Lógica e ser direto(a)' },
+      { letter: 'F', label: 'Sentimentos das pessoas' }
+    ] },
+  { key: 'JP', text: 'No dia a dia, você prefere...', options: [
+      { letter: 'J', label: 'Ter plano e rotina' },
+      { letter: 'P', label: 'Ir vendo na hora, com surpresas' }
+    ] }
+];
+
+const MBTI_TYPES = {
+  INTJ: { label: 'Estrategista', personality: "You are a calm, strategic thinker who loves big ideas, plans, and clever solutions. A bit reserved at first, but curious and sharp once a topic interests you, you enjoy discussing goals and how things work." },
+  INTP: { label: 'Pensador(a)', personality: "You are a curious, analytical thinker who loves exploring ideas and asking 'why'. A bit quiet and absent-minded, but excited once a topic interests you, you enjoy talking about theories, science, and puzzles." },
+  ENTJ: { label: 'Comandante', personality: "You are a confident, ambitious, and decisive leader. Direct and driven, a little intense but fair, you enjoy talking about big goals, strategy, leadership, and how to get things done efficiently." },
+  ENTP: { label: 'Inovador(a)', personality: "You are a witty, energetic debater who loves playing with ideas. Curious, quick-thinking, and a bit of a tease, you enjoy talking about clever arguments, new inventions, and 'what if' questions." },
+  INFJ: { label: 'Idealista', personality: "You are a thoughtful, gentle idealist who cares deeply about people's feelings and the bigger meaning behind things. Calm and insightful, you enjoy quiet, meaningful conversations about dreams and values." },
+  INFP: { label: 'Sonhador(a)', personality: "You are a dreamy, sensitive idealist with a rich imagination. Warm and thoughtful, a little quiet at first, you enjoy talking about stories, feelings, personal values, and what makes life meaningful." },
+  ENFJ: { label: 'Inspirador(a)', personality: "You are a warm, charismatic, and encouraging person who loves inspiring others. Friendly and empathetic, you enjoy talking about people's goals, dreams, and how everyone can grow and support each other." },
+  ENFP: { label: 'Entusiasta', personality: "You are an enthusiastic, warm, and imaginative person full of energy. Curious about people and ideas, a little scattered but always excited, you enjoy talking about dreams, creativity, and new possibilities." },
+  ISTJ: { label: 'Organizado(a)', personality: "You are a practical, reliable, detail-oriented person who likes order and clear rules. Calm and dependable, you enjoy talking about everyday routines, responsibilities, and how things are properly done." },
+  ISFJ: { label: 'Cuidador(a)', personality: "You are a warm, caring, and quietly dependable person who loves helping others feel comfortable. Gentle and attentive, you enjoy talking about family, traditions, and taking care of the people you love." },
+  ESTJ: { label: 'Executivo(a)', personality: "You are a confident, organized, no-nonsense leader type. Direct and hardworking, you enjoy talking about goals, plans, sports, and getting things done efficiently and the right way." },
+  ESFJ: { label: 'Sociável', personality: "You are a warm, sociable, and caring person who loves taking care of the people around you. Friendly and talkative, you enjoy talking about friends, family, celebrations, and helping others feel included." },
+  ISTP: { label: 'Prático(a)', personality: "You are a cool, practical problem-solver who likes figuring out how things work with your hands. Calm, direct, and a little adventurous, you enjoy talking about tools, gadgets, sports, and hands-on projects." },
+  ISFP: { label: 'Artista', personality: "You are a gentle, artistic soul who notices beauty in small things. Quiet, kind, and a little shy at first, you enjoy talking about art, music, nature, and living life at your own relaxed pace." },
+  ESTP: { label: 'Aventureiro(a)', personality: "You are an energetic, bold, and fun-loving person who lives in the moment. Confident and a little cheeky, you enjoy talking about sports, adventures, games, and anything exciting happening right now." },
+  ESFP: { label: 'Animado(a)', personality: "You are a cheerful, spontaneous, and fun person who loves being the center of attention. Warm and playful, you enjoy talking about parties, music, friends, and making everyday moments feel special." }
+};
+
+let mbtiAnswers = {}; // {EI:'E', SN:'S', TF:'T', JP:'J'} — vai enchendo conforme o aluno responde
+
+function renderMbtiQuiz() {
+  const el = document.getElementById('mbti-quiz');
+  if (!el) return;
+  el.innerHTML = MBTI_QUESTIONS.map(q => `
+    <div class="mbti-question">
+      <div class="mbti-question-text">${q.text}</div>
+      <div class="mbti-options">
+        ${q.options.map(o => `<button type="button" class="mbti-option-btn${mbtiAnswers[q.key] === o.letter ? ' selected' : ''}" data-key="${q.key}" data-letter="${o.letter}">${o.label}</button>`).join('')}
+      </div>
+    </div>
+  `).join('');
+  el.querySelectorAll('.mbti-option-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      mbtiAnswers[btn.dataset.key] = btn.dataset.letter;
+      renderMbtiQuiz();
+      applyMbtiResultIfComplete();
+    });
+  });
+}
+
+function applyMbtiResultIfComplete() {
+  const resultEl = document.getElementById('mbti-result');
+  const keys = ['EI', 'SN', 'TF', 'JP'];
+  if (!keys.every(k => mbtiAnswers[k])) {
+    if (resultEl) resultEl.classList.add('hidden');
+    return;
+  }
+  const type = keys.map(k => mbtiAnswers[k]).join('');
+  const info = MBTI_TYPES[type];
+  if (!info || !resultEl) return;
+
+  const textarea = document.getElementById('input-persona-personality');
+  if (textarea) textarea.value = info.personality;
+  aiChatUpdatePersonaPreview();
+
+  resultEl.classList.remove('hidden');
+  resultEl.innerHTML = `<strong>${type} — ${info.label}</strong><br>Preenchemos a personalidade com esse jeito de ser — pode editar o texto acima à vontade. <button type="button" class="link-btn" id="btn-mbti-redo">Refazer o quiz</button>`;
+  const redoBtn = document.getElementById('btn-mbti-redo');
+  if (redoBtn) {
+    redoBtn.addEventListener('click', () => {
+      mbtiAnswers = {};
+      renderMbtiQuiz();
+      resultEl.classList.add('hidden');
+      if (textarea) textarea.value = '';
+      aiChatUpdatePersonaPreview();
+    });
+  }
+}
+
 // ---------- Armazenamento das personalidades ----------
 // getAiChatPersonas / addAiChatPersona / deleteAiChatPersona / getAiChatHistoryFor /
 // saveAiChatHistoryFor vêm do db-client.js: sincronizam pela nuvem (Supabase) quando
@@ -2232,8 +2326,12 @@ function aiChatShowCreateView() {
   document.getElementById('input-persona-personality').value = '';
   personaEmojiSelected = PERSONA_EMOJIS[0];
   personaGenderSelected = 'female';
+  mbtiAnswers = {};
   renderPersonaEmojiPicker();
   renderPersonaGenderPicker();
+  renderMbtiQuiz();
+  const mbtiResult = document.getElementById('mbti-result');
+  if (mbtiResult) mbtiResult.classList.add('hidden');
   aiChatUpdatePersonaPreview();
 }
 
@@ -2539,12 +2637,6 @@ function setupAiChat() {
 
   const inputPersonaName = document.getElementById('input-persona-name');
   if (inputPersonaName) inputPersonaName.addEventListener('input', aiChatUpdatePersonaPreview);
-
-  document.querySelectorAll('.persona-suggestion-chip').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.getElementById('input-persona-personality').value = btn.dataset.personality;
-    });
-  });
 
   if (chkTts) {
     chkTts.checked = aiChatTtsEnabled;

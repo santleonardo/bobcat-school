@@ -572,12 +572,13 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
 .persona-gender-btn.selected { border-color: var(--terracotta); background: var(--cream); color: var(--terracotta-deep); }
 .persona-card .gender-badge { font-size: 11px; margin-left: 4px; }
 
-.persona-suggestion-grid { display: flex; flex-direction: column; gap: 8px; }
-.persona-suggestion-chip {
-  display: flex; align-items: center; gap: 10px;
+.mbti-quiz { display: flex; flex-direction: column; gap: 14px; }
+.mbti-question-text { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 7px; }
+.mbti-options { display: flex; flex-direction: column; gap: 8px; }
+.mbti-option-btn {
   width: 100%;
   padding: 10px 13px;
-  font-size: 13px; font-weight: 600; font-family: inherit;
+  font-size: 13px; font-weight: 500; font-family: inherit;
   color: var(--ink);
   background: #fff;
   border: 1.5px solid var(--border);
@@ -586,15 +587,19 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
   text-align: left;
   transition: border-color .15s, background .15s, transform .1s;
 }
-.persona-suggestion-chip .emoji {
-  flex-shrink: 0;
-  width: 30px; height: 30px;
-  border-radius: 50%;
+.mbti-option-btn:hover { border-color: var(--terracotta); background: var(--cream-2); transform: translateY(-1px); }
+.mbti-option-btn.selected { border-color: var(--terracotta); background: var(--cream); color: var(--terracotta-deep); font-weight: 600; }
+.mbti-result {
+  margin-top: 14px;
+  padding: 12px 13px;
   background: var(--cream);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 15px;
+  border: 1.5px solid var(--terracotta);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.5;
 }
-.persona-suggestion-chip:hover { border-color: var(--terracotta); background: var(--cream-2); transform: translateY(-1px); }
+.mbti-result strong { color: var(--terracotta-deep); }
 
 /* Cabeçalho da conversa com a IA */
 .ai-conv-header {
