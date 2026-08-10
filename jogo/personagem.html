@@ -131,13 +131,14 @@
   /* ── Controles de jogo: pausar / continuar / reiniciar / sair ──── */
   .pause-btn {
     position: fixed; top: 16px; right: 16px; z-index: 500;
-    width: 42px; height: 42px; border-radius: 50%; border: none; cursor: pointer;
-    background: rgba(255,255,255,0.16); color: #fff; font-size: 17px;
-    display: flex; align-items: center; justify-content: center;
-    transition: background .15s, transform .1s;
+    height: 42px; padding: 0 16px 0 12px; border-radius: 999px; border: 1.5px solid rgba(255,255,255,0.5);
+    cursor: pointer; background: rgba(0,0,0,0.28); color: #fff; font-size: 13.5px; font-weight: 700;
+    font-family: inherit; display: flex; align-items: center; gap: 7px;
+    transition: background .15s, transform .1s, border-color .15s;
   }
-  .pause-btn:hover { background: rgba(255,255,255,0.28); transform: translateY(-1px); }
-  .pause-btn:active { transform: scale(0.94); }
+  .pause-btn:hover { background: var(--terracotta); border-color: var(--terracotta); transform: translateY(-1px); }
+  .pause-btn:active { transform: scale(0.96); }
+  .pause-btn svg { flex-shrink: 0; }
 
   .pause-overlay {
     position: fixed; inset: 0; background: rgba(32, 24, 16, 0.5); z-index: 700;
@@ -175,7 +176,10 @@
 
 <div class="top-hero">
   <a class="back-link" href="../index.html">← Voltar ao app</a>
-  <button class="pause-btn" id="btn-pause" aria-label="Pausar" title="Pausar">⏸️</button>
+  <button class="pause-btn" id="btn-pause" aria-label="Pausar o jogo" title="Pausar">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+    Pausar
+  </button>
   <p class="eyebrow">Bobcat Ville · fase de testes</p>
   <h1>Quem chega em Bobcat Ville?</h1>
   <p>Antes da primeira lição, escolha quem você é nesta história. Isso só muda o tom das conversas — a jornada é a mesma pra todo mundo.</p>
@@ -257,13 +261,24 @@
 <!-- MENU DE PAUSA: pausar / continuar / reiniciar personagem / sair -->
 <div class="pause-overlay hidden" id="pause-overlay">
   <div class="pause-card">
-    <div class="pause-icon">⏸️</div>
+    <div class="pause-icon">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="var(--terracotta)"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>
+    </div>
     <p class="pause-title">Jogo pausado</p>
     <p class="pause-sub" id="pause-sub-text">Seu progresso nesta tela fica salvo automaticamente.</p>
     <div class="pause-actions">
-      <button class="btn" id="btn-resume">▶️ Continuar</button>
-      <button class="btn-outline" id="btn-restart">🔁 Reiniciar personagem</button>
-      <button class="btn-danger" id="btn-quit-open">🚪 Sair para o app</button>
+      <button class="btn" id="btn-resume">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-1px;margin-right:6px;"><path d="M8 5v14l11-7z"/></svg>
+        Continuar
+      </button>
+      <button class="btn-outline" id="btn-restart">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:6px;"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        Reiniciar personagem
+      </button>
+      <button class="btn-danger" id="btn-quit-open">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:5px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        Sair para o app
+      </button>
     </div>
     <div class="quit-confirm" id="quit-confirm">
       <p>Tem certeza? Isso te leva de volta ao app principal.</p>
