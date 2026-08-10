@@ -127,12 +127,55 @@
     background: none; color: var(--ink-soft); border: none; padding: 10px; font-size: 13px; font-weight: 600;
     cursor: pointer; width: 100%; margin-top: 6px; text-decoration: underline;
   }
+
+  /* ── Controles de jogo: pausar / continuar / reiniciar / sair ──── */
+  .pause-btn {
+    position: fixed; top: 16px; right: 16px; z-index: 500;
+    width: 42px; height: 42px; border-radius: 50%; border: none; cursor: pointer;
+    background: rgba(255,255,255,0.16); color: #fff; font-size: 17px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s, transform .1s;
+  }
+  .pause-btn:hover { background: rgba(255,255,255,0.28); transform: translateY(-1px); }
+  .pause-btn:active { transform: scale(0.94); }
+
+  .pause-overlay {
+    position: fixed; inset: 0; background: rgba(32, 24, 16, 0.5); z-index: 700;
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+  }
+  .pause-overlay.hidden { display: none; }
+  .pause-card {
+    background: #fff; border-radius: var(--radius-lg); box-shadow: var(--shadow-warm);
+    padding: 28px 24px; width: 100%; max-width: 340px; text-align: center;
+  }
+  .pause-icon { font-size: 30px; margin-bottom: 6px; }
+  .pause-title { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 19px; color: var(--pine-deep); margin: 0 0 4px; }
+  .pause-sub { font-size: 13px; color: var(--ink-soft); margin: 0 0 22px; line-height: 1.45; }
+  .pause-actions { display: flex; flex-direction: column; gap: 10px; }
+  .pause-actions .btn { margin-top: 0; }
+  .btn-outline {
+    background: #fff; color: var(--pine-deep); border: 1.5px solid var(--border); padding: 13px 20px;
+    border-radius: 13px; font-size: 14.5px; font-weight: 600; font-family: inherit; cursor: pointer; width: 100%;
+    transition: border-color .15s, background .15s;
+  }
+  .btn-outline:hover { border-color: var(--terracotta); background: var(--paper); }
+  .btn-danger {
+    background: none; color: var(--bad, #B23B2E); border: none; padding: 12px; font-size: 13.5px; font-weight: 600;
+    cursor: pointer; width: 100%; text-decoration: underline;
+  }
+
+  .quit-confirm { display: none; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .quit-confirm.active { display: block; }
+  .quit-confirm p { font-size: 12.5px; color: var(--ink-soft); margin: 0 0 12px; }
+  .quit-confirm-actions { display: flex; gap: 8px; }
+  .quit-confirm-actions button { flex: 1; }
 </style>
 </head>
 <body>
 
 <div class="top-hero">
   <a class="back-link" href="../index.html">← Voltar ao app</a>
+  <button class="pause-btn" id="btn-pause" aria-label="Pausar" title="Pausar">⏸️</button>
   <p class="eyebrow">Bobcat Ville · fase de testes</p>
   <h1>Quem chega em Bobcat Ville?</h1>
   <p>Antes da primeira lição, escolha quem você é nesta história. Isso só muda o tom das conversas — a jornada é a mesma pra todo mundo.</p>
@@ -211,6 +254,27 @@
 
 </div>
 
+<!-- MENU DE PAUSA: pausar / continuar / reiniciar personagem / sair -->
+<div class="pause-overlay hidden" id="pause-overlay">
+  <div class="pause-card">
+    <div class="pause-icon">⏸️</div>
+    <p class="pause-title">Jogo pausado</p>
+    <p class="pause-sub" id="pause-sub-text">Seu progresso nesta tela fica salvo automaticamente.</p>
+    <div class="pause-actions">
+      <button class="btn" id="btn-resume">▶️ Continuar</button>
+      <button class="btn-outline" id="btn-restart">🔁 Reiniciar personagem</button>
+      <button class="btn-danger" id="btn-quit-open">🚪 Sair para o app</button>
+    </div>
+    <div class="quit-confirm" id="quit-confirm">
+      <p>Tem certeza? Isso te leva de volta ao app principal.</p>
+      <div class="quit-confirm-actions">
+        <button class="btn-outline" id="btn-quit-cancel">Cancelar</button>
+        <button class="btn" id="btn-quit-confirm">Sair mesmo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   var IDENTITIES = {
     turista: {
@@ -236,6 +300,7 @@
   };
 
   var state = { name: '', identity: null, color: null };
+  var isPaused = false;
 
   var elNameInput = document.getElementById('input-char-name');
   var elIdentityGrid = document.getElementById('identity-grid');
@@ -325,6 +390,56 @@
   document.getElementById('btn-confirm-continue').addEventListener('click', function () {
     // O mapa/primeira missão ainda não existem — placeholder até a Fase 1 avançar.
     window.location.href = '../index.html';
+  });
+
+  // ---------- Menu de pausa ----------
+  var elPauseOverlay = document.getElementById('pause-overlay');
+  var elPauseSubText = document.getElementById('pause-sub-text');
+  var elQuitConfirm = document.getElementById('quit-confirm');
+
+  function openPause() {
+    isPaused = true;
+    var onConfirmScreen = document.getElementById('confirm-screen').classList.contains('active');
+    elPauseSubText.textContent = onConfirmScreen
+      ? 'Seu personagem já está salvo — pode sair e continuar depois de onde parou.'
+      : 'Seu progresso nesta tela fica salvo automaticamente.';
+    elQuitConfirm.classList.remove('active');
+    elPauseOverlay.classList.remove('hidden');
+  }
+
+  function closePause() {
+    isPaused = false;
+    elPauseOverlay.classList.add('hidden');
+  }
+
+  document.getElementById('btn-pause').addEventListener('click', openPause);
+  document.getElementById('btn-resume').addEventListener('click', closePause);
+
+  document.getElementById('btn-restart').addEventListener('click', function () {
+    try { localStorage.removeItem('bobcatVilleCharacter'); } catch (err) { /* segue mesmo assim */ }
+    state = { name: '', identity: null, color: null };
+    elNameInput.value = '';
+    document.querySelectorAll('.identity-card').forEach(function (c) { c.classList.remove('selected'); });
+    document.querySelectorAll('.avatar-swatch').forEach(function (s) { s.classList.remove('selected'); });
+    updatePreview();
+    document.getElementById('confirm-screen').classList.remove('active');
+    document.getElementById('setup-screen').classList.remove('hidden');
+    closePause();
+  });
+
+  document.getElementById('btn-quit-open').addEventListener('click', function () {
+    elQuitConfirm.classList.add('active');
+  });
+  document.getElementById('btn-quit-cancel').addEventListener('click', function () {
+    elQuitConfirm.classList.remove('active');
+  });
+  document.getElementById('btn-quit-confirm').addEventListener('click', function () {
+    window.location.href = '../index.html';
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (isPaused) { closePause(); } else { openPause(); }
   });
 
   // Restaura personagem já criado, se existir (permite testar de novo sem redigitar tudo)
