@@ -295,15 +295,6 @@
     z-index:20;pointer-events:none;
     display:flex;align-items:center;gap:10px;
   }
-  .hud-back{
-    pointer-events:auto;
-    display:flex;align-items:center;justify-content:center;
-    width:38px;height:38px;border-radius:12px;
-    background:rgba(43,43,43,.55);backdrop-filter:blur(6px);
-    color:#fff;text-decoration:none;font-size:16px;
-    box-shadow:var(--shadow);flex-shrink:0;
-  }
-  .hud-back:active{background:rgba(43,43,43,.75)}
   .hud-badge{
     pointer-events:none;
     background:linear-gradient(135deg,var(--orange),var(--orange-dark));
@@ -338,7 +329,6 @@
     .hud-badge h1{font-size:13px}
     .hud-badge .tag{font-size:8px}
     .hud-badge{padding:5px 10px}
-    .hud-back{width:32px;height:32px;font-size:14px}
     .hud-menu-btn{padding:7px 10px;font-size:11px}
     .marker-pin{width:28px;height:28px}
     .marker-num{font-size:12px}
@@ -389,6 +379,42 @@
 
   .dilemma-box{background:var(--cream);border:1px solid var(--border);border-radius:14px;padding:14px 16px;font-size:13px;color:var(--ink-soft)}
   .proto-note{background:var(--cream);border:1px dashed var(--border);border-radius:12px;padding:10px 14px;font-size:11.5px;color:var(--ink-soft);margin-top:22px}
+
+  /* ─── Controles (pausar / voltar) dentro do menu ─── */
+  .menu-actions{display:flex;flex-direction:column;gap:8px}
+  .menu-action-btn{
+    display:flex;align-items:center;gap:10px;
+    background:#fff;border:1px solid #f0e6da;border-radius:12px;
+    padding:11px 14px;box-shadow:var(--shadow);
+    font-family:inherit;font-size:13.5px;font-weight:700;color:var(--ink);
+    cursor:pointer;text-decoration:none;width:100%;text-align:left;
+  }
+  .menu-action-btn:active{background:var(--cream)}
+  .menu-action-icon{font-size:16px;line-height:1;flex-shrink:0}
+
+  /* ─── Overlay de pausa ─── */
+  .pause-overlay{
+    position:absolute;inset:0;z-index:40;
+    background:rgba(20,16,12,.6);backdrop-filter:blur(2px);
+    display:flex;align-items:center;justify-content:center;padding:20px;
+  }
+  .pause-overlay.hidden{display:none}
+  .pause-card{
+    background:var(--cream-3);border-radius:18px;box-shadow:0 14px 32px rgba(0,0,0,.32);
+    padding:26px 22px;width:100%;max-width:320px;text-align:center;
+  }
+  .pause-icon{font-size:28px;margin-bottom:6px}
+  .pause-title{font-family:"Poppins",sans-serif;font-weight:900;font-size:18px;color:var(--orange-dark);margin:0 0 6px}
+  .pause-sub{font-size:12.5px;color:var(--ink-soft);margin:0 0 20px;line-height:1.45}
+  .pause-actions{display:flex;flex-direction:column;gap:10px}
+  .pause-btn-primary{
+    border:none;border-radius:14px;padding:13px;font-family:"Poppins",sans-serif;font-weight:800;font-size:14px;color:#fff;
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));box-shadow:var(--shadow);cursor:pointer;
+  }
+  .pause-btn-outline{
+    border:1.5px solid var(--border);border-radius:14px;padding:12px;font-family:"Poppins",sans-serif;font-weight:700;font-size:13.5px;
+    color:var(--ink-soft);background:#fff;text-decoration:none;display:block;
+  }
 
   /* ─── Tela de criação de personagem ─── */
   .char-screen{
@@ -527,7 +553,6 @@
 
   <!-- HUD superior -->
   <div class="hud-top">
-    <a class="hud-back" href="index.html" aria-label="Voltar para o app">←</a>
     <div class="hud-badge">
       <div class="tag">Ato 1 · protótipo</div>
       <h1>Bobcat Ville</h1>
@@ -544,6 +569,18 @@
       <button class="menu-close" id="menuClose" aria-label="Fechar menu">✕</button>
       <div class="menu-title">Bobcat Ville</div>
       <div class="menu-theme">"Inglês é liberdade."</div>
+
+      <div class="section-title">Controles</div>
+      <div class="menu-actions">
+        <button type="button" class="menu-action-btn" id="menuPauseBtn">
+          <span class="menu-action-icon">⏸️</span>
+          <span>Pausar o jogo</span>
+        </button>
+        <a class="menu-action-btn" href="index.html">
+          <span class="menu-action-icon">🏠</span>
+          <span>Voltar para o app</span>
+        </a>
+      </div>
 
       <div class="section-title">Linha do tempo — Ato 1</div>
       <div id="checkpoints"></div>
@@ -566,6 +603,19 @@
       <div class="proto-note">
         🧪 Esta página é um protótipo isolado. Ela só lê <code>story.js</code> —
         não salva progresso, não afeta notas e não altera nenhuma lição existente.
+      </div>
+    </div>
+  </div>
+
+  <!-- Pausa -->
+  <div class="pause-overlay hidden" id="pauseOverlay">
+    <div class="pause-card">
+      <div class="pause-icon">⏸️</div>
+      <p class="pause-title">Jogo pausado</p>
+      <p class="pause-sub">Seu personagem fica salvo neste dispositivo. Pode continuar de onde parou quando quiser.</p>
+      <div class="pause-actions">
+        <button type="button" class="pause-btn-primary" id="pauseResumeBtn">▶ Continuar</button>
+        <a class="pause-btn-outline" href="index.html">🏠 Voltar para o app</a>
       </div>
     </div>
   </div>
@@ -895,6 +945,36 @@
     menuClose.addEventListener('click', closeMenu);
     menuOverlay.addEventListener('click', function (e) {
       if (e.target === menuOverlay) closeMenu();
+    });
+
+    // ─── Pausar (acionado a partir do menu) ───
+    var pauseOverlay = document.getElementById('pauseOverlay');
+    var pauseResumeBtn = document.getElementById('pauseResumeBtn');
+    var menuPauseBtn = document.getElementById('menuPauseBtn');
+
+    function openPause() {
+      closeDialogue();
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      closeMenu();
+      pauseOverlay.classList.remove('hidden');
+    }
+
+    function closePause() {
+      pauseOverlay.classList.add('hidden');
+    }
+
+    menuPauseBtn.addEventListener('click', openPause);
+    pauseResumeBtn.addEventListener('click', closePause);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      if (!pauseOverlay.classList.contains('hidden')) {
+        closePause();
+      } else if (menuOverlay.classList.contains('open')) {
+        closeMenu();
+      } else {
+        openPause();
+      }
     });
 
     function onLayout() {
