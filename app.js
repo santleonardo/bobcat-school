@@ -1788,6 +1788,7 @@ function handleDeepLinkScreen() {
 let aiChatHistory = []; // [{role:'user'|'model', text}] — da personalidade aberta no momento
 let aiChatBusy = false;
 let aiChatCurrentPersonaId = null; // id da personalidade aberta na tela de conversa
+let aiChatCurrentPersona = null; // objeto da personalidade aberta (cache — evita reconsultar a cada render/envio)
 let aiChatSuggestions = []; // sugestões de próxima fala (ramificação de conversa), vindas da última resposta da IA
 
 // Áudio: gravação (aluno fala) e leitura em voz (TTS do navegador, sem custo de IA)
@@ -1802,27 +1803,10 @@ const PERSONA_EMOJIS = ['🤖', '🐱', '🧒', '🧑', '💼', '👴', '🦸', 
 let personaEmojiSelected = PERSONA_EMOJIS[0];
 let personaGenderSelected = 'female'; // 'female' | 'male' — obrigatório escolher um dos dois
 
-// ---------- Armazenamento das personalidades (localStorage, por aluno/aparelho) ----------
-
-function getAiChatPersonas() {
-  try { return JSON.parse(localStorage.getItem('aiChatPersonas') || '[]') || []; }
-  catch (e) { return []; }
-}
-
-function saveAiChatPersonas(list) {
-  localStorage.setItem('aiChatPersonas', JSON.stringify(list));
-}
-
-function aiChatHistoryKey(id) { return 'aiChatHistory_' + id; }
-
-function getAiChatHistoryFor(id) {
-  try { return JSON.parse(localStorage.getItem(aiChatHistoryKey(id)) || '[]') || []; }
-  catch (e) { return []; }
-}
-
-function saveAiChatHistoryFor(id, hist) {
-  localStorage.setItem(aiChatHistoryKey(id), JSON.stringify(hist));
-}
+// ---------- Armazenamento das personalidades ----------
+// getAiChatPersonas / addAiChatPersona / deleteAiChatPersona / getAiChatHistoryFor /
+// saveAiChatHistoryFor vêm do db-client.js: sincronizam pela nuvem (Supabase) quando
+// configurado, ou caem para localStorage (só neste aparelho) caso contrário.
 
 function aiChatEscapeHtml(s) {
   const div = document.createElement('div');
@@ -1952,7 +1936,7 @@ async function aiChatToggleRecording() {
 function aiChatRenderThread() {
   const thread = document.getElementById('ai-chat-thread');
   if (!thread) return;
-  const persona = getAiChatPersonas().find(p => p.id === aiChatCurrentPersonaId);
+  const persona = aiChatCurrentPersona;
   const aiName = (persona && persona.name) || 'IA';
   const aiEmoji = (persona && persona.emoji) || '🤖';
   thread.innerHTML = aiChatHistory.map(m => {
@@ -2231,12 +2215,13 @@ const AI_PROACTIVE_AFTER_HOURS = 4;
 
 // ---------- Navegação entre as 3 sub-telas de "Praticar com a IA" ----------
 
-function aiChatShowListView() {
+async function aiChatShowListView() {
   document.getElementById('ai-chat-conversation-view').classList.add('hidden');
   document.getElementById('ai-chat-create-view').classList.add('hidden');
   document.getElementById('ai-chat-list-view').classList.remove('hidden');
   aiChatCurrentPersonaId = null;
-  renderAiChatPersonaList();
+  aiChatCurrentPersona = null;
+  await renderAiChatPersonaList();
 }
 
 function aiChatShowCreateView() {
@@ -2264,9 +2249,11 @@ function aiChatUpdatePersonaPreview() {
 }
 
 async function aiChatOpenPersona(id) {
-  const persona = getAiChatPersonas().find(p => p.id === id);
+  const personas = await getAiChatPersonas();
+  const persona = personas.find(p => p.id === id);
   if (!persona) return;
   aiChatCurrentPersonaId = id;
+  aiChatCurrentPersona = persona;
 
   document.getElementById('ai-chat-list-view').classList.add('hidden');
   document.getElementById('ai-chat-create-view').classList.add('hidden');
@@ -2279,13 +2266,13 @@ async function aiChatOpenPersona(id) {
     </span>
   `;
 
-  aiChatHistory = getAiChatHistoryFor(id);
+  aiChatHistory = await getAiChatHistoryFor(id);
   aiChatSuggestions = [];
   if (aiChatHistory.length === 0) {
     let profile = {};
     try { profile = (await getProfile()) || {}; } catch (e) { /* sem perfil ainda */ }
     aiChatHistory = [{ role: 'model', text: aiChatGreetingFor(persona, profile.name || ''), ts: Date.now() }];
-    saveAiChatHistoryFor(id, aiChatHistory);
+    await saveAiChatHistoryFor(id, aiChatHistory);
     aiChatRenderThread();
     aiChatRenderSuggestions();
   } else {
@@ -2301,10 +2288,11 @@ async function aiChatOpenPersona(id) {
     }
   }
 }
-function renderAiChatPersonaList() {
+async function renderAiChatPersonaList() {
   const list = document.getElementById('ai-chat-persona-list');
   if (!list) return;
-  const personas = getAiChatPersonas();
+  list.innerHTML = '<div class="chat-empty" style="background:var(--cream-2); border-radius:12px; padding:18px 12px;">Carregando…</div>';
+  const personas = await getAiChatPersonas();
   if (personas.length === 0) {
     list.innerHTML = '<div class="chat-empty" style="background:var(--cream-2); border-radius:12px; padding:18px 12px;">Você ainda não criou nenhuma personalidade. Toque em "Criar nova personalidade" acima para começar sua primeira conversa! 🎉</div>';
     return;
@@ -2358,7 +2346,7 @@ function renderPersonaEmojiPicker() {
   });
 }
 
-function aiChatCreatePersonaFromForm() {
+async function aiChatCreatePersonaFromForm() {
   const name = document.getElementById('input-persona-name').value.trim().slice(0, 30);
   const personality = document.getElementById('input-persona-personality').value.trim().slice(0, 300);
   if (!name) { alert('Dê um nome para a personalidade.'); return; }
@@ -2372,26 +2360,22 @@ function aiChatCreatePersonaFromForm() {
     gender: personaGenderSelected,
     createdAt: new Date().toISOString()
   };
-  const list = getAiChatPersonas();
-  list.push(persona);
-  saveAiChatPersonas(list);
-  aiChatOpenPersona(persona.id);
+  await addAiChatPersona(persona);
+  await aiChatOpenPersona(persona.id);
 }
 
-function aiChatDeleteCurrentPersona() {
+async function aiChatDeleteCurrentPersona() {
   if (!aiChatCurrentPersonaId) return;
   if (!confirm('Excluir essa personalidade e toda a conversa com ela? Essa ação não pode ser desfeita.')) return;
-  const list = getAiChatPersonas().filter(p => p.id !== aiChatCurrentPersonaId);
-  saveAiChatPersonas(list);
-  localStorage.removeItem(aiChatHistoryKey(aiChatCurrentPersonaId));
-  aiChatShowListView();
+  await deleteAiChatPersona(aiChatCurrentPersonaId);
+  await aiChatShowListView();
 }
 
-function aiChatResetConversation() {
+async function aiChatResetConversation() {
   if (!aiChatCurrentPersonaId) return;
-  localStorage.removeItem(aiChatHistoryKey(aiChatCurrentPersonaId));
+  await saveAiChatHistoryFor(aiChatCurrentPersonaId, []);
   aiChatHistory = [];
-  aiChatOpenPersona(aiChatCurrentPersonaId);
+  await aiChatOpenPersona(aiChatCurrentPersonaId);
 }
 
 async function aiChatSend(audioPayload) {
@@ -2402,7 +2386,7 @@ async function aiChatSend(audioPayload) {
   const text = input.value.trim();
   if (!text && !audioPayload) return;
 
-  const persona = getAiChatPersonas().find(p => p.id === aiChatCurrentPersonaId);
+  const persona = aiChatCurrentPersona;
   if (!persona) return;
 
   let profile = {};
@@ -2416,7 +2400,7 @@ async function aiChatSend(audioPayload) {
   aiChatSuggestions = [];
   aiChatRenderSuggestions();
   aiChatRenderThread();
-  saveAiChatHistoryFor(persona.id, aiChatHistory);
+  saveAiChatHistoryFor(persona.id, aiChatHistory).catch(() => {});
 
   aiChatBusy = true;
   if (typing) {
@@ -2458,7 +2442,7 @@ async function aiChatSend(audioPayload) {
     if (typing) typing.classList.add('hidden');
     aiChatRenderThread();
     aiChatRenderSuggestions();
-    if (aiChatCurrentPersonaId) saveAiChatHistoryFor(aiChatCurrentPersonaId, aiChatHistory);
+    if (aiChatCurrentPersonaId) saveAiChatHistoryFor(aiChatCurrentPersonaId, aiChatHistory).catch(() => {});
     // "Fire and forget" — atualiza o resumo da conversa no Supabase (se configurado)
     // pra permitir lembretes personalizados. Nunca bloqueia nem quebra o chat.
     if (typeof syncAiChatLastConversation === 'function') {
@@ -2473,7 +2457,7 @@ async function aiChatSend(audioPayload) {
  */
 async function aiChatSendProactive() {
   if (aiChatBusy || !aiChatCurrentPersonaId) return;
-  const persona = getAiChatPersonas().find(p => p.id === aiChatCurrentPersonaId);
+  const persona = aiChatCurrentPersona;
   if (!persona) return;
 
   const typing = document.getElementById('ai-chat-typing');
@@ -2518,7 +2502,7 @@ async function aiChatSendProactive() {
     if (typing) typing.classList.add('hidden');
     aiChatRenderThread();
     aiChatRenderSuggestions();
-    if (aiChatCurrentPersonaId) saveAiChatHistoryFor(aiChatCurrentPersonaId, aiChatHistory);
+    if (aiChatCurrentPersonaId) saveAiChatHistoryFor(aiChatCurrentPersonaId, aiChatHistory).catch(() => {});
     if (typeof syncAiChatLastConversation === 'function') {
       syncAiChatLastConversation(persona, aiChatHistory).catch(() => {});
     }

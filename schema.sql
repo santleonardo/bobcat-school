@@ -262,11 +262,57 @@ create policy "Authenticated can view all push subscriptions"
   using (auth.role() = 'authenticated');
 
 -- ============================================================
+-- Personalidades de IA criadas pelo aluno e histórico completo das
+-- conversas. Antes ficavam só no localStorage (por aparelho); agora, com
+-- Supabase configurado, sincronizam entre qualquer dispositivo logado com
+-- a mesma conta.
+-- ============================================================
+create table if not exists ai_chat_personas (
+  id text primary key,
+  user_id uuid not null references auth.users(id) on delete cascade,
+  name text not null,
+  personality text not null default '',
+  emoji text not null default '🤖',
+  gender text not null default 'female' check (gender in ('male', 'female')),
+  created_at timestamptz not null default now()
+);
+
+create index if not exists ai_chat_personas_user_id_idx on ai_chat_personas (user_id);
+
+alter table ai_chat_personas enable row level security;
+
+drop policy if exists "Students manage own ai chat personas" on ai_chat_personas;
+create policy "Students manage own ai chat personas"
+  on ai_chat_personas for all
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+-- Histórico completo de cada conversa (1 linha por personalidade). Guarda
+-- todas as mensagens trocadas, diferente de ai_chat_last_conversation
+-- (mais abaixo), que guarda só as últimas ~8 mensagens só para o lembrete
+-- de push.
+create table if not exists ai_chat_history (
+  user_id uuid not null references auth.users(id) on delete cascade,
+  persona_id text not null references ai_chat_personas(id) on delete cascade,
+  messages jsonb not null default '[]'::jsonb,
+  updated_at timestamptz not null default now(),
+  primary key (user_id, persona_id)
+);
+
+alter table ai_chat_history enable row level security;
+
+drop policy if exists "Students manage own ai chat history" on ai_chat_history;
+create policy "Students manage own ai chat history"
+  on ai_chat_history for all
+  using (auth.uid() = user_id)
+  with check (auth.uid() = user_id);
+
+-- ============================================================
 -- Resumo da última conversa com a IA — usado só para personalizar o
 -- texto do lembrete (push). Guarda as últimas mensagens da conversa mais
 -- recente do aluno (com qualquer personalidade), sobrescritas a cada
--- turno novo. Não é o histórico completo (esse continua só no aparelho,
--- em localStorage) — é só o suficiente para o servidor (api/push-send.js)
+-- turno novo. Não é o histórico completo (esse fica em ai_chat_history,
+-- acima) — é só o suficiente para o servidor (api/push-send.js)
 -- montar um lembrete com o Gemini que "lembra" do assunto.
 -- Uma linha por aluno (a conversa mais recente substitui a anterior).
 -- ============================================================

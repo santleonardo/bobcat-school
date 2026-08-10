@@ -429,6 +429,83 @@ async function uploadMessageFile(file) {
   return { ok: true, url: data.publicUrl, name: file.name, type: file.type || getFileExtension(file.name), size: file.size };
 }
 
+// ---------- Personalidades e histórico do chat com IA ----------
+// Mesmo padrão do perfil/progresso: com Supabase configurado, sincroniza
+// entre dispositivos; sem Supabase, cai para localStorage (só naquele
+// aparelho). Antes disso, ambos viviam só no localStorage — por isso um
+// personagem/conversa criado no celular não aparecia no desktop e vice-versa.
+
+function aiChatHistoryLocalKey(personaId) { return 'aiChatHistory_' + personaId; }
+
+async function getAiChatPersonas() {
+  if (useSupabase) {
+    if (!currentUserId) return [];
+    const { data, error } = await supabaseClient
+      .from('ai_chat_personas').select('*').eq('user_id', currentUserId).order('created_at');
+    if (error) { console.error(error); return []; }
+    return (data || []).map(r => ({
+      id: r.id, name: r.name, personality: r.personality,
+      emoji: r.emoji, gender: r.gender, createdAt: r.created_at
+    }));
+  }
+  try { return JSON.parse(localStorage.getItem('aiChatPersonas') || '[]') || []; }
+  catch (e) { return []; }
+}
+
+async function addAiChatPersona(persona) {
+  if (useSupabase) {
+    if (!currentUserId) return;
+    const row = {
+      id: persona.id, user_id: currentUserId, name: persona.name,
+      personality: persona.personality, emoji: persona.emoji,
+      gender: persona.gender === 'male' ? 'male' : 'female',
+      created_at: persona.createdAt || new Date().toISOString()
+    };
+    const { error } = await supabaseClient.from('ai_chat_personas').insert(row);
+    if (error) console.error(error);
+    return;
+  }
+  const list = await getAiChatPersonas();
+  list.push(persona);
+  localStorage.setItem('aiChatPersonas', JSON.stringify(list));
+}
+
+async function deleteAiChatPersona(id) {
+  if (useSupabase) {
+    if (!currentUserId) return;
+    // O histórico (ai_chat_history) é apagado junto via "on delete cascade".
+    const { error } = await supabaseClient.from('ai_chat_personas').delete().eq('id', id).eq('user_id', currentUserId);
+    if (error) console.error(error);
+    return;
+  }
+  const list = (await getAiChatPersonas()).filter(p => p.id !== id);
+  localStorage.setItem('aiChatPersonas', JSON.stringify(list));
+  localStorage.removeItem(aiChatHistoryLocalKey(id));
+}
+
+async function getAiChatHistoryFor(personaId) {
+  if (useSupabase) {
+    if (!currentUserId) return [];
+    const { data, error } = await supabaseClient
+      .from('ai_chat_history').select('messages').eq('user_id', currentUserId).eq('persona_id', personaId).maybeSingle();
+    if (error) { console.error(error); return []; }
+    return (data && data.messages) || [];
+  }
+  try { return JSON.parse(localStorage.getItem(aiChatHistoryLocalKey(personaId)) || '[]') || []; }
+  catch (e) { return []; }
+}
+
+async function saveAiChatHistoryFor(personaId, hist) {
+  if (useSupabase) {
+    if (!currentUserId) return;
+    const row = { user_id: currentUserId, persona_id: personaId, messages: hist, updated_at: new Date().toISOString() };
+    const { error } = await supabaseClient.from('ai_chat_history').upsert(row, { onConflict: 'user_id,persona_id' });
+    if (error) console.error(error);
+    return;
+  }
+  localStorage.setItem(aiChatHistoryLocalKey(personaId), JSON.stringify(hist));
+}
+
 // Retorna a conversa do aluno logado, mais antiga primeiro.
 async function getMyMessages() {
   if (!messagingAvailable()) return [];
