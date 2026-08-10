@@ -110,6 +110,24 @@
     border-radius:20px; padding:4px 10px; white-space:nowrap;
   }
 
+  /* ── CURRÍCULO COMPLETO ───────────────────── */
+  .cur-summary { width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden; border:1px solid #eee; margin-bottom:18px; font-size:13px; }
+  .cur-summary th { background:var(--orange); color:#fff; text-align:left; padding:10px 12px; }
+  .cur-summary td { padding:10px 12px; border-bottom:1px solid #eee; }
+  .cur-summary tr:nth-child(even) td { background:var(--cream-2); }
+  .cur-section { background:#fff; border:1px solid #eee; border-radius:12px; padding:16px 18px; margin-bottom:16px; }
+  .cur-section h3 { margin:0 0 6px; font-size:15px; color:var(--orange-dark); }
+  .cur-section .sub { margin:0 0 12px; font-size:12.5px; color:#888; }
+  .cur-table { width:100%; border-collapse:collapse; font-size:12.5px; }
+  .cur-table th { background:#f3efe8; color:#5b4a3f; text-align:left; padding:8px 10px; font-size:12px; }
+  .cur-table td { padding:8px 10px; border-bottom:1px solid #f0ebe3; vertical-align:top; }
+  .cur-table td.num { font-weight:800; color:var(--orange-dark); width:36px; }
+  .cur-table code { font-size:11px; background:#f0ebe3; padding:1px 5px; border-radius:4px; word-break:break-all; }
+  .cur-ok { color:#1e6b40; font-weight:700; }
+  .cur-pend { color:#9c7a12; font-weight:700; }
+  .cur-goal { margin:0 0 16px; padding:12px 14px; background:var(--cream); border-left:4px solid var(--orange); border-radius:0 10px 10px 0; font-size:13px; }
+  .online-banner { background:#EAF7EF; border:1px solid #b8e0c8; color:#1e6b40; border-radius:8px; padding:10px 14px; font-size:13px; margin-bottom:16px; }
+
   /* ── PRÓXIMOS SEMESTRES (planejamento) ──────── */
   .roadmap-semester { background:#fff; border:1px solid #eee; border-radius:12px; padding:18px 20px; margin-bottom:22px; }
   .roadmap-semester-header { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:2px; }
@@ -264,9 +282,16 @@
     </div>
   </div>
 
+  <div class="online-banner">
+    🌐 <strong>Painel online</strong> — acesse de qualquer dispositivo pelo mesmo link do site
+    (<code>…/teacher.html</code>). Aba <strong>Currículo</strong> e <strong>Próximos Semestres</strong> funcionam sem login.
+    Progresso, mensagens e senhas precisam do Supabase configurado.
+  </div>
+
   <div class="tabs">
     <button class="tab-btn active" id="tab-btn-progress" onclick="switchTab('progress')">📊 Progresso da turma</button>
     <button class="tab-btn" id="tab-btn-lessons" onclick="switchTab('lessons')">📚 Todas as lições</button>
+    <button class="tab-btn" id="tab-btn-curriculo" onclick="switchTab('curriculo')">📋 Currículo completo</button>
     <button class="tab-btn" id="tab-btn-roadmap" onclick="switchTab('roadmap')">🗺️ Próximos Semestres</button>
     <button class="tab-btn" id="tab-btn-addlesson" onclick="switchTab('addlesson')">➕ Adicionar Lição</button>
     <button class="tab-btn" id="tab-btn-messages" onclick="switchTab('messages')">💬 Mensagens<span id="unread-dot" class="unread-dot hidden"></span></button>
@@ -296,6 +321,14 @@
     </div>
     <div class="lesson-list-meta" id="lessons-meta"></div>
     <div id="lessons-slot"></div>
+  </div>
+
+  <div id="panel-curriculo" class="tab-panel">
+    <div class="cur-goal">
+      <strong>Meta do Semestre 1 (A1):</strong> se apresentar, perguntar sobre pessoas e fazer perguntas básicas no
+      <strong>presente, passado e futuro</strong>. Esquema de 5 semestres · C1 e C2 unidos no Semestre 5 · sem overlap A1–B1 no roadmap.
+    </div>
+    <div id="curriculo-slot"></div>
   </div>
 
   <div id="panel-roadmap" class="tab-panel">
@@ -970,17 +1003,20 @@ const ROADMAP_CATALOG = [
 function switchTab(tab) {
   document.getElementById('panel-progress').classList.toggle('active', tab === 'progress');
   document.getElementById('panel-lessons').classList.toggle('active', tab === 'lessons');
+  document.getElementById('panel-curriculo').classList.toggle('active', tab === 'curriculo');
   document.getElementById('panel-roadmap').classList.toggle('active', tab === 'roadmap');
   document.getElementById('panel-addlesson').classList.toggle('active', tab === 'addlesson');
   document.getElementById('panel-messages').classList.toggle('active', tab === 'messages');
   document.getElementById('panel-passwords').classList.toggle('active', tab === 'passwords');
   document.getElementById('tab-btn-progress').classList.toggle('active', tab === 'progress');
   document.getElementById('tab-btn-lessons').classList.toggle('active', tab === 'lessons');
+  document.getElementById('tab-btn-curriculo').classList.toggle('active', tab === 'curriculo');
   document.getElementById('tab-btn-roadmap').classList.toggle('active', tab === 'roadmap');
   document.getElementById('tab-btn-addlesson').classList.toggle('active', tab === 'addlesson');
   document.getElementById('tab-btn-messages').classList.toggle('active', tab === 'messages');
   document.getElementById('tab-btn-passwords').classList.toggle('active', tab === 'passwords');
   if (tab === 'lessons') renderLessonsTab();
+  if (tab === 'curriculo') renderCurriculoTab();
   if (tab === 'roadmap') renderRoadmapTab();
   if (tab === 'addlesson') loadAddLessonTab();
   if (tab === 'messages') loadMessages();
@@ -1060,6 +1096,103 @@ async function renderLessonsTab() {
 
   document.getElementById('lessons-slot').innerHTML = html;
 }
+
+
+function renderCurriculoTab() {
+  const a1 = LESSONS_CATALOG.filter(l => l.level === 'Introdutório' || l.level === 'A1');
+  const a2 = LESSONS_CATALOG.filter(l => l.level === 'A2');
+  const b1 = LESSONS_CATALOG.filter(l => l.level === 'B1');
+
+  function rowsExisting(list, startNum) {
+    let n = startNum;
+    return list.map(l => {
+      const num = l.level === 'Introdutório' ? '0' : String(n++);
+      return `<tr>
+        <td class="num">${num}</td>
+        <td><code>${escapeHtml(l.id)}</code></td>
+        <td>${escapeHtml(l.name)}</td>
+        <td>${l.totalQuestions != null ? l.totalQuestions : '—'}</td>
+        <td>${escapeHtml(l.description || '')}</td>
+        <td class="cur-ok">✅</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function rowsPlanned(lessons) {
+    return lessons.map(l => {
+      const phase = l.phase ? ` <small>(${escapeHtml(String(l.phase).toUpperCase())})</small>` : '';
+      return `<tr>
+        <td class="num">${l.num}</td>
+        <td>—</td>
+        <td>${escapeHtml(l.title)}${phase}</td>
+        <td>—</td>
+        <td>${escapeHtml((l.topics || []).slice(0, 6).join(' · '))}</td>
+        <td class="cur-pend">📝</td>
+      </tr>`;
+    }).join('');
+  }
+
+  const head = `<thead><tr><th>#</th><th>ID</th><th>Nome / Título</th><th>Q</th><th>Descrição / Tópicos</th><th></th></tr></thead>`;
+
+  let html = `
+    <table class="cur-summary">
+      <thead><tr><th>Semestre</th><th>Nível</th><th>Faixa</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1</strong></td><td>A1 (+ Intro)</td><td>Pronúncia + Lições 1–18</td><td class="cur-ok">✅ Existente</td></tr>
+        <tr><td><strong>2</strong></td><td>A2</td><td>Lições 19–29</td><td class="cur-ok">✅ Existente</td></tr>
+        <tr><td><strong>3</strong></td><td>B1</td><td>Lições 30–40</td><td class="cur-ok">✅ Existente</td></tr>
+        <tr><td><strong>4</strong></td><td>B2</td><td>Lições 41–50</td><td class="cur-pend">📝 Planejado</td></tr>
+        <tr><td><strong>5</strong></td><td>C1 → C2</td><td>Lições 51–70 (fases C1 e C2)</td><td class="cur-pend">📝 Planejado</td></tr>
+      </tbody>
+    </table>
+
+    <div class="cur-section">
+      <h3>Semestre 1 — A1 Conversacional</h3>
+      <p class="sub">Meta: apresentação, perguntas sobre pessoas, rotina, ontem e planos.</p>
+      <table class="cur-table">${head}<tbody>${rowsExisting(a1, 1)}</tbody></table>
+    </div>
+
+    <div class="cur-section">
+      <h3>Semestre 2 — A2</h3>
+      <p class="sub">Expansão do dia a dia.</p>
+      <table class="cur-table">${head}<tbody>${rowsExisting(a2, 19)}</tbody></table>
+    </div>
+
+    <div class="cur-section">
+      <h3>Semestre 3 — B1</h3>
+      <p class="sub">Narrativa e experiência (inclui First Conditional e Present Perfect).</p>
+      <table class="cur-table">${head}<tbody>${rowsExisting(b1, 30)}</tbody></table>
+    </div>
+  `;
+
+  const sem4 = ROADMAP_CATALOG[0];
+  const sem5 = ROADMAP_CATALOG[1];
+
+  html += `
+    <div class="cur-section">
+      <h3>Semestre 4 — B2 <span class="cur-pend">(planejado)</span></h3>
+      <p class="sub"><strong>Projeto:</strong> ${escapeHtml(sem4.finalProjectTitle)} · Sem reensino do que já está em A1–B1.</p>
+      <table class="cur-table">${head}<tbody>${rowsPlanned(sem4.lessons)}</tbody></table>
+    </div>
+
+    <div class="cur-section">
+      <h3>Semestre 5 — C1 → C2 <span class="cur-pend">(planejado)</span></h3>
+      <p class="sub">
+        <strong>Fase C1 (51–60):</strong> An Issue Worth Discussing ·
+        <strong>Fase C2 (61–70):</strong> The Big Argument
+      </p>
+      <table class="cur-table">${head}<tbody>${rowsPlanned(sem5.lessons)}</tbody></table>
+    </div>
+
+    <p class="lesson-list-meta">
+      ✅ = página em <code>lessons/</code> · 📝 = roadmap (ainda não criada) ·
+      IDs estáveis (progresso antigo válido) · Detalhes de planejamento também na aba <strong>Próximos Semestres</strong>.
+    </p>
+  `;
+
+  document.getElementById('curriculo-slot').innerHTML = html;
+}
+
 
 // ---------- Próximos Semestres (planejamento — Lições 41–70, ainda não criadas) ----------
 
