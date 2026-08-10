@@ -6,166 +6,62 @@
   <title>Bobcat School — Currículo completo (5 semestres)</title>
   <style>
     :root {
-      --orange: #e85d04;
-      --orange-dark: #9c2f00;
-      --bg: #faf7f2;
-      --card: #fff;
-      --border: #eee;
-      --text: #2b2b2b;
-      --muted: #666;
-      --ok: #2e7d32;
-      --pend: #b26a00;
+      --orange: #e85d04; --orange-dark: #9c2f00; --bg: #faf7f2; --card: #fff;
+      --border: #eee; --text: #2b2b2b; --muted: #666; --ok: #2e7d32; --pend: #b26a00;
     }
     * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.45;
-      padding: 24px 16px 48px;
-    }
-    .wrap { max-width: 1100px; margin: 0 auto; }
-    header {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 22px 24px;
-      margin-bottom: 22px;
-    }
-    header h1 { margin: 0 0 8px; font-size: 1.45rem; color: var(--orange-dark); }
-    header p { margin: 0; color: var(--muted); font-size: 0.95rem; }
-    .goal {
-      margin-top: 14px;
-      padding: 12px 14px;
-      background: #fff6ee;
-      border-left: 4px solid var(--orange);
-      border-radius: 0 10px 10px 0;
-      font-size: 0.92rem;
-    }
-    .summary {
-      width: 100%;
-      border-collapse: collapse;
-      background: var(--card);
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      margin-bottom: 28px;
-    }
-    .summary th, .summary td {
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--border);
-      text-align: left;
-      font-size: 0.9rem;
-    }
-    .summary th { background: #f3efe8; font-weight: 700; }
-    .summary tr:last-child td { border-bottom: none; }
-    section {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 18px 18px 8px;
-      margin-bottom: 22px;
-    }
-    section h2 {
-      margin: 0 0 6px;
-      font-size: 1.15rem;
-      color: var(--orange-dark);
-    }
-    section .sub {
-      margin: 0 0 14px;
-      color: var(--muted);
-      font-size: 0.88rem;
-    }
-    .project {
-      margin: 0 0 14px;
-      padding: 10px 12px;
-      background: #f7faf7;
-      border-radius: 10px;
-      font-size: 0.88rem;
-    }
-    table.lessons {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.86rem;
-      margin-bottom: 10px;
-    }
-    table.lessons th, table.lessons td {
-      padding: 8px 10px;
-      border-bottom: 1px solid var(--border);
-      vertical-align: top;
-      text-align: left;
-    }
-    table.lessons th {
-      background: #f3efe8;
-      font-weight: 700;
-      position: sticky;
-      top: 0;
-    }
-    table.lessons td.num { width: 42px; font-weight: 700; color: var(--orange-dark); }
-    table.lessons td.id { width: 200px; }
-    table.lessons td.q { width: 48px; text-align: center; }
-    table.lessons td.status { width: 40px; text-align: center; }
-    code {
-      font-size: 0.8rem;
-      background: #f0ebe3;
-      padding: 1px 5px;
-      border-radius: 4px;
-      word-break: break-all;
-    }
-    .ok { color: var(--ok); }
-    .pend { color: var(--pend); }
-    footer {
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 0.82rem;
-    }
-    @media print {
-      body { background: #fff; padding: 0; }
-      header, section { break-inside: avoid; border: 1px solid #ddd; }
-      table.lessons th { position: static; }
-    }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:var(--bg); color:var(--text); line-height:1.45; padding:24px 16px 48px; }
+    .wrap { max-width:1100px; margin:0 auto; }
+    header { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:22px 24px; margin-bottom:22px; }
+    header h1 { margin:0 0 8px; font-size:1.45rem; color:var(--orange-dark); }
+    header p { margin:0; color:var(--muted); font-size:0.95rem; }
+    .goal { margin-top:14px; padding:12px 14px; background:#fff6ee; border-left:4px solid var(--orange); border-radius:0 10px 10px 0; font-size:0.92rem; }
+    .summary { width:100%; border-collapse:collapse; background:var(--card); border-radius:12px; overflow:hidden; border:1px solid var(--border); margin-bottom:28px; }
+    .summary th, .summary td { padding:10px 12px; border-bottom:1px solid var(--border); text-align:left; font-size:0.9rem; }
+    .summary th { background:#f3efe8; font-weight:700; }
+    .summary tr:last-child td { border-bottom:none; }
+    section { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:18px 18px 8px; margin-bottom:22px; }
+    section h2 { margin:0 0 6px; font-size:1.15rem; color:var(--orange-dark); }
+    section .sub { margin:0 0 14px; color:var(--muted); font-size:0.88rem; }
+    .project { margin:0 0 14px; padding:10px 12px; background:#f7faf7; border-radius:10px; font-size:0.88rem; }
+    table.lessons { width:100%; border-collapse:collapse; font-size:0.86rem; margin-bottom:10px; }
+    table.lessons th, table.lessons td { padding:8px 10px; border-bottom:1px solid var(--border); vertical-align:top; text-align:left; }
+    table.lessons th { background:#f3efe8; font-weight:700; }
+    table.lessons td.num { width:42px; font-weight:700; color:var(--orange-dark); }
+    table.lessons td.id { width:200px; }
+    table.lessons td.q { width:48px; text-align:center; }
+    table.lessons td.status { width:40px; text-align:center; }
+    code { font-size:0.8rem; background:#f0ebe3; padding:1px 5px; border-radius:4px; word-break:break-all; }
+    .ok { color:var(--ok); } .pend { color:var(--pend); }
+    footer { margin-top:8px; color:var(--muted); font-size:0.82rem; }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
       <h1>Bobcat Language School — Currículo completo</h1>
-      <p>Esquema oficial de <strong>5 semestres</strong>, com C1 e C2 unidos no Semestre 5.</p>
+      <p>Esquema de <strong>5 semestres</strong>. Roadmap 41–70 limpo de overlap com A1–B1. C1 e C2 unidos no Semestre 5 em duas fases.</p>
       <div class="goal">
-        <strong>Meta do Semestre 1 (A1):</strong> o aluno sai capaz de se apresentar, perguntar sobre pessoas
-        e fazer perguntas básicas no <strong>presente, passado e futuro</strong>
-        (ex.: <em>Where do you live? What did you do yesterday? What are you going to do tomorrow?</em>).
+        <strong>Meta do Semestre 1 (A1):</strong> se apresentar, perguntar sobre pessoas, presente, passado e futuro básicos.
       </div>
     </header>
 
     <table class="summary">
-      <thead>
-        <tr>
-          <th>Semestre</th>
-          <th>Nível CEFR</th>
-          <th>Faixa</th>
-          <th>Status</th>
-        </tr>
-      </thead>
+      <thead><tr><th>Semestre</th><th>Nível</th><th>Faixa</th><th>Status</th></tr></thead>
       <tbody>
-        <tr><td><strong>1</strong></td><td>A1 (+ Introdutório)</td><td>Pronúncia + Lições 1–18</td><td><span class="ok">✅ Existente</span></td></tr>
-        <tr><td><strong>2</strong></td><td>A2</td><td>Lições 19–29</td><td><span class="ok">✅ Existente</span></td></tr>
-        <tr><td><strong>3</strong></td><td>B1</td><td>Lições 30–40</td><td><span class="ok">✅ Existente</span></td></tr>
-        <tr><td><strong>4</strong></td><td>B1 → B2</td><td>Lições 41–50</td><td><span class="pend">📝 Planejado</span></td></tr>
-        <tr><td><strong>5</strong></td><td>B2 → C2 (C1 + C2)</td><td>Lições 51–70</td><td><span class="pend">📝 Planejado</span></td></tr>
+        <tr><td><strong>1</strong></td><td>A1 (+ Intro)</td><td>Pronúncia + 1–18</td><td><span class="ok">✅</span></td></tr>
+        <tr><td><strong>2</strong></td><td>A2</td><td>19–29</td><td><span class="ok">✅</span></td></tr>
+        <tr><td><strong>3</strong></td><td>B1</td><td>30–40</td><td><span class="ok">✅</span></td></tr>
+        <tr><td><strong>4</strong></td><td>B2</td><td>41–50</td><td><span class="pend">📝</span></td></tr>
+        <tr><td><strong>5</strong></td><td>C1 → C2</td><td>51–70 (fases C1 e C2)</td><td><span class="pend">📝</span></td></tr>
       </tbody>
     </table>
 
     <section>
       <h2>Semestre 1 — A1 Conversacional</h2>
-      <p class="sub">Saída esperada: apresentação, perguntas sobre pessoas, rotina, ontem e planos próximos.</p>
-      <table class="lessons">
-        <thead>
-          <tr><th>#</th><th>ID</th><th>Nome</th><th>Q</th><th>Descrição</th><th></th></tr>
-        </thead>
-        <tbody>
-          <tr>
+      <p class="sub">Meta: apresentação, perguntas sobre pessoas, rotina, ontem e planos.</p>
+      <table class="lessons"><thead><tr><th>#</th><th>ID</th><th>Nome</th><th>Q</th><th>Descrição</th><th></th></tr></thead>
+      <tbody><tr>
       <td class="num">0</td>
       <td class="id"><code>pronuncia-essencial</code></td>
       <td class="name">Pronúncia Essencial do Inglês</td>
@@ -316,20 +212,14 @@
       <td class="q">16</td>
       <td class="desc">Projeto final do Semestre 1: se apresentar, perguntar sobre pessoas, rotina, ontem e planos</td>
       <td class="status"><span class="ok">✅</span></td>
-    </tr>
-        </tbody>
-      </table>
+    </tr></tbody></table>
     </section>
 
     <section>
-      <h2>Semestre 2 — A2 · Expansão do dia a dia</h2>
-      <p class="sub">Present Continuous, quantidades, survival English, consolidação do passado, comparativos, modais e phrasal verbs.</p>
-      <table class="lessons">
-        <thead>
-          <tr><th>#</th><th>ID</th><th>Nome</th><th>Q</th><th>Descrição</th><th></th></tr>
-        </thead>
-        <tbody>
-          <tr>
+      <h2>Semestre 2 — A2</h2>
+      <p class="sub">Expansão do dia a dia.</p>
+      <table class="lessons"><thead><tr><th>#</th><th>ID</th><th>Nome</th><th>Q</th><th>Descrição</th><th></th></tr></thead>
+      <tbody><tr>
       <td class="num">19</td>
       <td class="id"><code>licao-11-object-possessive-pronouns</code></td>
       <td class="name">Lição 19 — Pronomes Objeto e Possessivos</td>
@@ -416,20 +306,14 @@
       <td class="q">12</td>
       <td class="desc">Revisão completa do Semestre 2 (A2) e consolidação</td>
       <td class="status"><span class="ok">✅</span></td>
-    </tr>
-        </tbody>
-      </table>
+    </tr></tbody></table>
     </section>
 
     <section>
-      <h2>Semestre 3 — B1 · Narrativa e experiência</h2>
-      <p class="sub">Past Continuous, bloco de Present Perfect, futuro consolidado, modais B1, comparativos e conditionals.</p>
-      <table class="lessons">
-        <thead>
-          <tr><th>#</th><th>ID</th><th>Nome</th><th>Q</th><th>Descrição</th><th></th></tr>
-        </thead>
-        <tbody>
-          <tr>
+      <h2>Semestre 3 — B1</h2>
+      <p class="sub">Narrativa e experiência (inclui First Conditional e Present Perfect).</p>
+      <table class="lessons"><thead><tr><th>#</th><th>ID</th><th>Nome</th><th>Q</th><th>Descrição</th><th></th></tr></thead>
+      <tbody><tr>
       <td class="num">30</td>
       <td class="id"><code>licao-31-past-continuous</code></td>
       <td class="name">Lição 30 — Past Continuous</td>
@@ -516,33 +400,27 @@
       <td class="q">12</td>
       <td class="desc">Revisão completa do Semestre 3 e projeto final B1</td>
       <td class="status"><span class="ok">✅</span></td>
-    </tr>
-        </tbody>
-      </table>
+    </tr></tbody></table>
     </section>
 
     <section>
-      <h2>Semestre 4 — B1 → B2 <span class="pend">(planejado)</span></h2>
-      <div class="project"><strong>Projeto final:</strong> The Story of My Life — narrativa complexa utilizando acontecimentos passados, experiências, ações em progresso, ações anteriores a outras ações, hipóteses, planos, opiniões, explicações, voz passiva, discurso indireto e relative clauses.</div>
-      <table class="lessons">
-        <thead>
-          <tr><th>#</th><th>ID</th><th>Título</th><th>Q</th><th>Tópicos principais</th><th></th></tr>
-        </thead>
-        <tbody>
-          <tr>
+      <h2>Semestre 4 — B2 <span class="pend">(planejado)</span></h2>
+      <div class="project"><strong>Projeto:</strong> The Story of My Life — narrativa complexa com hipóteses, sequência temporal, voz passiva, discurso indireto, relative clauses e gerunds/infinitives.<br><small>Sem reensino de First Conditional, will/going to, Present Perfect simples ou modais básicos.</small></div>
+      <table class="lessons"><thead><tr><th>#</th><th>ID</th><th>Título</th><th>Q</th><th>Tópicos</th><th></th></tr></thead>
+      <tbody><tr>
     <td class="num">41</td>
     <td class="id">—</td>
     <td class="name">Second Conditional</td>
     <td class="q">—</td>
-    <td class="desc">Second Conditional · Situações hipotéticas e improváveis · Imaginação e conselhos hipotéticos · if + past, would + verb · What would you do if...? · If I were you...</td>
+    <td class="desc">Second Conditional (if + past, would + verb) · Situações hipotéticas e improváveis · Imaginação e conselhos hipotéticos · What would you do if...? · If I were you...</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">42</td>
     <td class="id">—</td>
-    <td class="name">First × Second Conditional</td>
+    <td class="name">Second Conditional em uso (contraste com First)</td>
     <td class="q">—</td>
-    <td class="desc">First Conditional × Second Conditional · Possibilidade real × situação hipotética · unless · as long as · provided that · in case</td>
+    <td class="desc">Contraste rápido: First (já visto no B1) × Second · Possibilidade real × situação hipotética · unless / as long as / provided that / in case · Escolher o conditional certo no contexto · Sem reensino do First Conditional</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
@@ -550,7 +428,7 @@
     <td class="id">—</td>
     <td class="name">Present Perfect Continuous</td>
     <td class="q">—</td>
-    <td class="desc">have/has been + verb-ing · Ações iniciadas no passado que continuam · Ações recentes com resultado presente · for / since · Present Perfect × Present Perfect Continuous</td>
+    <td class="desc">have/has been + verb-ing · Ações que começaram no passado e continuam · Resultado presente de ação recente · for / since · Present Perfect simples (B1) × Present Perfect Continuous</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
@@ -558,7 +436,7 @@
     <td class="id">—</td>
     <td class="name">Past Perfect</td>
     <td class="q">—</td>
-    <td class="desc">had + past participle · Uma ação anterior a outra no passado · already · before · after · by the time · when</td>
+    <td class="desc">had + past participle · Uma ação anterior a outra no passado · already / before / after / by the time / when · Narrativa com dois momentos no passado</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
@@ -566,229 +444,223 @@
     <td class="id">—</td>
     <td class="name">Past Perfect × Simple Past</td>
     <td class="q">—</td>
-    <td class="desc">Sequência temporal no passado · Narrativas mais complexas · Storytelling · Causa e consequência · before / after / by the time</td>
+    <td class="desc">Sequência temporal no passado · Storytelling mais complexo · Causa e consequência · before / after / by the time · Simple Past (A1) já consolidado — foco no Past Perfect</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">46</td>
     <td class="id">—</td>
-    <td class="name">Passive Voice</td>
+    <td class="name">Passive Voice (introdução)</td>
     <td class="q">—</td>
-    <td class="desc">Present Passive · Past Passive · Future Passive · Modal + Passive · be + past participle · Uso quando o agente não é importante ou desconhecido · Linguagem jornalística, processos e notícias</td>
+    <td class="desc">Present / Past / Future Passive · Modal + Passive · be + past participle · Quando o agente não importa ou é desconhecido · Notícias, processos e descrições objetivas</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">47</td>
     <td class="id">—</td>
-    <td class="name">Reported Speech</td>
+    <td class="name">Reported Speech (introdução)</td>
     <td class="q">—</td>
-    <td class="desc">Direct Speech × Reported Speech · say × tell · Mudanças básicas de tempo verbal · Mudanças de pronomes · Mudanças de expressões de tempo e lugar · Reported questions · Reported commands</td>
+    <td class="desc">Direct Speech × Reported Speech · say × tell · Mudanças básicas de tempo, pronomes e tempo/lugar · Reported questions · Reported commands</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">48</td>
     <td class="id">—</td>
-    <td class="name">Relative Clauses</td>
+    <td class="name">Relative Clauses (introdução)</td>
     <td class="q">—</td>
-    <td class="desc">who · which · that · whose · where · when · Defining Relative Clauses · Pessoas, lugares, objetos e posse</td>
+    <td class="desc">who / which / that / whose / where / when · Defining Relative Clauses · Informação essencial sobre pessoas, lugares e coisas · whose além da posse básica do A1</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">49</td>
     <td class="id">—</td>
-    <td class="name">Gerunds &amp; Infinitives</td>
+    <td class="name">Gerunds &amp; Infinitives (introdução)</td>
     <td class="q">—</td>
-    <td class="desc">Gerund: verb + -ing · Infinitive: to + verb · enjoy doing / avoid doing / finish doing / keep doing / mind doing · want to / need to / decide to / hope to / plan to / promise to · remember doing × remember to do · stop doing × stop to do · try doing × try to do</td>
+    <td class="desc">verb + -ing (enjoy, avoid, finish, keep, mind) · to + verb (want, need, decide, hope, plan, promise) · remember/stop/try: gerund × infinitive · Padrões mais comuns no dia a dia</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">50</td>
     <td class="id">—</td>
-    <td class="name">Grande Revisão B1 → B2</td>
+    <td class="name">Grande Revisão B2 + projeto final</td>
     <td class="q">—</td>
-    <td class="desc">First Conditional · Second Conditional · Present Perfect Continuous · Past Perfect · Passive Voice · Reported Speech · Relative Clauses · Gerunds</td>
+    <td class="desc">Second Conditional · Present Perfect Continuous · Past Perfect · Passive Voice (intro) · Reported Speech (intro) · Relative Clauses (intro) · Gerunds &amp; Infinitives (intro) · Projeto final: The Story of My Life</td>
     <td class="status"><span class="pend">📝</span></td>
-  </tr>
-        </tbody>
-      </table>
+  </tr></tbody></table>
     </section>
 
     <section>
-      <h2>Semestre 5 — B2 → C2 (C1 + C2) <span class="pend">(planejado)</span></h2>
-      <div class="project"><strong>Projetos:</strong> An Issue Worth Discussing · The Big Argument</div>
-      <table class="lessons">
-        <thead>
-          <tr><th>#</th><th>ID</th><th>Título</th><th>Q</th><th>Tópicos principais</th><th></th></tr>
-        </thead>
-        <tbody>
-          <tr>
+      <h2>Semestre 5 — C1 → C2 <span class="pend">(planejado)</span></h2>
+      <div class="project">
+        <strong>Fase C1 (51–60):</strong> An Issue Worth Discussing<br>
+        <strong>Fase C2 (61–70):</strong> The Big Argument<br>
+        <small>Fase C1 (51–60): conditionals avançados, dedução, formas avançadas de passive/reported/relative/verb patterns, discourse e registro → projeto intermediário An Issue Worth Discussing · Fase C2 (61–70): inversion, clefts, nominalization, hedging, pragmatics, linguagem figurada, collocations, retórica → projeto final The Big Argument · Não revisa Simple Present/Past, will/going to, First Conditional, Present Perfect simples nem modais básicos (já fechados em A1–B1)</small>
+      </div>
+      <table class="lessons"><thead><tr><th>#</th><th>ID</th><th>Título</th><th>Q</th><th>Tópicos</th><th></th></tr></thead>
+      <tbody><tr>
     <td class="num">51</td>
     <td class="id">—</td>
-    <td class="name">Third Conditional &amp; Mixed Conditionals</td>
+    <td class="name">Third Conditional &amp; Mixed Conditionals <small>(C1)</small></td>
     <td class="q">—</td>
-    <td class="desc">Third Conditional · Past unreal situations · Regrets and missed opportunities · would have + past participle · could have / might have · Mixed Conditionals · If I had..., I would... · If I had..., I would have...</td>
+    <td class="desc">Third Conditional (if + past perfect, would have + pp) · Situações irreais no passado e arrependimentos · could have / might have · Mixed Conditionals (passado → presente / presente → passado)</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">52</td>
     <td class="id">—</td>
-    <td class="name">Advanced Modal Verbs &amp; Deduction</td>
+    <td class="name">Modal Verbs: Deduction &amp; Speculation <small>(C1)</small></td>
     <td class="q">—</td>
-    <td class="desc">must have · might have · may have · could have · can't have · should have · ought to have · Dedução sobre o passado</td>
+    <td class="desc">must have / might have / may have / could have / can't have · should have (crítica e arrependimento) · Dedução no presente e no passado · Além dos modais de conselho/obrigação do B1</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">53</td>
     <td class="id">—</td>
-    <td class="name">Advanced Passive Voice</td>
+    <td class="name">Passive Voice avançada <small>(C1)</small></td>
     <td class="q">—</td>
-    <td class="desc">Passive Voice em tempos diferentes · Passive with modals · Perfect Passive · Continuous Passive · It is believed that... · He is thought to... · It is said that... · Causative: have something done / get something done</td>
+    <td class="desc">Perfect Passive e Continuous Passive · Passive with modals · It is believed that… / He is thought to… · Have something done · Além da intro do Semestre 4</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">54</td>
     <td class="id">—</td>
-    <td class="name">Advanced Reported Speech</td>
+    <td class="name">Reported Speech avançado <small>(C1)</small></td>
     <td class="q">—</td>
-    <td class="desc">Reported statements · Reported questions · Reported commands · Reporting verbs · admit · deny · suggest · recommend</td>
+    <td class="desc">Reporting verbs além de say/tell (admit, deny, claim, suggest, warn…) · Reported questions e commands com mais precisão · Backshift em contextos complexos · Além da intro do Semestre 4</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">55</td>
     <td class="id">—</td>
-    <td class="name">Advanced Relative Clauses &amp; Reduced Clauses</td>
+    <td class="name">Relative Clauses avançadas &amp; Reduced Clauses <small>(C1)</small></td>
     <td class="q">—</td>
-    <td class="desc">Defining × Non-defining Relative Clauses · who / whom / which / whose · where / when · Preposition + relative pronoun · which para referência a uma oração inteira · Reduced Relative Clauses · The man standing over there... · The documents submitted yesterday...</td>
+    <td class="desc">Defining × Non-defining · whom / of which / preposition + relative · which referindo-se a uma oração inteira · Reduced Relative Clauses · Além da intro do Semestre 4</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">56</td>
     <td class="id">—</td>
-    <td class="name">Advanced Gerunds, Infinitives &amp; Verb Patterns</td>
+    <td class="name">Verb Patterns avançados <small>(C1)</small></td>
     <td class="q">—</td>
-    <td class="desc">verb + gerund · verb + infinitive · verb + object + infinitive · gerund after prepositions · infinitive of purpose · bare infinitive · verb patterns · remember doing / remember to do</td>
+    <td class="desc">verb + object + infinitive · gerund after prepositions · infinitive of purpose · bare infinitive · Padrões menos comuns e contrastes finos · Além da intro do Semestre 4</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">57</td>
     <td class="id">—</td>
-    <td class="name">Complex Sentence Structure</td>
+    <td class="name">Complex Sentence Structure <small>(C1)</small></td>
     <td class="q">—</td>
-    <td class="desc">although · even though · whereas · while · despite · in spite of · unless · provided that</td>
+    <td class="desc">although / even though / whereas / while · despite / in spite of · Concessão, contraste, causa e propósito · Frases mais longas e precisas</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">58</td>
     <td class="id">—</td>
-    <td class="name">Discourse, Cohesion &amp; Coherence</td>
+    <td class="name">Discourse, Cohesion &amp; Coherence <small>(C1)</small></td>
     <td class="q">—</td>
-    <td class="desc">Linking devices · furthermore · moreover · in addition · besides · nevertheless · consequently · in contrast</td>
+    <td class="desc">Linking devices (furthermore, moreover, nevertheless…) · Organizar ideias em texto e fala · Coesão referencial e lexical · Evitar repetição e saltos lógicos</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">59</td>
     <td class="id">—</td>
-    <td class="name">Nuance, Register &amp; Advanced Vocabulary</td>
+    <td class="name">Nuance, Register &amp; Advanced Vocabulary <small>(C1)</small></td>
     <td class="q">—</td>
-    <td class="desc">Registro: informal / neutral / formal / academic · Nuance lexical · big / enormous / substantial · good / beneficial / advantageous · bad / harmful / detrimental · say / claim / argue / assert · problem / issue / concern / obstacle · Collocations: pose a threat, draw a conclusion, raise an issue,</td>
+    <td class="desc">Registro: informal / neutral / formal / academic · Nuance lexical (big → substantial; say → claim/argue) · Escolher o tom certo para a situação · Vocabulário de temas sociais e abstratos</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">60</td>
     <td class="id">—</td>
-    <td class="name">Grande Revisão B2 → C1</td>
+    <td class="name">Revisão Fase C1 + An Issue Worth Discussing <small>(C1)</small></td>
     <td class="q">—</td>
-    <td class="desc">Conditionals · Modal verbs · Passive voice · Reported speech · Relative clauses · Complex sentences · Discourse markers · Collocations</td>
+    <td class="desc">Third &amp; Mixed Conditionals · Modal deduction · Passive / Reported / Relative / Verb patterns (nível avançado) · Complex sentences e discourse markers · Registro e nuance · Projeto: An Issue Worth Discussing</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">61</td>
     <td class="id">—</td>
-    <td class="name">Advanced Inversion</td>
+    <td class="name">Advanced Inversion <small>(C2)</small></td>
     <td class="q">—</td>
-    <td class="desc">Negative adverbials · Inversion after restrictive expressions · Never have I... · Rarely do we... · Not only did he..., but... · Under no circumstances... · On no account... · Little did I know...</td>
+    <td class="desc">Negative adverbials (Never have I…, Rarely do we…) · Not only… but… · Under no circumstances… / On no account… · Little did I know… · Ênfase e estilo formal/literário</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">62</td>
     <td class="id">—</td>
-    <td class="name">Cleft Sentences &amp; Emphasis</td>
+    <td class="name">Cleft Sentences &amp; Emphasis <small>(C2)</small></td>
     <td class="q">—</td>
-    <td class="desc">It-clefts · What-clefts · All-clefts · Emphatic structures · It was John who... · What I need is... · What surprised me was... · do / does / did para ênfase</td>
+    <td class="desc">It-clefts (It was John who…) · What-clefts (What I need is…) · All-clefts e estruturas enfáticas · do/does/did para ênfase</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">63</td>
     <td class="id">—</td>
-    <td class="name">Advanced Subordination &amp; Nominalization</td>
+    <td class="name">Subordination avançada &amp; Nominalization <small>(C2)</small></td>
     <td class="q">—</td>
-    <td class="desc">Subordinação: concessão, causa, consequência, condição, propósito e · contraste · Nominalization · Transformação de estruturas verbais em estruturas nominais · Linguagem condensada acadêmica, jornalística e profissional</td>
+    <td class="desc">Subordinação densa (causa, concessão, propósito, contraste) · Nominalization (decide → decision) · Estilo acadêmico, jornalístico e profissional · Condensar ideias em estruturas nominais</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">64</td>
     <td class="id">—</td>
-    <td class="name">Hedging, Certainty &amp; Academic Language</td>
+    <td class="name">Hedging, Certainty &amp; Academic Language <small>(C2)</small></td>
     <td class="q">—</td>
-    <td class="desc">may · might · could · appears to · seems to · tends to · is likely to · is unlikely to</td>
+    <td class="desc">may / might / could / appears to / seems to / tends to · is likely to / arguably / to some extent · Evitar afirmações absolutas demais · Tom acadêmico e profissional</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">65</td>
     <td class="id">—</td>
-    <td class="name">Pragmatics: Meaning Beyond Words</td>
+    <td class="name">Pragmatics: Meaning Beyond Words <small>(C2)</small></td>
     <td class="q">—</td>
-    <td class="desc">Implicature · Politeness · Pedidos indiretos · Recusas diplomáticas · Desacordo · Crítica · Sugestões · Intenção, contexto e relação entre interlocutores</td>
+    <td class="desc">Implicatura e intenção · Pedidos indiretos e recusas diplomáticas · Desacordo e crítica com polidez · Contexto e relação entre interlocutores</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">66</td>
     <td class="id">—</td>
-    <td class="name">Idioms, Metaphors &amp; Figurative Language</td>
+    <td class="name">Idioms, Metaphors &amp; Figurative Language <small>(C2)</small></td>
     <td class="q">—</td>
-    <td class="desc">Idioms · Metaphors · Similes · Hyperbole · Understatement · Euphemism · Irony · Sarcasm</td>
+    <td class="desc">Idioms e metáforas frequentes · Simile, hyperbole, understatement, euphemism · Ironia e sarcasmo (reconhecer e usar com cuidado) · Linguagem não literal</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">67</td>
     <td class="id">—</td>
-    <td class="name">Collocations, Lexical Chunks &amp; Precision</td>
+    <td class="name">Collocations, Lexical Chunks &amp; Precision <small>(C2)</small></td>
     <td class="q">—</td>
-    <td class="desc">Collocations · Lexical chunks · Precisão lexical · deeply concerned · highly unlikely · utterly ridiculous · strongly opposed · broadly speaking</td>
+    <td class="desc">Collocations de alta frequência acadêmica/profissional · Lexical chunks (raise an issue, reach a conclusion…) · Precisão: deeply concerned, highly unlikely, strongly opposed… · Evitar traduções literais</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">68</td>
     <td class="id">—</td>
-    <td class="name">Register, Style &amp; Voice</td>
+    <td class="name">Register, Style &amp; Voice <small>(C2)</small></td>
     <td class="q">—</td>
-    <td class="desc">Informal English · Neutral English · Formal English · Academic English · Professional English · Conversational English · Tone · Voice</td>
+    <td class="desc">Informal × neutral × formal × academic × professional · Adaptar a mesma ideia a públicos diferentes · Tone e voice · Consistência de registro no texto/fala</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">69</td>
     <td class="id">—</td>
-    <td class="name">Rhetoric, Argumentation &amp; Persuasion</td>
+    <td class="name">Rhetoric, Argumentation &amp; Persuasion <small>(C2)</small></td>
     <td class="q">—</td>
-    <td class="desc">Claim · Evidence · Reasoning · Counterargument · Rebuttal · Concession · Qualification · Rhetorical questions</td>
+    <td class="desc">Claim, evidence, reasoning · Counterargument, rebuttal, concession · Rhetorical questions, parallelism, contrast, analogy · Storytelling e apelo emocional com controle</td>
     <td class="status"><span class="pend">📝</span></td>
   </tr>
 <tr>
     <td class="num">70</td>
     <td class="id">—</td>
-    <td class="name">Grande Revisão C1 → C2</td>
+    <td class="name">Grande Revisão C2 + The Big Argument <small>(C2)</small></td>
     <td class="q">—</td>
-    <td class="desc">Advanced inversion · Cleft sentences · Nominalization · Hedging · Pragmatics · Figurative language · Collocations · Register</td>
+    <td class="desc">Inversion e clefts · Nominalization e hedging · Pragmatics e linguagem figurada · Collocations e registro · Argumentação e persuasão · Projeto final: The Big Argument</td>
     <td class="status"><span class="pend">📝</span></td>
-  </tr>
-        </tbody>
-      </table>
+  </tr></tbody></table>
     </section>
 
     <footer>
-      Legenda: ✅ página HTML em <code>lessons/</code> e catálogo em <code>app.js</code> /
-      📝 apenas no roadmap de <code>teacher.html</code>.
-      IDs estáveis — o progresso antigo dos alunos continua válido.
+      ✅ existente em <code>lessons/</code> · 📝 roadmap em <code>teacher.html</code> · IDs estáveis (progresso antigo válido).
     </footer>
   </div>
 </body>
