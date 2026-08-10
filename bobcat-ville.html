@@ -394,7 +394,7 @@
 
   /* ─── Overlay de pausa ─── */
   .pause-overlay{
-    position:absolute;inset:0;z-index:40;
+    position:fixed;inset:0;z-index:60;
     background:rgba(20,16,12,.6);backdrop-filter:blur(2px);
     display:flex;align-items:center;justify-content:center;padding:20px;
   }
@@ -413,8 +413,18 @@
   }
   .pause-btn-outline{
     border:1.5px solid var(--border);border-radius:14px;padding:12px;font-family:"Poppins",sans-serif;font-weight:700;font-size:13.5px;
-    color:var(--ink-soft);background:#fff;text-decoration:none;display:block;
+    color:var(--ink-soft);background:#fff;text-decoration:none;display:block;width:100%;cursor:pointer;
   }
+
+  /* ─── Botão de pausa na tela de criação de personagem ─── */
+  .char-pause-btn{
+    position:absolute;top:calc(14px + env(safe-area-inset-top));right:calc(14px + env(safe-area-inset-right));
+    z-index:2;
+    width:38px;height:38px;border-radius:12px;border:1.5px solid var(--border);
+    background:#fff;color:var(--ink-soft);font-size:15px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);
+  }
+  .char-pause-btn:active{background:var(--cream)}
 
   /* ─── Tela de criação de personagem ─── */
   .char-screen{
@@ -514,6 +524,7 @@
 <body>
 
 <div class="char-screen" id="charScreen">
+  <button class="char-pause-btn" id="charPauseBtn" aria-label="Pausar">⏸️</button>
   <div class="char-wrap">
     <p class="char-eyebrow">Antes de começar</p>
     <h1 class="char-title">Crie seu personagem</h1>
@@ -607,19 +618,20 @@
     </div>
   </div>
 
-  <!-- Pausa -->
-  <div class="pause-overlay hidden" id="pauseOverlay">
-    <div class="pause-card">
-      <div class="pause-icon">⏸️</div>
-      <p class="pause-title">Jogo pausado</p>
-      <p class="pause-sub">Seu personagem fica salvo neste dispositivo. Pode continuar de onde parou quando quiser.</p>
-      <div class="pause-actions">
-        <button type="button" class="pause-btn-primary" id="pauseResumeBtn">▶ Continuar</button>
-        <a class="pause-btn-outline" href="index.html">🏠 Voltar para o app</a>
-      </div>
+</div>
+
+<!-- Pausa (funciona tanto no mapa quanto na criação de personagem) -->
+<div class="pause-overlay hidden" id="pauseOverlay">
+  <div class="pause-card">
+    <div class="pause-icon">⏸️</div>
+    <p class="pause-title">Jogo pausado</p>
+    <p class="pause-sub" id="pauseSubText">Seu personagem fica salvo neste dispositivo. Pode continuar de onde parou quando quiser.</p>
+    <div class="pause-actions">
+      <button type="button" class="pause-btn-primary" id="pauseResumeBtn">▶ Continuar</button>
+      <button type="button" class="pause-btn-outline" id="pauseRestartBtn" style="display:none">🔄 Reiniciar personagem</button>
+      <a class="pause-btn-outline" href="index.html">🏠 Voltar para o app</a>
     </div>
   </div>
-
 </div>
 
 <script src="./story.js"></script>
@@ -690,6 +702,54 @@
     mercado_bairro:    { x: 54.5, y: 47.5 },
     campus_escritorio: { x: 88.5, y: 45.0 },
   };
+
+  // ─── Pausa: funciona tanto no mapa quanto na criação de personagem ───
+  var pauseOverlay = document.getElementById('pauseOverlay');
+  var pauseSubText = document.getElementById('pauseSubText');
+  var pauseResumeBtn = document.getElementById('pauseResumeBtn');
+  var pauseRestartBtn = document.getElementById('pauseRestartBtn');
+  var charPauseBtn = document.getElementById('charPauseBtn');
+
+  function isOnCharScreen() {
+    var el = document.getElementById('charScreen');
+    return el && !el.classList.contains('hidden');
+  }
+
+  function openPause() {
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    if (window.__closeDialogue) window.__closeDialogue();
+    if (window.__closeMenu) window.__closeMenu();
+
+    var onChar = isOnCharScreen();
+    pauseRestartBtn.style.display = onChar ? 'block' : 'none';
+    pauseSubText.textContent = onChar
+      ? 'Seu progresso na criação do personagem fica só neste dispositivo.'
+      : 'Seu personagem fica salvo neste dispositivo. Pode continuar de onde parou quando quiser.';
+
+    pauseOverlay.classList.remove('hidden');
+  }
+
+  function closePause() {
+    pauseOverlay.classList.add('hidden');
+  }
+
+  pauseResumeBtn.addEventListener('click', closePause);
+  pauseRestartBtn.addEventListener('click', function () {
+    if (window.__resetCharForm) window.__resetCharForm();
+    closePause();
+  });
+  if (charPauseBtn) charPauseBtn.addEventListener('click', openPause);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (!pauseOverlay.classList.contains('hidden')) {
+      closePause();
+    } else if (window.__isMenuOpen && window.__isMenuOpen()) {
+      window.__closeMenu();
+    } else {
+      openPause();
+    }
+  });
 
   function render() {
     var story = window.BOBCAT_VILLE_STORY;
@@ -940,6 +1000,9 @@
 
     function openMenu() { menuOverlay.classList.add('open'); }
     function closeMenu() { menuOverlay.classList.remove('open'); }
+    window.__closeMenu = closeMenu;
+    window.__isMenuOpen = function () { return menuOverlay.classList.contains('open'); };
+    window.__closeDialogue = closeDialogue;
 
     menuBtn.addEventListener('click', openMenu);
     menuClose.addEventListener('click', closeMenu);
@@ -947,35 +1010,8 @@
       if (e.target === menuOverlay) closeMenu();
     });
 
-    // ─── Pausar (acionado a partir do menu) ───
-    var pauseOverlay = document.getElementById('pauseOverlay');
-    var pauseResumeBtn = document.getElementById('pauseResumeBtn');
     var menuPauseBtn = document.getElementById('menuPauseBtn');
-
-    function openPause() {
-      closeDialogue();
-      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-      closeMenu();
-      pauseOverlay.classList.remove('hidden');
-    }
-
-    function closePause() {
-      pauseOverlay.classList.add('hidden');
-    }
-
     menuPauseBtn.addEventListener('click', openPause);
-    pauseResumeBtn.addEventListener('click', closePause);
-
-    document.addEventListener('keydown', function (e) {
-      if (e.key !== 'Escape') return;
-      if (!pauseOverlay.classList.contains('hidden')) {
-        closePause();
-      } else if (menuOverlay.classList.contains('open')) {
-        closeMenu();
-      } else {
-        openPause();
-      }
-    });
 
     function onLayout() {
       setVh();
@@ -1061,6 +1097,16 @@
       namePreview.textContent = nameInput.value.trim();
       startBtn.disabled = !(nameInput.value.trim() && selectedIdentity && selectedColor);
     }
+
+    function resetForm() {
+      nameInput.value = '';
+      selectedIdentity = null;
+      selectedColor = null;
+      identityGrid.querySelectorAll('.char-identity-card').forEach(function (c) { c.classList.remove('selected'); });
+      colorRow.querySelectorAll('.char-color-swatch').forEach(function (s) { s.classList.remove('selected'); });
+      updatePreview();
+    }
+    window.__resetCharForm = resetForm;
 
     // grade de identidades
     identityGrid.innerHTML = '';
