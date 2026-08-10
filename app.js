@@ -570,6 +570,7 @@ function showScreen(id) {
   document.getElementById('screen-' + id).classList.remove('hidden');
 
   document.body.classList.toggle('on-auth-screen', id === 'auth' || id === 'landing');
+  document.body.classList.toggle('on-landing-screen', id === 'landing');
 
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   const navBtn = document.querySelector('.nav-btn[data-screen="' + id + '"]');
