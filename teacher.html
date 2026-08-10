@@ -289,6 +289,11 @@
   </div>
 
   <div id="panel-lessons" class="tab-panel">
+    <div class="notice" style="margin-bottom:14px;">
+      ✅ <strong>Currículo reorganizado (5 semestres).</strong>
+      Semestre 1 (A1) fecha conversação básica: se apresentar, perguntar sobre pessoas, presente, passado e futuro.
+      IDs das páginas e progresso dos alunos permanecem os mesmos — só a ordem e os níveis mudaram.
+    </div>
     <div class="lesson-list-meta" id="lessons-meta"></div>
     <div id="lessons-slot"></div>
   </div>
@@ -973,8 +978,20 @@ async function renderLessonsTab() {
   const all = [...TESTS_CATALOG, ...LESSONS_CATALOG, ...customAsLessons];
   const totalQuestions = all.reduce((sum, l) => sum + (l.totalQuestions || 0), 0);
   document.getElementById('lessons-meta').textContent =
-    (LESSONS_CATALOG.length + customAsLessons.length) + ' lições + ' + TESTS_CATALOG.length + ' teste, totalizando ' + totalQuestions + ' questões.' +
+    (LESSONS_CATALOG.length + customAsLessons.length) + ' lições + ' + TESTS_CATALOG.length + ' teste, totalizando ' + totalQuestions + ' questões · 5 semestres (C1+C2 no 5º).' +
     (result.ok ? '' : ' (não foi possível carregar as lições enviadas pelo painel: ' + result.message + ')');
+
+  // Rótulos de semestre alinhados ao currículo (A1 conversacional no Sem. 1)
+  const SEMESTER_LABEL = {
+    'Teste': 'Testes',
+    'Introdutório': 'Semestre 1 — Introdutório',
+    'A1': 'Semestre 1 — A1 · Conversação básica (presente, passado e futuro)',
+    'A2': 'Semestre 2 — A2 · Expansão do dia a dia',
+    'B1': 'Semestre 3 — B1 · Narrativa e experiência',
+    'B2': 'Semestre 4 — B2',
+    'C1': 'Semestre 5 — C1',
+    'C2': 'Semestre 5 — C2'
+  };
 
   // agrupa mantendo a ordem de aparição (Teste, Introdutório, A1, ...)
   const groups = [];
@@ -989,8 +1006,12 @@ async function renderLessonsTab() {
 
   let html = '';
   groups.forEach(g => {
+    const title = SEMESTER_LABEL[g.level] || g.level;
     html += '<div class="level-group">';
-    html += '<div class="level-title">' + g.level + '</div>';
+    html += '<div class="level-title">' + title + '</div>';
+    if (g.level === 'A1') {
+      html += '<div class="lesson-list-meta" style="margin:-4px 0 12px;">Meta de saída: se apresentar, perguntar sobre pessoas, rotina, ontem e planos próximos.</div>';
+    }
     html += '<div class="lesson-card-list">';
     g.items.forEach(item => {
       const href = item.custom ? 'lessons/custom.html?id=' + encodeURIComponent(item.id) : `lessons/${item.id}.html`;
