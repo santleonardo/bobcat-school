@@ -537,8 +537,19 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
   box-shadow: var(--clay-raised);
   margin-top: 2px;
 }
-.howto-step-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.howto-step-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
 .howto-step-desc { font-size: 12.5px; color: var(--ink-soft); line-height: 1.55; }
+.howto-soon {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--terracotta-deep);
+  background: var(--terracotta-tonal);
+  border-radius: 999px;
+  padding: 2.5px 9px;
+  text-transform: uppercase;
+}
 
 .howto-cta { width: 100%; margin-top: 24px; }
 
