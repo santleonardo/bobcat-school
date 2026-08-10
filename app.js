@@ -569,7 +569,7 @@ function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
   document.getElementById('screen-' + id).classList.remove('hidden');
 
-  document.body.classList.toggle('on-auth-screen', id === 'auth');
+  document.body.classList.toggle('on-auth-screen', id === 'auth' || id === 'landing');
 
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   const navBtn = document.querySelector('.nav-btn[data-screen="' + id + '"]');
@@ -1426,16 +1426,28 @@ async function boot() {
 
   showLoadingState(false);
 
+  // Landing first for visitors without session; returning students go straight in.
   if (isUsingCloud() && !isLoggedIn()) {
-    setAuthMode('login');
-    showScreen('auth');
+    showScreen('landing');
   } else {
     const profile = await getProfile();
     if (profile) {
       await enterApp();
     } else {
-      showScreen('profile-setup');
+      showScreen('landing');
     }
+  }
+
+  const btnLandingStart = document.getElementById('btn-landing-start');
+  if (btnLandingStart) {
+    btnLandingStart.addEventListener('click', () => {
+      if (isUsingCloud()) {
+        setAuthMode('signup');
+        showScreen('auth');
+      } else {
+        showScreen('profile-setup');
+      }
+    });
   }
 
   setupInstallPrompt();

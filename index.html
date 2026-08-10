@@ -33,43 +33,68 @@
   </div>
 
   <!-- TELA: LOGIN / CADASTRO (só aparece quando o Supabase está configurado) -->
+
+  <!-- TELA: LANDING (início) -->
+  <div class="screen hidden" id="screen-landing">
+    <div class="landing">
+      <div class="landing-hero">
+        <img src="./icons/icon-192.png" alt="Bobcat Language School" class="landing-logo">
+        <p class="landing-eyebrow">Bobcat Language School</p>
+        <h1 class="landing-title">Inglês que você usa de verdade.</h1>
+        <p class="landing-sub">Pare de estudar só a gramática. Aprenda a se apresentar, conversar, contar histórias e defender ideias — no seu ritmo, com clareza e prática real.</p>
+      </div>
+
+      <div class="landing-skills">
+        <p class="landing-skills-label">O que você vai conseguir fazer</p>
+        <div class="landing-skill">
+          <span class="landing-skill-n">1</span>
+          <p>Você vai conseguir se apresentar, perguntar sobre as pessoas, falar da sua rotina, contar o que fez ontem e o que pretende fazer amanhã.</p>
+        </div>
+        <div class="landing-skill">
+          <span class="landing-skill-n">2</span>
+          <p>Você será capaz de se virar no dia a dia: descrever o que está acontecendo agora, pedir e comparar coisas, se localizar e usar expressões naturais.</p>
+        </div>
+        <div class="landing-skill">
+          <span class="landing-skill-n">3</span>
+          <p>Você vai conseguir contar histórias, falar de experiências de vida, dar conselhos e explicar planos com mais segurança.</p>
+        </div>
+        <div class="landing-skill">
+          <span class="landing-skill-n">4</span>
+          <p>Você será capaz de narrar sua própria história com detalhes, imaginar hipóteses e reportar o que outras pessoas disseram.</p>
+        </div>
+        <div class="landing-skill">
+          <span class="landing-skill-n">5</span>
+          <p>Você vai conseguir discutir ideias, defender um ponto de vista, negociar com nuance e argumentar de forma clara e persuasiva.</p>
+        </div>
+      </div>
+
+      <div class="landing-pillars">
+        <div class="landing-pillar">
+          <div class="landing-pillar-title">Lições guiadas</div>
+          <div class="landing-pillar-sub">Passo a passo, cada uma destrava a próxima</div>
+        </div>
+        <div class="landing-pillar">
+          <div class="landing-pillar-title">Prática com IA</div>
+          <div class="landing-pillar-sub">Converse em inglês quando quiser, sem julgamento</div>
+        </div>
+        <div class="landing-pillar">
+          <div class="landing-pillar-title">Progresso real</div>
+          <div class="landing-pillar-sub">Acompanhe sua evolução lição a lição</div>
+        </div>
+      </div>
+
+      <button type="button" class="btn landing-cta" id="btn-landing-start">Começar</button>
+      <p class="landing-foot">Leva menos de um minuto para criar seu perfil e começar a primeira lição.</p>
+    </div>
+  </div>
+
   <div class="screen hidden" id="screen-auth">
-    <div class="auth-hero">
+    <div class="auth-hero auth-hero-compact">
       <div class="auth-hero-top">
         <img src="./icons/icon-192.png" alt="Bobcat Language School" class="auth-hero-logo">
         <p class="auth-eyebrow">Bobcat Language School</p>
-        <h1 class="auth-hero-title">Inglês aprendido com clareza.</h1>
-        <p class="auth-hero-sub">Lições estruturadas, prática de conversação com IA e acompanhamento real do seu progresso — tudo em um único lugar.</p>
-      </div>
-
-      <div class="auth-features">
-        <div class="auth-feature">
-          <span class="auth-feature-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11a2 2 0 0 1 2 2v14a1.5 1.5 0 0 0-1.5-1.5H4Z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13a2 2 0 0 0-2 2v14a1.5 1.5 0 0 1 1.5-1.5H20Z"/></svg>
-          </span>
-          <div class="auth-feature-copy">
-            <div class="auth-feature-title">Lições guiadas</div>
-            <div class="auth-feature-sub">Do A1 ao C1, passo a passo</div>
-          </div>
-        </div>
-        <div class="auth-feature">
-          <span class="auth-feature-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8.5L4 19.5Z"/><path d="M8 9.5h8M8 12.5h5"/></svg>
-          </span>
-          <div class="auth-feature-copy">
-            <div class="auth-feature-title">Prática com IA</div>
-            <div class="auth-feature-sub">Converse em inglês quando quiser</div>
-          </div>
-        </div>
-        <div class="auth-feature">
-          <span class="auth-feature-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M11 20V4M18 20v-7"/><path d="M3 20h18"/></svg>
-          </span>
-          <div class="auth-feature-copy">
-            <div class="auth-feature-title">Progresso real</div>
-            <div class="auth-feature-sub">Veja sua evolução lição a lição</div>
-          </div>
-        </div>
+        <h1 class="auth-hero-title">Vamos começar.</h1>
+        <p class="auth-hero-sub">Entre na sua conta ou crie uma em menos de um minuto.</p>
       </div>
     </div>
 
@@ -530,7 +555,7 @@
         <div class="howto-step-icon">✨</div>
         <div class="howto-step-body">
           <div class="howto-step-title">O que você vai conseguir fazer</div>
-          <div class="howto-step-desc">A cada etapa do curso, novas habilidades entram na sua conversa real — não é só “saber a regra”, é usar o inglês.</div>
+          <div class="howto-step-desc">A cada etapa, o inglês deixa de ser só regra e vira conversa de verdade — no seu ritmo.</div>
           <div class="howto-semesters">
             <div class="howto-sem-row">
               <span class="howto-sem-n">1</span>
@@ -542,7 +567,7 @@
             </div>
             <div class="howto-sem-row">
               <span class="howto-sem-n">3</span>
-              <span class="howto-sem-lv">Você vai conseguir contar histórias, falar de experiências de vida, dar conselhos e explicar planos e possibilidades com mais segurança.</span>
+              <span class="howto-sem-lv">Você vai conseguir contar histórias, falar de experiências de vida, dar conselhos e explicar planos com mais segurança.</span>
             </div>
             <div class="howto-sem-row">
               <span class="howto-sem-n">4</span>
@@ -550,7 +575,7 @@
             </div>
             <div class="howto-sem-row">
               <span class="howto-sem-n">5</span>
-              <span class="howto-sem-lv">Você vai conseguir discutir ideias complexas, defender um ponto de vista, negociar com nuance e argumentar de forma clara e persuasiva.</span>
+              <span class="howto-sem-lv">Você vai conseguir discutir ideias, defender um ponto de vista, negociar com nuance e argumentar de forma clara e persuasiva.</span>
             </div>
           </div>
         </div>
