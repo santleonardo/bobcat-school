@@ -146,7 +146,7 @@ module.exports = async function handler(req, res) {
       system_instruction: { parts: [{ text: systemPromptFor(level, name, personality, aiName, gender, proactive) }] },
       contents,
       generationConfig: {
-        maxOutputTokens: proactive ? 180 : 320,
+        maxOutputTokens: proactive ? 300 : 650,
         temperature: 0.75,
         responseMimeType: 'application/json',
         thinkingConfig: { thinkingLevel: 'low' } // resposta de chat simples não precisa de raciocínio pesado — isso corta boa parte da demora
@@ -181,8 +181,9 @@ module.exports = async function handler(req, res) {
     }
 
     // Espera JSON {"reply": "...", "suggestions": [...]}, mas se a IA devolver
-    // texto puro (falha de formatação) cai para o texto inteiro como reply,
-    // sem sugestões — o chat continua funcionando normalmente.
+    // texto puro ou um JSON cortado/malformado (ex.: resposta truncada pelo limite
+    // de tokens), tenta recuperar só o texto da resposta em vez de jogar o JSON
+    // quebrado na tela do aluno.
     let reply = '';
     let suggestions = [];
     try {
@@ -192,7 +193,22 @@ module.exports = async function handler(req, res) {
         ? parsed.suggestions.slice(0, 3).map(s => String(s || '').slice(0, 120).trim()).filter(Boolean)
         : [];
     } catch (e) {
-      reply = raw;
+      // Tenta extrair o valor de "reply" mesmo de um JSON incompleto/cortado,
+      // ex.: '{"reply": "Oh nice! What game' (sem fechar aspas nem chaves).
+      const match = raw.match(/"reply"\s*:\s*"((?:\\.|[^"\\])*)/);
+      if (match) {
+        try {
+          // JSON.parse de uma string isolada decodifica \n, \", etc. corretamente
+          reply = JSON.parse('"' + match[1] + '"');
+        } catch (e2) {
+          reply = match[1];
+        }
+      } else if (!/^[{[]/.test(raw.trim())) {
+        // Não parece JSON nenhum (a IA só devolveu texto puro) — usa como está.
+        reply = raw;
+      }
+      // Se raw parecia JSON mas não achamos nem o campo "reply", reply fica vazio
+      // e cai no erro genérico abaixo, em vez de mostrar chaves/aspas soltas.
     }
 
     if (!reply) {
