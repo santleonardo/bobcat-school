@@ -553,6 +553,41 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
 
 .howto-cta { width: 100%; margin-top: 24px; }
 
+/* "Como funciona" — mini trilha de semestres (A1 → C2) */
+.howto-semesters {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.howto-sem-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.howto-sem-n {
+  flex-shrink: 0;
+  width: 19px; height: 19px;
+  border-radius: 50%;
+  background: var(--pine-tint);
+  color: var(--pine);
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.howto-sem-lv {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  letter-spacing: 0.01em;
+}
+.howto-sem-row:last-child .howto-sem-n { background: var(--terracotta-tonal); color: var(--terracotta-deep); }
+.howto-sem-row:last-child .howto-sem-lv { color: var(--terracotta-deep); }
+
 /* Lesson list */
 .lesson-card {
   background: var(--surface);
