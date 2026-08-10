@@ -193,376 +193,374 @@ const EXTRAS = [
 
 const LESSONS = [
   {
-    id: 'pronuncia-essencial',
-    name: 'Pronúncia Essencial do Inglês',
-    level: 'Introdutório',
-    icon: '🔤',
-    description: 'Comece por aqui: alfabeto, vogais, consoantes e combinações mais comuns',
-    url: 'lessons/pronuncia-essencial.html',
-    totalQuestions: 15 // 5 (parte1) + 5 (parte2) + 5 (parte3)
+    id: "pronuncia-essencial",
+    name: "Pronúncia Essencial do Inglês",
+    level: "Introdutório",
+    icon: "🔤",
+    description: "Comece por aqui: alfabeto, vogais, consoantes e combinações mais comuns",
+    url: "lessons/pronuncia-essencial.html",
+    totalQuestions: 15
   },
   {
-    id: 'verb-to-be',
-    name: 'Verb To Be',
-    level: 'A1',
-    icon: '📘',
-    description: 'am, is, are — afirmativas, negativas e perguntas',
-    url: 'lessons/verb-to-be.html',
-    totalQuestions: 21 // 8 (parte1) + 6 (parte2) + 7 (parte3)
+    id: "verb-to-be",
+    name: "Lição 1 — Verb To Be",
+    level: "A1",
+    icon: "📘",
+    description: "am, is, are — afirmativas, negativas e perguntas",
+    url: "lessons/verb-to-be.html",
+    totalQuestions: 21
   },
   {
-    id: 'saudacoes-apresentacoes',
-    name: 'Saudações e Apresentações',
-    level: 'A1',
-    icon: '👋',
-    description: 'Greetings, introductions e diálogos com áudio',
-    url: 'lessons/saudacoes-apresentacoes.html',
-    totalQuestions: 17 // 5 (parte1) + 3 (parte2) + 3 (parte3) + 4 (parte4) + 2 (parte5)
+    id: "saudacoes-apresentacoes",
+    name: "Lição 2 — Saudações e Apresentações",
+    level: "A1",
+    icon: "👋",
+    description: "Greetings, introductions e diálogos com áudio",
+    url: "lessons/saudacoes-apresentacoes.html",
+    totalQuestions: 17
   },
   {
-    id: 'licao-2-perguntas-artigos',
-    name: 'Lição 2 — Fazendo Perguntas e Apresentando Coisas',
-    level: 'A1',
-    icon: '❓',
-    description: 'Wh- words, artigos a/an/the — design interativo (jogos, áudio, cartões)',
-    url: 'lessons/licao-2-perguntas-artigos.html',
-    totalQuestions: 20 // drag-drop 8 + quiz 6 + memória 6
+    id: "licao-2-perguntas-artigos",
+    name: "Lição 3 — Fazendo Perguntas e Apresentando Coisas",
+    level: "A1",
+    icon: "❓",
+    description: "Wh- words, artigos a/an/the — base para perguntar sobre pessoas e coisas",
+    url: "lessons/licao-2-perguntas-artigos.html",
+    totalQuestions: 20
   },
   {
-    id: 'licao-3-revisao-perguntas',
-    name: 'Lição 3 — Revisando e Praticando: Quem é Você? O Que é Isso?',
-    level: 'A1',
-    icon: '🔁',
-    description: 'Revisão das lições 1 e 2 com prática de diálogos',
-    url: 'lessons/licao-3-revisao-perguntas.html',
-    totalQuestions: 12 // Wh 5 + artigos 3 + MC 4 (design interativo)
+    id: "licao-3-revisao-perguntas",
+    name: "Lição 4 — Revisando: Quem é Você? O Que é Isso?",
+    level: "A1",
+    icon: "🔁",
+    description: "Revisão de To Be, saudações e Wh- questions com prática de diálogos",
+    url: "lessons/licao-3-revisao-perguntas.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-4-preposicoes',
-    name: 'Lição 4 — Preposições em Ação: Onde? Com Quem? Como?',
-    level: 'A1',
-    icon: '📍',
-    description: 'Preposições: onde, com quem e como',
-    url: 'lessons/licao-4-preposicoes.html',
-    totalQuestions: 10 // design interativo
+    id: "licao-4-preposicoes",
+    name: "Lição 5 — Preposições: Onde? Com Quem? Como?",
+    level: "A1",
+    icon: "📍",
+    description: "Preposições de lugar e companhia para localizar pessoas e coisas",
+    url: "lessons/licao-4-preposicoes.html",
+    totalQuestions: 10
   },
   {
-    id: 'licao-5-posse',
-    name: 'Lição 5 — O Que É Isso? De Quem É?',
-    level: 'A1',
-    icon: '🎒',
-    description: 'O que é isso e de quem é: posse em inglês',
-    url: 'lessons/licao-5-posse.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-5-posse",
+    name: "Lição 6 — Posse: De Quem É?",
+    level: "A1",
+    icon: "🎒",
+    description: "Possessivos, 's e whose — falar de pertences e pessoas",
+    url: "lessons/licao-5-posse.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-6-here-there',
-    name: 'Lição 6 — Aqui e Ali: Localização e Posição',
-    level: 'A1',
-    icon: '📌',
-    description: 'Localização, posição e phrasal verbs básicos',
-    url: 'lessons/licao-6-here-there.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-12-simple-present-daily-life",
+    name: "Lição 7 — Simple Present: Rotina e Hábitos",
+    level: "A1",
+    icon: "🗓️",
+    description: "Simple Present, advérbios de frequência e a rotina diária",
+    url: "lessons/licao-12-simple-present-daily-life.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-8-to-be-passado',
-    name: 'Lição 8 — Verbo To Be no Passado: Como Era e Onde Estava?',
-    level: 'A1',
-    icon: '⏳',
-    description: 'O verbo to be no passado: was e were',
-    url: 'lessons/licao-8-to-be-passado.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-10-do-does-to-for",
+    name: "Lição 8 — DO/DOES, TO e FOR",
+    level: "A1",
+    icon: "🔧",
+    description: "Verbos essenciais, perguntas com DO/DOES e o uso de TO e FOR",
+    url: "lessons/licao-10-do-does-to-for.html",
+    totalQuestions: 14
   },
   {
-    id: 'licao-9-revisao-completa',
-    name: 'Lição 9 — Revisão Completa: Tudo que Aprendemos Até Aqui!',
-    level: 'A1',
-    icon: '📚',
-    description: 'Revisão completa das lições anteriores',
-    url: 'lessons/licao-9-revisao-completa.html',
-    totalQuestions: 16 // design interativo
+    id: "licao-13-perguntas-simple-present",
+    name: "Lição 9 — Perguntas no Simple Present",
+    level: "A1",
+    icon: "🗣️",
+    description: "Perguntas e negativas com Do/Does — perguntar sobre pessoas e rotina",
+    url: "lessons/licao-13-perguntas-simple-present.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-10-do-does-to-for',
-    name: 'Lição 10 — Verbos Essenciais, Perguntas com DO/DOES, e o Uso de TO e FOR',
-    level: 'A2',
-    icon: '🔧',
-    description: 'Verbos essenciais, DO/DOES, TO e FOR',
-    url: 'lessons/licao-10-do-does-to-for.html',
-    totalQuestions: 14 // design interativo
+    id: "licao-15-can-cant",
+    name: "Lição 10 — Can / Can't",
+    level: "A1",
+    icon: "🙌",
+    description: "Habilidade, permissão e pedidos do dia a dia com can/can't",
+    url: "lessons/licao-15-can-cant.html",
+    totalQuestions: 38
   },
   {
-    id: 'licao-11-object-possessive-pronouns',
-    name: 'Lesson 11 — People, Objects and Possession',
-    level: 'A2',
-    icon: '👥',
-    description: 'Pronomes objetos, possessivos e mais de 20 verbos',
-    url: 'lessons/licao-11-object-possessive-pronouns.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-14-there-is-there-are",
+    name: "Lição 11 — There Is / There Are",
+    level: "A1",
+    icon: "🏠",
+    description: "Descrevendo lugares e objetos com There is/There are",
+    url: "lessons/licao-14-there-is-there-are.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-12-simple-present-daily-life',
-    name: 'Lição 12 — Simple Present: Rotina e Hábitos Diários',
-    level: 'A2',
-    icon: '🗓️',
-    description: 'Simple Present, advérbios de frequência e a rotina diária',
-    url: 'lessons/licao-12-simple-present-daily-life.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-6-here-there",
+    name: "Lição 12 — Aqui e Ali: Localização",
+    level: "A1",
+    icon: "📌",
+    description: "Localização, posição e phrasal verbs básicos de movimento",
+    url: "lessons/licao-6-here-there.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-13-perguntas-simple-present',
-    name: 'Lição 13 — Perguntas Naturais no Simple Present',
-    level: 'A2',
-    icon: '🗣️',
-    description: 'Perguntas e negativas com Do/Does no Simple Present',
-    url: 'lessons/licao-13-perguntas-simple-present.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-8-to-be-passado",
+    name: "Lição 13 — To Be no Passado (was/were)",
+    level: "A1",
+    icon: "⏳",
+    description: "Was e were — como era, onde estava, quem estava",
+    url: "lessons/licao-8-to-be-passado.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-14-there-is-there-are',
-    name: 'Lição 14 — There Is / There Are',
-    level: 'A2',
-    icon: '🏠',
-    description: 'Descrevendo lugares e objetos com There is/There are',
-    url: 'lessons/licao-14-there-is-there-are.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-21-simple-past-regular",
+    name: "Lição 14 — Simple Past: Verbos Regulares",
+    level: "A1",
+    icon: "⏮️",
+    description: "Passado de ação com verbos regulares (-ed) e expressões de tempo",
+    url: "lessons/licao-21-simple-past-regular.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-15-can-cant',
-    name: "Lição 15 — Can, Can't e Comunicação do Dia a Dia",
-    level: 'A2',
-    icon: '🙌',
-    description: "Teoria completa, diálogo, cultura, vocabulário e exercícios sobre Can/Can't",
-    url: 'lessons/licao-15-can-cant.html',
-    totalQuestions: 38 // teoria + vocab + 6 partes de exercícios
+    id: "licao-22-simple-past-irregular",
+    name: "Lição 15 — Simple Past: Verbos Irregulares",
+    level: "A1",
+    icon: "📖",
+    description: "Verbos irregulares mais comuns no Simple Past",
+    url: "lessons/licao-22-simple-past-irregular.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-16-present-continuous',
-    name: 'Lição 16 — Present Continuous',
-    level: 'A2',
-    icon: '🏃',
-    description: 'Ações em andamento com o Present Continuous',
-    url: 'lessons/licao-16-present-continuous.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-24-future-going-to",
+    name: "Lição 16 — Futuro com Going To",
+    level: "A1",
+    icon: "🎯",
+    description: "Planos e intenções futuras com going to",
+    url: "lessons/licao-24-future-going-to.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-17-countable-uncountable',
-    name: 'Lição 17 — Substantivos Contáveis e Incontáveis',
-    level: 'A2',
-    icon: '🍎',
-    description: 'Countable/uncountable nouns, some, any e much/many',
-    url: 'lessons/licao-17-countable-uncountable.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-25-future-will",
+    name: "Lição 17 — Futuro com Will",
+    level: "A1",
+    icon: "🔮",
+    description: "Previsões, decisões espontâneas e promessas com will",
+    url: "lessons/licao-25-future-will.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-18-quantities-choices',
-    name: 'Lição 18 — Quantidades e Escolhas',
-    level: 'A2',
-    icon: '🛒',
-    description: 'Expressando quantidades e fazendo escolhas em inglês',
-    url: 'lessons/licao-18-quantities-choices.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-9-revisao-completa",
+    name: "Lição 18 — Revisão A1: Conversação Básica 🎓",
+    level: "A1",
+    icon: "📚",
+    description: "Projeto final do Semestre 1: se apresentar, perguntar sobre pessoas, rotina, ontem e planos",
+    url: "lessons/licao-9-revisao-completa.html",
+    totalQuestions: 16
   },
   {
-    id: 'licao-19-quantities-distance-time',
-    name: 'Lição 19 — Perguntando Sobre Quantidade, Distância e Tempo',
-    level: 'A2',
-    icon: '📏',
-    description: 'How much/how many, distância e tempo',
-    url: 'lessons/licao-19-quantities-distance-time.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-11-object-possessive-pronouns",
+    name: "Lição 19 — Pronomes Objeto e Possessivos",
+    level: "A2",
+    icon: "👥",
+    description: "Object pronouns, possessives e mais verbos essenciais",
+    url: "lessons/licao-11-object-possessive-pronouns.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-20-survival-english',
-    name: 'Lição 20 — Survival English 🌍',
-    level: 'A2',
-    icon: '🌍',
-    description: 'Frases essenciais para se virar em situações reais',
-    url: 'lessons/licao-20-survival-english.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-16-present-continuous",
+    name: "Lição 20 — Present Continuous",
+    level: "A2",
+    icon: "🏃",
+    description: "Ações em andamento e situações temporárias",
+    url: "lessons/licao-16-present-continuous.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-21-simple-past-regular',
-    name: 'Lição 21 — Simple Past: Verbos Regulares',
-    level: 'A2',
-    icon: '⏮️',
-    description: 'Formação e uso do Simple Past com verbos regulares',
-    url: 'lessons/licao-21-simple-past-regular.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-17-countable-uncountable",
+    name: "Lição 21 — Contáveis e Incontáveis",
+    level: "A2",
+    icon: "🍎",
+    description: "Countable/uncountable, some, any, much e many",
+    url: "lessons/licao-17-countable-uncountable.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-22-simple-past-irregular',
-    name: 'Lição 22 — Simple Past: Verbos Irregulares',
-    level: 'A2',
-    icon: '📖',
-    description: 'Verbos irregulares mais comuns no Simple Past',
-    url: 'lessons/licao-22-simple-past-irregular.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-18-quantities-choices",
+    name: "Lição 22 — Quantidades e Escolhas",
+    level: "A2",
+    icon: "🛒",
+    description: "Expressando quantidades e fazendo escolhas em inglês",
+    url: "lessons/licao-18-quantities-choices.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-23-talking-about-the-past',
-    name: 'Lição 23 — Falando Sobre o Passado',
-    level: 'A2',
-    icon: '🕰️',
-    description: 'Perguntas, negativas e expressões de tempo no passado',
-    url: 'lessons/licao-23-talking-about-the-past.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-19-quantities-distance-time",
+    name: "Lição 23 — Quantidade, Distância e Tempo",
+    level: "A2",
+    icon: "📏",
+    description: "How much/many/long/far e perguntas de medida",
+    url: "lessons/licao-19-quantities-distance-time.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-24-future-going-to',
-    name: 'Lição 24 — Futuro com Going To',
-    level: 'A2',
-    icon: '🎯',
-    description: 'Planos e intenções futuras com Going To',
-    url: 'lessons/licao-24-future-going-to.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-20-survival-english",
+    name: "Lição 24 — Survival English",
+    level: "A2",
+    icon: "🌍",
+    description: "Inglês de sobrevivência para situações reais do dia a dia",
+    url: "lessons/licao-20-survival-english.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-25-future-will',
-    name: 'Lição 25 — Futuro com Will',
-    level: 'A2',
-    icon: '🔮',
-    description: 'Previsões, decisões espontâneas e promessas com Will',
-    url: 'lessons/licao-25-future-will.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-23-talking-about-the-past",
+    name: "Lição 25 — Falando Sobre o Passado",
+    level: "A2",
+    icon: "🕰️",
+    description: "Perguntas, negativas e expressões de tempo no passado (consolidação)",
+    url: "lessons/licao-23-talking-about-the-past.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-26-comparatives-superlatives',
-    name: 'Lição 26 — Comparativos e Superlativos',
-    level: 'A2',
-    icon: '⚖️',
-    description: 'Comparando pessoas e coisas em inglês',
-    url: 'lessons/licao-26-comparatives-superlatives.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-26-comparatives-superlatives",
+    name: "Lição 26 — Comparativos e Superlativos",
+    level: "A2",
+    icon: "⚖️",
+    description: "Comparando pessoas e coisas em inglês (nível A2)",
+    url: "lessons/licao-26-comparatives-superlatives.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-27-present-perfect',
-    name: 'Lição 27 — Present Perfect (Introdução)',
-    level: 'A2',
-    icon: '✅',
-    description: 'Introdução ao Present Perfect: have/has + particípio',
-    url: 'lessons/licao-27-present-perfect.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-28-modal-verbs",
+    name: "Lição 27 — Verbos Modais (introdução)",
+    level: "A2",
+    icon: "🔑",
+    description: "Could, must, should e outros modais além de can",
+    url: "lessons/licao-28-modal-verbs.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-28-modal-verbs',
-    name: 'Lição 28 — Verbos Modais',
-    level: 'A2',
-    icon: '🔑',
-    description: 'Can, could, must, should e outros verbos modais',
-    url: 'lessons/licao-28-modal-verbs.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-29-phrasal-verbs",
+    name: "Lição 28 — Phrasal Verbs Essenciais",
+    level: "A2",
+    icon: "🧩",
+    description: "Phrasal verbs mais usados no inglês do dia a dia",
+    url: "lessons/licao-29-phrasal-verbs.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-29-phrasal-verbs',
-    name: 'Lição 29 — Phrasal Verbs Essenciais',
-    level: 'A2',
-    icon: '🧩',
-    description: 'Phrasal verbs mais usados no inglês do dia a dia',
-    url: 'lessons/licao-29-phrasal-verbs.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-30-revisao-semestre-2",
+    name: "Lição 29 — Revisão Geral do Semestre 2 🎓",
+    level: "A2",
+    icon: "🎓",
+    description: "Revisão completa do Semestre 2 (A2) e consolidação",
+    url: "lessons/licao-30-revisao-semestre-2.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-30-revisao-semestre-2',
-    name: 'Lição 30 — Revisão Geral do Semestre 2 🎓',
-    level: 'A2',
-    icon: '🎓',
-    description: 'Revisão completa de todo o conteúdo do Semestre 2',
-    url: 'lessons/licao-30-revisao-semestre-2.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-31-past-continuous",
+    name: "Lição 30 — Past Continuous",
+    level: "B1",
+    icon: "⏳",
+    description: "Ações em progresso no passado: was/were + verbo-ing",
+    url: "lessons/licao-31-past-continuous.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-31-past-continuous',
-    name: 'Lição 31 — Past Continuous',
-    level: 'B1',
-    icon: '⏳',
-    description: 'Ações em progresso no passado: was/were + verbo-ing',
-    url: 'lessons/licao-31-past-continuous.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-32-simple-past-past-continuous",
+    name: "Lição 31 — Simple Past × Past Continuous",
+    level: "B1",
+    icon: "🔀",
+    description: "Ações simultâneas e interrompidas ao contar histórias",
+    url: "lessons/licao-32-simple-past-past-continuous.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-32-simple-past-past-continuous',
-    name: 'Lição 32 — Simple Past × Past Continuous',
-    level: 'B1',
-    icon: '🔀',
-    description: 'Combinando ações simultâneas e interrompidas ao contar histórias',
-    url: 'lessons/licao-32-simple-past-past-continuous.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-27-present-perfect",
+    name: "Lição 32 — Present Perfect (introdução)",
+    level: "B1",
+    icon: "✅",
+    description: "Have/has + particípio — primeira abordagem ao Present Perfect",
+    url: "lessons/licao-27-present-perfect.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-33-present-perfect-experiences',
-    name: 'Lição 33 — Present Perfect: Experiences',
-    level: 'B1',
-    icon: '🌍',
-    description: 'Falando sobre experiências de vida com ever, never, before',
-    url: 'lessons/licao-33-present-perfect-experiences.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-33-present-perfect-experiences",
+    name: "Lição 33 — Present Perfect: Experiences",
+    level: "B1",
+    icon: "🌍",
+    description: "Experiências de vida com ever, never, before",
+    url: "lessons/licao-33-present-perfect-experiences.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-34-present-perfect-simple-past',
-    name: 'Lição 34 — Present Perfect × Simple Past',
-    level: 'B1',
-    icon: '⚖️',
-    description: 'Quando usar cada tempo verbal: since, for, last, ago',
-    url: 'lessons/licao-34-present-perfect-simple-past.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-34-present-perfect-simple-past",
+    name: "Lição 34 — Present Perfect × Simple Past",
+    level: "B1",
+    icon: "⚖️",
+    description: "Quando usar cada tempo: since, for, last, ago",
+    url: "lessons/licao-34-present-perfect-simple-past.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-35-present-perfect-already-yet-just',
-    name: 'Lição 35 — Present Perfect: Already, Yet, Just',
-    level: 'B1',
-    icon: '✅',
-    description: 'Already, yet, just, still, recently e lately em contexto',
-    url: 'lessons/licao-35-present-perfect-already-yet-just.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-35-present-perfect-already-yet-just",
+    name: "Lição 35 — Present Perfect: Already, Yet, Just",
+    level: "B1",
+    icon: "✅",
+    description: "Already, yet, just, still, recently e lately",
+    url: "lessons/licao-35-present-perfect-already-yet-just.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-36-future-will-going-to',
-    name: 'Lição 36 — Future: Will, Going to & Present Continuous',
-    level: 'B1',
-    icon: '🔮',
-    description: 'Decisões espontâneas, planos e compromissos marcados',
-    url: 'lessons/licao-36-future-will-going-to.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-36-future-will-going-to",
+    name: "Lição 36 — Futuro consolidado (Will, Going to & Present Continuous)",
+    level: "B1",
+    icon: "🔮",
+    description: "Decisões espontâneas, planos e compromissos marcados",
+    url: "lessons/licao-36-future-will-going-to.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-37-modal-verbs-advice-obligation',
-    name: 'Lição 37 — Modal Verbs: Advice, Obligation & Permission',
-    level: 'B1',
-    icon: '🔑',
-    description: 'Should, must, have to, can, may e might em contexto real',
-    url: 'lessons/licao-37-modal-verbs-advice-obligation.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-37-modal-verbs-advice-obligation",
+    name: "Lição 37 — Modais: Conselho, Obrigação e Permissão",
+    level: "B1",
+    icon: "🔑",
+    description: "Should, must, have to, can, may e might em contexto real",
+    url: "lessons/licao-37-modal-verbs-advice-obligation.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-38-comparatives-superlatives-equality',
-    name: 'Lição 38 — Comparatives, Superlatives & Equality',
-    level: 'B1',
-    icon: '📊',
-    description: 'Comparando pessoas e coisas: bigger, the best, as...as',
-    url: 'lessons/licao-38-comparatives-superlatives-equality.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-38-comparatives-superlatives-equality",
+    name: "Lição 38 — Comparativos, Superlativos e Igualdade",
+    level: "B1",
+    icon: "📊",
+    description: "Bigger, the best, as...as — nível B1",
+    url: "lessons/licao-38-comparatives-superlatives-equality.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-39-conditionals-zero-first',
-    name: 'Lição 39 — Conditionals: Zero & First Conditional',
-    level: 'B1',
-    icon: '🔀',
-    description: 'Fatos gerais e possibilidades reais no futuro com if/unless',
-    url: 'lessons/licao-39-conditionals-zero-first.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-39-conditionals-zero-first",
+    name: "Lição 39 — Conditionals: Zero & First",
+    level: "B1",
+    icon: "🔀",
+    description: "Fatos gerais e possibilidades reais com if/unless",
+    url: "lessons/licao-39-conditionals-zero-first.html",
+    totalQuestions: 12
   },
   {
-    id: 'licao-40-revisao-semestre-3',
-    name: 'Lição 40 — Grande Revisão A2 → B1 🎓',
-    level: 'B1',
-    icon: '🎓',
-    description: 'Revisão completa do Semestre 3 e projeto final',
-    url: 'lessons/licao-40-revisao-semestre-3.html',
-    totalQuestions: 12 // design interativo
+    id: "licao-40-revisao-semestre-3",
+    name: "Lição 40 — Grande Revisão A2 → B1 🎓",
+    level: "B1",
+    icon: "🎓",
+    description: "Revisão completa do Semestre 3 e projeto final B1",
+    url: "lessons/licao-40-revisao-semestre-3.html",
+    totalQuestions: 12
   }
-  // próximas lições entram aqui, ex:
-  // { id: 'present-simple', name: 'Present Simple', level: 'A1', icon: '📗', url: 'lessons/present-simple.html', totalQuestions: 15 }
 ];
 
 // ---------- Navegação entre telas ----------
