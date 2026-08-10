@@ -484,6 +484,20 @@
           <button type="button" class="btn btn-small" id="btn-push-toggle">Ativar</button>
         </div>
         <button type="button" class="link-btn push-test-btn hidden" id="btn-push-test">Enviar notificação de teste</button>
+        <button type="button" class="link-btn push-config-btn hidden" id="btn-push-config">⏰ Configurar horários</button>
+
+        <div class="push-times-panel hidden" id="push-times-panel">
+          <div class="push-times-hint">Escolha um ou mais horários do dia para receber o lembrete. Sem nenhum horário aqui, usamos o padrão (8h e 18h).</div>
+          <div class="push-times-list" id="push-times-list"></div>
+          <div class="push-times-add-row">
+            <input type="time" id="push-time-input" step="900">
+            <button type="button" class="btn btn-small" id="btn-push-time-add">Adicionar</button>
+          </div>
+          <div class="push-times-actions">
+            <button type="button" class="btn btn-small" id="btn-push-times-save">Salvar horários</button>
+            <button type="button" class="link-btn" id="btn-push-times-cancel">Cancelar</button>
+          </div>
+        </div>
       </div>
 
       <div id="ai-chat-persona-list"></div>

@@ -243,6 +243,16 @@ create table if not exists push_subscriptions (
   updated_at timestamptz not null default now()
 );
 
+-- Horários (em UTC, formato 'HH:MM', arredondados pro quarto de hora mais
+-- próximo) em que o aluno quer receber lembrete de prática. Editável pelo
+-- aluno na tela de Perfil/Praticar com IA. Vazio ([]) = usa os horários
+-- padrão do sistema (ver DEFAULT_REMINDER_TIMES em api/push-send.js).
+alter table push_subscriptions add column if not exists reminder_times jsonb not null default '[]'::jsonb;
+
+-- Evita mandar o mesmo lembrete duas vezes no mesmo horário (ex.: o cron
+-- rodar de novo por retry). Atualizado pelo servidor a cada envio.
+alter table push_subscriptions add column if not exists last_reminder_sent_at timestamptz;
+
 create index if not exists push_subscriptions_user_id_idx on push_subscriptions (user_id);
 
 alter table push_subscriptions enable row level security;

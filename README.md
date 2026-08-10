@@ -107,35 +107,49 @@ Na tela **Praticar com IA** o aluno pode ativar **Lembretes de prática**. Isso 
 - Botão **Ativar / Desativar** lembretes
 - Pedido de permissão de notificação
 - Inscrição Push (subscription) salva no aparelho e, com Supabase, também na tabela `push_subscriptions`
+- Botão **⏰ Configurar horários** — o aluno escolhe um ou mais horários do dia pra receber o lembrete (fica salvo por aparelho; sem escolha nenhuma, usa o padrão 8h/18h)
 - Service Worker exibe a notificação e, ao tocar, abre a tela de Praticar com IA
 - **Notificação de teste** (local, sem servidor)
 - Com Shift + clique no teste: envia push de verdade via `/api/push-send` (precisa das chaves VAPID na Vercel)
 
 ### Configuração na Vercel (obrigatória para push real)
 
-1. As chaves VAPID do projeto já estão pareadas:
-   - **Pública** → em `config.js` (`APP_CONFIG.vapidPublicKey`)
-   - **Privada** → só na Vercel (nunca no código)
+1. Gere um par de chaves VAPID (não reaproveite nenhuma chave que já tenha aparecido em texto puro em algum arquivo do projeto): `npx web-push generate-vapid-keys`.
+   - **Pública** → cole em `config.js` (`APP_CONFIG.vapidPublicKey`)
+   - **Privada** → só na Vercel, nunca em nenhum arquivo do repositório
 
 2. No painel da Vercel → **Settings → Environment Variables**, adicione:
 
 | Name | Value |
 |------|--------|
 | `VAPID_PUBLIC_KEY` | a mesma pública de `config.js` |
-| `VAPID_PRIVATE_KEY` | `A4LhDtBYLHCFdB1TC8znW78xCxwfappz6Wtp4-L_rxA` |
+| `VAPID_PRIVATE_KEY` | a privada gerada no passo 1 (nunca no código) |
 | `VAPID_SUBJECT` | `mailto:seu-email@escola.com` |
 | `SUPABASE_URL` | (opcional) URL do projeto Supabase — para enviar à turma inteira |
 | `SUPABASE_SERVICE_ROLE_KEY` | (opcional) service role do Supabase — só no servidor |
 | `GEMINI_API_KEY` | (opcional, mesma chave do `api/chat.js`) com Supabase + essa chave, o lembrete vira personalizado com base na última conversa (veja abaixo) |
-| `PUSH_SEND_SECRET` | (opcional) senha que o cron/painel deve mandar no header `x-push-secret` |
+| `PUSH_SEND_SECRET` | (recomendado) uma senha à sua escolha — protege `/api/push-send` de ser chamada por qualquer um que descubra a URL |
 
-3. Rode de novo o `schema.sql` no Supabase (a tabela `push_subscriptions` é criada de forma segura).
+3. Rode de novo o `schema.sql` no Supabase — além de garantir a tabela `push_subscriptions`, agora ele também adiciona as colunas `reminder_times` e `last_reminder_sent_at` nela (seguro rodar de novo em um banco que já existe).
 
 4. **Redeploy** o projeto na Vercel (para instalar a dependência `web-push` do `package.json`).
 
-> Se quiser gerar **outro** par de chaves: `npx web-push generate-vapid-keys` — atualize a pública em `config.js` e a pública+privada nas env vars.
+### Lembrete automático, todo dia, no horário de cada aluno
 
-### Enviar lembrete para a turma (manual ou cron)
+O envio automático **não** usa o Cron nativo da Vercel: no plano gratuito (Hobby), cron só pode rodar 1x por dia, o que não é suficiente pra checar o horário individual de cada aluno. Em vez disso, o repositório já vem com um workflow do **GitHub Actions** (`.github/workflows/push-reminders.yml`) que chama `/api/push-send` a cada 15 minutos; a própria rota decide quem está "no horário" agora e só manda notificação pra esses alunos.
+
+Pra ativar, em **Settings → Secrets and variables → Actions** deste repositório no GitHub, adicione:
+
+| Secret | Valor |
+|--------|-------|
+| `APP_URL` | `https://SEU-SITE.vercel.app` (sem barra no final) |
+| `PUSH_SEND_SECRET` | o **mesmo** valor que você colocou na env var `PUSH_SEND_SECRET` da Vercel |
+
+Pronto — a partir do próximo `git push`, o GitHub já passa a rodar o workflow sozinho a cada 15 minutos (dá pra testar na hora clicando em "Run workflow" na aba **Actions** do repositório).
+
+> Prefere manter tudo dentro da Vercel? Se o projeto estiver no plano **Pro**, adicione de volta um bloco `"crons"` em `vercel.json` apontando pra `/api/push-send` (o handler já aceita chamadas `GET` e reconhece o header que o Vercel Cron manda automaticamente) e pode desativar o workflow do GitHub Actions.
+
+### Enviar um aviso manual pra turma (fora do horário configurado)
 
 ```bash
 curl -X POST https://SEU-SITE.vercel.app/api/push-send \
@@ -144,26 +158,25 @@ curl -X POST https://SEU-SITE.vercel.app/api/push-send \
   -d '{"title":"Bobcat 🐱","body":"Hora de praticar inglês com a IA!","url":"./index.html?screen=ai-chat"}'
 ```
 
-Isso exige `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` configurados. Sem isso, o endpoint ainda aceita uma `subscription` avulsa no body (como o botão de teste com Shift faz).
-
-Para agendar (ex.: 8h e 18h), use **Vercel Cron** apontando para essa rota, ou um serviço externo de cron.
+Diferente do envio automático (que só manda pra quem está no horário certo), um `POST` como esse manda **na hora**, pra turma inteira — útil pra um aviso pontual do professor. Exige `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` configurados. Sem isso, o endpoint ainda aceita uma `subscription` avulsa no body (como o botão de teste com Shift faz).
 
 ### Limitações
 - **iPhone (Safari/PWA):** Web Push em PWA no iOS exige iOS 16.4+ e o app instalado na tela inicial; o suporte ainda é mais limitado que no Android.
 - **Android + Chrome:** funciona bem com o app instalado ou aberto no navegador.
 - A notificação em si é um lembrete genérico; ao abrir o chat, a mensagem proativa da personalidade (já implementada) continua gerando o “bom dia / como você está?” no tom da IA.
+- O horário configurado é arredondado pro quarto de hora mais próximo (ex.: 9h07 vira 9h00) e o lembrete pode chegar com até 15 minutos de atraso em relação a ele — é a granularidade da checagem do GitHub Actions.
 
 ### Lembrete personalizado com a última conversa
 
-Se **Supabase** e **`GEMINI_API_KEY`** estiverem configurados na Vercel, o `/api/push-send` personaliza automaticamente o título/corpo do lembrete de cada aluno com base no final da última conversa dele com a IA — algo como *"Mia 🐱 — Ready to talk about that trip to Rio?"* em vez do texto genérico.
+Se **Supabase** e **`GEMINI_API_KEY`** estiverem configurados na Vercel, o `/api/push-send` personaliza automaticamente o título/corpo do lembrete de cada aluno com base no final de uma conversa recente dele com a IA — algo como *"Mia 🐱 — Ready to talk about that trip to Rio?"* em vez do texto genérico.
 
 Como funciona:
-- A cada resposta da IA no chat, o app grava um resumo (últimas ~8 mensagens) na tabela `ai_chat_last_conversation` do Supabase — só isso, não o histórico completo (que continua só no aparelho do aluno).
-- Ao enviar o lembrete, o servidor busca esse resumo por aluno e pede pro Gemini gerar um `title`/`body` curtos referenciando o assunto.
-- Sem conversa registrada, sem `GEMINI_API_KEY`, ou se o Gemini falhar nesse aluno em particular, cai automaticamente no `title`/`body` genérico enviado no `curl`/cron.
+- Se o aluno tiver **mais de uma personalidade de IA criada**, o servidor sorteia qual delas "manda" o lembrete dessa vez (usando o histórico daquela personalidade específica) — assim o lembrete não vem sempre da mesma, o que ficaria estranho pra quem conversa com várias.
+- Com só uma personalidade (ou nenhuma conversa ainda registrada pra sorteada), cai no resumo da conversa mais recente (qualquer personalidade), como antes — gravado na tabela `ai_chat_last_conversation` a cada resposta da IA no chat.
+- Sem `GEMINI_API_KEY`, ou se o Gemini falhar nesse aluno em particular, cai automaticamente no `title`/`body` genérico.
 - Para desligar a personalização em um envio específico (ex.: um aviso igual pra turma toda), mande `"personalize": false` no body do POST.
 - Por segurança de custo, um mesmo envio gera no máximo 60 lembretes personalizados (turmas maiores que isso recebem o texto genérico para o excedente).
-- Exige rodar de novo o `schema.sql` no Supabase (cria a tabela `ai_chat_last_conversation`).
+- Exige rodar de novo o `schema.sql` no Supabase (cria as tabelas `ai_chat_last_conversation`, `ai_chat_personas` e `ai_chat_history`).
 
 ---
 
@@ -177,6 +190,7 @@ config.js             → suas chaves do Supabase + VAPID pública (edite aqui)
 api/chat.js            → função serverless (Vercel) que fala com a IA — a GEMINI_API_KEY fica aqui, como variável de ambiente, nunca neste arquivo
 api/explain-error.js   → mesma chave/modelo do chat; gera as explicações da "Trilha de Erro" (tela de fim de lição, quando o aluno não passa)
 api/push-send.js       → envia notificações Web Push (VAPID + opcionalmente Supabase)
+.github/workflows/push-reminders.yml → GitHub Actions: chama /api/push-send a cada 15 min (lembrete automático)
 style.css             → visual do app
 manifest.json         → deixa o app instalável
 sw.js                 → cache offline + handlers de push/notificationclick

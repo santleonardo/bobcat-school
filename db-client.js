@@ -570,6 +570,7 @@ async function savePushSubscription(subscription) {
     p256dh,
     auth,
     user_agent: (typeof navigator !== 'undefined' && navigator.userAgent) ? navigator.userAgent.slice(0, 300) : null,
+    reminder_times: getLocalPushReminderTimes(),
     updated_at: new Date().toISOString()
   };
 
@@ -599,6 +600,42 @@ function getLocalPushSubscription() {
     return JSON.parse(localStorage.getItem('bobcat_push_subscription') || 'null');
   } catch (e) {
     return null;
+  }
+}
+
+// Horários (formato 'HH:MM', em UTC) em que o aluno quer receber o lembrete
+// de prática. Fica atrelado à subscription deste aparelho (coluna
+// reminder_times em push_subscriptions). Sem Supabase, fica só local — nesse
+// modo não há como o servidor de push saber do horário escolhido, então o
+// lembrete automático (cron) não chega; só o botão de teste funciona.
+async function savePushReminderTimes(times) {
+  const list = Array.isArray(times) ? times : [];
+  try { localStorage.setItem('bobcat_push_reminder_times', JSON.stringify(list)); } catch (e) { /* ignore quota */ }
+
+  if (!useSupabase || !supabaseClient || !currentUserId) return { ok: true, localOnly: true };
+
+  const local = getLocalPushSubscription();
+  if (!local || !local.endpoint) {
+    return { ok: false, message: 'Ative os lembretes de prática antes de escolher os horários.' };
+  }
+
+  const { error } = await supabaseClient
+    .from('push_subscriptions')
+    .update({ reminder_times: list, updated_at: new Date().toISOString() })
+    .eq('endpoint', local.endpoint);
+  if (error) {
+    console.error('savePushReminderTimes:', error);
+    return { ok: false, message: error.message };
+  }
+  return { ok: true };
+}
+
+function getLocalPushReminderTimes() {
+  try {
+    const list = JSON.parse(localStorage.getItem('bobcat_push_reminder_times') || '[]');
+    return Array.isArray(list) ? list : [];
+  } catch (e) {
+    return [];
   }
 }
 

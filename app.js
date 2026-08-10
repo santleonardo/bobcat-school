@@ -1605,6 +1605,7 @@ async function updatePushRemindersUI() {
   const statusEl = document.getElementById('push-reminders-status');
   const btn = document.getElementById('btn-push-toggle');
   const testBtn = document.getElementById('btn-push-test');
+  const configBtn = document.getElementById('btn-push-config');
   if (!btn) return;
 
   if (!pushSupported()) {
@@ -1612,6 +1613,7 @@ async function updatePushRemindersUI() {
     btn.disabled = true;
     btn.textContent = 'Indisponível';
     if (testBtn) testBtn.classList.add('hidden');
+    if (configBtn) configBtn.classList.add('hidden');
     return;
   }
 
@@ -1624,6 +1626,7 @@ async function updatePushRemindersUI() {
     btn.disabled = true;
     btn.classList.remove('is-on');
     if (testBtn) testBtn.classList.add('hidden');
+    if (configBtn) configBtn.classList.add('hidden');
     return;
   }
 
@@ -1633,11 +1636,14 @@ async function updatePushRemindersUI() {
     btn.textContent = 'Desativar';
     btn.classList.add('is-on');
     if (testBtn) testBtn.classList.remove('hidden');
+    if (configBtn) configBtn.classList.remove('hidden');
   } else {
     if (statusEl) statusEl.textContent = 'Receba um toque no celular para praticar com a IA ao longo do dia.';
     btn.textContent = 'Ativar';
     btn.classList.remove('is-on');
     if (testBtn) testBtn.classList.add('hidden');
+    if (configBtn) configBtn.classList.add('hidden');
+    closePushTimesPanel();
   }
 }
 
@@ -1783,7 +1789,110 @@ function setupPushRemindersUI() {
       else sendLocalTestNotification();
     });
   }
+  setupPushTimesUI();
   updatePushRemindersUI();
+}
+
+// ─── Horários personalizados do lembrete ───────────────────────────────────
+// Precisa bater com REMINDER_WINDOW_MINUTES em api/push-send.js.
+const PUSH_REMINDER_WINDOW_MINUTES = 15;
+
+let pushTimesDraft = [];
+
+/** Converte um horário local ('HH:MM', do <input type="time">) pro "slot" UTC
+ * mais próximo (arredondado pro quarto de hora), formato usado no servidor. */
+function localTimeToUtcSlot(hhmm) {
+  const [h, m] = String(hhmm).split(':').map(Number);
+  if (Number.isNaN(h) || Number.isNaN(m)) return null;
+  const d = new Date();
+  d.setHours(h, m, 0, 0);
+  const rounded = d.getUTCMinutes() - (d.getUTCMinutes() % PUSH_REMINDER_WINDOW_MINUTES);
+  return `${String(d.getUTCHours()).padStart(2, '0')}:${String(rounded).padStart(2, '0')}`;
+}
+
+/** Converte um "slot" UTC salvo de volta pro horário local, só para exibição. */
+function utcSlotToLocalTime(hhmm) {
+  const [h, m] = String(hhmm).split(':').map(Number);
+  const d = new Date();
+  d.setUTCHours(h, m, 0, 0);
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+}
+
+function renderPushTimesList() {
+  const list = document.getElementById('push-times-list');
+  if (!list) return;
+  if (pushTimesDraft.length === 0) {
+    list.innerHTML = '<div class="push-times-empty">Nenhum horário específico — usando o padrão (8h e 18h).</div>';
+    return;
+  }
+  const sorted = [...pushTimesDraft].sort();
+  list.innerHTML = sorted.map((utc) => {
+    const local = utcSlotToLocalTime(utc);
+    return `<span class="push-time-chip" data-utc="${utc}">${local}<button type="button" class="push-time-remove" data-utc="${utc}" aria-label="Remover ${local}">✕</button></span>`;
+  }).join('');
+  list.querySelectorAll('.push-time-remove').forEach((removeBtn) => {
+    removeBtn.addEventListener('click', () => {
+      pushTimesDraft = pushTimesDraft.filter((t) => t !== removeBtn.dataset.utc);
+      renderPushTimesList();
+    });
+  });
+}
+
+function openPushTimesPanel() {
+  const panel = document.getElementById('push-times-panel');
+  if (!panel) return;
+  const stored = (typeof getLocalPushReminderTimes === 'function') ? getLocalPushReminderTimes() : [];
+  pushTimesDraft = [...stored];
+  renderPushTimesList();
+  panel.classList.remove('hidden');
+}
+
+function closePushTimesPanel() {
+  const panel = document.getElementById('push-times-panel');
+  if (panel) panel.classList.add('hidden');
+}
+
+function addPushTimeFromInput() {
+  const input = document.getElementById('push-time-input');
+  if (!input || !input.value) return;
+  const slot = localTimeToUtcSlot(input.value);
+  if (slot && !pushTimesDraft.includes(slot)) pushTimesDraft.push(slot);
+  input.value = '';
+  renderPushTimesList();
+}
+
+async function savePushTimesFromPanel() {
+  const saveBtn = document.getElementById('btn-push-times-save');
+  if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Salvando...'; }
+  try {
+    const result = (typeof savePushReminderTimes === 'function')
+      ? await savePushReminderTimes(pushTimesDraft)
+      : { ok: false };
+    if (!result.ok) {
+      alert('Não foi possível salvar os horários: ' + (result.message || 'tente novamente.'));
+      return;
+    }
+    closePushTimesPanel();
+  } finally {
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Salvar horários'; }
+  }
+}
+
+function setupPushTimesUI() {
+  const configBtn = document.getElementById('btn-push-config');
+  const addBtn = document.getElementById('btn-push-time-add');
+  const saveBtn = document.getElementById('btn-push-times-save');
+  const cancelBtn = document.getElementById('btn-push-times-cancel');
+  const timeInput = document.getElementById('push-time-input');
+  if (configBtn) configBtn.addEventListener('click', openPushTimesPanel);
+  if (addBtn) addBtn.addEventListener('click', addPushTimeFromInput);
+  if (saveBtn) saveBtn.addEventListener('click', savePushTimesFromPanel);
+  if (cancelBtn) cancelBtn.addEventListener('click', closePushTimesPanel);
+  if (timeInput) {
+    timeInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); addPushTimeFromInput(); }
+    });
+  }
 }
 
 /** Abre a tela pedida por ?screen=... (ex.: notificação push). */

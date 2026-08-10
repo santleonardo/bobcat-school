@@ -10,19 +10,33 @@
 //   GEMINI_API_KEY     — (opcional) mesma chave do api/chat.js — habilita lembretes
 //                         personalizados com base na última conversa do aluno
 //   PUSH_SEND_SECRET   — (opcional) se definida, exige header x-push-secret
+//   CRON_SECRET        — (opcional) enviado automaticamente pelo Vercel Cron
+//                         quando configurada nas env vars do projeto
 //
-// Body JSON:
-//   { title, body, url?, tag?, userId?, personalize? }
-//   ou { title, body, subscription: { endpoint, keys } }  — envia só para essa
+// Duas formas de chamar:
+//   GET  (usado pelo Vercel Cron, ver "crons" em vercel.json) — sem corpo,
+//        manda lembrete só pra quem está "no horário" agora (ver
+//        reminder_times abaixo). É o disparo automático, agendado.
+//   POST { title, body, url?, tag?, userId?, personalize? }
+//        ou { title, body, subscription: {...} } — envio manual/imediato
+//        (painel do professor, curl, ou o botão de teste do app), ignora
+//        horário e manda na hora pra quem for pedido.
+//
+// Horários configuráveis (reminder_times, coluna em push_subscriptions):
+//   Cada aluno pode escolher, na tela de Perfil/Praticar com IA, em que
+//   horários (UTC, arredondados pro quarto de hora) quer receber o lembrete.
+//   Quem não configurou nada usa DEFAULT_REMINDER_TIMES. O cron precisa
+//   rodar com a mesma granularidade de REMINDER_WINDOW_MINUTES (15 min) pra
+//   não perder nenhum horário configurado.
 //
 // Personalização (só funciona com Supabase + GEMINI_API_KEY configurados):
-//   Para cada aluno com subscription, busca o resumo da última conversa com a
-//   IA (tabela ai_chat_last_conversation, alimentada pelo app a cada turno de
-//   chat) e pede pro Gemini gerar um título/corpo de notificação que "lembra"
-//   do assunto. Se não houver conversa, ou o Gemini falhar, ou personalize
-//   estiver desligado, cai no title/body genérico enviado no request.
-//
-// Pode ser chamada por um Vercel Cron, pelo painel do professor, ou manualmente.
+//   Busca a conversa mais recente do aluno com a IA e pede pro Gemini gerar
+//   um título/corpo de notificação que "lembra" do assunto. Quando o aluno
+//   tem mais de uma personalidade de IA criada, sorteia qual delas "manda"
+//   o lembrete dessa vez (fetchConversationsForReminder), pra não ficar
+//   sempre a mesma e confundir quem conversa com várias. Se não houver
+//   conversa, ou o Gemini falhar, ou personalize estiver desligado, cai no
+//   title/body genérico enviado no request.
 
 const webpush = require('web-push');
 
@@ -34,6 +48,38 @@ const GEMINI_URL =
 // uma turma gigante gerar centenas de chamadas de IA num único envio.
 // Alunos além do limite recebem o lembrete genérico (title/body do request).
 const MAX_PERSONALIZED_CALLS = 60;
+
+// Horários padrão (UTC) usados por quem não configurou horário próprio na
+// tela de Perfil/Praticar com IA (equivale a 8h/18h em Brasília).
+const DEFAULT_REMINDER_TIMES = ['11:00', '21:00'];
+
+// Precisa bater com o intervalo do cron em vercel.json (ex.: "*/15 * * * *").
+const REMINDER_WINDOW_MINUTES = 15;
+
+// Horário atual em UTC, arredondado pra baixo pro múltiplo de
+// REMINDER_WINDOW_MINUTES mais próximo — é o "slot" que comparamos com os
+// horários configurados pelo aluno (que também são salvos já arredondados).
+function currentUtcSlot() {
+  const now = new Date();
+  const roundedMinutes = now.getUTCMinutes() - (now.getUTCMinutes() % REMINDER_WINDOW_MINUTES);
+  const hh = String(now.getUTCHours()).padStart(2, '0');
+  const mm = String(roundedMinutes).padStart(2, '0');
+  return `${hh}:${mm}`;
+}
+
+// Um push_subscriptions row está "no horário" agora? (usado só na chamada
+// automática do cron — envios manuais/broadcast do professor ignoram isso).
+function isDueNow(row, slot) {
+  const times = Array.isArray(row.reminder_times) && row.reminder_times.length > 0
+    ? row.reminder_times
+    : DEFAULT_REMINDER_TIMES;
+  if (!times.includes(slot)) return false;
+  if (row.last_reminder_sent_at) {
+    const elapsedMs = Date.now() - new Date(row.last_reminder_sent_at).getTime();
+    if (elapsedMs < REMINDER_WINDOW_MINUTES * 60 * 1000) return false; // já mandou nesse ciclo
+  }
+  return true;
+}
 
 function buildPayload(title, body, url, tag) {
   return JSON.stringify({
@@ -67,6 +113,107 @@ async function fetchLastConversations(supabaseUrl, serviceKey, userIds) {
     console.error('fetchLastConversations failed:', e);
     return new Map();
   }
+}
+
+// Todas as personalidades de IA de um conjunto de alunos, agrupadas por aluno.
+async function fetchPersonasByUser(supabaseUrl, serviceKey, userIds) {
+  const map = new Map();
+  if (userIds.length === 0) return map;
+  const idsParam = userIds.map(id => encodeURIComponent(id)).join(',');
+  const url = `${supabaseUrl}/rest/v1/ai_chat_personas?select=id,user_id,name,emoji&user_id=in.(${idsParam})`;
+  try {
+    const res = await fetch(url, {
+      headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}`, Accept: 'application/json' }
+    });
+    if (!res.ok) {
+      console.error('fetchPersonasByUser error:', res.status, await res.text());
+      return map;
+    }
+    const rows = await res.json();
+    for (const row of Array.isArray(rows) ? rows : []) {
+      if (!map.has(row.user_id)) map.set(row.user_id, []);
+      map.get(row.user_id).push(row);
+    }
+    return map;
+  } catch (e) {
+    console.error('fetchPersonasByUser failed:', e);
+    return map;
+  }
+}
+
+// Histórico completo (ai_chat_history) para pares (user_id, persona_id) específicos.
+async function fetchHistoryForPersonas(supabaseUrl, serviceKey, pairs) {
+  const map = new Map(); // `${user_id}::${persona_id}` -> messages
+  if (pairs.length === 0) return map;
+  const userIds = [...new Set(pairs.map(p => p.user_id))];
+  const personaIds = [...new Set(pairs.map(p => p.persona_id))];
+  const idsParam = userIds.map(id => encodeURIComponent(id)).join(',');
+  const pidsParam = personaIds.map(id => encodeURIComponent(id)).join(',');
+  const url = `${supabaseUrl}/rest/v1/ai_chat_history?select=user_id,persona_id,messages&user_id=in.(${idsParam})&persona_id=in.(${pidsParam})`;
+  try {
+    const res = await fetch(url, {
+      headers: { apikey: serviceKey, Authorization: `Bearer ${serviceKey}`, Accept: 'application/json' }
+    });
+    if (!res.ok) {
+      console.error('fetchHistoryForPersonas error:', res.status, await res.text());
+      return map;
+    }
+    const rows = await res.json();
+    const wanted = new Set(pairs.map(p => `${p.user_id}::${p.persona_id}`));
+    for (const row of Array.isArray(rows) ? rows : []) {
+      const key = `${row.user_id}::${row.persona_id}`;
+      if (wanted.has(key)) map.set(key, row.messages);
+    }
+    return map;
+  } catch (e) {
+    console.error('fetchHistoryForPersonas failed:', e);
+    return map;
+  }
+}
+
+// Monta os dados de conversa usados pra personalizar o lembrete de cada
+// aluno. Quando o aluno tem mais de uma personalidade de IA criada, sorteia
+// qual delas "manda" o lembrete dessa vez — assim não fica sempre a mesma
+// personalidade (o que confundiria quem conversa com várias) nem depende de
+// qual foi usada por último. Alunos com 0 ou 1 personalidade, ou cuja
+// personalidade sorteada ainda não tem conversa registrada, caem no resumo
+// da última conversa (fetchLastConversations) como antes.
+async function fetchConversationsForReminder(supabaseUrl, serviceKey, userIds) {
+  const personasByUser = await fetchPersonasByUser(supabaseUrl, serviceKey, userIds);
+
+  const chosen = [];
+  let usersNeedingFallback = [];
+  for (const userId of userIds) {
+    const personas = personasByUser.get(userId) || [];
+    if (personas.length === 0) {
+      usersNeedingFallback.push(userId);
+    } else {
+      const pick = personas[Math.floor(Math.random() * personas.length)];
+      chosen.push({ user_id: userId, persona_id: pick.id, persona_name: pick.name, persona_emoji: pick.emoji });
+    }
+  }
+
+  const historyMap = await fetchHistoryForPersonas(
+    supabaseUrl, serviceKey,
+    chosen.map(c => ({ user_id: c.user_id, persona_id: c.persona_id }))
+  );
+
+  const result = new Map();
+  for (const c of chosen) {
+    const messages = historyMap.get(`${c.user_id}::${c.persona_id}`);
+    if (Array.isArray(messages) && messages.length > 0) {
+      result.set(c.user_id, { persona_name: c.persona_name, persona_emoji: c.persona_emoji, messages });
+    } else {
+      usersNeedingFallback.push(c.user_id); // sorteada, mas nunca conversou ainda
+    }
+  }
+
+  if (usersNeedingFallback.length > 0) {
+    const fallbackMap = await fetchLastConversations(supabaseUrl, serviceKey, usersNeedingFallback);
+    for (const [userId, conv] of fallbackMap) result.set(userId, conv);
+  }
+
+  return result;
 }
 
 // Pede ao Gemini um título + corpo curtos de notificação, baseados na última
@@ -132,7 +279,8 @@ Regras:
 }
 
 module.exports = async function handler(req, res) {
-  if (req.method !== 'POST') {
+  const method = req.method;
+  if (method !== 'POST' && method !== 'GET') {
     res.status(405).json({ error: 'Method not allowed' });
     return;
   }
@@ -148,27 +296,54 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  // Proteção opcional: se PUSH_SEND_SECRET estiver definida, exige o header.
-  const requiredSecret = process.env.PUSH_SEND_SECRET;
-  if (requiredSecret) {
-    const got = req.headers['x-push-secret'] || '';
-    if (got !== requiredSecret) {
+  // GET é o formato que o Vercel Cron usa para chamar a rota (sem corpo JSON,
+  // parâmetros na query string). POST continua sendo o formato usado pelo
+  // painel do professor e pelo botão de teste no app.
+  const body = method === 'POST' ? (req.body || {}) : (req.query || {});
+  const isAdHocTest = method === 'POST' && !!(body.subscription && body.subscription.endpoint && body.subscription.keys);
+
+  if (method === 'GET') {
+    // Essa chamada manda lembrete pra turma inteira (ou pro userId da query),
+    // então não pode ficar aberta pra qualquer um que descubra a URL. Aceita
+    // o header que o próprio Vercel Cron manda automaticamente quando
+    // CRON_SECRET está configurado no projeto, ou o x-push-secret de sempre
+    // (útil se você preferir usar um cron externo em vez do Vercel Cron).
+    const cronSecret = process.env.CRON_SECRET;
+    const gotCron = (req.headers['authorization'] || '').replace(/^Bearer\s+/i, '');
+    const pushSecret = process.env.PUSH_SEND_SECRET;
+    const gotPush = req.headers['x-push-secret'] || '';
+    const authorized = (cronSecret && gotCron === cronSecret) || (pushSecret && gotPush === pushSecret);
+    if ((cronSecret || pushSecret) && !authorized) {
       res.status(401).json({ error: 'Não autorizado.' });
       return;
     }
+  } else if (!isAdHocTest) {
+    // POST "de verdade" (turma inteira ou aluno específico via Supabase):
+    // protegido por PUSH_SEND_SECRET se estiver configurada.
+    const requiredSecret = process.env.PUSH_SEND_SECRET;
+    if (requiredSecret) {
+      const got = req.headers['x-push-secret'] || '';
+      if (got !== requiredSecret) {
+        res.status(401).json({ error: 'Não autorizado.' });
+        return;
+      }
+    }
   }
+  // POST com "subscription" avulsa (o botão de teste do app, Shift+clique) não
+  // exige segredo: só manda notificação pro próprio aparelho que já provou ter
+  // essa subscription — não dá acesso à lista de alunos nem manda em massa.
 
   webpush.setVapidDetails(subject, publicKey, privateKey);
 
   try {
-    const body = req.body || {};
     const fallbackTitle = String(body.title || 'Bobcat Language School').slice(0, 80);
     const fallbackText = String(body.body || 'Hora de praticar inglês! 🐱').slice(0, 200);
     const url = String(body.url || '/index.html?screen=ai-chat').slice(0, 200);
     const tag = String(body.tag || 'bobcat-practice').slice(0, 60);
     const userId = body.userId ? String(body.userId).slice(0, 80) : null;
-    // Personalização ligada por padrão; pode ser desligada explicitamente no body.
-    const wantsPersonalization = body.personalize !== false;
+    // Personalização ligada por padrão; pode ser desligada explicitamente no
+    // body (POST) ou com ?personalize=false na query (GET/cron).
+    const wantsPersonalization = !(body.personalize === false || body.personalize === 'false');
 
     const genericPayload = buildPayload(fallbackTitle, fallbackText, url, tag);
 
@@ -177,12 +352,20 @@ module.exports = async function handler(req, res) {
     const geminiKey = process.env.GEMINI_API_KEY;
     const canPersonalize = wantsPersonalization && !!supabaseUrl && !!serviceKey && !!geminiKey;
 
+    // Chamada automática do cron (GET, sem subscription/userId específico no
+    // corpo): só manda pra quem está "no horário" configurado agora — cada
+    // aluno pode ter horários próprios (reminder_times). Envios manuais
+    // (POST do professor/painel, com ou sem userId) continuam mandando na
+    // hora, sem filtrar por horário.
+    const isScheduledDispatch = method === 'GET' && !isAdHocTest;
+    const currentSlot = currentUtcSlot();
+
     // 1) Subscription avulsa (útil para teste). Se vier junto com userId e a
     // personalização estiver disponível, tenta personalizar; senão, genérico.
-    if (body.subscription && body.subscription.endpoint && body.subscription.keys) {
+    if (isAdHocTest) {
       let payload = genericPayload;
       if (canPersonalize && userId) {
-        const convMap = await fetchLastConversations(supabaseUrl, serviceKey, [userId]);
+        const convMap = await fetchConversationsForReminder(supabaseUrl, serviceKey, [userId]);
         const conv = convMap.get(userId);
         if (conv) {
           const personalized = await generatePersonalizedReminder(geminiKey, conv, fallbackTitle, fallbackText);
@@ -207,7 +390,7 @@ module.exports = async function handler(req, res) {
       return;
     }
 
-    let queryUrl = `${supabaseUrl}/rest/v1/push_subscriptions?select=endpoint,p256dh,auth,user_id`;
+    let queryUrl = `${supabaseUrl}/rest/v1/push_subscriptions?select=endpoint,p256dh,auth,user_id,reminder_times,last_reminder_sent_at`;
     if (userId) queryUrl += `&user_id=eq.${encodeURIComponent(userId)}`;
 
     const listRes = await fetch(queryUrl, {
@@ -223,17 +406,29 @@ module.exports = async function handler(req, res) {
       res.status(502).json({ error: 'Não foi possível listar subscriptions.' });
       return;
     }
-    const rows = await listRes.json();
-    if (!Array.isArray(rows) || rows.length === 0) {
-      res.status(200).json({ ok: true, sent: 0, message: 'Nenhuma subscription encontrada.' });
+    let rows = await listRes.json();
+    if (!Array.isArray(rows)) rows = [];
+
+    let dueRows = rows;
+    let skipped = 0;
+    if (isScheduledDispatch) {
+      dueRows = rows.filter((row) => isDueNow(row, currentSlot));
+      skipped = rows.length - dueRows.length;
+    }
+
+    if (dueRows.length === 0) {
+      res.status(200).json({
+        ok: true, sent: 0, skipped,
+        message: isScheduledDispatch ? 'Ninguém no horário agora.' : 'Nenhuma subscription encontrada.'
+      });
       return;
     }
 
-    // Busca as últimas conversas de todos os alunos com subscription, de uma vez.
+    // Busca as conversas usadas pra personalizar, de todos os alunos de uma vez.
     let conversationsByUser = new Map();
     if (canPersonalize) {
-      const uniqueUserIds = [...new Set(rows.map(r => r.user_id).filter(Boolean))];
-      conversationsByUser = await fetchLastConversations(supabaseUrl, serviceKey, uniqueUserIds);
+      const uniqueUserIds = [...new Set(dueRows.map(r => r.user_id).filter(Boolean))];
+      conversationsByUser = await fetchConversationsForReminder(supabaseUrl, serviceKey, uniqueUserIds);
     }
 
     let sent = 0;
@@ -241,9 +436,10 @@ module.exports = async function handler(req, res) {
     let personalized = 0;
     let personalizedCallsUsed = 0;
     const gone = []; // endpoints 410/404 → remover depois
+    const sentEndpoints = []; // pra marcar last_reminder_sent_at depois
     const payloadCache = new Map(); // user_id -> payload já gerado (evita gerar 2x p/ aluno c/ 2 aparelhos)
 
-    for (const row of rows) {
+    for (const row of dueRows) {
       const sub = {
         endpoint: row.endpoint,
         keys: { p256dh: row.p256dh, auth: row.auth }
@@ -270,12 +466,35 @@ module.exports = async function handler(req, res) {
       try {
         await webpush.sendNotification(sub, payload);
         sent++;
+        sentEndpoints.push(row.endpoint);
       } catch (err) {
         failed++;
         console.error('Push to', row.endpoint.slice(0, 40), err.statusCode || err.message);
         if (err.statusCode === 404 || err.statusCode === 410) {
           gone.push(row.endpoint);
         }
+      }
+    }
+
+    // Marca quando cada subscription recebeu o lembrete agendado, pra não
+    // mandar de novo se o cron rodar de novo dentro da mesma janela.
+    if (isScheduledDispatch && sentEndpoints.length > 0) {
+      try {
+        await fetch(
+          `${supabaseUrl}/rest/v1/push_subscriptions?endpoint=in.(${sentEndpoints.map(e => encodeURIComponent(e)).join(',')})`,
+          {
+            method: 'PATCH',
+            headers: {
+              apikey: serviceKey,
+              Authorization: `Bearer ${serviceKey}`,
+              'Content-Type': 'application/json',
+              Prefer: 'return=minimal'
+            },
+            body: JSON.stringify({ last_reminder_sent_at: new Date().toISOString() })
+          }
+        );
+      } catch (e) {
+        console.warn('Failed to update last_reminder_sent_at', e);
       }
     }
 
@@ -297,7 +516,7 @@ module.exports = async function handler(req, res) {
       }
     }
 
-    res.status(200).json({ ok: true, sent, failed, removed: gone.length, personalized });
+    res.status(200).json({ ok: true, sent, failed, skipped, removed: gone.length, personalized });
   } catch (err) {
     console.error('Erro em /api/push-send:', err);
     res.status(500).json({ error: 'Erro interno ao enviar push.' });
