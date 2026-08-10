@@ -449,6 +449,35 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
 .stat-box .num { font-family: "Fraunces", Georgia, serif; font-size: 23px; font-weight: 600; color: var(--terracotta-deep); }
 .stat-box .label { font-size: 10.5px; color: var(--ink-soft); margin-top: 3px; line-height: 1.3; }
 
+/* "Como funciona" steps */
+.howto-list { display: flex; flex-direction: column; gap: 12px; }
+.howto-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 14px 15px;
+  box-shadow: var(--clay-raised);
+}
+.howto-step-num {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--terracotta-tonal);
+  color: var(--terracotta-deep);
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 600;
+  font-size: 13.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.howto-step-body { flex: 1; min-width: 0; }
+.howto-step-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+.howto-step-desc { font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; }
+
 /* Lesson list */
 .lesson-card {
   background: var(--surface);
