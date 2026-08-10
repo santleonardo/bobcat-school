@@ -17,12 +17,13 @@
 // criadas antes desses checkpoints funcionarem de verdade.
 //
 // Achado importante ao cruzar com o roadmap: os projetos finais
-// dos semestres 4, 5 e 6 já SÃO os beats centrais da história —
+// dos semestres 4 e 5 já SÃO os beats centrais da história —
+// (esquema original de 5 semestres, com C1 e C2 juntos no Sem. 5).
 // "The Story of My Life" (sem. 4) = o Midpoint; "An Issue Worth
-// Discussing" (sem. 5) = a Provação Central; "The Big Argument"
-// (sem. 6) = a própria Cena Obrigatória do clímax. Não foi preciso
-// inventar missão nenhuma pra esses três pontos — o currículo já
-// pedia exatamente essas entregas.
+// Discussing" e "The Big Argument" (sem. 5, C1+C2) = a Provação
+// Central e a Cena Obrigatória do clímax. Não foi preciso inventar
+// missão nenhuma pra esses pontos — o currículo já pedia exatamente
+// essas entregas.
 // ============================================================
 
 // --- Tema central (seção 1 do MD) ---------------------------
@@ -319,7 +320,7 @@ const ACT2_CHECKPOINTS = [
   {
     id: 'midpoint_historia_de_vida',
     stage: 'Midpoint — vitória aparente esconde a 1ª pista',
-    lessonId: 'licao-50-revisao-semestre-4', // ROADMAP — projeto final "The Story of My Life"
+    lessonId: 'licao-50-revisao-semestre-4', // ROADMAP — projeto final "The Story of My Life" (Semestre 4)
     trigger: 'after',
     location: 'centro_eventos',
     npc: 'idris',
@@ -330,7 +331,7 @@ const ACT2_CHECKPOINTS = [
   },
 ];
 
-// --- Checkpoints do Ato 2B (C1, lições 46-60) ----------------------
+// --- Checkpoints do Ato 2B (C1, parte do Semestre 5 — lições 46-60) ---
 // Aproximação da Caverna + Provação Central + All Is Lost (seção 5).
 const ACT2B_CHECKPOINTS = [
   {
@@ -346,7 +347,7 @@ const ACT2B_CHECKPOINTS = [
   {
     id: 'passado_de_kessler',
     stage: 'Aproximação da Caverna Mais Profunda',
-    lessonId: 'licao-51-third-conditional-mixed', // ROADMAP, semestre 5
+    lessonId: 'licao-51-third-conditional-mixed', // ROADMAP, Semestre 5 (C1+C2)
     trigger: 'after',
     location: 'corporate_center',
     npc: 'informante',
@@ -356,7 +357,7 @@ const ACT2B_CHECKPOINTS = [
   {
     id: 'issue_worth_discussing',
     stage: 'Provação Central',
-    lessonId: 'licao-60-revisao-semestre-5', // ROADMAP — projeto final "An Issue Worth Discussing"
+    lessonId: 'licao-60-revisao-semestre-5', // ROADMAP — projeto final "An Issue Worth Discussing" (Semestre 5)
     trigger: 'after',
     location: 'centro_eventos',
     npc: 'kessler',
@@ -367,7 +368,7 @@ const ACT2B_CHECKPOINTS = [
   {
     id: 'priya_revelacao',
     stage: 'Recompensa + Caminho de Volta — All Is Lost',
-    lessonId: 'licao-47-reported-speech', // ROADMAP, semestre 4 — a gramática da própria cena
+    lessonId: 'licao-47-reported-speech', // ROADMAP, Semestre 4 — a gramática da própria cena
     trigger: 'after',
     location: 'hospital',
     npc: 'priya',
@@ -378,13 +379,13 @@ const ACT2B_CHECKPOINTS = [
   },
 ];
 
-// --- Checkpoints do Ato 3 (C2, lições 61-70) -----------------------
+// --- Checkpoints do Ato 3 (C2, parte do Semestre 5 — lições 61-70) ----
 // Ressurreição + Retorno com o Elixir (seção 5).
 const ACT3_CHECKPOINTS = [
   {
     id: 'preparando_argumento',
     stage: 'Ressurreição (preparação)',
-    lessonId: 'licao-69-rhetoric-argumentation-persuasion', // ROADMAP, semestre 6
+    lessonId: 'licao-69-rhetoric-argumentation-persuasion', // ROADMAP, Semestre 5 (C1+C2)
     trigger: 'after',
     location: 'campus_escritorio',
     npc: 'priya',
@@ -394,7 +395,7 @@ const ACT3_CHECKPOINTS = [
   {
     id: 'confronto_final',
     stage: 'Ressurreição',
-    lessonId: 'licao-70-revisao-semestre-6', // ROADMAP — projeto final "The Big Argument"
+    lessonId: 'licao-70-revisao-semestre-6', // ROADMAP — projeto final "The Big Argument" (Semestre 5)
     trigger: 'after',
     location: 'torre', // PENDENTE — ver LOCATIONS.torre
     npc: 'kessler',

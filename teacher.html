@@ -295,8 +295,8 @@
 
   <div id="panel-roadmap" class="tab-panel">
     <div class="notice">
-      📝 <strong>Planejamento — ainda não criado no app.</strong> Este é o roteiro de conteúdo dos Semestres 4, 5 e 6
-      (Lições 41–70), organizado a partir dos planos enviados. Nenhuma dessas lições existe como página no app ainda —
+      📝 <strong>Planejamento — ainda não criado no app.</strong> Este é o roteiro de conteúdo dos Semestres 4 e 5
+      (Lições 41–70), organizado a partir dos planos enviados — Semestre 5 junta C1 e C2 num só. Nenhuma dessas lições existe como página no app ainda —
       esta aba é só para consulta e planejamento.
     </div>
     <div id="roadmap-slot"></div>
@@ -457,89 +457,194 @@ const LESSONS_CATALOG = [
 const ROADMAP_CATALOG = [
   {
     semester: 4,
-    levelRange: 'B1 → B2',
-    lessonRange: 'Lições 41–50',
-    finalProjectTitle: 'The Story of My Life — narrativa complexa utilizando acontecimentos passados, experiências, ações em progresso, ações anteriores a outras ações, hipóteses, planos, opiniões, explicações, voz passiva, discurso indireto e relative clauses.',
+    levelRange: "B1 → B2",
+    lessonRange: "Lições 41–50",
+    finalProjectTitle: "The Story of My Life — narrativa complexa utilizando acontecimentos passados, experiências, ações em progresso, ações anteriores a outras ações, hipóteses, planos, opiniões, explicações, voz passiva, discurso indireto e relative clauses.",
     finalProjectDetails: [],
     lessons: [
-      { num: 41, title: 'Second Conditional', topics: ['Second Conditional', 'Situações hipotéticas e improváveis', 'Imaginação e conselhos hipotéticos', 'if + past, would + verb', 'What would you do if...?', 'If I were you...'] },
-      { num: 42, title: 'First × Second Conditional', topics: ['First Conditional × Second Conditional', 'Possibilidade real × situação hipotética', 'unless', 'as long as', 'provided that', 'in case'] },
-      { num: 43, title: 'Present Perfect Continuous', topics: ['have/has been + verb-ing', 'Ações iniciadas no passado que continuam', 'Ações recentes com resultado presente', 'for / since', 'Present Perfect × Present Perfect Continuous'] },
-      { num: 44, title: 'Past Perfect', topics: ['had + past participle', 'Uma ação anterior a outra no passado', 'already', 'before', 'after', 'by the time', 'when'] },
-      { num: 45, title: 'Past Perfect × Simple Past', topics: ['Sequência temporal no passado', 'Narrativas mais complexas', 'Storytelling', 'Causa e consequência', 'before / after / by the time'] },
-      { num: 46, title: 'Passive Voice', topics: ['Present Passive', 'Past Passive', 'Future Passive', 'Modal + Passive', 'be + past participle', 'Uso quando o agente não é importante ou desconhecido', 'Linguagem jornalística, processos e notícias'] },
-      { num: 47, title: 'Reported Speech', topics: ['Direct Speech × Reported Speech', 'say × tell', 'Mudanças básicas de tempo verbal', 'Mudanças de pronomes', 'Mudanças de expressões de tempo e lugar', 'Reported questions', 'Reported commands'] },
-      { num: 48, title: 'Relative Clauses', topics: ['who', 'which', 'that', 'whose', 'where', 'when', 'Defining Relative Clauses', 'Pessoas, lugares, objetos e posse', 'Informações adicionais'] },
-      { num: 49, title: 'Gerunds & Infinitives', topics: ['Gerund: verb + -ing', 'Infinitive: to + verb', 'enjoy doing / avoid doing / finish doing / keep doing / mind doing', 'want to / need to / decide to / hope to / plan to / promise to', 'remember doing × remember to do', 'stop doing × stop to do', 'try doing × try to do'] },
-      { num: 50, title: 'Grande Revisão B1 → B2', topics: ['First Conditional', 'Second Conditional', 'Present Perfect Continuous', 'Past Perfect', 'Passive Voice', 'Reported Speech', 'Relative Clauses', 'Gerunds', 'Infinitives', 'Projeto final: The Story of My Life'] },
+      {
+        num: 41,
+        title: "Second Conditional",
+        topics: ["Second Conditional", "Situações hipotéticas e improváveis", "Imaginação e conselhos hipotéticos", "if + past, would + verb", "What would you do if...?", "If I were you..."]
+      },
+      {
+        num: 42,
+        title: "First × Second Conditional",
+        topics: ["First Conditional × Second Conditional", "Possibilidade real × situação hipotética", "unless", "as long as", "provided that", "in case"]
+      },
+      {
+        num: 43,
+        title: "Present Perfect Continuous",
+        topics: ["have/has been + verb-ing", "Ações iniciadas no passado que continuam", "Ações recentes com resultado presente", "for / since", "Present Perfect × Present Perfect Continuous"]
+      },
+      {
+        num: 44,
+        title: "Past Perfect",
+        topics: ["had + past participle", "Uma ação anterior a outra no passado", "already", "before", "after", "by the time", "when"]
+      },
+      {
+        num: 45,
+        title: "Past Perfect × Simple Past",
+        topics: ["Sequência temporal no passado", "Narrativas mais complexas", "Storytelling", "Causa e consequência", "before / after / by the time"]
+      },
+      {
+        num: 46,
+        title: "Passive Voice",
+        topics: ["Present Passive", "Past Passive", "Future Passive", "Modal + Passive", "be + past participle", "Uso quando o agente não é importante ou desconhecido", "Linguagem jornalística, processos e notícias"]
+      },
+      {
+        num: 47,
+        title: "Reported Speech",
+        topics: ["Direct Speech × Reported Speech", "say × tell", "Mudanças básicas de tempo verbal", "Mudanças de pronomes", "Mudanças de expressões de tempo e lugar", "Reported questions", "Reported commands"]
+      },
+      {
+        num: 48,
+        title: "Relative Clauses",
+        topics: ["who", "which", "that", "whose", "where", "when", "Defining Relative Clauses", "Pessoas, lugares, objetos e posse", "Informações adicionais"]
+      },
+      {
+        num: 49,
+        title: "Gerunds & Infinitives",
+        topics: ["Gerund: verb + -ing", "Infinitive: to + verb", "enjoy doing / avoid doing / finish doing / keep doing / mind doing", "want to / need to / decide to / hope to / plan to / promise to", "remember doing × remember to do", "stop doing × stop to do", "try doing × try to do"]
+      },
+      {
+        num: 50,
+        title: "Grande Revisão B1 → B2",
+        topics: ["First Conditional", "Second Conditional", "Present Perfect Continuous", "Past Perfect", "Passive Voice", "Reported Speech", "Relative Clauses", "Gerunds", "Infinitives", "Projeto final: The Story of My Life"]
+      }
     ],
     parallel: {
-      'Speaking': ['Expressing opinions', 'Agreeing and disagreeing', 'Giving reasons', 'Making arguments', 'Speculating', 'Hypothetical situations', 'Telling stories', 'Explaining problems', 'Giving presentations', 'Debating', 'Negotiating', 'Clarifying ideas'],
-      'Listening': ['Conversas espontâneas', 'Entrevistas', 'Podcasts', 'Notícias', 'Diferentes sotaques', 'Connected speech', 'Reduced forms', 'Conversas com interrupções', 'Identificação de opinião e intenção'],
-      'Writing': ['E-mails formais', 'Reclamações', 'Textos de opinião', 'Reviews', 'Narrativas', 'Textos comparativos', 'Textos argumentativos', 'Relatórios simples', 'Cartas de apresentação'],
-      'Reading': ['Artigos curtos', 'Notícias', 'Blogs', 'Reviews', 'Entrevistas', 'Textos informativos', 'Textos argumentativos simples', 'Textos com linguagem implícita'],
-      'Vocabulário B1 → B2': ['Society', 'Politics', 'Education', 'Environment', 'Technology', 'Science', 'Media', 'Culture', 'Relationships', 'Work', 'Economy', 'Crime', 'Law', 'Health', 'Psychology', 'Globalization'],
-      'Collocations': ['make a decision', 'take responsibility', 'have an impact', 'raise awareness', 'reach an agreement', 'solve a problem', 'deal with a situation', 'take advantage of', 'come up with an idea'],
-      'Phrasal Verbs — B1 → B2': ['carry out', 'come across', 'come up with', 'deal with', 'figure out', 'get along with', 'get rid of', 'look into', 'point out', 'put off', 'run into', 'set up', 'take over', 'turn down', 'work out'],
-      'Inglês americano natural': ['gonna', 'wanna', 'gotta', 'kinda', 'sorta', 'outta', 'lemme', 'gimme', 'dunno', 'Fillers', 'Discourse markers', 'Informal contractions', 'Respostas naturais', 'you know', 'I mean', 'actually', 'basically', 'well', 'anyway'],
+      Speaking: ["Expressing opinions", "Agreeing and disagreeing", "Giving reasons", "Making arguments", "Speculating", "Hypothetical situations", "Telling stories", "Explaining problems", "Giving presentations", "Debating", "Negotiating", "Clarifying ideas"],
+      Listening: ["Conversas espontâneas", "Entrevistas", "Podcasts", "Notícias", "Diferentes sotaques", "Connected speech", "Reduced forms", "Conversas com interrupções", "Identificação de opinião e intenção"],
+      Writing: ["E-mails formais", "Reclamações", "Textos de opinião", "Reviews", "Narrativas", "Textos comparativos", "Textos argumentativos", "Relatórios simples", "Cartas de apresentação"],
+      Reading: ["Artigos curtos", "Notícias", "Blogs", "Reviews", "Entrevistas", "Textos informativos", "Textos argumentativos simples", "Textos com linguagem implícita"],
+      "Vocabulário B1 → B2": ["Society", "Politics", "Education", "Environment", "Technology", "Science", "Media", "Culture", "Relationships", "Work", "Economy", "Crime", "Law", "Health", "Psychology", "Globalization"],
+      Collocations: ["make a decision", "take responsibility", "have an impact", "raise awareness", "reach an agreement", "solve a problem", "deal with a situation", "take advantage of", "come up with an idea"],
+      "Phrasal Verbs — B1 → B2": ["carry out", "come across", "come up with", "deal with", "figure out", "get along with", "get rid of", "look into", "point out", "put off", "run into", "set up", "take over", "turn down", "work out"],
+      "Inglês americano natural": ["gonna", "wanna", "gotta", "kinda", "sorta", "outta", "lemme", "gimme", "dunno", "Fillers", "Discourse markers", "Informal contractions", "Respostas naturais", "you know", "I mean", "actually", "basically", "well", "anyway"]
     }
   },
   {
     semester: 5,
-    levelRange: 'B2 → C1',
-    lessonRange: 'Lições 51–60',
-    finalProjectTitle: 'An Issue Worth Discussing',
-    finalProjectDetails: ['Reading: identificar argumento principal, argumentos secundários, evidências, opinião, pressupostos e linguagem implícita.', 'Listening: identificar ideia principal, posição do falante, argumentos, atitude, ironia ou implícito quando houver.', 'Speaking: apresentar uma opinião estruturada e defendê-la.', 'Writing: produzir texto argumentativo de aproximadamente 300–400 palavras utilizando conditionals, modal verbs, passive voice, reported speech, relative clauses, complex sentences, discourse markers, collocations e registro apropriado.'],
+    levelRange: "B2 → C2",
+    lessonRange: "Lições 51–70",
+    finalProjectTitle: "The Big Argument",
+    finalProjectDetails: ["Inclui também o projeto intermediário do antigo Semestre 5: An Issue Worth Discussing", "Reading: identificar argumento, pressupostos, viés, ironia, tom, intenção e significado implícito.", "Listening: analisar intenção, atitude, sarcasmo, humor, implicatura, registro, hesitação e discurso espontâneo.", "Speaking: apresentar um argumento de 8–10 minutos, responder perguntas e defender uma posição.", "Writing: produzir texto de 500–700 palavras utilizando estruturas complexas, inversão, emphasis, hedging, nominalization, discourse markers, collocations, linguagem figurada e argumentação."],
     lessons: [
-      { num: 51, title: 'Third Conditional & Mixed Conditionals', topics: ['Third Conditional', 'Past unreal situations', 'Regrets and missed opportunities', 'would have + past participle', 'could have / might have', 'Mixed Conditionals', 'If I had..., I would...', 'If I had..., I would have...'] },
-      { num: 52, title: 'Advanced Modal Verbs & Deduction', topics: ['must have', 'might have', 'may have', 'could have', 'can\'t have', 'should have', 'ought to have', 'Dedução sobre o passado', 'Probabilidade e certeza', 'Arrependimento', 'Crítica', 'Expectativa'] },
-      { num: 53, title: 'Advanced Passive Voice', topics: ['Passive Voice em tempos diferentes', 'Passive with modals', 'Perfect Passive', 'Continuous Passive', 'It is believed that...', 'He is thought to...', 'It is said that...', 'Causative: have something done / get something done'] },
-      { num: 54, title: 'Advanced Reported Speech', topics: ['Reported statements', 'Reported questions', 'Reported commands', 'Reporting verbs', 'admit', 'deny', 'suggest', 'recommend', 'warn', 'advise', 'promise', 'accuse', 'insist', 'suggest doing / suggest that... / advise someone to... / warn', 'someone not to...'] },
-      { num: 55, title: 'Advanced Relative Clauses & Reduced Clauses', topics: ['Defining × Non-defining Relative Clauses', 'who / whom / which / whose', 'where / when', 'Preposition + relative pronoun', 'which para referência a uma oração inteira', 'Reduced Relative Clauses', 'The man standing over there...', 'The documents submitted yesterday...'] },
-      { num: 56, title: 'Advanced Gerunds, Infinitives & Verb Patterns', topics: ['verb + gerund', 'verb + infinitive', 'verb + object + infinitive', 'gerund after prepositions', 'infinitive of purpose', 'bare infinitive', 'verb patterns', 'remember doing / remember to do', 'regret doing / regret to do', 'stop doing / stop to do', 'mean doing / mean to do', 'try doing / try to do'] },
-      { num: 57, title: 'Complex Sentence Structure', topics: ['although', 'even though', 'whereas', 'while', 'despite', 'in spite of', 'unless', 'provided that', 'assuming that', 'therefore', 'thus', 'consequently', 'as a result', 'due to', 'owing to', 'however', 'nevertheless', 'nonetheless', 'on the other hand'] },
-      { num: 58, title: 'Discourse, Cohesion & Coherence', topics: ['Linking devices', 'furthermore', 'moreover', 'in addition', 'besides', 'nevertheless', 'consequently', 'in contrast', 'similarly', 'in other words', 'in fact', 'Referencing: this / that / such / the former / the latter', 'Organização textual: introdução, desenvolvimento, exemplificação,', 'contraste e conclusão'] },
-      { num: 59, title: 'Nuance, Register & Advanced Vocabulary', topics: ['Registro: informal / neutral / formal / academic', 'Nuance lexical', 'big / enormous / substantial', 'good / beneficial / advantageous', 'bad / harmful / detrimental', 'say / claim / argue / assert', 'problem / issue / concern / obstacle', 'Collocations: pose a threat, draw a conclusion, raise an issue,', 'reach a consensus', 'meet a requirement', 'take into consideration', 'play a role', 'have implications'] },
-      { num: 60, title: 'Grande Revisão B2 → C1', topics: ['Conditionals', 'Modal verbs', 'Passive voice', 'Reported speech', 'Relative clauses', 'Complex sentences', 'Discourse markers', 'Collocations', 'Registro apropriado', 'Projeto final: An Issue Worth Discussing'] },
+      {
+        num: 51,
+        title: "Third Conditional & Mixed Conditionals",
+        topics: ["Third Conditional", "Past unreal situations", "Regrets and missed opportunities", "would have + past participle", "could have / might have", "Mixed Conditionals", "If I had..., I would...", "If I had..., I would have..."]
+      },
+      {
+        num: 52,
+        title: "Advanced Modal Verbs & Deduction",
+        topics: ["must have", "might have", "may have", "could have", "can't have", "should have", "ought to have", "Dedução sobre o passado", "Probabilidade e certeza", "Arrependimento", "Crítica", "Expectativa"]
+      },
+      {
+        num: 53,
+        title: "Advanced Passive Voice",
+        topics: ["Passive Voice em tempos diferentes", "Passive with modals", "Perfect Passive", "Continuous Passive", "It is believed that...", "He is thought to...", "It is said that...", "Causative: have something done / get something done"]
+      },
+      {
+        num: 54,
+        title: "Advanced Reported Speech",
+        topics: ["Reported statements", "Reported questions", "Reported commands", "Reporting verbs", "admit", "deny", "suggest", "recommend", "warn", "advise", "promise", "accuse", "insist", "suggest doing / suggest that... / advise someone to... / warn", "someone not to..."]
+      },
+      {
+        num: 55,
+        title: "Advanced Relative Clauses & Reduced Clauses",
+        topics: ["Defining × Non-defining Relative Clauses", "who / whom / which / whose", "where / when", "Preposition + relative pronoun", "which para referência a uma oração inteira", "Reduced Relative Clauses", "The man standing over there...", "The documents submitted yesterday..."]
+      },
+      {
+        num: 56,
+        title: "Advanced Gerunds, Infinitives & Verb Patterns",
+        topics: ["verb + gerund", "verb + infinitive", "verb + object + infinitive", "gerund after prepositions", "infinitive of purpose", "bare infinitive", "verb patterns", "remember doing / remember to do", "regret doing / regret to do", "stop doing / stop to do", "mean doing / mean to do", "try doing / try to do"]
+      },
+      {
+        num: 57,
+        title: "Complex Sentence Structure",
+        topics: ["although", "even though", "whereas", "while", "despite", "in spite of", "unless", "provided that", "assuming that", "therefore", "thus", "consequently", "as a result", "due to", "owing to", "however", "nevertheless", "nonetheless", "on the other hand"]
+      },
+      {
+        num: 58,
+        title: "Discourse, Cohesion & Coherence",
+        topics: ["Linking devices", "furthermore", "moreover", "in addition", "besides", "nevertheless", "consequently", "in contrast", "similarly", "in other words", "in fact", "Referencing: this / that / such / the former / the latter", "Organização textual: introdução, desenvolvimento, exemplificação,", "contraste e conclusão"]
+      },
+      {
+        num: 59,
+        title: "Nuance, Register & Advanced Vocabulary",
+        topics: ["Registro: informal / neutral / formal / academic", "Nuance lexical", "big / enormous / substantial", "good / beneficial / advantageous", "bad / harmful / detrimental", "say / claim / argue / assert", "problem / issue / concern / obstacle", "Collocations: pose a threat, draw a conclusion, raise an issue,", "reach a consensus", "meet a requirement", "take into consideration", "play a role", "have implications"]
+      },
+      {
+        num: 60,
+        title: "Grande Revisão B2 → C1",
+        topics: ["Conditionals", "Modal verbs", "Passive voice", "Reported speech", "Relative clauses", "Complex sentences", "Discourse markers", "Collocations", "Registro apropriado", "Projeto final: An Issue Worth Discussing"]
+      },
+      {
+        num: 61,
+        title: "Advanced Inversion",
+        topics: ["Negative adverbials", "Inversion after restrictive expressions", "Never have I...", "Rarely do we...", "Not only did he..., but...", "Under no circumstances...", "On no account...", "Little did I know..."]
+      },
+      {
+        num: 62,
+        title: "Cleft Sentences & Emphasis",
+        topics: ["It-clefts", "What-clefts", "All-clefts", "Emphatic structures", "It was John who...", "What I need is...", "What surprised me was...", "do / does / did para ênfase"]
+      },
+      {
+        num: 63,
+        title: "Advanced Subordination & Nominalization",
+        topics: ["Subordinação: concessão, causa, consequência, condição, propósito e", "contraste", "Nominalization", "Transformação de estruturas verbais em estruturas nominais", "Linguagem condensada acadêmica, jornalística e profissional"]
+      },
+      {
+        num: 64,
+        title: "Hedging, Certainty & Academic Language",
+        topics: ["may", "might", "could", "appears to", "seems to", "tends to", "is likely to", "is unlikely to", "arguably", "presumably", "to some extent", "Como evitar afirmações excessivamente absolutas"]
+      },
+      {
+        num: 65,
+        title: "Pragmatics: Meaning Beyond Words",
+        topics: ["Implicature", "Politeness", "Pedidos indiretos", "Recusas diplomáticas", "Desacordo", "Crítica", "Sugestões", "Intenção, contexto e relação entre interlocutores", "Significado implícito"]
+      },
+      {
+        num: 66,
+        title: "Idioms, Metaphors & Figurative Language",
+        topics: ["Idioms", "Metaphors", "Similes", "Hyperbole", "Understatement", "Euphemism", "Irony", "Sarcasm", "Linguagem não literal"]
+      },
+      {
+        num: 67,
+        title: "Collocations, Lexical Chunks & Precision",
+        topics: ["Collocations", "Lexical chunks", "Precisão lexical", "deeply concerned", "highly unlikely", "utterly ridiculous", "strongly opposed", "broadly speaking", "readily available", "raise an issue", "draw a distinction", "reach a conclusion", "pose a question", "meet a deadline"]
+      },
+      {
+        num: 68,
+        title: "Register, Style & Voice",
+        topics: ["Informal English", "Neutral English", "Formal English", "Academic English", "Professional English", "Conversational English", "Tone", "Voice", "Audience awareness", "Adaptação da mesma ideia a diferentes situações"]
+      },
+      {
+        num: 69,
+        title: "Rhetoric, Argumentation & Persuasion",
+        topics: ["Claim", "Evidence", "Reasoning", "Counterargument", "Rebuttal", "Concession", "Qualification", "Rhetorical questions", "Parallelism", "Repetition", "Contrast", "Analogy", "Storytelling", "Emotional appeal"]
+      },
+      {
+        num: 70,
+        title: "Grande Revisão C1 → C2",
+        topics: ["Advanced inversion", "Cleft sentences", "Nominalization", "Hedging", "Pragmatics", "Figurative language", "Collocations", "Register", "Rhetoric", "Argumentation", "Projeto final: The Big Argument"]
+      }
     ],
     parallel: {
-      'Speaking': ['Debate', 'Argumentação', 'Persuasão', 'Nuance', 'Hipóteses complexas', 'Concordância e discordância diplomática', 'Reformulação de ideias', 'Interrupção educada', 'Apresentações formais', 'Discussões abstratas'],
-      'Listening': ['Palestras', 'Debates', 'Entrevistas longas', 'Podcasts autênticos', 'Notícias', 'Diferentes sotaques', 'Humor', 'Ironia', 'Implicatura', 'Fala rápida e reduzida'],
-      'Writing': ['Essays', 'Argumentative essays', 'Discursive essays', 'Reports', 'Formal letters', 'Reviews', 'Proposals', 'Academic-style writing', 'Síntese de informações de fontes diferentes'],
-      'Reading': ['Artigos jornalísticos', 'Ensaios', 'Artigos acadêmicos adaptados', 'Opiniões', 'Literatura contemporânea', 'Textos com linguagem figurada', 'Argumentos implícitos', 'Ironia e tom'],
-      'Vocabulário C1': ['Philosophy', 'Ethics', 'Politics', 'Economics', 'Psychology', 'Science', 'Artificial Intelligence', 'Climate Change', 'Globalization', 'Social Issues', 'Human Rights', 'Media', 'Culture', 'Education', 'Business', 'Law'],
-      'Word Formation': ['Prefixes', 'Suffixes', 'Noun → adjective', 'Verb → noun', 'Adjective → adverb', 'decide → decision → decisive → decisively', 'economy → economic → economically'],
-      'Inglês americano natural — B2 → C1': ['Idioms', 'Phrasal verbs avançados', 'Collocations', 'Slang contextual', 'Discourse markers', 'Fillers', 'Sarcasm', 'Understatement', 'Euphemisms', 'Figurative language', 'Diferenças de registro'],
+      Speaking: ["Debate", "Argumentação", "Persuasão", "Nuance", "Hipóteses complexas", "Concordância e discordância diplomática", "Reformulação de ideias", "Interrupção educada", "Apresentações formais", "Discussões abstratas", "Debate avançado", "Negociação", "Diplomacia", "Apresentações", "Entrevistas", "Discussões acadêmicas", "Discussões profissionais", "Humor", "Ironia", "Sarcasmo", "Reformulação espontânea"],
+      Listening: ["Palestras", "Debates", "Entrevistas longas", "Podcasts autênticos", "Notícias", "Diferentes sotaques", "Humor", "Ironia", "Implicatura", "Fala rápida e reduzida", "Debates autênticos", "Podcasts não adaptados", "Filmes", "Séries", "Fala extremamente rápida", "Overlapping speech", "Hesitations", "Reductions", "Sarcasmo"],
+      Writing: ["Essays", "Argumentative essays", "Discursive essays", "Reports", "Formal letters", "Reviews", "Proposals", "Academic-style writing", "Síntese de informações de fontes diferentes", "Academic essays", "Research-based essays", "Critical analysis", "Formal correspondence", "Persuasive writing", "Discursive writing", "Síntese de múltiplas fontes"],
+      Reading: ["Artigos jornalísticos", "Ensaios", "Artigos acadêmicos adaptados", "Opiniões", "Literatura contemporânea", "Textos com linguagem figurada", "Argumentos implícitos", "Ironia e tom", "Artigos acadêmicos", "Jornalismo", "Literatura", "Críticas", "Textos técnicos", "Textos filosóficos", "Textos com alto grau de inferência"],
+      "Vocabulário C1": ["Philosophy", "Ethics", "Politics", "Economics", "Psychology", "Science", "Artificial Intelligence", "Climate Change", "Globalization", "Social Issues", "Human Rights", "Media", "Culture", "Education", "Business", "Law"],
+      "Word Formation": ["Prefixes", "Suffixes", "Noun → adjective", "Verb → noun", "Adjective → adverb", "decide → decision → decisive → decisively", "economy → economic → economically"],
+      "Inglês americano natural — B2 → C1": ["Idioms", "Phrasal verbs avançados", "Collocations", "Slang contextual", "Discourse markers", "Fillers", "Sarcasm", "Understatement", "Euphemisms", "Figurative language", "Diferenças de registro"],
+      "Vocabulário C2": ["Precisão lexical e nuance", "significant", "crucial", "essential", "fundamental", "critical", "pivotal", "consequential", "noteworthy", "substantial", "issue", "concern", "obstacle", "difficulty", "complication", "drawback", "limitation", "dilemma", "predicament", "controversy"],
+      "Word Formation — C1 → C2": ["Derivação", "Nominalização", "Prefixação", "Sufixação", "Mudança de classe gramatical", "Palavras de origem latina e grega", "Cognatos acadêmicos", "False friends", "Lexical families", "assume → assumption → presumable → presumably → presumptive"],
+      "Inglês americano avançado": ["Conversação espontânea", "I mean", "You know", "I guess", "kind of", "sort of", "basically", "actually", "pretty much", "or whatever", "Sarcasmo", "Understatement", "Humor cultural", "Referências culturais", "Duplo sentido", "Linguagem figurada", "Mudança de registro"]
     }
-  },
-  {
-    semester: 6,
-    levelRange: 'C1 → C2',
-    lessonRange: 'Lições 61–70',
-    finalProjectTitle: 'The Big Argument',
-    finalProjectDetails: ['Reading: identificar argumento, pressupostos, viés, ironia, tom, intenção e significado implícito.', 'Listening: analisar intenção, atitude, sarcasmo, humor, implicatura, registro, hesitação e discurso espontâneo.', 'Speaking: apresentar um argumento de 8–10 minutos, responder perguntas e defender uma posição.', 'Writing: produzir texto de 500–700 palavras utilizando estruturas complexas, inversão, emphasis, hedging, nominalization, discourse markers, collocations, linguagem figurada e argumentação.'],
-    lessons: [
-      { num: 61, title: 'Advanced Inversion', topics: ['Negative adverbials', 'Inversion after restrictive expressions', 'Never have I...', 'Rarely do we...', 'Not only did he..., but...', 'Under no circumstances...', 'On no account...', 'Little did I know...'] },
-      { num: 62, title: 'Cleft Sentences & Emphasis', topics: ['It-clefts', 'What-clefts', 'All-clefts', 'Emphatic structures', 'It was John who...', 'What I need is...', 'What surprised me was...', 'do / does / did para ênfase'] },
-      { num: 63, title: 'Advanced Subordination & Nominalization', topics: ['Subordinação: concessão, causa, consequência, condição, propósito e', 'contraste', 'Nominalization', 'Transformação de estruturas verbais em estruturas nominais', 'Linguagem condensada acadêmica, jornalística e profissional'] },
-      { num: 64, title: 'Hedging, Certainty & Academic Language', topics: ['may', 'might', 'could', 'appears to', 'seems to', 'tends to', 'is likely to', 'is unlikely to', 'arguably', 'presumably', 'to some extent', 'Como evitar afirmações excessivamente absolutas'] },
-      { num: 65, title: 'Pragmatics: Meaning Beyond Words', topics: ['Implicature', 'Politeness', 'Pedidos indiretos', 'Recusas diplomáticas', 'Desacordo', 'Crítica', 'Sugestões', 'Intenção, contexto e relação entre interlocutores', 'Significado implícito'] },
-      { num: 66, title: 'Idioms, Metaphors & Figurative Language', topics: ['Idioms', 'Metaphors', 'Similes', 'Hyperbole', 'Understatement', 'Euphemism', 'Irony', 'Sarcasm', 'Linguagem não literal'] },
-      { num: 67, title: 'Collocations, Lexical Chunks & Precision', topics: ['Collocations', 'Lexical chunks', 'Precisão lexical', 'deeply concerned', 'highly unlikely', 'utterly ridiculous', 'strongly opposed', 'broadly speaking', 'readily available', 'raise an issue', 'draw a distinction', 'reach a conclusion', 'pose a question', 'meet a deadline'] },
-      { num: 68, title: 'Register, Style & Voice', topics: ['Informal English', 'Neutral English', 'Formal English', 'Academic English', 'Professional English', 'Conversational English', 'Tone', 'Voice', 'Audience awareness', 'Adaptação da mesma ideia a diferentes situações'] },
-      { num: 69, title: 'Rhetoric, Argumentation & Persuasion', topics: ['Claim', 'Evidence', 'Reasoning', 'Counterargument', 'Rebuttal', 'Concession', 'Qualification', 'Rhetorical questions', 'Parallelism', 'Repetition', 'Contrast', 'Analogy', 'Storytelling', 'Emotional appeal'] },
-      { num: 70, title: 'Grande Revisão C1 → C2', topics: ['Advanced inversion', 'Cleft sentences', 'Nominalization', 'Hedging', 'Pragmatics', 'Figurative language', 'Collocations', 'Register', 'Rhetoric', 'Argumentation', 'Projeto final: The Big Argument'] },
-    ],
-    parallel: {
-      'Speaking': ['Debate avançado', 'Persuasão', 'Negociação', 'Diplomacia', 'Apresentações', 'Entrevistas', 'Discussões acadêmicas', 'Discussões profissionais', 'Humor', 'Ironia', 'Sarcasmo', 'Reformulação espontânea', 'Nuance'],
-      'Listening': ['Debates autênticos', 'Palestras', 'Podcasts não adaptados', 'Entrevistas longas', 'Notícias', 'Filmes', 'Séries', 'Diferentes sotaques', 'Fala extremamente rápida', 'Overlapping speech', 'Hesitations', 'Reductions', 'Humor', 'Ironia', 'Sarcasmo'],
-      'Reading': ['Ensaios', 'Artigos acadêmicos', 'Jornalismo', 'Literatura', 'Críticas', 'Opiniões', 'Textos técnicos', 'Textos filosóficos', 'Textos com alto grau de inferência'],
-      'Writing': ['Academic essays', 'Research-based essays', 'Reports', 'Proposals', 'Reviews', 'Critical analysis', 'Formal correspondence', 'Persuasive writing', 'Discursive writing', 'Síntese de múltiplas fontes'],
-      'Vocabulário C2': ['Precisão lexical e nuance', 'significant', 'crucial', 'essential', 'fundamental', 'critical', 'pivotal', 'consequential', 'noteworthy', 'substantial', 'issue', 'concern', 'obstacle', 'difficulty', 'complication', 'drawback', 'limitation', 'dilemma', 'predicament', 'controversy'],
-      'Word Formation — C1 → C2': ['Derivação', 'Nominalização', 'Prefixação', 'Sufixação', 'Mudança de classe gramatical', 'Palavras de origem latina e grega', 'Cognatos acadêmicos', 'False friends', 'Lexical families', 'assume → assumption → presumable → presumably → presumptive'],
-      'Inglês americano avançado': ['Conversação espontânea', 'I mean', 'You know', 'I guess', 'kind of', 'sort of', 'basically', 'actually', 'pretty much', 'or whatever', 'Sarcasmo', 'Understatement', 'Humor cultural', 'Referências culturais', 'Duplo sentido', 'Linguagem figurada', 'Mudança de registro'],
-    }
-  },
+  }
 ];
 
 function switchTab(tab) {
