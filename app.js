@@ -1405,6 +1405,9 @@ async function boot() {
     btn.addEventListener('click', () => showScreen(btn.dataset.screen));
   });
 
+  const howtoCta = document.querySelector('.howto-cta[data-screen]');
+  if (howtoCta) howtoCta.addEventListener('click', () => showScreen(howtoCta.dataset.screen));
+
   setupAiChat();
   setupVocabCard();
 
