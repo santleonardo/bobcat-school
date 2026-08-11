@@ -195,6 +195,14 @@ const EXTRAS = [
     icon: '🔎',
     description: 'Classes gramaticais, áreas da gramática e sinais de pontuação escondidos na grade',
     url: 'lessons/caca-palavras-portugues.html'
+  },
+  {
+    id: 'labirinto-sintaxe',
+    group: 'Jogos',
+    name: 'Labirinto da Oração',
+    icon: '🐾',
+    description: 'Percorra o labirinto e encontre sujeito, verbo, complementos e adjuntos na ordem certa — frase e tema novos a cada rodada',
+    url: 'lessons/labirinto-sintaxe.html'
   }
 
 ];
