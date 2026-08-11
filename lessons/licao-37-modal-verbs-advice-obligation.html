@@ -9,7 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
 </head><body>
 <div class="hud" id="hud">
-  <div class="hud-left"><span>🐾 Bobcat</span>
+  <div class="hud-left">🐾 Bobcat
     <div class="xp-track"><div class="xp-fill" id="xpBar"></div></div>
     <span id="xpLabel" style="font-weight:700;color:var(--orange-dark)">0 XP</span>
   </div>
@@ -23,7 +23,7 @@
     <a class="back-link" href="../index.html" style="color:#fff;opacity:.9">← Voltar ao app</a>
     <span class="badge">🐾 Bobcat · A2</span>
     <h1>Advice, Obligation & Permission</h1>
-    <p class="lede">should, must, have to, can, may.</p>
+    <p class="lede"><span class="vocab-word" data-word="should">should</span>, <span class="vocab-word" data-word="must">must</span>, <span class="vocab-word" data-word="have to">have to</span>, can, may.</p>
     <div class="hero-cta"><a href="#objetivos" class="btn">Começar →</a></div>
   </div>
 </header>
@@ -32,14 +32,14 @@
 <section class="section" id="objetivos">
   <div class="section-head reveal"><span class="sec-num">1</span><div><h2 class="sec-title">🎯 Objetivos</h2><p class="sec-sub">Conselho, obrigação e permissão</p></div></div>
   <div class="grid-3 reveal">
-    <div class="card obj-card"><span class="ic">💡</span><h3>Advice</h3><p>should / shouldn't</p></div>
-    <div class="card obj-card"><span class="ic">⚠️</span><h3>Obligation</h3><p>must / have to / mustn't</p></div>
-    <div class="card obj-card"><span class="ic">✅</span><h3>Permission</h3><p>can / may / can't</p></div>
+    <div class="card obj-card"><span class="ic">💡</span><h3>Advice</h3><p><span class="vocab-word" data-word="should">should</span> / shouldn't</p></div>
+    <div class="card obj-card"><span class="ic">⚠️</span><h3>Obligation</h3><p><span class="vocab-word" data-word="must">must</span> / <span class="vocab-word" data-word="have to">have to</span> / mustn't</p></div>
+    <div class="card obj-card"><span class="ic">✅</span><h3>Permission</h3><p>can / may / <span class="vocab-word" data-word="can't">can't</span></p></div>
   </div>
 </section>
 <section class="section" id="exercises">
   <div class="section-head reveal"><span class="sec-num">2</span><div><h2 class="sec-title">🎮 Exercícios</h2></div></div>
-<div class="game-wrap reveal"><div class="game-title"><h3>Parte 1 — should / must / can</h3></div><div id="p1"></div>
+<div class="game-wrap reveal"><div class="game-title"><h3>Parte 1 — <span class="vocab-word" data-word="should">should</span> / <span class="vocab-word" data-word="must">must</span> / can</h3></div><div id="p1"></div>
     <div class="game-actions"><button class="btn sm" onclick="checkP1()">✨ Verificar</button><span class="score-badge" id="s1">0/?</span></div></div><div class="game-wrap reveal"><div class="game-title"><h3>Parte 2 — Complete</h3></div><div id="p2"></div>
     <div class="game-actions"><button class="btn sm" onclick="checkP2()">✨ Verificar</button><span class="score-badge" id="s2">0/?</span></div></div><div class="game-wrap reveal"><div class="game-title"><h3>Parte 3 — Significado</h3></div><div id="p3"></div>
     <div class="game-actions"><button class="btn sm" onclick="checkP3()">✨ Verificar</button><span class="score-badge" id="s3">0/?</span></div></div>

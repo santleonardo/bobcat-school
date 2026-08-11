@@ -9,7 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
 </head><body>
 <div class="hud" id="hud">
-  <div class="hud-left"><span>🐾 Bobcat</span>
+  <div class="hud-left">🐾 Bobcat
     <div class="xp-track"><div class="xp-fill" id="xpBar"></div></div>
     <span id="xpLabel" style="font-weight:700;color:var(--orange-dark)">0 XP</span>
   </div>
@@ -22,15 +22,15 @@
   <div class="wrap hero-inner">
     <a class="back-link" href="../index.html" style="color:#fff;opacity:.9">← Voltar ao app</a>
     <span class="badge">🐾 Bobcat · A1/A2</span>
-    <h1>Present Perfect</h1>
-    <p class="lede">Have/has + participle · ever, never, just, already, yet.</p>
+    <h1><span class="vocab-word" data-word="Present Perfect">Present Perfect</span></h1>
+    <p class="lede">Have/has + participle · ever, never, <span class="vocab-word" data-word="just">just</span>, <span class="vocab-word" data-word="already">already</span>, <span class="vocab-word" data-word="yet">yet</span>.</p>
     <div class="hero-cta"><a href="#objetivos" class="btn">Começar →</a></div>
   </div>
 </header>
 <div class="wrap" style="min-height:100vh;display:flex;flex-direction:column">
 
 <section class="section" id="objetivos">
-  <div class="section-head reveal"><span class="sec-num">1</span><div><h2 class="sec-title">🎯 Objetivos</h2><p class="sec-sub">Present Perfect — have/has + past participle</p></div></div>
+  <div class="section-head reveal"><span class="sec-num">1</span><div><h2 class="sec-title">🎯 Objetivos</h2><p class="sec-sub"><span class="vocab-word" data-word="Present Perfect">Present Perfect</span> — have/has + <span class="vocab-word" data-word="past participle">past participle</span></p></div></div>
   <div class="grid-3 reveal">
     <div class="card obj-card"><span class="ic">✨</span><h3>Experiências</h3><p>Have you ever…?</p></div>
     <div class="card obj-card"><span class="ic">⏱️</span><h3>Just / Already / Yet</h3><p>Acabei de / já / ainda</p></div>
@@ -43,7 +43,7 @@
     <div class="bubble-row"><span class="miniav anna">E</span><div class="bubble anna"><span class="who">Emma</span>Have you ever traveled abroad? <button class="audio-btn" onclick="speak(this,'Have you ever traveled abroad?')">🔊</button></div></div>
     <div class="bubble-row right"><span class="miniav tom">L</span><div class="bubble tom"><span class="who">Lucas</span>Yes, I have! I've been to Argentina. <button class="audio-btn" onclick="speak(this,'Yes, I have! I have been to Argentina.')">🔊</button></div></div>
     <div class="bubble-row"><span class="miniav anna">E</span><div class="bubble anna"><span class="who">Emma</span>Have you ever eaten sushi? <button class="audio-btn" onclick="speak(this,'Have you ever eaten sushi?')">🔊</button></div></div>
-    <div class="bubble-row right"><span class="miniav tom">L</span><div class="bubble tom"><span class="who">Lucas</span>No, I haven't. I've never tried it. <button class="audio-btn" onclick="speak(this,'No, I haven\'t. I have never tried it.')">🔊</button></div></div>
+    <div class="bubble-row right"><span class="miniav tom">L</span><div class="bubble tom"><span class="who">Lucas</span>No, I <span class="vocab-word" data-word="haven't">haven't</span>. I've never tried it. <button class="audio-btn" onclick="speak(this,'No, I haven\'t. I have never tried it.')">🔊</button></div></div>
   </div>
   <div class="card reveal" style="margin-top:12px">
     <div class="struct-example">I/you/we/they <b>have</b> + participle · He/she/it <b>has</b> + participle</div>
@@ -54,7 +54,7 @@
   <div class="section-head reveal"><span class="sec-num">3</span><div><h2 class="sec-title">🎮 Exercícios</h2></div></div>
 <div class="game-wrap reveal"><div class="game-title"><h3>Parte 1 — have / has</h3></div><div id="p1"></div>
     <div class="game-actions"><button class="btn sm" onclick="checkP1()">✨ Verificar</button><span class="score-badge" id="s1">0/?</span></div></div><div class="game-wrap reveal"><div class="game-title"><h3>Parte 2 — Participle</h3></div><div id="p2"></div>
-    <div class="game-actions"><button class="btn sm" onclick="checkP2()">✨ Verificar</button><span class="score-badge" id="s2">0/?</span></div></div><div class="game-wrap reveal"><div class="game-title"><h3>Parte 3 — ever / never / yet</h3></div><div id="p3"></div>
+    <div class="game-actions"><button class="btn sm" onclick="checkP2()">✨ Verificar</button><span class="score-badge" id="s2">0/?</span></div></div><div class="game-wrap reveal"><div class="game-title"><h3>Parte 3 — ever / never / <span class="vocab-word" data-word="yet">yet</span></h3></div><div id="p3"></div>
     <div class="game-actions"><button class="btn sm" onclick="checkP3()">✨ Verificar</button><span class="score-badge" id="s3">0/?</span></div></div>
 </section>
 
@@ -71,7 +71,7 @@
 </div>
 <footer class="footer">
   <div class="school">🐾 Bobcat Language School</div>
-  <p style="margin:5px 0 0">Lição 27 — Present Perfect</p>
+  <p style="margin:5px 0 0">Lição 27 — <span class="vocab-word" data-word="Present Perfect">Present Perfect</span></p>
   <p style="margin:2px 0 0;font-size:11px;opacity:.6">Fotos: Pexels · Design interativo inspirado em Genially</p>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

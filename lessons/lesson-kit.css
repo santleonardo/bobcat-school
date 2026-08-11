@@ -299,3 +299,164 @@ html[data-theme="light"] .flow .node.out-a,
 html[data-theme="light"] .flow .node.out-an { background: #EAF7EF; border-color: #b6dec6; }
 html[data-theme="light"] .flow .node.out-the { background: #F3ECF6; border-color: #d8c2e2; }
 
+
+/* ─── Vocab term (clickable) — same resource as AI chat ─── */
+.vocab-word {
+  cursor: pointer;
+  border-bottom: 1.5px dotted var(--orange-dark);
+  border-radius: 3px;
+  transition: background .12s ease;
+  color: inherit;
+}
+.vocab-word:hover,
+.vocab-word:focus-visible {
+  background: rgba(255, 91, 61, 0.16);
+  outline: none;
+}
+.vocab-word:active { background: rgba(255, 91, 61, 0.28); }
+
+.vocab-card-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(32, 24, 16, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 600;
+}
+.vocab-card-overlay.hidden { display: none !important; }
+@media (min-width: 560px) {
+  .vocab-card-overlay { align-items: center; padding: 20px; }
+}
+.vocab-card {
+  position: relative;
+  background: var(--cream);
+  width: 100%;
+  max-width: 400px;
+  max-height: 78vh;
+  overflow-y: auto;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 12px 40px rgba(0,0,0,.35);
+  padding: 22px 20px 20px;
+  animation: vocab-card-in .18s ease-out;
+  border: 1px solid var(--border);
+}
+@media (min-width: 560px) {
+  .vocab-card { border-radius: 16px; }
+}
+@keyframes vocab-card-in {
+  from { transform: translateY(16px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.vocab-card-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--cream-2);
+  color: var(--ink-soft);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vocab-card-close:hover { color: var(--ink); }
+.vocab-card-loading {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.vocab-card-loading.hidden,
+.vocab-card-content.hidden,
+.vocab-card-error.hidden { display: none !important; }
+.vocab-card-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-right: 34px;
+}
+.vocab-card-word {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 21px;
+  color: var(--orange-dark);
+}
+.vocab-card-pos {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: var(--orange-dark);
+  background: var(--cream-2);
+  border-radius: 99px;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+}
+.vocab-card-pos.hidden { display: none !important; }
+.vocab-card-listen {
+  margin-left: auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--cream-2);
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+.vocab-card-listen:hover { transform: translateY(-1px); }
+.vocab-card-listen:active { transform: scale(0.94); }
+.vocab-card-pron {
+  margin-top: 4px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+.vocab-card-pron .ipa { font-style: italic; }
+.vocab-card-pron .easy { color: var(--ink); font-weight: 600; }
+.vocab-card-translation {
+  margin-top: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ok);
+  background: var(--ok-bg);
+  border-radius: 10px;
+  padding: 11px 13px;
+  border: 1px solid rgba(61, 214, 140, 0.25);
+}
+.vocab-card-examples {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.vocab-example {
+  border-left: 3px solid var(--orange);
+  padding: 2px 0 2px 10px;
+}
+.vocab-example .en { font-size: 13.5px; color: var(--ink); line-height: 1.4; }
+.vocab-example .pt { font-size: 12.5px; color: var(--ink-soft); margin-top: 2px; line-height: 1.4; }
+.vocab-card-error { text-align: center; padding: 18px 4px; }
+.vocab-card-error p { color: var(--ink-soft); font-size: 13.5px; margin: 0 0 12px 0; }
+
+html[data-theme="light"] .vocab-card {
+  background: #fff;
+  box-shadow: 0 12px 40px rgba(0,0,0,.15);
+}
+html[data-theme="light"] .vocab-card-close,
+html[data-theme="light"] .vocab-card-listen,
+html[data-theme="light"] .vocab-card-pos {
+  background: #f5f0ea;
+}

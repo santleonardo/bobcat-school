@@ -219,7 +219,7 @@ function setAttemptCount(n) {
 function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 function renderMCQ(qNum, level, item) {
-  var h = '<div class="question" id="q' + qNum + '"><p class="q-text"><span class="lvl-badge ' + level + '">' + level + '</span> ' + qNum + '. ' + esc(item.q) + '</p><ul class="mc-options">';
+  var h = '<div class="question" id="q' + qNum + '"><p class="q-text">' + level + ' ' + qNum + '. ' + esc(item.q) + '</p><ul class="mc-options">';
   for (var i = 0; i < item.o.length; i++) {
     h += '<li data-q="' + qNum + '" data-o="' + i + '" onclick="selectOption(' + qNum + ',' + i + ',this)">' + 'abcd'[i] + ') ' + esc(item.o[i]) + '</li>';
   }

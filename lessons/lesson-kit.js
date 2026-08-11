@@ -226,6 +226,233 @@
     return ok;
   }
 
+  // ─── Vocab card (same resource as AI chat) ──────────────
+  // Student taps a .vocab-word span → mini-card with translation,
+  // pronunciation and examples via /api/vocab-lookup.
+  var vocabCardCurrentWord = null;
+  var vocabCardCurrentContext = '';
+  var vocabCardCurrentLevel = 'A1';
+
+  function vocabEscapeHtml(s) {
+    return String(s || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function vocabCacheKey(word, level) {
+    return 'vocabCache_' + level + '_' + word;
+  }
+
+  function vocabCacheGet(word, level) {
+    try {
+      var raw = localStorage.getItem(vocabCacheKey(word, level));
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) { return null; }
+  }
+
+  function vocabCacheSet(word, level, data) {
+    try { localStorage.setItem(vocabCacheKey(word, level), JSON.stringify(data)); } catch (e) { /* optional */ }
+  }
+
+  function ensureVocabCardDom() {
+    if (document.getElementById('vocab-card-overlay')) return;
+    var overlay = document.createElement('div');
+    overlay.className = 'vocab-card-overlay hidden';
+    overlay.id = 'vocab-card-overlay';
+    overlay.innerHTML =
+      '<div class="vocab-card" id="vocab-card">' +
+        '<button type="button" class="vocab-card-close" id="vocab-card-close" aria-label="Fechar">✕</button>' +
+        '<div class="vocab-card-body" id="vocab-card-body">' +
+          '<div class="vocab-card-loading" id="vocab-card-loading">Carregando…</div>' +
+          '<div class="vocab-card-content hidden" id="vocab-card-content">' +
+            '<div class="vocab-card-head">' +
+              '<span class="vocab-card-word" id="vocab-card-word"></span>' +
+              '<span class="vocab-card-pos hidden" id="vocab-card-pos"></span>' +
+              '<button type="button" class="vocab-card-listen" id="vocab-card-listen" aria-label="Ouvir pronúncia" title="Ouvir pronúncia">🔊</button>' +
+            '</div>' +
+            '<div class="vocab-card-pron" id="vocab-card-pron"></div>' +
+            '<div class="vocab-card-translation" id="vocab-card-translation"></div>' +
+            '<div class="vocab-card-examples" id="vocab-card-examples"></div>' +
+          '</div>' +
+          '<div class="vocab-card-error hidden" id="vocab-card-error">' +
+            '<p id="vocab-card-error-text">Não consegui buscar essa palavra agora.</p>' +
+            '<button type="button" class="btn" id="vocab-card-retry" style="margin-top:8px">Tentar de novo</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+  }
+
+  function vocabCardClose() {
+    var overlay = document.getElementById('vocab-card-overlay');
+    if (overlay) overlay.classList.add('hidden');
+    if ('speechSynthesis' in window) {
+      try { window.speechSynthesis.cancel(); } catch (e) { /* ignore */ }
+    }
+  }
+
+  function vocabCardShowError(msg) {
+    var loading = document.getElementById('vocab-card-loading');
+    var content = document.getElementById('vocab-card-content');
+    var errorBox = document.getElementById('vocab-card-error');
+    var errorText = document.getElementById('vocab-card-error-text');
+    if (loading) loading.classList.add('hidden');
+    if (content) content.classList.add('hidden');
+    if (errorBox) errorBox.classList.remove('hidden');
+    if (errorText) errorText.textContent = msg || 'Não consegui buscar essa palavra agora.';
+  }
+
+  function vocabCardRender(data) {
+    var loading = document.getElementById('vocab-card-loading');
+    var content = document.getElementById('vocab-card-content');
+    var errorBox = document.getElementById('vocab-card-error');
+    if (loading) loading.classList.add('hidden');
+    if (errorBox) errorBox.classList.add('hidden');
+    if (content) content.classList.remove('hidden');
+
+    var wordEl = document.getElementById('vocab-card-word');
+    var posEl = document.getElementById('vocab-card-pos');
+    var pronEl = document.getElementById('vocab-card-pron');
+    var translationEl = document.getElementById('vocab-card-translation');
+    var examplesEl = document.getElementById('vocab-card-examples');
+
+    if (wordEl) wordEl.textContent = data.word || vocabCardCurrentWord || '';
+    if (posEl) {
+      if (data.partOfSpeech) {
+        posEl.textContent = data.partOfSpeech;
+        posEl.classList.remove('hidden');
+      } else {
+        posEl.classList.add('hidden');
+      }
+    }
+    if (pronEl) {
+      var bits = [];
+      if (data.pronunciationIpa) bits.push('<span class="ipa">' + vocabEscapeHtml(data.pronunciationIpa) + '</span>');
+      if (data.pronunciationEasy) bits.push('<span class="easy">' + vocabEscapeHtml(data.pronunciationEasy) + '</span>');
+      pronEl.innerHTML = bits.join(' · ');
+    }
+    if (translationEl) translationEl.textContent = data.translation || '';
+    if (examplesEl) {
+      var examples = Array.isArray(data.examples) ? data.examples : [];
+      examplesEl.innerHTML = examples.map(function (ex) {
+        return '<div class="vocab-example">' +
+          '<div class="en">' + vocabEscapeHtml(ex.en || '') + '</div>' +
+          (ex.pt ? '<div class="pt">' + vocabEscapeHtml(ex.pt) + '</div>' : '') +
+          '</div>';
+      }).join('');
+    }
+  }
+
+  async function vocabCardFetchAndRender(word, context, level) {
+    var loading = document.getElementById('vocab-card-loading');
+    var content = document.getElementById('vocab-card-content');
+    var errorBox = document.getElementById('vocab-card-error');
+    if (loading) loading.classList.remove('hidden');
+    if (content) content.classList.add('hidden');
+    if (errorBox) errorBox.classList.add('hidden');
+
+    try {
+      var resp = await fetch('/api/vocab-lookup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ word: word, context: context, level: level })
+      });
+      var data = await resp.json().catch(function () { return {}; });
+      if (!resp.ok || !data.translation) {
+        vocabCardShowError(data.error);
+        return;
+      }
+      vocabCacheSet(word, level, data);
+      vocabCardRender(data);
+    } catch (err) {
+      console.error('Erro em vocabCardFetchAndRender:', err);
+      vocabCardShowError('Erro de conexão. Verifique sua internet.');
+    }
+  }
+
+  async function vocabCardOpen(word, context) {
+    ensureVocabCardDom();
+    var overlay = document.getElementById('vocab-card-overlay');
+    if (!overlay) return;
+
+    var level = 'A1';
+    try {
+      if (typeof getProfile === 'function') {
+        var profile = (await getProfile()) || {};
+        if (profile.level) level = profile.level;
+      } else {
+        var stored = localStorage.getItem('bobcat_profile');
+        if (stored) {
+          var p = JSON.parse(stored);
+          if (p && p.level) level = p.level;
+        }
+      }
+    } catch (e) { /* default A1 */ }
+
+    vocabCardCurrentWord = word;
+    vocabCardCurrentContext = context || '';
+    vocabCardCurrentLevel = level;
+
+    overlay.classList.remove('hidden');
+
+    var cached = vocabCacheGet(word, level);
+    if (cached) {
+      vocabCardRender(cached);
+      return;
+    }
+    await vocabCardFetchAndRender(word, context, level);
+  }
+
+  function vocabCardSpeakCurrent() {
+    if (!vocabCardCurrentWord) return;
+    if (!('speechSynthesis' in window)) return;
+    try {
+      window.speechSynthesis.cancel();
+      var utter = new SpeechSynthesisUtterance(vocabCardCurrentWord);
+      utter.lang = 'en-US';
+      utter.rate = 0.9;
+      window.speechSynthesis.speak(utter);
+    } catch (e) { /* optional */ }
+  }
+
+  function setupVocabCard() {
+    ensureVocabCardDom();
+
+    document.addEventListener('click', function (e) {
+      var span = e.target.closest('.vocab-word');
+      if (!span) return;
+      e.preventDefault();
+      e.stopPropagation();
+      var word = span.getAttribute('data-word') || span.textContent.trim();
+      if (!word) return;
+      // Prefer surrounding sentence / paragraph as context
+      var parent = span.closest('p, li, td, .bubble, .struct-example, .card, h3, h2');
+      var context = parent ? parent.textContent.replace(/\s+/g, ' ').trim().slice(0, 300) : '';
+      vocabCardOpen(word, context);
+    });
+
+    var overlay = document.getElementById('vocab-card-overlay');
+    var closeBtn = document.getElementById('vocab-card-close');
+    var listenBtn = document.getElementById('vocab-card-listen');
+    var retryBtn = document.getElementById('vocab-card-retry');
+    if (closeBtn) closeBtn.addEventListener('click', vocabCardClose);
+    if (overlay) {
+      overlay.addEventListener('click', function (e) {
+        if (e.target.id === 'vocab-card-overlay') vocabCardClose();
+      });
+    }
+    if (listenBtn) listenBtn.addEventListener('click', vocabCardSpeakCurrent);
+    if (retryBtn) {
+      retryBtn.addEventListener('click', function () {
+        if (vocabCardCurrentWord) {
+          vocabCardFetchAndRender(vocabCardCurrentWord, vocabCardCurrentContext, vocabCardCurrentLevel);
+        }
+      });
+    }
+  }
+
   // ─── Init ───────────────────────────────────────────────
   function init(opts) {
     opts = opts || {};
@@ -236,6 +463,7 @@
 
     updateHUD();
     initReveal();
+    setupVocabCard();
 
     // Delegate audio buttons with data-speak
     document.addEventListener('click', function (e) {

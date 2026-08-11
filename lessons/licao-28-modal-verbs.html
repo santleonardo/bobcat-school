@@ -9,7 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
 </head><body>
 <div class="hud" id="hud">
-  <div class="hud-left"><span>🐾 Bobcat</span>
+  <div class="hud-left">🐾 Bobcat
     <div class="xp-track"><div class="xp-fill" id="xpBar"></div></div>
     <span id="xpLabel" style="font-weight:700;color:var(--orange-dark)">0 XP</span>
   </div>
@@ -23,7 +23,7 @@
     <a class="back-link" href="../index.html" style="color:#fff;opacity:.9">← Voltar ao app</a>
     <span class="badge">🐾 Bobcat · A2</span>
     <h1>Verbos Modais (introdução)</h1>
-    <p class="lede">could, must, should, may…</p>
+    <p class="lede"><span class="vocab-word" data-word="could">could</span>, <span class="vocab-word" data-word="must">must</span>, <span class="vocab-word" data-word="should">should</span>, may…</p>
     <div class="hero-cta"><a href="#objetivos" class="btn">Começar →</a></div>
   </div>
 </header>
@@ -33,7 +33,7 @@
   <div class="section-head reveal"><span class="sec-num">1</span>
     <div><h2 class="sec-title">🎯 Objetivos da Lição</h2><p class="sec-sub">Ao final desta lição você será capaz de:</p></div>
   </div>
-  <div class="grid-3 reveal"><div class="card obj-card"><span class="ic">🔑</span><h3>Modais</h3><p>must, should, could</p></div><div class="card obj-card"><span class="ic">💡</span><h3>Conselho</h3><p>You should…</p></div><div class="card obj-card"><span class="ic">⚠️</span><h3>Obrigação</h3><p>You must…</p></div></div>
+  <div class="grid-3 reveal"><div class="card obj-card"><span class="ic">🔑</span><h3>Modais</h3><p><span class="vocab-word" data-word="must">must</span>, <span class="vocab-word" data-word="should">should</span>, <span class="vocab-word" data-word="could">could</span></p></div><div class="card obj-card"><span class="ic">💡</span><h3>Conselho</h3><p>You <span class="vocab-word" data-word="should">should</span>…</p></div><div class="card obj-card"><span class="ic">⚠️</span><h3>Obrigação</h3><p>You <span class="vocab-word" data-word="must">must</span>…</p></div></div>
 </section>
 
 <section class="section" id="warmup">
@@ -56,7 +56,7 @@
   </div>
   <div class="bubble-row reveal">
     <span class="miniav anna">A</span>
-    <div class="bubble anna"><span class="who">Anna</span>You should see a doctor. You mustn't ignore it.
+    <div class="bubble anna"><span class="who">Anna</span>You <span class="vocab-word" data-word="should">should</span> see a doctor. You mustn't ignore it.
       <button class="audio-btn" onclick="speak(this,"You should see a doctor. You mustn't ignore it.")">🔊</button>
     </div>
   </div>
@@ -80,10 +80,10 @@
     <div><h2 class="sec-title">🔍 Vocabulário da Lição</h2><p class="sec-sub">Palavras e expressões essenciais.</p></div>
   </div>
   <table class="lesson-table reveal"><thead><tr><th>English</th><th>Português</th><th>Exemplo</th></tr></thead><tbody>
-<tr><td>should <button class="audio-btn" onclick="speak(this,"should")">🔊</button></td><td>deveria</td><td>You should rest.</td></tr>
-<tr><td>must <button class="audio-btn" onclick="speak(this,"must")">🔊</button></td><td>deve (obrigação)</td><td>You must stop.</td></tr>
+<tr><td><span class="vocab-word" data-word="should">should</span> <button class="audio-btn" onclick="speak(this,"should")">🔊</button></td><td>deveria</td><td>You <span class="vocab-word" data-word="should">should</span> rest.</td></tr>
+<tr><td><span class="vocab-word" data-word="must">must</span> <button class="audio-btn" onclick="speak(this,"must")">🔊</button></td><td>deve (obrigação)</td><td>You <span class="vocab-word" data-word="must">must</span> stop.</td></tr>
 <tr><td>mustn't <button class="audio-btn" onclick="speak(this,"mustn't")">🔊</button></td><td>não deve</td><td>You mustn't smoke.</td></tr>
-<tr><td>could <button class="audio-btn" onclick="speak(this,"could")">🔊</button></td><td>poderia</td><td>Could you help?</td></tr>
+<tr><td><span class="vocab-word" data-word="could">could</span> <button class="audio-btn" onclick="speak(this,"could")">🔊</button></td><td>poderia</td><td>Could you help?</td></tr>
 <tr><td>may <button class="audio-btn" onclick="speak(this,"may")">🔊</button></td><td>pode (permissão)</td><td>You may enter.</td></tr>
 <tr><td>advice <button class="audio-btn" onclick="speak(this,"advice")">🔊</button></td><td>conselho</td><td>some advice</td></tr>
 </tbody></table>
@@ -95,17 +95,17 @@
     <p class="sec-sub">Estrutura e uso no dia a dia.</p></div>
   </div>
   <div class="card reveal" style="margin-bottom:12px">
-    <h3 style="margin:0 0 6px;color:var(--orange-dark);font-size:16px">should</h3>
+    <h3 style="margin:0 0 6px;color:var(--orange-dark);font-size:16px"><span class="vocab-word" data-word="should">should</span></h3>
     <p style="margin:0 0 8px;font-size:14px">conselho</p>
-    <div class="struct-example">You should sleep more.</div>
+    <div class="struct-example">You <span class="vocab-word" data-word="should">should</span> sleep more.</div>
   </div>
   <div class="card reveal" style="margin-bottom:12px">
-    <h3 style="margin:0 0 6px;color:var(--orange-dark);font-size:16px">must / mustn't</h3>
+    <h3 style="margin:0 0 6px;color:var(--orange-dark);font-size:16px"><span class="vocab-word" data-word="must">must</span> / mustn't</h3>
     <p style="margin:0 0 8px;font-size:14px">obrigação / proibição</p>
-    <div class="struct-example">You must wear a seatbelt.</div>
+    <div class="struct-example">You <span class="vocab-word" data-word="must">must</span> wear a seatbelt.</div>
   </div>
   <div class="card reveal" style="margin-bottom:12px">
-    <h3 style="margin:0 0 6px;color:var(--orange-dark);font-size:16px">could / may</h3>
+    <h3 style="margin:0 0 6px;color:var(--orange-dark);font-size:16px"><span class="vocab-word" data-word="could">could</span> / may</h3>
     <p style="margin:0 0 8px;font-size:14px">pedido educado / permissão</p>
     <div class="struct-example">Could you open the window?</div>
   </div>
@@ -133,7 +133,7 @@
   <div class="section-head reveal"><span class="sec-num">7</span>
     <div><h2 class="sec-title">🎭 Prática Oral — Role-play</h2><p class="sec-sub">Fale em voz alta (só ou em dupla).</p></div>
   </div>
-  <div class="card reveal"><ol style="margin:0;padding-left:18px;line-height:1.7"><li>Dê 5 conselhos com should.</li><li>Liste 4 regras com must/mustn't.</li></ol></div>
+  <div class="card reveal"><ol style="margin:0;padding-left:18px;line-height:1.7"><li>Dê 5 conselhos com <span class="vocab-word" data-word="should">should</span>.</li><li>Liste 4 regras com <span class="vocab-word" data-word="must">must</span>/mustn't.</li></ol></div>
 </section>
 
 <section class="section" id="twister">
@@ -141,7 +141,7 @@
     <div><h2 class="sec-title">👅 Trava-língua (Tongue Twister)</h2><p class="sec-sub">Repita 3× cada vez mais rápido.</p></div>
   </div>
   <div class="card reveal" style="text-align:center;font-size:17px;font-weight:700;line-height:1.5">
-    Should Sheila sell seashells or should she not?
+    Should Sheila sell seashells or <span class="vocab-word" data-word="should">should</span> she not?
     <div style="margin-top:10px"><button class="audio-btn btn" onclick="speak(this,"Should Sheila sell seashells or should she not?")">🔊 Ouvir</button></div>
   </div>
 </section>
@@ -150,14 +150,14 @@
   <div class="section-head reveal"><span class="sec-num">9</span>
     <div><h2 class="sec-title">🌍 Curiosidade Cultural</h2><p class="sec-sub">Inglês no mundo real.</p></div>
   </div>
-  <div class="card reveal callout" style="line-height:1.55">Must é forte (regra); should é conselho — não são sinônimos.</div>
+  <div class="card reveal callout" style="line-height:1.55">Must é forte (regra); <span class="vocab-word" data-word="should">should</span> é conselho — não são sinônimos.</div>
 </section>
 
 <section class="section" id="review">
   <div class="section-head reveal"><span class="sec-num">10</span>
     <div><h2 class="sec-title">🔁 Revisão Rápida</h2><p class="sec-sub">Os pontos-chave em um minuto.</p></div>
   </div>
-  <div class="card reveal"><ul style="margin:0;padding-left:18px;line-height:1.7"><li>should = conselho</li><li>must / mustn't</li><li>Could you…?</li></ul></div>
+  <div class="card reveal"><ul style="margin:0;padding-left:18px;line-height:1.7"><li><span class="vocab-word" data-word="should">should</span> = conselho</li><li><span class="vocab-word" data-word="must">must</span> / mustn't</li><li>Could you…?</li></ul></div>
 </section>
 
 <section class="section" id="homework" style="background:linear-gradient(180deg,var(--cream-3),#fff)">
