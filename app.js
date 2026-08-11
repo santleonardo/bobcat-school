@@ -939,6 +939,34 @@ async function confirmResetPassword() {
   alert('Progresso zerado.');
 }
 
+// ─── Esconder/expandir a lista de lições (tela Home) ───────────────────────
+function setupLessonListToggle() {
+  const btn = document.getElementById('btn-lesson-list-toggle');
+  const list = document.getElementById('lesson-list');
+  const label = document.getElementById('lesson-list-toggle-label');
+  const icon = document.getElementById('lesson-list-toggle-icon');
+  if (!btn || !list) return;
+
+  const STORAGE_KEY = 'bobcat_lesson_list_collapsed';
+
+  function applyState(collapsed) {
+    list.classList.toggle('hidden', collapsed);
+    btn.classList.toggle('collapsed', collapsed);
+    btn.setAttribute('aria-expanded', String(!collapsed));
+    label.textContent = collapsed ? 'Mostrar' : 'Esconder';
+  }
+
+  let collapsed = false;
+  try { collapsed = localStorage.getItem(STORAGE_KEY) === '1'; } catch (e) { /* ignore */ }
+  applyState(collapsed);
+
+  btn.addEventListener('click', () => {
+    collapsed = !collapsed;
+    applyState(collapsed);
+    try { localStorage.setItem(STORAGE_KEY, collapsed ? '1' : '0'); } catch (e) { /* ignore quota */ }
+  });
+}
+
 function setupResetPasswordModal() {
   document.getElementById('reset-password-cancel').addEventListener('click', closeResetPasswordModal);
   document.getElementById('reset-password-confirm').addEventListener('click', confirmResetPassword);
@@ -1395,6 +1423,7 @@ async function boot() {
   setupProfileScreen();
   setupProfileViewScreen();
   setupResetPasswordModal();
+  setupLessonListToggle();
 
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => showScreen(btn.dataset.screen));
