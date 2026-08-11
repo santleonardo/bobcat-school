@@ -1705,36 +1705,104 @@ function showLoadingState(loading) {
 
 let deferredInstallPrompt = null;
 
+const INSTALL_DISMISS_KEY = 'bobcat_install_banner_dismissed_at';
+const INSTALL_DISMISS_DAYS = 7; // depois de fechar, só volta a incomodar depois de N dias
+
+// iOS nunca dispara "beforeinstallprompt" — precisamos detectar o aparelho
+// na mão e mostrar o passo a passo manual (Compartilhar → Adicionar à Tela de Início).
+function detectInstallPlatform() {
+  const ua = navigator.userAgent || navigator.vendor || '';
+  const isIOS = /iPad|iPhone|iPod/.test(ua) ||
+    (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1); // iPad com iPadOS 13+
+  if (isIOS) return 'ios';
+  if (/Android/.test(ua)) return 'android';
+  return 'other';
+}
+
+function isRunningAsInstalledPWA() {
+  return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+    || window.navigator.standalone === true; // Safari iOS
+}
+
+function wasInstallBannerDismissedRecently() {
+  try {
+    const raw = localStorage.getItem(INSTALL_DISMISS_KEY);
+    if (!raw) return false;
+    const days = (Date.now() - parseInt(raw, 10)) / 86400000;
+    return days < INSTALL_DISMISS_DAYS;
+  } catch (e) {
+    return false;
+  }
+}
+
+function markInstallBannerDismissed() {
+  try { localStorage.setItem(INSTALL_DISMISS_KEY, String(Date.now())); } catch (e) { /* ignore */ }
+}
+
 function setupInstallPrompt() {
+  // Já instalado (rodando a partir da tela inicial) → não precisa avisar nada.
+  if (isRunningAsInstalledPWA()) return;
+  if (wasInstallBannerDismissedRecently()) return;
+
+  // Android/Chrome/Edge: o navegador nos avisa quando pode instalar.
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredInstallPrompt = e;
-    showInstallBanner();
+    showInstallBanner('android');
   });
 
   window.addEventListener('appinstalled', () => {
     deferredInstallPrompt = null;
+    markInstallBannerDismissed();
     const slot = document.getElementById('install-banner-slot');
     if (slot) slot.innerHTML = '';
   });
+
+  // iOS/Safari (e navegadores iOS em geral, que usam a mesma engine): não existe
+  // esse evento, então mostramos o passo a passo manual direto.
+  if (detectInstallPlatform() === 'ios') {
+    showInstallBanner('ios');
+  }
 }
 
-function showInstallBanner() {
+function showInstallBanner(platform) {
   const slot = document.getElementById('install-banner-slot');
-  if (!slot) return;
-  slot.innerHTML = `
-    <div class="install-banner">
-      <span>📲 Instale o app na tela inicial para acessar offline</span>
-      <button id="btn-install">Instalar</button>
-    </div>
-  `;
-  document.getElementById('btn-install').addEventListener('click', async () => {
-    if (!deferredInstallPrompt) return;
-    deferredInstallPrompt.prompt();
-    await deferredInstallPrompt.userChoice;
-    deferredInstallPrompt = null;
-    slot.innerHTML = '';
-  });
+  if (!slot || slot.dataset.shown) return;
+  slot.dataset.shown = 'true';
+
+  if (platform === 'ios') {
+    slot.innerHTML = `
+      <div class="install-banner">
+        <span>📲 Instale o app: toque em <strong>Compartilhar</strong> 📤 e depois em “Adicionar à Tela de Início”</span>
+        <button id="btn-install-dismiss" class="install-banner-close" aria-label="Fechar aviso">✕</button>
+      </div>
+    `;
+  } else {
+    slot.innerHTML = `
+      <div class="install-banner">
+        <span>📲 Instale o app na tela inicial para acessar offline</span>
+        <div class="install-banner-actions">
+          <button id="btn-install">Instalar</button>
+          <button id="btn-install-dismiss" class="install-banner-close" aria-label="Fechar aviso">✕</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('btn-install').addEventListener('click', async () => {
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      slot.innerHTML = '';
+    });
+  }
+
+  const dismissBtn = document.getElementById('btn-install-dismiss');
+  if (dismissBtn) {
+    dismissBtn.addEventListener('click', () => {
+      markInstallBannerDismissed();
+      slot.innerHTML = '';
+    });
+  }
 }
 
 function registerServiceWorker() {

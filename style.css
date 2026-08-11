@@ -1531,6 +1531,20 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
   font-family: inherit;
   box-shadow: var(--clay-accent);
 }
+.install-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.install-banner-close {
+  background: transparent !important;
+  color: var(--ink-soft, #8a8a8a) !important;
+  box-shadow: none !important;
+  padding: 6px 8px !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+}
 
 /* ── CHAT COM O PROFESSOR ────────────────────── */
 .chat-box {
