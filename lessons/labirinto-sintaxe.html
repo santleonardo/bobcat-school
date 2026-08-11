@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Labirinto da Oração — Português</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+<style>
+  :root{
+    --orange:#ff5b3d;--orange-dark:#e13a26;--orange-light:#ff7a5c;
+    --cream:#1c1614;--cream-2:#221a17;--cream-3:#0a0a0b;
+    --ink:#f7f1ec;--ink-soft:rgba(247,241,236,0.72);
+    --ok:#3dd68c;--ok-bg:rgba(61,214,140,0.15);--bad:#ff5b3d;
+    --border:rgba(247,241,236,0.14);--gold:#ffb347;
+    --shadow:0 4px 20px rgba(0,0,0,0.4);
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{font-family:"Inter",sans-serif;color:var(--ink);background:var(--cream-3);min-height:100vh;
+    line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:36px}
+  h1,h2,h3,.serif{font-family:"Poppins",sans-serif;letter-spacing:-.01em}
+
+  .hud{position:sticky;top:0;z-index:100;background:rgba(10,10,11,.92);backdrop-filter:blur(12px);
+    padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;
+    gap:10px;justify-content:space-between;flex-wrap:wrap}
+  .hud-title{display:flex;align-items:center;gap:9px;font-weight:800;font-size:14px}
+  .hud-title .icon{font-size:20px}
+  .hud-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .pill{display:inline-flex;align-items:center;gap:5px;background:var(--cream);border:1px solid var(--border);
+    border-radius:99px;padding:5px 12px;font-size:12.5px;font-weight:700;color:var(--orange-light)}
+  .pill.xp{color:var(--ok)}
+  .pill.topic{color:var(--gold)}
+
+  .wrap{max-width:760px;margin:0 auto;padding:18px 14px 0}
+
+  /* Sentence being built */
+  .sentence-bar{display:flex;flex-wrap:wrap;gap:6px;background:var(--cream);border:1px solid var(--border);
+    border-radius:var(--radius);padding:14px;margin-bottom:14px;box-shadow:var(--shadow);min-height:52px;
+    align-items:center}
+  .slot{padding:7px 12px;border-radius:9px;font-size:13px;font-weight:700;background:var(--cream-2);
+    color:rgba(247,241,236,0.3);border:1.5px dashed var(--border)}
+  .slot.filled{border:1.5px solid transparent;color:#0a0a0b}
+  .slot .lbl{display:block;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;
+    opacity:.75;margin-bottom:1px}
+
+  /* Maze */
+  .maze-card{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);
+    padding:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;gap:14px}
+  #mazeCanvas{border-radius:8px;touch-action:none}
+
+  .dpad{display:grid;grid-template-columns:44px 44px 44px;grid-template-rows:44px 44px 44px;gap:5px}
+  .dpad button{background:var(--cream-2);border:1.5px solid var(--border);border-radius:10px;color:var(--ink);
+    font-size:18px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .dpad button:active{background:var(--orange);border-color:var(--orange)}
+  .dpad .up{grid-column:2;grid-row:1}
+  .dpad .left{grid-column:1;grid-row:2}
+  .dpad .down{grid-column:2;grid-row:2}
+  .dpad .right{grid-column:3;grid-row:2}
+  .dpad .hint{grid-column:2;grid-row:3;font-size:15px}
+
+  .pieces-panel{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);
+    padding:14px 16px;margin-top:14px;box-shadow:var(--shadow)}
+  .pieces-panel h3{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin-bottom:10px}
+  .piece-list{display:flex;flex-direction:column;gap:7px}
+  .piece-row{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--ink-soft);
+    background:var(--cream-2);border-radius:8px;padding:8px 10px;transition:all .15s}
+  .piece-row.done{color:var(--ok);background:var(--ok-bg)}
+  .piece-letter{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;
+    border-radius:7px;background:var(--orange);color:#fff;font-weight:800;font-size:12px;flex-shrink:0}
+  .piece-row.done .piece-letter{background:var(--ok)}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);opacity:0;
+    background:var(--cream-2);border:1px solid var(--border);color:var(--ink);padding:11px 18px;
+    border-radius:11px;font-size:13px;font-weight:700;box-shadow:var(--shadow);transition:all .25s;
+    z-index:200;max-width:88vw;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.bad{color:var(--orange-light)}
+  .toast.good{color:var(--ok)}
+
+  .win-banner{display:none;text-align:center;margin-top:16px;padding:22px;border-radius:var(--radius);
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));box-shadow:0 8px 24px rgba(225,58,38,.35)}
+  .win-banner.show{display:block}
+  .win-banner h2{font-size:20px;margin-bottom:10px}
+  .win-sentence{font-size:14px;line-height:1.9;margin-bottom:14px}
+  .win-sentence .chunk{padding:2px 7px;border-radius:6px;margin:0 1px;display:inline-block;color:#0a0a0b;font-weight:700}
+  .win-legend{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:16px}
+  .win-legend span{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:99px;color:#0a0a0b}
+  .btn{background:#fff;color:var(--orange-dark);border:none;padding:11px 22px;border-radius:10px;
+    font-size:14px;font-weight:800;cursor:pointer}
+  .btn:active{transform:scale(.97)}
+
+  .hint-text{text-align:center;font-size:12px;color:var(--ink-soft);margin-top:12px}
+</style>
+</head>
+<body>
+
+<div class="hud">
+  <div class="hud-title"><span class="icon">🐾</span> Labirinto da Oração</div>
+  <div class="hud-right">
+    <span class="pill topic" id="topicPill">Tema: —</span>
+    <span class="pill">🧩 <span id="foundCount">0</span>/<span id="totalCount">0</span></span>
+    <span class="pill xp">⭐ <span id="xp">0</span> XP</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="sentence-bar" id="sentenceBar"></div>
+
+  <div class="maze-card">
+    <canvas id="mazeCanvas"></canvas>
+    <div class="dpad">
+      <button class="up" data-dir="N">▲</button>
+      <button class="left" data-dir="W">◀</button>
+      <button class="down" data-dir="S">▼</button>
+      <button class="right" data-dir="E">▶</button>
+      <button class="hint" id="hintBtn">💡</button>
+    </div>
+  </div>
+
+  <div class="pieces-panel">
+    <h3>Peças espalhadas pelo labirinto</h3>
+    <div class="piece-list" id="pieceList"></div>
+  </div>
+
+  <div class="win-banner" id="winBanner">
+    <h2>🎉 Oração completa!</h2>
+    <p class="win-sentence" id="winSentence"></p>
+    <div class="win-legend" id="winLegend"></div>
+    <button class="btn" id="nextBtn">Próxima frase →</button>
+  </div>
+
+  <p class="hint-text">Use as setas / toque no D-pad (ou as setas do teclado) para andar. 🐾 é você — encontre as peças <b>na ordem certa</b> para montar a frase lá em cima.</p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─── Paleta das funções sintáticas ─── */
+const LABELS = {
+  'Sujeito':                { color:'#3dd68c' },
+  'Verbo':                  { color:'#ff8a68' },
+  'Objeto Direto':          { color:'#b39bff' },
+  'Objeto Indireto':        { color:'#ffb347' },
+  'Complemento Nominal':    { color:'#ff8fc4' },
+  'Predicativo do Sujeito': { color:'#5fd7e6' },
+  'Adjunto Adverbial':      { color:'#d4f24a' },
+  'Vocativo':               { color:'#ff8f9e' }
+};
+
+/* ─── Banco de frases — cada rodada, um assunto diferente ─── */
+const ROUNDS = [
+  { topic:'Escola', sentence:'O professor explicou a matéria aos alunos com muita paciência.',
+    parts:[
+      {label:'Sujeito', text:'O professor'},
+      {label:'Verbo', text:'explicou'},
+      {label:'Objeto Direto', text:'a matéria'},
+      {label:'Objeto Indireto', text:'aos alunos'},
+      {label:'Adjunto Adverbial', text:'com muita paciência'}
+    ]},
+  { topic:'Família', sentence:'Minha irmã mais nova é muito curiosa.',
+    parts:[
+      {label:'Sujeito', text:'Minha irmã mais nova'},
+      {label:'Verbo', text:'é'},
+      {label:'Predicativo do Sujeito', text:'muito curiosa'}
+    ]},
+  { topic:'Natureza', sentence:'As folhas caíram lentamente durante o outono.',
+    parts:[
+      {label:'Sujeito', text:'As folhas'},
+      {label:'Verbo', text:'caíram'},
+      {label:'Adjunto Adverbial', text:'lentamente'},
+      {label:'Adjunto Adverbial', text:'durante o outono'}
+    ]},
+  { topic:'Cidade', sentence:'A prefeitura construiu uma praça nova no centro.',
+    parts:[
+      {label:'Sujeito', text:'A prefeitura'},
+      {label:'Verbo', text:'construiu'},
+      {label:'Objeto Direto', text:'uma praça nova'},
+      {label:'Adjunto Adverbial', text:'no centro'}
+    ]},
+  { topic:'Meio Ambiente', sentence:'Os moradores têm necessidade de água limpa.',
+    parts:[
+      {label:'Sujeito', text:'Os moradores'},
+      {label:'Verbo', text:'têm'},
+      {label:'Objeto Direto', text:'necessidade'},
+      {label:'Complemento Nominal', text:'de água limpa'}
+    ]},
+  { topic:'Esporte', sentence:'O time venceu o campeonato com muita garra.',
+    parts:[
+      {label:'Sujeito', text:'O time'},
+      {label:'Verbo', text:'venceu'},
+      {label:'Objeto Direto', text:'o campeonato'},
+      {label:'Adjunto Adverbial', text:'com muita garra'}
+    ]},
+  { topic:'Amizade', sentence:'O jogador é fiel ao seu clube.',
+    parts:[
+      {label:'Sujeito', text:'O jogador'},
+      {label:'Verbo', text:'é'},
+      {label:'Predicativo do Sujeito', text:'fiel'},
+      {label:'Complemento Nominal', text:'ao seu clube'}
+    ]},
+  { topic:'Viagem', sentence:'Os turistas deram um presente ao guia.',
+    parts:[
+      {label:'Sujeito', text:'Os turistas'},
+      {label:'Verbo', text:'deram'},
+      {label:'Objeto Direto', text:'um presente'},
+      {label:'Objeto Indireto', text:'ao guia'}
+    ]},
+  { topic:'Trabalho', sentence:'A equipe entregou o projeto aos clientes na sexta-feira.',
+    parts:[
+      {label:'Sujeito', text:'A equipe'},
+      {label:'Verbo', text:'entregou'},
+      {label:'Objeto Direto', text:'o projeto'},
+      {label:'Objeto Indireto', text:'aos clientes'},
+      {label:'Adjunto Adverbial', text:'na sexta-feira'}
+    ]},
+  { topic:'Animais de Estimação', sentence:'Ana, você viu o cachorro do vizinho?',
+    parts:[
+      {label:'Vocativo', text:'Ana'},
+      {label:'Sujeito', text:'você'},
+      {label:'Verbo', text:'viu'},
+      {label:'Objeto Direto', text:'o cachorro do vizinho'}
+    ]}
+];
+
+const ROWS = 9, COLS = 11;
+const LETTERS = ['A','B','C','D','E','F'];
+
+let order = [], roundIdx = 0;
+let grid, deadEndMap, cellSize;
+let player = {r:0,c:0};
+let nextIndex = 0;
+let xp = 0;
+let currentRound = null;
+
+function shuffle(arr){
+  const a = [...arr];
+  for (let i = a.length-1; i>0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function pickNextRoundIndex(){
+  if (order.length === 0){ order = shuffle(ROUNDS.map((_,i)=>i)); }
+  return order.shift();
+}
+
+/* ─── Geração do labirinto (recursive backtracker) ─── */
+function buildGrid(){
+  const g = [];
+  for (let i = 0; i < ROWS*COLS; i++) g.push({N:true,S:true,E:true,W:true,visited:false});
+  const idx = (r,c) => r*COLS+c;
+  const DIRS = [
+    {k:'N', dr:-1, dc:0, opp:'S'},
+    {k:'S', dr:1, dc:0, opp:'N'},
+    {k:'E', dr:0, dc:1, opp:'W'},
+    {k:'W', dr:0, dc:-1, opp:'E'}
+  ];
+  const stack = [0];
+  g[0].visited = true;
+  while (stack.length){
+    const cur = stack[stack.length-1];
+    const cr = Math.floor(cur/COLS), cc = cur%COLS;
+    const options = [];
+    DIRS.forEach(d => {
+      const nr = cr+d.dr, nc = cc+d.dc;
+      if (nr>=0 && nr<ROWS && nc>=0 && nc<COLS){
+        const ni = idx(nr,nc);
+        if (!g[ni].visited) options.push({dir:d, ni});
+      }
+    });
+    if (options.length){
+      const pick = options[Math.floor(Math.random()*options.length)];
+      g[cur][pick.dir.k] = false;
+      g[pick.ni][pick.dir.opp] = false;
+      g[pick.ni].visited = true;
+      stack.push(pick.ni);
+    } else {
+      stack.pop();
+    }
+  }
+  return g;
+}
+
+function findDeadEnds(g){
+  const ends = [];
+  for (let i = 1; i < g.length; i++){
+    const c = g[i];
+    const openCount = [c.N,c.S,c.E,c.W].filter(w => !w).length;
+    if (openCount === 1) ends.push(i);
+  }
+  return ends;
+}
+
+/* ─── Nova rodada ─── */
+function loadRound(){
+  currentRound = ROUNDS[pickNextRoundIndex()];
+  nextIndex = 0;
+  player = {r:0,c:0};
+
+  grid = buildGrid();
+  const deadEnds = shuffle(findDeadEnds(grid));
+  const letters = shuffle(LETTERS.slice(0, currentRound.parts.length));
+
+  deadEndMap = {}; // cellIndex -> {letter, partIndex}
+  currentRound.parts.forEach((part, partIndex) => {
+    const cellIndex = deadEnds[partIndex];
+    deadEndMap[cellIndex] = { letter: letters[partIndex], partIndex, collected:false };
+  });
+
+  document.getElementById('topicPill').textContent = 'Tema: ' + currentRound.topic;
+  document.getElementById('totalCount').textContent = currentRound.parts.length;
+  document.getElementById('foundCount').textContent = '0';
+  document.getElementById('winBanner').classList.remove('show');
+
+  buildSentenceBar();
+  buildPieceList(letters);
+  resizeCanvas();
+  draw();
+}
+
+function buildSentenceBar(){
+  const bar = document.getElementById('sentenceBar');
+  bar.innerHTML = '';
+  currentRound.parts.forEach((p, i) => {
+    const slot = document.createElement('div');
+    slot.className = 'slot';
+    slot.id = 'slot-' + i;
+    slot.textContent = '?';
+    bar.appendChild(slot);
+  });
+}
+
+function buildPieceList(letters){
+  const list = document.getElementById('pieceList');
+  list.innerHTML = '';
+  const sortedLetters = [...letters].sort();
+  sortedLetters.forEach(letter => {
+    const entry = Object.values(deadEndMap).find(d => d.letter === letter);
+    const part = currentRound.parts[entry.partIndex];
+    const row = document.createElement('div');
+    row.className = 'piece-row';
+    row.id = 'piece-' + letter;
+    row.innerHTML = `<span class="piece-letter">${letter}</span><span class="piece-text">"${part.text}"</span>`;
+    list.appendChild(row);
+  });
+}
+
+/* ─── Canvas ─── */
+function resizeCanvas(){
+  const maxW = Math.min(window.innerWidth - 44, 620);
+  cellSize = Math.max(22, Math.min(38, Math.floor(maxW / COLS)));
+  const canvas = document.getElementById('mazeCanvas');
+  const dpr = window.devicePixelRatio || 1;
+  canvas.style.width = (COLS*cellSize) + 'px';
+  canvas.style.height = (ROWS*cellSize) + 'px';
+  canvas.width = COLS*cellSize*dpr;
+  canvas.height = ROWS*cellSize*dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+
+function draw(){
+  const canvas = document.getElementById('mazeCanvas');
+  const ctx = canvas.getContext('2d');
+  const cs = cellSize;
+  ctx.clearRect(0,0,COLS*cs,ROWS*cs);
+  ctx.fillStyle = '#221a17';
+  ctx.fillRect(0,0,COLS*cs,ROWS*cs);
+
+  ctx.strokeStyle = 'rgba(247,241,236,0.28)';
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+
+  for (let r = 0; r < ROWS; r++){
+    for (let c = 0; c < COLS; c++){
+      const cell = grid[r*COLS+c];
+      const x = c*cs, y = r*cs;
+      ctx.beginPath();
+      if (cell.N){ ctx.moveTo(x,y); ctx.lineTo(x+cs,y); }
+      if (cell.W){ ctx.moveTo(x,y); ctx.lineTo(x,y+cs); }
+      if (cell.S){ ctx.moveTo(x,y+cs); ctx.lineTo(x+cs,y+cs); }
+      if (cell.E){ ctx.moveTo(x+cs,y); ctx.lineTo(x+cs,y+cs); }
+      ctx.stroke();
+    }
+  }
+
+  // start marker
+  ctx.font = (cs*0.5) + 'px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.globalAlpha = 0.6;
+  ctx.fillText('🏁', cs*0.5, cs*0.5);
+  ctx.globalAlpha = 1;
+
+  // fragment markers
+  Object.entries(deadEndMap).forEach(([cellIndex, info]) => {
+    if (info.collected) return;
+    const r = Math.floor(cellIndex/COLS), c = cellIndex%COLS;
+    const cx = c*cs + cs/2, cy = r*cs + cs/2;
+    ctx.beginPath();
+    ctx.arc(cx, cy, cs*0.34, 0, Math.PI*2);
+    ctx.fillStyle = info.pulse ? '#ffb347' : '#ff5b3d';
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold ' + (cs*0.4) + 'px Inter, sans-serif';
+    ctx.fillText(info.letter, cx, cy+1);
+  });
+
+  // player
+  const px = player.c*cs + cs/2, py = player.r*cs + cs/2;
+  ctx.font = (cs*0.62) + 'px sans-serif';
+  ctx.fillText('🐱', px, py+1);
+}
+
+/* ─── Movimento ─── */
+function canMove(cell, dir){ return !cell[dir]; }
+
+function move(dir){
+  const idx = player.r*COLS+player.c;
+  const cell = grid[idx];
+  if (!canMove(cell, dir)) return;
+  if (dir === 'N') player.r--;
+  if (dir === 'S') player.r++;
+  if (dir === 'E') player.c++;
+  if (dir === 'W') player.c--;
+  draw();
+  checkPickup();
+}
+
+function checkPickup(){
+  const idx = player.r*COLS+player.c;
+  const info = deadEndMap[idx];
+  if (!info || info.collected) return;
+
+  if (info.partIndex === nextIndex){
+    info.collected = true;
+    const part = currentRound.parts[info.partIndex];
+    const color = LABELS[part.label].color;
+    const slot = document.getElementById('slot-' + info.partIndex);
+    slot.classList.add('filled');
+    slot.style.background = color;
+    slot.innerHTML = `<span class="lbl">${part.label}</span>${part.text}`;
+
+    const row = document.getElementById('piece-' + info.letter);
+    if (row) row.classList.add('done');
+
+    xp += 10;
+    document.getElementById('xp').textContent = xp;
+    nextIndex++;
+    document.getElementById('foundCount').textContent = nextIndex;
+    showToast('✅ "' + part.text + '" — ' + part.label + '!', 'good');
+    draw();
+
+    if (nextIndex === currentRound.parts.length){
+      setTimeout(finishRound, 400);
+    }
+  } else {
+    showToast('⏳ Ainda não é essa! Ache a peça que vem antes primeiro.', 'bad');
+  }
+}
+
+function finishRound(){
+  xp += 25;
+  document.getElementById('xp').textContent = xp;
+  if (typeof confetti === 'function') confetti({ particleCount: 130, spread: 75, origin: { y: 0.6 } });
+
+  const winSentence = document.getElementById('winSentence');
+  winSentence.innerHTML = currentRound.parts.map(p =>
+    `<span class="chunk" style="background:${LABELS[p.label].color}">${p.text}</span>`
+  ).join(' ');
+
+  const legend = document.getElementById('winLegend');
+  const usedLabels = [...new Set(currentRound.parts.map(p => p.label))];
+  legend.innerHTML = usedLabels.map(l =>
+    `<span style="background:${LABELS[l].color}">${l}</span>`
+  ).join('');
+
+  document.getElementById('winBanner').classList.add('show');
+}
+
+/* ─── Dica ─── */
+function showHint(){
+  const entry = Object.entries(deadEndMap).find(([_,info]) => info.partIndex === nextIndex && !info.collected);
+  if (!entry) return;
+  const [cellIndex, info] = entry;
+  info.pulse = true;
+  draw();
+  showToast('💡 Procure a peça ' + info.letter, 'good');
+  setTimeout(() => { info.pulse = false; draw(); }, 900);
+}
+
+/* ─── Toast ─── */
+let toastTimer = null;
+function showToast(msg, kind){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (kind||'');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.classList.remove('show'); }, 1800);
+}
+
+/* ─── Controles ─── */
+document.querySelectorAll('.dpad button[data-dir]').forEach(btn => {
+  btn.addEventListener('click', () => move(btn.dataset.dir));
+});
+document.getElementById('hintBtn').addEventListener('click', showHint);
+document.getElementById('nextBtn').addEventListener('click', loadRound);
+
+window.addEventListener('keydown', e => {
+  const map = { ArrowUp:'N', ArrowDown:'S', ArrowLeft:'W', ArrowRight:'E', w:'N', s:'S', a:'W', d:'E' };
+  if (map[e.key]){ e.preventDefault(); move(map[e.key]); }
+});
+
+// swipe support
+let touchStart = null;
+const canvasEl = document.getElementById('mazeCanvas');
+canvasEl.addEventListener('touchstart', e => {
+  const t = e.touches[0]; touchStart = {x:t.clientX, y:t.clientY};
+}, {passive:true});
+canvasEl.addEventListener('touchend', e => {
+  if (!touchStart) return;
+  const t = e.changedTouches[0];
+  const dx = t.clientX - touchStart.x, dy = t.clientY - touchStart.y;
+  if (Math.max(Math.abs(dx),Math.abs(dy)) < 22) return;
+  if (Math.abs(dx) > Math.abs(dy)) move(dx > 0 ? 'E' : 'W');
+  else move(dy > 0 ? 'S' : 'N');
+  touchStart = null;
+});
+
+window.addEventListener('resize', () => { resizeCanvas(); draw(); });
+
+loadRound();
+</script>
+</body>
+</html>
