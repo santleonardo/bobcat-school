@@ -281,8 +281,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8.5L4 19.5Z"/><path d="M8 9.5h8M8 12.5h5"/></svg>
         </span>
         <span class="menu-btn-text">
-          <span class="menu-btn-label">Praticar com IA</span>
-          <span class="menu-btn-desc">Converse em inglês quando quiser</span>
+          <span class="menu-btn-label">💬 Conversar</span>
+          <span class="menu-btn-desc">Pratique inglês com a IA</span>
         </span>
         <span class="menu-btn-chevron" aria-hidden="true">›</span>
       </button>
@@ -486,34 +486,26 @@
     <!-- SUB-TELA: lista de personalidades criadas -->
     <div id="ai-chat-list-view">
       <h2 class="screen-title">
-        <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H8.5L4 19.5Z"/><path d="M8 9.5h8M8 12.5h5"/></svg>
-        Praticar com a IA
+        <span class="title-emoji" aria-hidden="true">💬</span>
+        Conversar
       </h2>
-      <p style="font-size:13px; color:var(--ink-soft); margin-bottom:14px; line-height:1.5;">Crie personalidades com o nome e o jeito de ser que você quiser, e converse em inglês com cada uma delas. Cada personalidade tem sua própria conversa, guardada separada. É só um parceiro de prática — não substitui as aulas com o professor.</p>
+      <p class="ai-chat-lead">Crie um parceiro e fale inglês. ✨</p>
 
       <button type="button" class="ai-persona-create-btn" id="btn-ai-chat-new-persona">
-        <span class="icon-wrap" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none">
-            <circle cx="10.5" cy="10.5" r="8" stroke="currentColor" stroke-width="1.6"/>
-            <circle cx="7.8" cy="9.1" r="1.1" fill="currentColor"/>
-            <circle cx="13.2" cy="9.1" r="1.1" fill="currentColor"/>
-            <path d="M7.3 12.6c.95 1.05 2.15 1.55 3.2 1.55s2.25-.5 3.2-1.55" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-            <circle cx="17.5" cy="16.5" r="5.2" fill="var(--terracotta)" stroke="#fff" stroke-width="1.6"/>
-            <path d="M17.5 14.3v4.4M15.3 16.5h4.4" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>
-          </svg>
-        </span>
+        <span class="icon-wrap emoji-big" aria-hidden="true">➕🤖</span>
         <span class="label">
-          <span class="title">Criar nova personalidade</span>
-          <span class="sub">Escolha um rosto, um nome e um jeito de ser</span>
+          <span class="title">Novo parceiro</span>
+          <span class="sub">Avatar · nome · jeito</span>
         </span>
+        <span class="create-chevron" aria-hidden="true">›</span>
       </button>
 
       <!-- Lembretes por notificação (Web Push) -->
       <div class="push-reminders-card" id="push-reminders-card">
         <div class="push-reminders-row">
           <div class="push-reminders-text">
-            <div class="push-reminders-title">🔔 Lembretes de prática</div>
-            <div class="push-reminders-sub" id="push-reminders-status">Receba um toque no celular para praticar com a IA ao longo do dia.</div>
+            <div class="push-reminders-title">🔔 Lembretes</div>
+            <div class="push-reminders-sub" id="push-reminders-status">Toque no celular pra praticar.</div>
           </div>
           <button type="button" class="btn btn-small" id="btn-push-toggle">Ativar</button>
         </div>
@@ -540,53 +532,53 @@
     <!-- SUB-TELA: criar/editar personalidade -->
     <div id="ai-chat-create-view" class="hidden">
       <button type="button" class="link-btn" id="btn-ai-chat-create-back" style="margin-bottom:10px;">← Voltar</button>
-      <h2 class="screen-title">Nova personalidade</h2>
+      <h2 class="screen-title"><span class="title-emoji" aria-hidden="true">✨</span> Novo parceiro</h2>
 
       <div class="persona-preview">
         <div class="persona-preview-avatar" id="persona-preview-avatar">🤖</div>
         <div class="persona-preview-info">
-          <div class="persona-preview-name" id="persona-preview-name">Sua nova personalidade</div>
-          <div class="persona-preview-sub">é assim que ela vai aparecer na sua lista</div>
+          <div class="persona-preview-name" id="persona-preview-name">Sem nome</div>
+          <div class="persona-preview-sub">prévia na lista</div>
         </div>
       </div>
 
       <div class="persona-form-section">
-        <label class="field-label" for="input-persona-emoji" style="margin-top:0;">Avatar</label>
+        <label class="field-label" style="margin-top:0;">😊 Avatar</label>
         <div id="persona-emoji-picker" class="persona-emoji-grid"></div>
       </div>
 
       <div class="persona-form-section">
-        <label class="field-label" for="input-persona-name" style="margin-top:0;">Nome</label>
-        <input type="text" id="input-persona-name" maxlength="30" placeholder="Ex: Max, Sofia, Capitã Estrela...">
+        <label class="field-label" for="input-persona-name" style="margin-top:0;">🏷️ Nome</label>
+        <input type="text" id="input-persona-name" maxlength="30" placeholder="Ex: Max, Sofia, Luna…">
       </div>
 
       <div class="persona-form-section">
-        <label class="field-label" style="margin-top:0;">Gênero da IA</label>
+        <label class="field-label" style="margin-top:0;">⚧ Voz</label>
         <div id="persona-gender-picker" class="persona-gender-row"></div>
       </div>
 
       <div class="persona-form-section">
-        <label class="field-label" for="input-persona-personality" style="margin-top:0;">Personalidade</label>
-        <textarea id="input-persona-personality" rows="4" maxlength="300" placeholder="Descreva como essa personalidade é: o jeito de falar, o que gosta de conversar... Ex: uma astronauta aventureira, animada, que adora contar histórias sobre o espaço."></textarea>
-        <p class="persona-form-hint">Dica: quanto mais detalhes, mais a IA vai manter esse jeito de ser durante a conversa. As regras de segurança do app continuam valendo, não importa o que for descrito aqui.</p>
+        <label class="field-label" for="input-persona-personality" style="margin-top:0;">🎭 Jeito</label>
+        <textarea id="input-persona-personality" rows="3" maxlength="300" placeholder="Ex: animada, adora espaço e piadas…"></textarea>
+        <p class="persona-form-hint">Mais detalhes = conversa mais fiel.</p>
       </div>
 
       <div class="persona-form-section">
-        <label class="field-label" style="margin-top:0;">Descubra o jeito da personalidade</label>
-        <p class="persona-form-hint" style="margin-top:0; margin-bottom:10px;">Responda as 4 perguntas e a gente preenche a personalidade pra você (dá pra editar depois).</p>
+        <label class="field-label" style="margin-top:0;">🎲 Quiz rápido</label>
+        <p class="persona-form-hint" style="margin-top:0; margin-bottom:10px;">4 perguntas → a gente preenche o jeito.</p>
         <div id="mbti-quiz" class="mbti-quiz"></div>
         <div id="mbti-result" class="mbti-result hidden"></div>
       </div>
 
       <button type="button" class="btn" id="btn-ai-chat-create-submit" style="width:100%;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px; height:18px; vertical-align:-3px; margin-right:6px;" aria-hidden="true"><path d="M4 5h16v11H8.5L4 19.5Z"/></svg>Criar e começar a conversar
+        🚀 Criar e conversar
       </button>
     </div>
 
 
     <!-- SUB-TELA: conversa com a personalidade escolhida -->
     <div id="ai-chat-conversation-view" class="hidden">
-      <button type="button" class="link-btn" id="btn-ai-chat-conv-back" style="margin-bottom:10px;">← Minhas personalidades</button>
+      <button type="button" class="link-btn" id="btn-ai-chat-conv-back" style="margin-bottom:10px;">← Parceiros</button>
 
       <div class="ai-conv-header" id="ai-chat-conv-title"></div>
 
@@ -608,7 +600,7 @@
           <div id="ai-chat-suggestions" class="ai-chat-suggestions hidden"></div>
           <div class="chat-input-row">
             <div class="chat-input-main">
-              <textarea id="ai-chat-input" rows="2" placeholder="Escreva algo em inglês (ou português, se travar)..."></textarea>
+              <textarea id="ai-chat-input" rows="2" placeholder="Digite em inglês…"></textarea>
             </div>
             <button type="button" class="btn-icon" id="btn-ai-chat-mic" title="Gravar áudio" aria-label="Gravar áudio">
               <svg class="mic-icon-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
@@ -621,12 +613,8 @@
         </div>
       </div>
       <div style="display:flex; justify-content:space-between; margin-top:10px;">
-        <button type="button" class="link-btn" id="btn-ai-chat-reset">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px; margin-right:4px;" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg>Nova conversa
-        </button>
-        <button type="button" class="link-btn" id="btn-ai-chat-delete-persona" style="color:#B23B2E;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px; margin-right:4px;" aria-hidden="true"><path d="M5 7h14M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-8 0 1 12.5a1 1 0 0 0 1 .5h4a1 1 0 0 0 1-.5L17 7"/></svg>Excluir personalidade
-        </button>
+        <button type="button" class="link-btn" id="btn-ai-chat-reset">🔄 Nova conversa</button>
+        <button type="button" class="link-btn" id="btn-ai-chat-delete-persona" style="color:var(--bad);">🗑️ Excluir</button>
       </div>
     </div>
 

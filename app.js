@@ -1810,7 +1810,7 @@ async function updatePushRemindersUI() {
     if (testBtn) testBtn.classList.remove('hidden');
     if (configBtn) configBtn.classList.remove('hidden');
   } else {
-    if (statusEl) statusEl.textContent = 'Receba um toque no celular para praticar com a IA ao longo do dia.';
+    if (statusEl) statusEl.textContent = 'Toque no celular pra praticar.';
     btn.textContent = 'Ativar';
     btn.classList.remove('is-on');
     if (testBtn) testBtn.classList.add('hidden');
@@ -2094,7 +2094,16 @@ const AI_CHAT_MAX_RECORD_MS = 30000; // 30s é suficiente pra prática e mantém
 let aiChatRecordTimeout = null;
 let aiChatTtsEnabled = localStorage.getItem('aiChatTtsEnabled') === '1';
 
-const PERSONA_EMOJIS = ['🤖', '🐱', '🧒', '🧑', '💼', '👴', '🦸', '🧑‍🚀', '🐉', '🎸', '⚽', '📚'];
+const PERSONA_EMOJIS = [
+  // robots & fantasy
+  '🤖', '👾', '👽', '🛸', '🦸', '🦹', '🧙', '🧚', '🧛', '🧜', '🧞', '🧟',
+  // animals
+  '🐱', '🐶', '🦊', '🐼', '🐨', '🐯', '🦁', '🐸', '🐵', '🦄', '🐲', '🦉', '🐧', '🦋',
+  // people
+  '🧒', '👧', '👦', '🧑', '👩', '👨', '👵', '👴', '🧑‍🎤', '🧑‍🚀', '🧑‍🔬', '🧑‍🍳', '🧑‍🎨', '🧑‍💻', '👮', '🥷',
+  // hobbies & objects
+  '💼', '🎸', '⚽', '🏀', '🎮', '📚', '🎬', '🎤', '🎧', '☕', '🍕', '🌈', '⭐', '🔥', '💡', '🎯'
+];
 let personaEmojiSelected = PERSONA_EMOJIS[0];
 let personaGenderSelected = 'female'; // 'female' | 'male' — obrigatório escolher um dos dois
 
@@ -2104,21 +2113,21 @@ let personaGenderSelected = 'female'; // 'female' | 'male' — obrigatório esco
 // clássicas do MBTI (E/I, S/N, T/F, J/P). O texto de cada tipo já vem pronto
 // para o prompt da IA (em inglês, dentro do limite de 300 caracteres).
 const MBTI_QUESTIONS = [
-  { key: 'EI', text: 'Você prefere...', options: [
-      { letter: 'E', label: 'Conversar bastante e conhecer gente nova' },
-      { letter: 'I', label: 'Ficar mais quieto(a) e pensar antes de falar' }
+  { key: 'EI', text: 'Você prefere…', options: [
+      { letter: 'E', label: '🗣️ Falar e conhecer gente' },
+      { letter: 'I', label: '🤫 Pensar em silêncio' }
     ] },
-  { key: 'SN', text: 'Você presta mais atenção em...', options: [
-      { letter: 'S', label: 'Fatos e detalhes reais' },
-      { letter: 'N', label: 'Ideias e possibilidades novas' }
+  { key: 'SN', text: 'Você repara mais em…', options: [
+      { letter: 'S', label: '🔎 Fatos e detalhes' },
+      { letter: 'N', label: '💡 Ideias novas' }
     ] },
-  { key: 'TF', text: 'Na hora de decidir algo, você pensa mais em...', options: [
-      { letter: 'T', label: 'Lógica e ser direto(a)' },
-      { letter: 'F', label: 'Sentimentos das pessoas' }
+  { key: 'TF', text: 'Na hora de decidir…', options: [
+      { letter: 'T', label: '🧠 Lógica' },
+      { letter: 'F', label: '❤️ Sentimentos' }
     ] },
-  { key: 'JP', text: 'No dia a dia, você prefere...', options: [
-      { letter: 'J', label: 'Ter plano e rotina' },
-      { letter: 'P', label: 'Ir vendo na hora, com surpresas' }
+  { key: 'JP', text: 'No dia a dia…', options: [
+      { letter: 'J', label: '📅 Plano e rotina' },
+      { letter: 'P', label: '🎲 Surpresa' }
     ] }
 ];
 
@@ -2644,7 +2653,7 @@ function aiChatUpdatePersonaPreview() {
   if (nameEl) {
     const nameInput = document.getElementById('input-persona-name');
     const typed = nameInput ? nameInput.value.trim() : '';
-    nameEl.textContent = typed || 'Sua nova personalidade';
+    nameEl.textContent = typed || 'Sem nome';
   }
 }
 
@@ -2691,10 +2700,14 @@ async function aiChatOpenPersona(id) {
 async function renderAiChatPersonaList() {
   const list = document.getElementById('ai-chat-persona-list');
   if (!list) return;
-  list.innerHTML = '<div class="chat-empty" style="background:var(--cream-2); border-radius:12px; padding:18px 12px;">Carregando…</div>';
+  list.innerHTML = '<div class="ai-empty-state"><div class="ai-empty-emojis">⏳</div><div class="ai-empty-sub">Carregando…</div></div>';
   const personas = await getAiChatPersonas();
   if (personas.length === 0) {
-    list.innerHTML = '<div class="chat-empty" style="background:var(--cream-2); border-radius:12px; padding:18px 12px;">Você ainda não criou nenhuma personalidade. Toque em "Criar nova personalidade" acima para começar sua primeira conversa! 🎉</div>';
+    list.innerHTML = `<div class="ai-empty-state">
+      <div class="ai-empty-emojis" aria-hidden="true">🤖 🐱 🦸 🦄</div>
+      <div class="ai-empty-title">Nenhum parceiro ainda</div>
+      <div class="ai-empty-sub">Toque em <strong>Novo parceiro</strong> e comece a conversar! 🎉</div>
+    </div>`;
     return;
   }
   list.innerHTML = personas.map(p => `
@@ -2702,9 +2715,9 @@ async function renderAiChatPersonaList() {
       <div class="icon">${p.emoji || '🤖'}</div>
       <div class="info">
         <div class="name">${aiChatEscapeHtml(p.name)} <span class="gender-badge">${p.gender === 'male' ? '♂️' : '♀️'}</span></div>
-        <div class="personality-preview">${aiChatEscapeHtml(p.personality || '')}</div>
+        <div class="personality-preview">${aiChatEscapeHtml((p.personality || '').slice(0, 60))}${(p.personality || '').length > 60 ? '…' : ''}</div>
       </div>
-      <div class="chevron">›</div>
+      <div class="chevron">💬</div>
     </div>
   `).join('');
   list.querySelectorAll('.persona-card').forEach(card => {
@@ -2716,11 +2729,11 @@ function renderPersonaGenderPicker() {
   const picker = document.getElementById('persona-gender-picker');
   if (!picker) return;
   const options = [
-    { id: 'female', label: '♀️ Feminino' },
-    { id: 'male', label: '♂️ Masculino' }
+    { id: 'female', label: '♀️', sub: 'Ela' },
+    { id: 'male', label: '♂️', sub: 'Ele' }
   ];
   picker.innerHTML = options.map(o =>
-    `<button type="button" class="persona-gender-btn${o.id === personaGenderSelected ? ' selected' : ''}" data-gender="${o.id}">${o.label}</button>`
+    `<button type="button" class="persona-gender-btn${o.id === personaGenderSelected ? ' selected' : ''}" data-gender="${o.id}"><span class="gender-emoji">${o.label}</span><span class="gender-sub">${o.sub}</span></button>`
   ).join('');
   picker.querySelectorAll('.persona-gender-btn').forEach(btn => {
     btn.addEventListener('click', () => {

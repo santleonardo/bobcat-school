@@ -1070,13 +1070,27 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
 .ai-persona-create-btn:active { transform: translateY(1px); }
 .ai-persona-create-btn .icon-wrap {
   flex-shrink: 0;
-  width: 46px; height: 46px;
+  width: 52px; height: 52px;
   color: var(--terracotta);
+  display: flex; align-items: center; justify-content: center;
 }
 .ai-persona-create-btn .icon-wrap svg { width: 46px; height: 46px; }
+.ai-persona-create-btn .icon-wrap.emoji-big {
+  font-size: 28px;
+  line-height: 1;
+  background: var(--terracotta-tonal);
+  border-radius: 16px;
+  box-shadow: var(--clay-well);
+}
 .ai-persona-create-btn .label { flex: 1; min-width: 0; }
-.ai-persona-create-btn .label .title { display: block; font-weight: 700; font-size: 14.5px; color: var(--ink); }
-.ai-persona-create-btn .label .sub { display: block; font-size: 11.5px; color: var(--ink-soft); margin-top: 2px; }
+.ai-persona-create-btn .label .title { display: block; font-weight: 700; font-size: 15px; color: var(--ink); }
+.ai-persona-create-btn .label .sub { display: block; font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+.ai-persona-create-btn .create-chevron {
+  font-size: 22px;
+  color: var(--terracotta);
+  font-weight: 700;
+  flex-shrink: 0;
+}
 
 .persona-card {
   background: var(--surface);
@@ -1119,7 +1133,7 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
   font-size: 11.5px; color: var(--ink-soft); margin-top: 2px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.persona-card .chevron { font-size: 18px; color: var(--ink-faint); }
+.persona-card .chevron { font-size: 18px; color: var(--terracotta); opacity: 0.85; }
 
 /* Preview ao vivo na tela de nova personalidade */
 .persona-preview {
@@ -1157,27 +1171,55 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
 .persona-form-hint { font-size: 11.5px; color: var(--ink-faint); margin-top: 5px; line-height: 1.5; }
 .persona-form-hint-inline { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-faint); }
 
-.persona-emoji-grid { display: flex; gap: 9px; flex-wrap: wrap; }
-.persona-emoji-btn {
-  width: 44px; height: 44px; font-size: 19px;
-  border-radius: 50%; border: 1.5px solid var(--border);
-  background: var(--cream); cursor: pointer; padding: 0;
-  box-shadow: var(--clay-raised);
-  transition: transform .12s, box-shadow .15s, border-color .15s;
+.persona-emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
+  gap: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 4px 2px 8px;
+  -webkit-overflow-scrolling: touch;
 }
-.persona-emoji-btn:hover { transform: translateY(-1px); }
-.persona-emoji-btn.selected { background: var(--surface); border-color: var(--terracotta); box-shadow: var(--clay-accent); transform: scale(1.1); }
+.persona-emoji-btn {
+  width: 100%;
+  aspect-ratio: 1;
+  font-size: 22px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  background: var(--cream);
+  cursor: pointer;
+  padding: 0;
+  box-shadow: var(--clay-raised);
+  transition: transform .12s, box-shadow .15s, border-color .15s, background .15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.persona-emoji-btn:hover { transform: translateY(-2px) scale(1.04); }
+.persona-emoji-btn.selected {
+  background: var(--terracotta-tonal);
+  border-color: var(--terracotta);
+  box-shadow: var(--clay-accent);
+  transform: scale(1.08);
+}
 
-.persona-gender-row { display: flex; gap: 10px; }
+
+.persona-gender-row { display: flex; gap: 12px; }
 .persona-gender-btn {
-  flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 11px 12px; font-size: 13.5px; font-weight: 700; font-family: inherit;
-  border-radius: var(--radius-sm); border: 1.5px solid var(--border); background: var(--surface);
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  padding: 14px 12px; font-size: 13px; font-weight: 700; font-family: inherit;
+  border-radius: var(--radius-md); border: 1.5px solid var(--border); background: var(--surface);
   color: var(--ink-soft); cursor: pointer; box-shadow: var(--clay-raised);
   transition: box-shadow .15s, color .15s, background .15s, transform .12s, border-color .15s;
 }
-.persona-gender-btn.selected { background: var(--cream); color: var(--terracotta-deep); border-color: var(--terracotta); box-shadow: var(--clay-well); }
-.persona-card .gender-badge { font-size: 11px; margin-left: 4px; }
+.persona-gender-btn .gender-emoji { font-size: 28px; line-height: 1; }
+.persona-gender-btn .gender-sub { font-size: 12px; font-weight: 600; }
+.persona-gender-btn.selected {
+  background: var(--terracotta-tonal);
+  color: var(--terracotta-deep);
+  border-color: var(--terracotta);
+  box-shadow: var(--clay-well);
+}
+.persona-card .gender-badge { font-size: 12px; margin-left: 4px; }
 
 .mbti-quiz { display: flex; flex-direction: column; gap: 14px; }
 .mbti-question-text { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 7px; }
@@ -2249,5 +2291,50 @@ html[data-theme="light"] .btn.secondary {
   background: var(--surface);
   color: var(--pine-deep);
   border: none;
+}
+
+
+/* AI chat visual polish */
+.title-emoji {
+  font-size: 1.15em;
+  line-height: 1;
+  margin-right: 2px;
+}
+.ai-chat-lead {
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: -8px 0 16px;
+  line-height: 1.4;
+}
+.ai-empty-state {
+  text-align: center;
+  background: var(--surface);
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius-md);
+  padding: 28px 18px;
+  box-shadow: var(--clay-well);
+}
+.ai-empty-emojis {
+  font-size: 32px;
+  letter-spacing: 6px;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+.ai-empty-title {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.ai-empty-sub {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+.ai-empty-sub strong { color: var(--terracotta); font-weight: 700; }
+
+.persona-preview-avatar {
+  font-size: 32px !important;
 }
 
