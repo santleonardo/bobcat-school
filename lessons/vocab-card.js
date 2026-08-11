@@ -379,9 +379,81 @@
   }
 
 
+  // ─── Gabarito comentado (trava até a lição ser finalizada) ───
+  function injectGabaritoLockStyles() {
+    if (document.getElementById('gabarito-lock-styles')) return;
+    var css = document.createElement('style');
+    css.id = 'gabarito-lock-styles';
+    css.textContent = [
+      '.gabarito-box.locked{opacity:.72}',
+      '.gabarito-box.locked summary{cursor:not-allowed}',
+      '.gabarito-box.locked summary::before{content:"🔒 "!important}',
+      '.gabarito-box.locked .gabarito-list{display:none!important}'
+    ].join('');
+    document.head.appendChild(css);
+  }
+
+  function setupGabaritoLock() {
+    var boxes = document.querySelectorAll('.gabarito-box');
+    if (!boxes.length) return;
+    injectGabaritoLockStyles();
+
+    function lockBox(box) {
+      box.removeAttribute('open');
+      box.classList.add('locked');
+      var summary = box.querySelector('summary');
+      if (summary) {
+        if (!summary.dataset.unlockedText) summary.dataset.unlockedText = summary.textContent;
+        summary.textContent = 'Gabarito comentado — disponível após finalizar a lição';
+      }
+    }
+
+    function unlockBox(box) {
+      box.classList.remove('locked');
+      var summary = box.querySelector('summary');
+      if (summary && summary.dataset.unlockedText) summary.textContent = summary.dataset.unlockedText;
+    }
+
+    boxes.forEach(function (box) {
+      lockBox(box);
+      var summary = box.querySelector('summary');
+      if (summary) {
+        summary.addEventListener('click', function (e) {
+          if (box.classList.contains('locked')) e.preventDefault();
+        });
+      }
+    });
+
+    function unlockAll() {
+      boxes.forEach(unlockBox);
+    }
+
+    // A lição é considerada "terminada" quando o próprio checkAnswers() da página
+    // roda (isso acontece ao clicar em "Finalizar e salvar progresso").
+    if (typeof global.checkAnswers === 'function') {
+      var originalCheckAnswers = global.checkAnswers;
+      global.checkAnswers = function () {
+        var result = originalCheckAnswers.apply(this, arguments);
+        unlockAll();
+        return result;
+      };
+    } else {
+      // Sem checkAnswers nesta página: destrava ao finalizar a lição, se existir.
+      if (typeof global.finishLesson === 'function') {
+        var originalFinishLesson = global.finishLesson;
+        global.finishLesson = function () {
+          var result = originalFinishLesson.apply(this, arguments);
+          unlockAll();
+          return result;
+        };
+      }
+    }
+  }
+
   function boot() {
     setup();
     setupPause();
+    setupGabaritoLock();
   }
 
   if (document.readyState === 'loading') {
