@@ -6,6 +6,7 @@
 <title>Caça-Palavras — Português</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="game-sound.js"></script>
 <style>
   :root{
     --orange:#ff5b3d;--orange-dark:#e13a26;--orange-light:#ff7a5c;
@@ -36,6 +37,7 @@
     border-radius:99px;padding:5px 12px;font-size:12.5px;font-weight:700;color:var(--orange-light)}
   .pill.time{color:var(--gold)}
   .pill.xp{color:var(--ok)}
+  .pill.sound-toggle{cursor:pointer;font-family:inherit;font-size:14px;padding:5px 10px}
 
   .wrap{max-width:920px;margin:0 auto;padding:22px 16px 0}
 
@@ -90,6 +92,7 @@
     <span class="pill time">⏱️ <span id="timer">0:00</span></span>
     <span class="pill">🎯 <span id="foundCount">0</span>/<span id="totalCount">0</span></span>
     <span class="pill xp">⭐ <span id="xp">0</span> XP</span>
+    <button class="pill sound-toggle" data-sound-toggle title="Desativar sons">🔊</button>
   </div>
 </div>
 
@@ -333,7 +336,11 @@ function checkSelection(path){
   const forward = path.map(c => c.textContent).join('');
   const backward = [...path].reverse().map(c => c.textContent).join('');
   const match = state.words.find(w => (w === forward || w === backward) && !state.found.has(w));
-  if (!match) return;
+  if (!match){
+    if (path.length >= 3) GameSound.play('wrong');
+    return;
+  }
+  GameSound.play('correct');
 
   state.found.add(match);
   const altStyle = state.found.size % 2 === 0;
@@ -352,6 +359,7 @@ function checkSelection(path){
 
 function finishTopic(){
   stopTimer();
+  GameSound.play('win');
   state.xp += 20;
   document.getElementById('xp').textContent = state.xp;
   const secs = Math.floor((Date.now() - state.startTime) / 1000);
@@ -361,6 +369,7 @@ function finishTopic(){
 }
 
 document.getElementById('nextTopicBtn').onclick = () => {
+  GameSound.play('click');
   loadTopic((state.topicIndex + 1) % TOPICS.length);
 };
 

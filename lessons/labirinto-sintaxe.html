@@ -6,6 +6,7 @@
 <title>Labirinto da Oração — Português</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="game-sound.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
 <style>
   :root{
@@ -33,6 +34,7 @@
     border-radius:99px;padding:5px 12px;font-size:12.5px;font-weight:700;color:var(--orange-light)}
   .pill.xp{color:var(--ok)}
   .pill.topic{color:var(--gold)}
+  .pill.sound-toggle{cursor:pointer;font-family:inherit;font-size:14px;padding:5px 10px}
 
   .wrap{max-width:760px;margin:0 auto;padding:18px 14px 0}
 
@@ -103,6 +105,7 @@
     <span class="pill topic" id="topicPill">Tema: —</span>
     <span class="pill">🧩 <span id="foundCount">0</span>/<span id="totalCount">0</span></span>
     <span class="pill xp">⭐ <span id="xp">0</span> XP</span>
+    <button class="pill sound-toggle" data-sound-toggle title="Desativar sons">🔊</button>
   </div>
 </div>
 
@@ -428,6 +431,7 @@ function move(dir){
   if (dir === 'S') player.r++;
   if (dir === 'E') player.c++;
   if (dir === 'W') player.c--;
+  GameSound.play('move');
   draw();
   checkPickup();
 }
@@ -439,6 +443,7 @@ function checkPickup(){
 
   if (info.partIndex === nextIndex){
     info.collected = true;
+    GameSound.play('correct');
     const part = currentRound.parts[info.partIndex];
     const color = LABELS[part.label].color;
     const slot = document.getElementById('slot-' + info.partIndex);
@@ -460,6 +465,7 @@ function checkPickup(){
       setTimeout(finishRound, 400);
     }
   } else {
+    GameSound.play('wrong');
     showToast('⏳ Ainda não é essa! Ache a peça que vem antes primeiro.', 'bad');
   }
 }
@@ -467,6 +473,7 @@ function checkPickup(){
 function finishRound(){
   xp += 25;
   document.getElementById('xp').textContent = xp;
+  GameSound.play('win');
   if (typeof confetti === 'function') confetti({ particleCount: 130, spread: 75, origin: { y: 0.6 } });
 
   const winSentence = document.getElementById('winSentence');
@@ -488,6 +495,7 @@ function showHint(){
   const entry = Object.entries(deadEndMap).find(([_,info]) => info.partIndex === nextIndex && !info.collected);
   if (!entry) return;
   const [cellIndex, info] = entry;
+  GameSound.play('hint');
   info.pulse = true;
   draw();
   showToast('💡 Procure a peça ' + info.letter, 'good');

@@ -6,6 +6,7 @@
 <title>Empurra-Palavras — Português</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="game-sound.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
 <style>
   :root{
@@ -33,6 +34,7 @@
     border-radius:99px;padding:5px 12px;font-size:12.5px;font-weight:700;color:var(--orange-light)}
   .pill.xp{color:var(--ok)}
   .pill.topic{color:var(--gold)}
+  .pill.sound-toggle{cursor:pointer;font-family:inherit;font-size:14px;padding:5px 10px}
 
   .wrap{max-width:640px;margin:0 auto;padding:18px 14px 0}
 
@@ -116,6 +118,7 @@
     <span class="pill topic" id="topicPill">Tema: —</span>
     <span class="pill">🧩 <span id="foundCount">0</span>/<span id="totalCount">0</span></span>
     <span class="pill xp">⭐ <span id="xp">0</span> XP</span>
+    <button class="pill sound-toggle" data-sound-toggle title="Desativar sons">🔊</button>
   </div>
 </div>
 
@@ -372,6 +375,7 @@ function move(dir){
   const targetTile = tileAt(nr, nc);
   if (!targetTile){
     player.row = nr; player.col = nc;
+    GameSound.play('move');
     renderAll();
     return;
   }
@@ -379,11 +383,13 @@ function move(dir){
   // Tem uma caixinha no caminho — tenta empurrar mais uma casa na mesma direção.
   const fr = nr + v.dr, fc = nc + v.dc;
   if (fc < 0 || fc >= COLS || fr < 0 || fr >= ROWS){
+    GameSound.play('wrong');
     shakeTile(targetTile);
     showToast('🚧 Não dá pra empurrar pra fora do campo.', 'bad');
     return;
   }
   if (tileAt(fr, fc)){
+    GameSound.play('wrong');
     shakeTile(targetTile);
     showToast('🚧 Tem outra caixinha no caminho.', 'bad');
     return;
@@ -391,6 +397,7 @@ function move(dir){
   if (fr === ROWS - 1){
     // A última linha é o corredor do jogador — se a caixinha entrasse ali,
     // não teria mais como empurrá-la de volta pra cima.
+    GameSound.play('wrong');
     shakeTile(targetTile);
     showToast('🚧 Essa fileira de baixo é só passagem — não dá pra empurrar a caixinha pra lá.', 'bad');
     return;
@@ -403,6 +410,7 @@ function move(dir){
 
   targetTile.row = fr; targetTile.col = fc;
   player.row = nr; player.col = nc;
+  GameSound.play('push');
   renderAll();
 }
 
@@ -416,18 +424,21 @@ function shakeTile(tile){
 
 function tryDeliver(tile, playerLandRow, playerLandCol){
   if (tile.isDecoy){
+    GameSound.play('wrong');
     shakeTile(tile);
     showToast('❌ "' + tile.value + '" está com a grafia errada — essa nem é uma palavra de verdade!', 'bad');
     return;
   }
   const required = currentRound.words[nextIndex];
   if (tile.value !== required){
+    GameSound.play('wrong');
     shakeTile(tile);
     showToast('⏳ Essa palavra vem depois na frase — ache a que vem antes primeiro.', 'bad');
     return;
   }
 
   // Entrega válida!
+  GameSound.play('correct');
   tiles = tiles.filter(t => t.id !== tile.id);
   tile.el.remove();
 
@@ -454,6 +465,7 @@ function tryDeliver(tile, playerLandRow, playerLandCol){
 function finishRound(){
   xp += 25;
   document.getElementById('xp').textContent = xp;
+  GameSound.play('win');
   if (typeof confetti === 'function') confetti({ particleCount: 130, spread: 75, origin: { y: 0.6 } });
 
   document.getElementById('winSentence').textContent = currentRound.words.join(' ');
@@ -468,6 +480,7 @@ function showHint(){
     showToast('💡 Essa palavra já foi entregue por outra caixinha igual — procure a próxima!', 'good');
     return;
   }
+  GameSound.play('hint');
   found.el.classList.add('pulse');
   showToast('💡 Procure a caixinha: "' + required + '"', 'good');
   setTimeout(() => found.el && found.el.classList.remove('pulse'), 900);
@@ -475,6 +488,7 @@ function showHint(){
 
 /* ─── Reorganizar (evita ficar preso, não muda a rodada) ─── */
 function shuffleField(){
+  GameSound.play('click');
   placeTilesAndPlayer();
   // reaplica o que já foi entregue: remove do campo qualquer valor já
   // entregue e mantém o placar/slots como estavam.
