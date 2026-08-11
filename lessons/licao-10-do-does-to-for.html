@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bobcat Language School — Lição 10 — Do/Does, To e For</title>
+<title>Bobcat Language School — Lição 8 — Do / Does · To e For</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -18,94 +18,239 @@
     <span class="pill" id="starsPill">🏆 0 estrelas</span>
   </div>
 </div>
-<header class="hero" id="hero" style="background:linear-gradient(180deg,rgba(43,27,18,0) 40%,rgba(43,27,18,.78) 100%),url('https://images.pexels.com/photos/4145153/pexels-photo-4145153.jpeg?auto=compress&cs=tinysrgb&w=1200') center/cover no-repeat">
+<header class="hero" id="hero" style="background:linear-gradient(180deg,rgba(43,27,18,0) 40%,rgba(43,27,18,.78) 100%),url('https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=1200') center/cover no-repeat">
   <div class="wrap hero-inner">
     <a class="back-link" href="../index.html" style="color:#fff;opacity:.9">← Voltar ao app</a>
     <span class="badge">🐾 Bobcat · A1</span>
     <h1>Do / Does · To e For</h1>
-    <p class="lede">Perguntas com Do/Does e o uso de to e for.</p>
+    <p class="lede">Perguntas com Do/Does e uso de to e for</p>
     <div class="hero-cta"><a href="#objetivos" class="btn">Começar →</a></div>
   </div>
 </header>
-<div class="wrap" style="min-height:100vh;display:flex;flex-direction:column">
+<div class="wrap">
 
 <section class="section" id="objetivos">
-  <div class="section-head reveal"><span class="sec-num">1</span><div><h2 class="sec-title">🎯 Objetivos</h2><p class="sec-sub">DO / DOES · TO e FOR</p></div></div>
-  <div class="grid-3 reveal">
-    <div class="card obj-card"><span class="ic">❓</span><h3>Do / Does</h3><p>Perguntas no presente</p></div>
-    <div class="card obj-card"><span class="ic">➡️</span><h3>To</h3><p>Direção / infinitivo</p></div>
-    <div class="card obj-card"><span class="ic">🎁</span><h3>For</h3><p>Benefício / duração</p></div>
+  <div class="section-head reveal"><span class="sec-num">1</span>
+    <div><h2 class="sec-title">🎯 Objetivos da Lição</h2><p class="sec-sub">Ao final desta lição você será capaz de:</p></div>
+  </div>
+  <div class="grid-3 reveal"><div class="card obj-card"><span class="ic">❓</span><h3>Do / Does</h3><p>Perguntas no presente</p></div><div class="card obj-card"><span class="ic">➡️</span><h3>To</h3><p>Direção e infinitivo</p></div><div class="card obj-card"><span class="ic">🎁</span><h3>For</h3><p>Benefício e duração</p></div></div>
+</section>
+
+<section class="section" id="warmup">
+  <div class="section-head reveal"><span class="sec-num">2</span>
+    <div><h2 class="sec-title">🔥 Warm-Up</h2><p class="sec-sub">Ative o cérebro antes de estudar.</p></div>
+  </div>
+  <div class="card reveal callout" style="font-size:15px;line-height:1.55">Como você pergunta &quot;Você gosta de café?&quot; em inglês?</div>
+</section>
+
+<section class="section" id="dialogue" style="background:linear-gradient(180deg,var(--cream-3),#fff)">
+  <div class="section-head reveal"><span class="sec-num">3</span>
+    <div><h2 class="sec-title">🎧 Listening &amp; Speaking — "Plans"</h2>
+    <p class="sec-sub">Tom pergunta sobre planos.</p></div>
+  </div>
+  <div class="bubble-row reveal">
+    <span class="miniav tom">T</span>
+    <div class="bubble tom"><span class="who">Tom</span>Do you study English every day?
+      <button class="audio-btn" onclick="speak(this,"Do you study English every day?")">🔊</button>
+    </div>
+  </div>
+  <div class="bubble-row reveal">
+    <span class="miniav anna">A</span>
+    <div class="bubble anna"><span class="who">Anna</span>Yes, I do. I study to travel.
+      <button class="audio-btn" onclick="speak(this,"Yes, I do. I study to travel.")">🔊</button>
+    </div>
+  </div>
+  <div class="bubble-row reveal">
+    <span class="miniav tom">T</span>
+    <div class="bubble tom"><span class="who">Tom</span>Does your sister study too?
+      <button class="audio-btn" onclick="speak(this,"Does your sister study too?")">🔊</button>
+    </div>
+  </div>
+  <div class="bubble-row reveal">
+    <span class="miniav anna">A</span>
+    <div class="bubble anna"><span class="who">Anna</span>Yes. This book is for her.
+      <button class="audio-btn" onclick="speak(this,"Yes. This book is for her.")">🔊</button>
+    </div>
+  </div>
+  <p class="reveal" style="margin-top:12px;font-size:13px;color:var(--ink-soft)">Ouça (🔊), repita em voz alta e troque os papéis.</p>
+</section>
+
+<section class="section" id="vocab">
+  <div class="section-head reveal"><span class="sec-num">4</span>
+    <div><h2 class="sec-title">🔍 Vocabulário da Lição</h2><p class="sec-sub">Palavras e expressões essenciais.</p></div>
+  </div>
+  <table class="lesson-table reveal"><thead><tr><th>English</th><th>Português</th><th>Exemplo</th></tr></thead><tbody>
+<tr><td>do / does <button class="audio-btn" onclick="speak(this,"do")">🔊</button></td><td>auxiliar</td><td>Do you like…?</td></tr>
+<tr><td>to <button class="audio-btn" onclick="speak(this,"to")">🔊</button></td><td>para / a</td><td>go to school / to learn</td></tr>
+<tr><td>for <button class="audio-btn" onclick="speak(this,"for")">🔊</button></td><td>para / por</td><td>for you / for two hours</td></tr>
+<tr><td>every day <button class="audio-btn" onclick="speak(this,"every day")">🔊</button></td><td>todo dia</td><td>I run every day.</td></tr>
+<tr><td>Yes, I do <button class="audio-btn" onclick="speak(this,"Yes, I do")">🔊</button></td><td>Sim</td><td>Yes, I do.</td></tr>
+<tr><td>No, she doesn't <button class="audio-btn" onclick="speak(this,"No, she doesn't")">🔊</button></td><td>Não</td><td>No, she doesn't.</td></tr>
+</tbody></table>
+</section>
+
+<section class="section" id="grammar" style="background:linear-gradient(180deg,#fff,var(--cream-3))">
+  <div class="section-head reveal"><span class="sec-num">5</span>
+    <div><h2 class="sec-title">📘 Gramática — Do/Does e To/For</h2>
+    <p class="sec-sub">Estrutura e uso no dia a dia.</p></div>
+  </div>
+  <div class="card reveal" style="margin-bottom:12px">
+    <h3 style="margin:0 0 6px;color:var(--orange-dark);font-size:16px">Do / Does</h3>
+    <p style="margin:0 0 8px;font-size:14px">Do + I/you/we/they; Does + he/she/it</p>
+    <div class="struct-example">Does she live here?</div>
+  </div>
+  <div class="card reveal" style="margin-bottom:12px">
+    <h3 style="margin:0 0 6px;color:var(--orange-dark);font-size:16px">To</h3>
+    <p style="margin:0 0 8px;font-size:14px">Direção (to school) ou propósito (to learn)</p>
+    <div class="struct-example">I go to work to earn money.</div>
+  </div>
+  <div class="card reveal" style="margin-bottom:12px">
+    <h3 style="margin:0 0 6px;color:var(--orange-dark);font-size:16px">For</h3>
+    <p style="margin:0 0 8px;font-size:14px">Benefício (for you) ou duração (for 2 hours)</p>
+    <div class="struct-example">This gift is for you.</div>
   </div>
 </section>
-<section class="section" id="grammar">
-  <div class="section-head reveal"><span class="sec-num">2</span><div><h2 class="sec-title">📘 Gramática</h2></div></div>
-  <div class="grid-2 reveal">
-    <div class="card">
-      <h3 style="color:var(--orange-dark)">Do / Does</h3>
-      <div class="struct-example">Do you like coffee? <button class="audio-btn" onclick="speak(this,'Do you like coffee?')">🔊</button></div>
-      <div class="struct-example">Does she work here? <button class="audio-btn" onclick="speak(this,'Does she work here?')">🔊</button></div>
-      <div class="struct-example">I do not (don't) play. · He does not (doesn't) play.</div>
-      <p class="sec-sub" style="margin-top:8px"><b>Does</b> = he / she / it · <b>Do</b> = I / you / we / they</p>
-    </div>
-    <div class="card">
-      <h3 style="color:var(--orange-dark)">To vs For</h3>
-      <div class="struct-example">I go <b>to</b> school. (direção)</div>
-      <div class="struct-example">This gift is <b>for</b> you. (benefício)</div>
-      <div class="struct-example">I study <b>to</b> learn. (objetivo/infinitivo)</div>
-      <div class="struct-example">I waited <b>for</b> 10 minutes. (duração)</div>
-    </div>
-  </div>
-</section>
+
 <section class="section" id="exercises">
-  <div class="section-head reveal"><span class="sec-num">3</span><div><h2 class="sec-title">🎮 Exercícios</h2><p class="sec-sub">14 itens</p></div></div>
-<div class="game-wrap reveal"><div class="game-title"><h3>Parte 1 — Do ou Does?</h3></div><div id="p1"></div>
-    <div class="game-actions"><button class="btn sm" onclick="checkP1()">✨ Verificar</button><span class="score-badge" id="s1">0/?</span></div></div><div class="game-wrap reveal"><div class="game-title"><h3>Parte 2 — Complete a pergunta</h3></div><div id="p2"></div>
-    <div class="game-actions"><button class="btn sm" onclick="checkP2()">✨ Verificar</button><span class="score-badge" id="s2">0/?</span></div></div><div class="game-wrap reveal"><div class="game-title"><h3>Parte 3 — to ou for?</h3></div><div id="p3"></div>
-    <div class="game-actions"><button class="btn sm" onclick="checkP3()">✨ Verificar</button><span class="score-badge" id="s3">0/?</span></div></div>
+  <div class="section-head reveal"><span class="sec-num">6</span>
+    <div><h2 class="sec-title">🎮 Exercícios Interativos</h2><p class="sec-sub">Pratique e ganhe XP!</p></div>
+  </div>
+
+  <div class="game-wrap reveal" id="game1">
+    <div class="game-title">⚡ Quiz Relâmpago <span class="score-badge" id="quizScore">0/8</span></div>
+    <div id="quizGame"></div>
+    <div class="game-actions"><button class="btn" type="button" id="btnQuizNext">Próxima →</button></div>
+  </div>
+
+  <div class="game-wrap reveal" id="game2" style="margin-top:16px">
+    <div class="game-title">✍️ Complete as lacunas <span class="score-badge" id="sFill">0/5</span></div>
+    <div id="fillBox"></div>
+    <div class="game-actions"><button class="btn" type="button" onclick="checkFill()">Verificar</button></div>
+  </div>
+</section>
+
+<section class="section" id="oral" style="background:linear-gradient(180deg,var(--cream-3),#fff)">
+  <div class="section-head reveal"><span class="sec-num">7</span>
+    <div><h2 class="sec-title">🎭 Prática Oral — Role-play</h2><p class="sec-sub">Fale em voz alta (só ou em dupla).</p></div>
+  </div>
+  <div class="card reveal"><ol style="margin:0;padding-left:18px;line-height:1.7"><li>Faça 5 perguntas com Do/Does.</li><li>Use to e for em 4 frases.</li></ol></div>
+</section>
+
+<section class="section" id="twister">
+  <div class="section-head reveal"><span class="sec-num">8</span>
+    <div><h2 class="sec-title">👅 Trava-língua (Tongue Twister)</h2><p class="sec-sub">Repita 3× cada vez mais rápido.</p></div>
+  </div>
+  <div class="card reveal" style="text-align:center;font-size:17px;font-weight:700;line-height:1.5">
+    Does Dan do the dishes for Donna daily?
+    <div style="margin-top:10px"><button class="audio-btn btn" onclick="speak(this,"Does Dan do the dishes for Donna daily?")">🔊 Ouvir</button></div>
+  </div>
+</section>
+
+<section class="section" id="culture" style="background:linear-gradient(180deg,#fff,var(--cream-3))">
+  <div class="section-head reveal"><span class="sec-num">9</span>
+    <div><h2 class="sec-title">🌍 Curiosidade Cultural</h2><p class="sec-sub">Inglês no mundo real.</p></div>
+  </div>
+  <div class="card reveal callout" style="line-height:1.55">Do/Does não se traduz palavra a palavra — é o &quot;esqueleto&quot; da pergunta.</div>
+</section>
+
+<section class="section" id="review">
+  <div class="section-head reveal"><span class="sec-num">10</span>
+    <div><h2 class="sec-title">🔁 Revisão Rápida</h2><p class="sec-sub">Os pontos-chave em um minuto.</p></div>
+  </div>
+  <div class="card reveal"><ul style="margin:0;padding-left:18px;line-height:1.7"><li>Do vs Does</li><li>to = direção/propósito</li><li>for = benefício/duração</li></ul></div>
 </section>
 
 <section class="section" id="homework" style="background:linear-gradient(180deg,var(--cream-3),#fff)">
-  <div class="section-head reveal"><span class="sec-num">✓</span>
-    <div><h2 class="sec-title">🏁 Finalizar</h2><p class="sec-sub">Mínimo 85% para concluir.</p></div>
+  <div class="section-head reveal"><span class="sec-num">11</span>
+    <div><h2 class="sec-title">🏠 Tarefa de Casa</h2><p class="sec-sub">Pratique fora do app.</p></div>
   </div>
-  <div class="game-actions reveal" style="justify-content:center">
-    <button class="btn" onclick="finishLesson()">✅ Finalizar e Salvar Progresso</button>
+  <div class="card reveal" style="line-height:1.55">10 frases: 5 Do/Does e 5 com to/for.</div>
+  <div style="margin-top:18px;text-align:center" class="reveal">
+    <button class="btn" type="button" id="btnFinish">🏁 Finalizar Lição</button>
+    <p id="finishMsg" class="finish-msg" style="display:none;margin-top:12px;font-weight:700;color:var(--ok)">Parabéns! Lição concluída 🎉</p>
+    <p id="finishMessage" style="display:none"></p>
   </div>
-  <div id="finishMessage" style="display:none;margin-top:12px;text-align:center;font-size:13.5px;font-weight:600"></div>
-  <div id="finishMsg" style="display:none"></div>
 </section>
+
 </div>
-<footer class="footer">
-  <div class="school">🐾 Bobcat Language School</div>
-  <p style="margin:5px 0 0">Lição 10 — Do/Does, To e For</p>
-  <p style="margin:2px 0 0;font-size:11px;opacity:.6">Fotos: Pexels · Design interativo inspirado em Genially</p>
-</footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../config.js"></script>
-<script src="../db-client.js"></script>
 <script src="lesson-kit.js"></script>
 <script>
-const LESSON_ID='licao-10-do-does-to-for'; const TOTAL_Q=14;
-var SCORE={correct:0,total:TOTAL_Q};
-function addXP(n){if(window.BobcatLesson)BobcatLesson.addXP(n)}
-function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[.,!?]/g,'').replace(/\s+/g,' ').trim()}
-async function finishLesson(){
-  var msg=document.getElementById('finishMessage');
-  if(msg){msg.style.display='block';msg.style.color='#888';msg.textContent='Salvando progresso...'}
-  if(window.BobcatLesson) await BobcatLesson.finishLesson(SCORE.correct,SCORE.total,'correct');
-  else if(typeof handleLessonFinish==='function') await handleLessonFinish(LESSON_ID,SCORE.correct,SCORE.total,'correct');
+const LESSON_ID = "licao-10-do-does-to-for";
+const TOTAL_Q = 13;
+var SCORE = { correct: 0, total: TOTAL_Q };
+function norm(s){ return (s||'').toString().trim().toLowerCase().replace(/[.!?]/g,''); }
+function addXP(n){ if(window.BobcatLesson) BobcatLesson.addXP(n); }
+
+/* Quiz */
+var QUIZ = [{"prompt": "___ you like pizza?", "options": ["Do", "Does", "Are"], "answer": 0}, {"prompt": "___ she work here?", "options": ["Do", "Does", "Is"], "answer": 1}, {"prompt": "I go ___ school.", "options": ["to", "for", "at"], "answer": 0}, {"prompt": "This is ___ my mom.", "options": ["to", "for", "at"], "answer": 1}, {"prompt": "We waited ___ an hour.", "options": ["to", "for", "at"], "answer": 1}, {"prompt": "He studies ___ pass the test.", "options": ["to", "for", "at"], "answer": 0}, {"prompt": "___ they play soccer?", "options": ["Do", "Does", "Are"], "answer": 0}, {"prompt": "She comes ___ the office.", "options": ["to", "for", "in"], "answer": 0}];
+var qi = 0, qCorrect = 0, qAnswered = false;
+function renderQuiz(){
+  var box = document.getElementById('quizGame');
+  if(qi >= QUIZ.length){
+    box.innerHTML = '<p style="font-weight:700;color:var(--ok)">Quiz completo! '+qCorrect+'/'+QUIZ.length+' acertos.</p>';
+    document.getElementById('btnQuizNext').style.display='none';
+    return;
+  }
+  qAnswered = false;
+  var q = QUIZ[qi];
+  var opts = q.options.map(function(o,i){
+    return '<button type="button" class="btn secondary" style="margin:6px 6px 0 0" data-i="'+i+'">'+o+'</button>';
+  }).join('');
+  box.innerHTML = '<p style="font-weight:700;font-size:16px;margin:0 0 10px">'+(qi+1)+'. '+q.prompt+'</p><div>'+opts+'</div>';
+  box.querySelectorAll('button[data-i]').forEach(function(b){
+    b.addEventListener('click', function(){
+      if(qAnswered) return; qAnswered = true;
+      var ok = +b.dataset.i === q.answer;
+      if(ok){ qCorrect++; addXP(15); b.style.background='var(--ok)'; b.style.color='#fff'; }
+      else { b.style.background='var(--bad)'; b.style.color='#fff'; }
+      document.getElementById('quizScore').textContent = qCorrect+'/'+QUIZ.length;
+      SCORE.correct = qCorrect + fillCorrect;
+    });
+  });
+}
+document.getElementById('btnQuizNext').addEventListener('click', function(){
+  if(!qAnswered && qi < QUIZ.length) return;
+  qi++; renderQuiz();
+});
+renderQuiz();
+
+/* Fill */
+var FILL = [{"s": "___ you live in Brazil?", "a": "Do"}, {"s": "___ your mother cook?", "a": "Does"}, {"s": "I go ___ school.", "a": "to"}, {"s": "This present is ___ my sister.", "a": "for"}, {"s": "She studies ___ learn English.", "a": "to"}];
+var fillCorrect = 0;
+(function(){
+  var el = document.getElementById('fillBox');
+  FILL.forEach(function(item,i){
+    var p = item.s.split('___');
+    var row = document.createElement('div');
+    row.className = 'fill-row';
+    row.innerHTML = '<span>'+p[0]+'</span><input class="practice-input" id="fill_'+i+'" style="max-width:110px"><span>'+(p[1]||'')+'</span>';
+    el.appendChild(row);
+  });
+})();
+function checkFill(){
+  fillCorrect = 0;
+  FILL.forEach(function(item,i){
+    var inp = document.getElementById('fill_'+i);
+    var ok = norm(inp.value) === norm(item.a);
+    inp.className = 'practice-input '+(ok?'correct':'incorrect');
+    if(ok) fillCorrect++;
+  });
+  document.getElementById('sFill').textContent = fillCorrect+'/'+FILL.length;
+  addXP(fillCorrect*12);
+  SCORE.correct = qCorrect + fillCorrect;
+  if(SCORE.correct >= Math.floor(TOTAL_Q*0.8) && window.BobcatLesson) BobcatLesson.fireConfetti();
 }
 
-var P1=[{s:'___ you like pizza?',a:'do'},{s:'___ she work here?',a:'does'},{s:'___ they play soccer?',a:'do'},{s:'___ he speak English?',a:'does'},{s:'___ we need a ticket?',a:'do'}];
-var P2=[{s:'___ you live in Brazil?',a:'do'},{s:'___ your mother cook?',a:'does'},{s:'___ the cat sleep a lot?',a:'does'},{s:'___ I need help?',a:'do'}];
-var P3=[{s:'I go ___ school every day.',a:'to'},{s:'This present is ___ my sister.',a:'for'},{s:'She studies ___ pass the test.',a:'to'},{s:'We waited ___ two hours.',a:'for'},{s:'He comes ___ the office by bus.',a:'to'}];
-var partScore=[0,0,0];
-function mk(list,id){var el=document.getElementById(id);el.innerHTML='';list.forEach(function(item,i){var row=document.createElement('div');row.className='fill-row';var p=item.s.split('___');row.innerHTML='<span>'+p[0]+'</span><input class="practice-input" id="'+id+'_'+i+'" style="max-width:90px"><span>'+(p[1]||'')+'</span>';el.appendChild(row)})}
-function chk(list,id,si,tot){var c=0;list.forEach(function(item,i){var inp=document.getElementById(id+'_'+i);var ok=norm(inp.value)===norm(item.a);inp.className='practice-input '+(ok?'correct':'incorrect');if(ok)c++});partScore[si]=c;document.getElementById('s'+(si+1)).textContent=c+'/'+tot;addXP(c*12);recalc()}
-function checkP1(){chk(P1,'p1',0,5)} function checkP2(){chk(P2,'p2',1,4)} function checkP3(){chk(P3,'p3',2,5)}
-function recalc(){SCORE.correct=partScore.reduce(function(a,b){return a+b},0);SCORE.total=14;if(SCORE.correct>=12&&window.BobcatLesson)BobcatLesson.fireConfetti()}
-mk(P1,'p1');mk(P2,'p2');mk(P3,'p3');
+document.getElementById('btnFinish').addEventListener('click', function(){
+  SCORE.correct = qCorrect + fillCorrect;
+  SCORE.total = TOTAL_Q;
+  document.getElementById('finishMsg').style.display = 'block';
+  if(window.BobcatLesson){
+    BobcatLesson.complete({ correct: SCORE.correct, total: SCORE.total });
+    BobcatLesson.fireConfetti();
+  }
+});
 
-if(window.BobcatLesson) BobcatLesson.init({lessonId:LESSON_ID,totalQuestions:TOTAL_Q});
+if(window.BobcatLesson) BobcatLesson.init({ lessonId: LESSON_ID, totalQuestions: TOTAL_Q });
 </script>
 </body></html>

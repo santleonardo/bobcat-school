@@ -208,7 +208,7 @@ const LESSONS = [
     icon: "📘",
     description: "am, is, are — afirmativas, negativas e perguntas",
     url: "lessons/verb-to-be.html",
-    totalQuestions: 21
+    totalQuestions: 13
   },
   {
     id: "saudacoes-apresentacoes",
@@ -217,7 +217,7 @@ const LESSONS = [
     icon: "👋",
     description: "Greetings, introductions e diálogos com áudio",
     url: "lessons/saudacoes-apresentacoes.html",
-    totalQuestions: 17
+    totalQuestions: 13
   },
   {
     id: "licao-2-perguntas-artigos",
@@ -235,7 +235,7 @@ const LESSONS = [
     icon: "🔁",
     description: "Revisão de To Be, saudações e Wh- questions com prática de diálogos",
     url: "lessons/licao-3-revisao-perguntas.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-4-preposicoes",
@@ -244,7 +244,7 @@ const LESSONS = [
     icon: "📍",
     description: "Preposições de lugar e companhia para localizar pessoas e coisas",
     url: "lessons/licao-4-preposicoes.html",
-    totalQuestions: 10
+    totalQuestions: 13
   },
   {
     id: "licao-5-posse",
@@ -253,7 +253,7 @@ const LESSONS = [
     icon: "🎒",
     description: "Possessivos, 's e whose — falar de pertences e pessoas",
     url: "lessons/licao-5-posse.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-12-simple-present-daily-life",
@@ -262,7 +262,7 @@ const LESSONS = [
     icon: "🗓️",
     description: "Simple Present, advérbios de frequência e a rotina diária",
     url: "lessons/licao-12-simple-present-daily-life.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-10-do-does-to-for",
@@ -271,7 +271,7 @@ const LESSONS = [
     icon: "🔧",
     description: "Verbos essenciais, perguntas com DO/DOES e o uso de TO e FOR",
     url: "lessons/licao-10-do-does-to-for.html",
-    totalQuestions: 14
+    totalQuestions: 13
   },
   {
     id: "licao-13-perguntas-simple-present",
@@ -280,7 +280,7 @@ const LESSONS = [
     icon: "🗣️",
     description: "Perguntas e negativas com Do/Does — perguntar sobre pessoas e rotina",
     url: "lessons/licao-13-perguntas-simple-present.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-15-can-cant",
@@ -289,7 +289,7 @@ const LESSONS = [
     icon: "🙌",
     description: "Habilidade, permissão e pedidos do dia a dia com can/can't",
     url: "lessons/licao-15-can-cant.html",
-    totalQuestions: 38
+    totalQuestions: 13
   },
   {
     id: "licao-14-there-is-there-are",
@@ -298,7 +298,7 @@ const LESSONS = [
     icon: "🏠",
     description: "Descrevendo lugares e objetos com There is/There are",
     url: "lessons/licao-14-there-is-there-are.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-6-here-there",
@@ -307,7 +307,7 @@ const LESSONS = [
     icon: "📌",
     description: "Localização, posição e phrasal verbs básicos de movimento",
     url: "lessons/licao-6-here-there.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-8-to-be-passado",
@@ -316,7 +316,7 @@ const LESSONS = [
     icon: "⏳",
     description: "Was e were — como era, onde estava, quem estava",
     url: "lessons/licao-8-to-be-passado.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-21-simple-past-regular",
@@ -325,7 +325,7 @@ const LESSONS = [
     icon: "⏮️",
     description: "Passado de ação com verbos regulares (-ed) e expressões de tempo",
     url: "lessons/licao-21-simple-past-regular.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-22-simple-past-irregular",
@@ -334,7 +334,7 @@ const LESSONS = [
     icon: "📖",
     description: "Verbos irregulares mais comuns no Simple Past",
     url: "lessons/licao-22-simple-past-irregular.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-24-future-going-to",
@@ -343,7 +343,7 @@ const LESSONS = [
     icon: "🎯",
     description: "Planos e intenções futuras com going to",
     url: "lessons/licao-24-future-going-to.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-25-future-will",
@@ -352,7 +352,7 @@ const LESSONS = [
     icon: "🔮",
     description: "Previsões, decisões espontâneas e promessas com will",
     url: "lessons/licao-25-future-will.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-9-revisao-completa",
@@ -361,7 +361,7 @@ const LESSONS = [
     icon: "📚",
     description: "Projeto final do Semestre 1: se apresentar, perguntar sobre pessoas, rotina, ontem e planos",
     url: "lessons/licao-9-revisao-completa.html",
-    totalQuestions: 16
+    totalQuestions: 13
   },
   {
     id: "licao-11-object-possessive-pronouns",
@@ -370,7 +370,7 @@ const LESSONS = [
     icon: "👥",
     description: "Object pronouns, possessives e mais verbos essenciais",
     url: "lessons/licao-11-object-possessive-pronouns.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-16-present-continuous",
@@ -379,7 +379,7 @@ const LESSONS = [
     icon: "🏃",
     description: "Ações em andamento e situações temporárias",
     url: "lessons/licao-16-present-continuous.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-17-countable-uncountable",
@@ -388,7 +388,7 @@ const LESSONS = [
     icon: "🍎",
     description: "Countable/uncountable, some, any, much e many",
     url: "lessons/licao-17-countable-uncountable.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-18-quantities-choices",
@@ -397,7 +397,7 @@ const LESSONS = [
     icon: "🛒",
     description: "Expressando quantidades e fazendo escolhas em inglês",
     url: "lessons/licao-18-quantities-choices.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-19-quantities-distance-time",
@@ -406,7 +406,7 @@ const LESSONS = [
     icon: "📏",
     description: "How much/many/long/far e perguntas de medida",
     url: "lessons/licao-19-quantities-distance-time.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-20-survival-english",
@@ -415,7 +415,7 @@ const LESSONS = [
     icon: "🌍",
     description: "Inglês de sobrevivência para situações reais do dia a dia",
     url: "lessons/licao-20-survival-english.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-23-talking-about-the-past",
@@ -424,7 +424,7 @@ const LESSONS = [
     icon: "🕰️",
     description: "Perguntas, negativas e expressões de tempo no passado (consolidação)",
     url: "lessons/licao-23-talking-about-the-past.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-26-comparatives-superlatives",
@@ -433,7 +433,7 @@ const LESSONS = [
     icon: "⚖️",
     description: "Comparando pessoas e coisas em inglês (fase A2)",
     url: "lessons/licao-26-comparatives-superlatives.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-28-modal-verbs",
@@ -442,7 +442,7 @@ const LESSONS = [
     icon: "🔑",
     description: "Could, must, should e outros modais além de can",
     url: "lessons/licao-28-modal-verbs.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-29-phrasal-verbs",
@@ -451,7 +451,7 @@ const LESSONS = [
     icon: "🧩",
     description: "Phrasal verbs mais usados no inglês do dia a dia",
     url: "lessons/licao-29-phrasal-verbs.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-30-revisao-semestre-2",
@@ -460,7 +460,7 @@ const LESSONS = [
     icon: "🎓",
     description: "Revisão completa do Semestre 2 (A2) e consolidação",
     url: "lessons/licao-30-revisao-semestre-2.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-31-past-continuous",
@@ -469,7 +469,7 @@ const LESSONS = [
     icon: "⏳",
     description: "Ações em progresso no passado: was/were + verbo-ing",
     url: "lessons/licao-31-past-continuous.html",
-    totalQuestions: 12
+    totalQuestions: 13
   },
   {
     id: "licao-32-simple-past-past-continuous",
