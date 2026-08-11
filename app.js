@@ -1234,6 +1234,11 @@ function renderExtras() {
       short: 'Manual Prático',
       blurb: 'Morfologia, sintaxe, concordância, crase, pontuação e interpretação — teoria e prática.'
     },
+    'Jogos': {
+      icon: '🎮',
+      short: 'Jogos',
+      blurb: 'Caça-palavras, labirinto e outros jogos para praticar gramática de um jeito leve.'
+    },
     'Outros': {
       icon: '📎',
       short: 'Outros',
@@ -1243,6 +1248,7 @@ function renderExtras() {
   const GROUP_ORDER = [
     'Manual Básico — Classes Gramaticais',
     'Manual Prático — Língua Portuguesa',
+    'Jogos',
     'Outros'
   ];
 
