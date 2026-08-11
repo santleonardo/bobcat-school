@@ -234,13 +234,27 @@ function drawBackground(){
   }
 }
 
-/* ─── Nova rodada ─── */
+/* ─── Nova rodada ───
+   A última linha (ROWS-1) é reservada só para o bonequinho andar: se uma
+   caixinha nascesse ou fosse empurrada até lá, o jogador nunca teria como
+   ficar "por baixo" dela pra empurrar de volta pra cima (essa casa não
+   existe), e a caixinha ficaria presa pra sempre. Por isso as caixinhas só
+   nascem nas linhas 1..ROWS-2, deixando a última linha sempre livre como
+   corredor de acesso. */
 function freeFloorCells(){
   const cells = [];
-  for (let r = 1; r < ROWS; r++){
+  for (let r = 1; r < ROWS - 1; r++){
     for (let c = 0; c < COLS; c++){
       cells.push({ r, c });
     }
+  }
+  return shuffle(cells);
+}
+
+function playerFloorCells(){
+  const cells = [];
+  for (let c = 0; c < COLS; c++){
+    cells.push({ r: ROWS - 1, c });
   }
   return shuffle(cells);
 }
@@ -276,12 +290,9 @@ function placeTilesAndPlayer(){
   ];
   const cells = freeFloorCells();
 
-  // jogador começa na última linha, perto do centro
-  const bottomCells = cells.filter(c => c.r === ROWS - 1);
-  const playerCell = (bottomCells[0] || cells[0]);
+  // jogador começa na última linha (corredor reservado, sem caixinhas)
+  const playerCell = playerFloorCells()[0];
   player.row = playerCell.r; player.col = playerCell.c;
-  const usedIndex = cells.indexOf(playerCell);
-  if (usedIndex >= 0) cells.splice(usedIndex, 1);
 
   tiles = values.map((v, i) => {
     const cell = cells[i];
@@ -375,6 +386,13 @@ function move(dir){
   if (tileAt(fr, fc)){
     shakeTile(targetTile);
     showToast('🚧 Tem outra caixinha no caminho.', 'bad');
+    return;
+  }
+  if (fr === ROWS - 1){
+    // A última linha é o corredor do jogador — se a caixinha entrasse ali,
+    // não teria mais como empurrá-la de volta pra cima.
+    shakeTile(targetTile);
+    showToast('🚧 Essa fileira de baixo é só passagem — não dá pra empurrar a caixinha pra lá.', 'bad');
     return;
   }
 
