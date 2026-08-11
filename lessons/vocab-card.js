@@ -27,7 +27,8 @@
     var css = document.createElement('style');
     css.id = 'vocab-card-styles';
     css.textContent = [
-      '.vocab-word{cursor:pointer;border-bottom:1.5px dotted #C1121F;border-radius:3px;transition:background .12s ease;color:inherit}',
+      '.vocab-word{cursor:pointer;border-radius:3px;transition:background .12s ease;color:inherit}',
+      '.vocab-word::after{content:"?";display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;margin-left:3px;font-size:9px;font-weight:800;line-height:1;border-radius:50%;background:#C1121F;color:#fff;vertical-align:middle;position:relative;top:-1px}',
       '.vocab-word:hover,.vocab-word:focus-visible{background:rgba(193,18,31,0.12);outline:none}',
       '.vocab-word:active{background:rgba(193,18,31,0.22)}',
       '.vocab-card-overlay{position:fixed;inset:0;background:rgba(32,24,16,0.5);display:flex;align-items:flex-end;justify-content:center;z-index:600}',

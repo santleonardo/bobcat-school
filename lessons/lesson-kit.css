@@ -303,10 +303,27 @@ html[data-theme="light"] .flow .node.out-the { background: #F3ECF6; border-color
 /* ─── Vocab term (clickable) — same resource as AI chat ─── */
 .vocab-word {
   cursor: pointer;
-  border-bottom: 1.5px dotted var(--orange-dark);
   border-radius: 3px;
   transition: background .12s ease;
   color: inherit;
+}
+.vocab-word::after {
+  content: "?";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  margin-left: 3px;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1;
+  border-radius: 50%;
+  background: var(--orange-dark);
+  color: #fff;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
 }
 .vocab-word:hover,
 .vocab-word:focus-visible {
