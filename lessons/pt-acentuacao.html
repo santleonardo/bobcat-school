@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="vocab-card.js"></script>
 <style>
 
 
@@ -732,7 +733,7 @@
   <div class="hero">
     <div class="hero-eyebrow">Capítulo 7 de 10 · Gramática Aplicada</div>
     <h2>✏️ Acentuação<br><em>Regras do Novo Acordo Ortográfico</em></h2>
-    <p>Oxítonas, paroxítonas, proparoxítonas e casos especiais. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
+    <p><span class="vocab-word" data-word="oxítona">Oxítonas</span>, <span class="vocab-word" data-word="paroxítona">paroxítonas</span>, <span class="vocab-word" data-word="proparoxítona">proparoxítonas</span> e casos especiais. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Capítulo 7/10</span>
       <span class="badge">8 exercícios</span>
@@ -753,22 +754,22 @@
       </div>
 
       <div class="prose">
-        <p>A acentuação gráfica obedece ao <strong>Novo Acordo Ortográfico</strong> em vigor no Brasil desde 2009. As regras partem da classificação das palavras quanto à sílaba tônica.</p>
+        <p>A acentuação gráfica obedece ao <strong>Novo Acordo Ortográfico</strong> em vigor no Brasil desde 2009. As regras partem da classificação das palavras quanto à <span class="vocab-word" data-word="sílaba tônica">sílaba tônica</span>.</p>
 
         <h3>Classificação Quanto à Tonicidade</h3>
         <div class="ex-grid triple">
           <div class="ex-box neutral">
-            <span class="ex-label">Oxítona</span>
+            <span class="ex-label"><span class="vocab-word" data-word="oxítona">Oxítona</span></span>
             <code>ca-fé · so-fá · ju-iz</code>
             <small>Tônica na última sílaba</small>
           </div>
           <div class="ex-box neutral">
-            <span class="ex-label">Paroxítona</span>
+            <span class="ex-label"><span class="vocab-word" data-word="paroxítona">Paroxítona</span></span>
             <code>ca-sa · ló-gi-ca · di-fí-cil</code>
             <small>Tônica na penúltima sílaba</small>
           </div>
           <div class="ex-box neutral">
-            <span class="ex-label">Proparoxítona</span>
+            <span class="ex-label"><span class="vocab-word" data-word="proparoxítona">Proparoxítona</span></span>
             <code>pú-bli-co · má-gi-ca</code>
             <small>Tônica na antepenúltima — todas acentuadas!</small>
           </div>
@@ -781,31 +782,31 @@
               <tr><th>Classe</th><th>Quando acentua</th><th>Exemplos</th></tr>
             </thead>
             <tbody>
-              <tr><td><strong>Oxítonas</strong></td><td>Terminadas em: a(s), e(s), o(s), em, ens</td><td><em>café, avó, também, parabéns</em></td></tr>
-              <tr><td><strong>Paroxítonas</strong></td><td>Terminadas em tudo exceto: a(s), e(s), o(s), em, ens</td><td><em>difícil, hífen, álbum, vírus, tórax</em></td></tr>
-              <tr><td><strong>Proparoxítonas</strong></td><td>Sempre acentuadas</td><td><em>pátio, médico, cômodo, fôlego</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="oxítona">Oxítonas</span></strong></td><td>Terminadas em: a(s), e(s), o(s), em, ens</td><td><em>café, avó, também, parabéns</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="paroxítona">Paroxítonas</span></strong></td><td>Terminadas em tudo exceto: a(s), e(s), o(s), em, ens</td><td><em>difícil, <span class="vocab-word" data-word="hífen">hífen</span>, álbum, vírus, tórax</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="proparoxítona">Proparoxítonas</span></strong></td><td>Sempre acentuadas</td><td><em>pátio, médico, cômodo, fôlego</em></td></tr>
             </tbody>
           </table>
         </div>
 
         <h3>Casos Especiais</h3>
-        <h4>Hiato — vogais abertas i e u</h4>
+        <h4><span class="vocab-word" data-word="hiato">Hiato</span> — vogais abertas i e u</h4>
         <div class="ex-grid">
           <div class="ex-box correct">
-            <span class="ex-label">✓ Acento no hiato</span>
+            <span class="ex-label">✓ Acento no <span class="vocab-word" data-word="hiato">hiato</span></span>
             <code>sa-ú-de · pa-ís · ba-ú</code>
-            <small>i e u tônicos em hiato após vogal</small>
+            <small>i e u tônicos em <span class="vocab-word" data-word="hiato">hiato</span> após vogal</small>
           </div>
           <div class="ex-box correct">
             <span class="ex-label">✓ Sem acento (regra do Acordo)</span>
             <code>fei-ura · ru-im · ba-inha</code>
-            <small>Após ditongo, não se acentua mais</small>
+            <small>Após <span class="vocab-word" data-word="ditongo">ditongo</span>, não se acentua mais</small>
           </div>
         </div>
 
         <h4>Supressão de Acento pelo Novo Acordo</h4>
         <ul class="rule-list">
-          <li><strong>Ditongos abertos "ei" e "oi" em paroxítonas:</strong> <em>ideia (antes: idéia) · heroico (heróico)</em></li>
+          <li><strong>Ditongos abertos "ei" e "oi" em <span class="vocab-word" data-word="paroxítona">paroxítonas</span>:</strong> <em>ideia (antes: idéia) · heroico (heróico)</em></li>
           <li><strong>Trema suprimido</strong> exceto em nomes estrangeiros: <em>linguiça, aguentar</em> (sem trema)</li>
           <li><strong>Acento diferencial eliminado</strong> na maioria dos casos: <em>para (prep.) = para (verbo) · polo = pólo</em></li>
           <li><strong>Acento diferencial mantido:</strong> <em>pôde (pret.) × pode (pres.) · pôr (verbo) × por (prep.)</em></li>
@@ -813,18 +814,18 @@
 
         <div class="callout">
           <strong>Atenção especial</strong>
-          As palavras <strong>pôde</strong> (pretérito perfeito) e <strong>pode</strong> (presente) ainda se distinguem pelo acento. Igualmente: <strong>pôr</strong> (verbo) e <strong>por</strong> (preposição).
+          As palavras <strong>pôde</strong> (pretérito perfeito) e <strong>pode</strong> (presente) ainda se distinguem pelo acento. Igualmente: <strong>pôr</strong> (verbo) e <strong>por</strong> (<span class="vocab-word" data-word="preposição">preposição</span>).
         </div>
       </div>
     
 
       <div class="callout info">
         <strong>Ordem de análise</strong>
-        1) Ache a sílaba tônica · 2) Classifique oxítona/paroxítona/proparoxítona · 3) Aplique a regra de terminação · 4) Confira hiato e acentos diferenciais (pôde/pode, pôr/por).
+        1) Ache a <span class="vocab-word" data-word="sílaba tônica">sílaba tônica</span> · 2) Classifique <span class="vocab-word" data-word="oxítona">oxítona</span>/<span class="vocab-word" data-word="paroxítona">paroxítona</span>/<span class="vocab-word" data-word="proparoxítona">proparoxítona</span> · 3) Aplique a regra de terminação · 4) Confira <span class="vocab-word" data-word="hiato">hiato</span> e acentos diferenciais (pôde/pode, pôr/por).
       </div>
       <div class="prose">
         <h3>Lembretes do Acordo</h3>
-        <p>Proparoxítonas: <strong>sempre</strong> acentuadas. Ditongos abertos <em>ei/oi</em> em paroxítonas perderam acento (<em>ideia, heroico</em>). Trema abolido (exceto nomes estrangeiros).</p>
+        <p><span class="vocab-word" data-word="proparoxítona">Proparoxítonas</span>: <strong>sempre</strong> acentuadas. Ditongos abertos <em>ei/oi</em> em <span class="vocab-word" data-word="paroxítona">paroxítonas</span> perderam acento (<em>ideia, heroico</em>). Trema abolido (exceto nomes estrangeiros).</p>
       </div>
 
     </section>
@@ -839,13 +840,13 @@
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no perfil (mínimo 85% para concluir a lição).</p>
+        <p>Escolha a alternativa correta. Ao finalizar, a <span class="vocab-word" data-word="pontuação">pontuação</span> é salva no perfil (mínimo 85% para concluir a lição).</p>
 
         <div class="mc-item">
           <div class="q">Qual grafia <strong>não</strong> existe?</div>
           <div class="mc-options">
           <label><input type="radio" name="q1" value="a">pratico (verbo)</label>
-          <label><input type="radio" name="q1" value="b">prático (adjetivo)</label>
+          <label><input type="radio" name="q1" value="b">prático (<span class="vocab-word" data-word="adjetivo">adjetivo</span>)</label>
           <label class="correct-answer"><input type="radio" name="q1" value="c">praticó</label>
           </div>
         
@@ -861,7 +862,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Proparoxítonas são:</div>
+          <div class="q"><span class="vocab-word" data-word="proparoxítona">Proparoxítonas</span> são:</div>
           <div class="mc-options">
           <label><input type="radio" name="q3" value="a">Nunca acentuadas</label>
           <label class="correct-answer"><input type="radio" name="q3" value="b">Sempre acentuadas</label>
@@ -881,7 +882,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Oxítonas acentuadas terminam, entre outras, em:</div>
+          <div class="q"><span class="vocab-word" data-word="oxítona">Oxítonas</span> acentuadas terminam, entre outras, em:</div>
           <div class="mc-options">
           <label><input type="radio" name="q5" value="a">apenas em “l”</label>
           <label class="correct-answer"><input type="radio" name="q5" value="b">a(s), e(s), o(s), em, ens</label>
@@ -893,8 +894,8 @@
         <div class="mc-item">
           <div class="q">Em “saúde” e “baú”, o acento marca:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q6" value="a">Ditongo crescente obrigatório</label>
-          <label class="correct-answer"><input type="radio" name="q6" value="b">Hiato com i/u tônicos</label>
+          <label><input type="radio" name="q6" value="a"><span class="vocab-word" data-word="ditongo">Ditongo</span> crescente obrigatório</label>
+          <label class="correct-answer"><input type="radio" name="q6" value="b"><span class="vocab-word" data-word="hiato">Hiato</span> com i/u tônicos</label>
           <label><input type="radio" name="q6" value="c">Trema</label>
           </div>
         
@@ -904,14 +905,14 @@
           <div class="q">Pelo Acordo, “ideia” e “heroico”:</div>
           <div class="mc-options">
           <label><input type="radio" name="q7" value="a">Levam acento em ei/oi</label>
-          <label class="correct-answer"><input type="radio" name="q7" value="b">Não levam mais acento nesses ditongos em paroxítonas</label>
-          <label><input type="radio" name="q7" value="c">São proparoxítonas</label>
+          <label class="correct-answer"><input type="radio" name="q7" value="b">Não levam mais acento nesses ditongos em <span class="vocab-word" data-word="paroxítona">paroxítonas</span></label>
+          <label><input type="radio" name="q7" value="c">São <span class="vocab-word" data-word="proparoxítona">proparoxítonas</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">“pôr” (verbo) × “por” (preposição):</div>
+          <div class="q">“pôr” (verbo) × “por” (<span class="vocab-word" data-word="preposição">preposição</span>):</div>
           <div class="mc-options">
           <label><input type="radio" name="q8" value="a">Não se distinguem mais</label>
           <label class="correct-answer"><input type="radio" name="q8" value="b">Mantêm distinção pelo acento</label>
@@ -929,13 +930,13 @@
         <details class="gabarito-box">
           <summary>📋 Gabarito comentado</summary>
           <div class="gabarito-list">
-          <div class="g-item"><b>Questão 1.</b> Qual grafia não existe?<br><span class="g-ans">Resposta: praticó</span><br>Existem “pratico” (verbo, eu pratico) e “prático” (adjetivo). “Praticó” não é forma do português padrão.</div>
-          <div class="g-item"><b>Questão 2.</b> Qual grafia não existe?<br><span class="g-ans">Resposta: Não — “item” sem acento</span><br>“Item” é paroxítona terminada em -m; não se enquadra nas terminações que obrigam acento nas paroxítonas. A grafia acentuada “ítem” está incorreta.</div>
-          <div class="g-item"><b>Questão 3.</b> Qual grafia não existe?<br><span class="g-ans">Resposta: Sempre acentuadas</span><br>Regra mais estável do sistema: proparoxítona → acento gráfico sempre (lápis é paroxítona; médico é proparoxítona acentuada).</div>
-          <div class="g-item"><b>Questão 4.</b> Qual grafia não existe?<br><span class="g-ans">Resposta: pôde × pode</span><br>Acentos diferenciais remanescentes relevantes: pôde (pretérito) × pode (presente); pôr (verbo) × por (preposição). Muitos outros foram abolidos pelo Acordo.</div>
-          <div class="g-item"><b>Questão 5.</b> Qual grafia não existe?<br><span class="g-ans">Resposta: a(s), e(s), o(s), em, ens</span><br>Oxítonas acentuadas quando terminam em a(s), e(s), o(s), em, ens: café, você, jiló, também, parabéns.</div>
-          <div class="g-item"><b>Questão 6.</b> Qual grafia não existe?<br><span class="g-ans">Resposta: Hiato com i/u tônicos</span><br>I e U tônicos em hiato (precedidos de vogal, formando sílaba separada) recebem acento: sa-ú-de, ba-ú, ra-í-zes — com as ressalvas do Acordo após ditongo.</div>
-          <div class="g-item"><b>Questão 7.</b> Qual grafia não existe?<br><span class="g-ans">Resposta: Não levam mais acento nesses ditongos em paroxítonas</span><br>O Acordo eliminou o acento em ditongos abertos éi/ói de paroxítonas: ideia, heroico, jiboia (antes idéia, heróico etc.).</div>
+          <div class="g-item"><b>Questão 1.</b> Qual grafia não existe?<br><span class="g-ans">Resposta: praticó</span><br>Existem “pratico” (verbo, eu pratico) e “prático” (<span class="vocab-word" data-word="adjetivo">adjetivo</span>). “Praticó” não é forma do português padrão.</div>
+          <div class="g-item"><b>Questão 2.</b> Qual grafia não existe?<br><span class="g-ans">Resposta: Não — “item” sem acento</span><br>“Item” é <span class="vocab-word" data-word="paroxítona">paroxítona</span> terminada em -m; não se enquadra nas terminações que obrigam acento nas <span class="vocab-word" data-word="paroxítona">paroxítonas</span>. A grafia acentuada “ítem” está incorreta.</div>
+          <div class="g-item"><b>Questão 3.</b> Qual grafia não existe?<br><span class="g-ans">Resposta: Sempre acentuadas</span><br>Regra mais estável do sistema: <span class="vocab-word" data-word="proparoxítona">proparoxítona</span> → acento gráfico sempre (lápis é <span class="vocab-word" data-word="paroxítona">paroxítona</span>; médico é <span class="vocab-word" data-word="proparoxítona">proparoxítona</span> acentuada).</div>
+          <div class="g-item"><b>Questão 4.</b> Qual grafia não existe?<br><span class="g-ans">Resposta: pôde × pode</span><br>Acentos diferenciais remanescentes relevantes: pôde (pretérito) × pode (presente); pôr (verbo) × por (<span class="vocab-word" data-word="preposição">preposição</span>). Muitos outros foram abolidos pelo Acordo.</div>
+          <div class="g-item"><b>Questão 5.</b> Qual grafia não existe?<br><span class="g-ans">Resposta: a(s), e(s), o(s), em, ens</span><br><span class="vocab-word" data-word="oxítona">Oxítonas</span> acentuadas quando terminam em a(s), e(s), o(s), em, ens: café, você, jiló, também, parabéns.</div>
+          <div class="g-item"><b>Questão 6.</b> Qual grafia não existe?<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="hiato">Hiato</span> com i/u tônicos</span><br>I e U tônicos em <span class="vocab-word" data-word="hiato">hiato</span> (precedidos de vogal, formando sílaba separada) recebem acento: sa-ú-de, ba-ú, ra-í-zes — com as ressalvas do Acordo após <span class="vocab-word" data-word="ditongo">ditongo</span>.</div>
+          <div class="g-item"><b>Questão 7.</b> Qual grafia não existe?<br><span class="g-ans">Resposta: Não levam mais acento nesses ditongos em <span class="vocab-word" data-word="paroxítona">paroxítonas</span></span><br>O Acordo eliminou o acento em ditongos abertos éi/ói de <span class="vocab-word" data-word="paroxítona">paroxítonas</span>: ideia, heroico, jiboia (antes idéia, heróico etc.).</div>
           <div class="g-item"><b>Questão 8.</b> Qual grafia não existe?<br><span class="g-ans">Resposta: Mantêm distinção pelo acento</span><br>A oposição pôr/por continua válida e é um dos poucos diferenciais preservados de modo amplo no ensino.</div>
           </div>
         </details>

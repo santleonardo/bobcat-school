@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="vocab-card.js"></script>
 <style>
 
 
@@ -745,7 +746,7 @@
 
 <div class="mobile-topbar">
   <button class="mt-btn" id="menuToggle" aria-label="Abrir sumário">☰ Classes</button>
-  Numeral
+  <span class="vocab-word" data-word="numeral">Numeral</span>
   <a class="mt-btn" href="../index.html">🏠 App</a>
 </div>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
@@ -777,7 +778,7 @@
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Classe 4 de 10 · Português Básico</div>
-    <h2>🔢 Numeral<br><em>Quantidade e ordem</em></h2>
+    <h2>🔢 <span class="vocab-word" data-word="numeral">Numeral</span><br><em>Quantidade e ordem</em></h2>
     <p>Indica quantidade, ordem ou quantas vezes. Leia com calma, observe os exemplos e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Classe 4/10</span>
@@ -792,13 +793,13 @@
         <span class="section-num">4</span>
         <div class="section-title-block">
           <p class="section-label">Classe gramatical</p>
-          <h2 class="section-title">Numeral</h2>
+          <h2 class="section-title"><span class="vocab-word" data-word="numeral">Numeral</span></h2>
           <p class="section-subtitle">Quantidade e ordem</p>
         </div>
       </div>
 
       <div class="prose">
-        <p>O <strong>numeral</strong> indica <strong>quantidade</strong>, <strong>ordem</strong>, <strong>fração</strong> ou <strong>multiplicação</strong> em relação a um substantivo (explícito ou implícito).</p>
+        <p>O <strong><span class="vocab-word" data-word="numeral">numeral</span></strong> indica <strong>quantidade</strong>, <strong>ordem</strong>, <strong>fração</strong> ou <strong>multiplicação</strong> em relação a um <span class="vocab-word" data-word="substantivo">substantivo</span> (explícito ou implícito).</p>
 
         <h3>1. Cardinal</h3>
         <p>Responde “quantos?”: <em>um, dois, três, cem, mil</em>.</p>
@@ -812,9 +813,9 @@
         <p><strong>Multiplicativo:</strong> <em>dobro, triplo, quíntuplo</em>.</p>
         <p><strong>Fracionário:</strong> <em>metade, terço, um quarto, dois terços</em>.</p>
 
-        <h3>4. Numeral × artigo × pronome</h3>
+        <h3>4. <span class="vocab-word" data-word="numeral">Numeral</span> × <span class="vocab-word" data-word="artigo">artigo</span> × <span class="vocab-word" data-word="pronome">pronome</span></h3>
         <p>Não confunda:</p>
-        <p><em><strong>um</strong> livro</em> pode ser artigo indefinido ou numeral cardinal (depende do contexto). Em “só quero <strong>um</strong>”, o valor de quantidade fica mais claro (numeral).</p>
+        <p><em><strong>um</strong> livro</em> pode ser <span class="vocab-word" data-word="artigo indefinido"><span class="vocab-word" data-word="artigo">artigo</span> indefinido</span> ou <span class="vocab-word" data-word="numeral cardinal"><span class="vocab-word" data-word="numeral">numeral</span> cardinal</span> (depende do contexto). Em “só quero <strong>um</strong>”, o valor de quantidade fica mais claro (<span class="vocab-word" data-word="numeral">numeral</span>).</p>
       </div>
 
       <div class="callout info">
@@ -852,18 +853,18 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Aplique o que aprendeu sobre numeral</p>
+          <p class="section-subtitle">Aplique o que aprendeu sobre <span class="vocab-word" data-word="numeral">numeral</span></p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta em cada item. Ao finalizar, a pontuação é salva no seu perfil (é preciso acertar pelo menos 85% para concluir a lição).</p>
+        <p>Escolha a alternativa correta em cada item. Ao finalizar, a <span class="vocab-word" data-word="pontuação">pontuação</span> é salva no seu perfil (é preciso acertar pelo menos 85% para concluir a lição).</p>
 
         <div class="mc-item">
           <div class="q">Em <em>"Comprei DOIS presentes"</em>, “dois” é:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q1" value="a">Artigo</label>
-          <label><input type="radio" name="q1" value="b">Adjetivo</label>
-          <label class="correct-answer"><input type="radio" name="q1" value="c">Numeral</label>
+          <label><input type="radio" name="q1" value="a"><span class="vocab-word" data-word="artigo">Artigo</span></label>
+          <label><input type="radio" name="q1" value="b"><span class="vocab-word" data-word="adjetivo">Adjetivo</span></label>
+          <label class="correct-answer"><input type="radio" name="q1" value="c"><span class="vocab-word" data-word="numeral">Numeral</span></label>
           <label><input type="radio" name="q1" value="d">Verbo</label>
           </div>
         
@@ -892,7 +893,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Qual opção é numeral cardinal?</div>
+          <div class="q">Qual opção é <span class="vocab-word" data-word="numeral cardinal"><span class="vocab-word" data-word="numeral">numeral</span> cardinal</span>?</div>
           <div class="mc-options">
           <label><input type="radio" name="q4" value="a">segundo</label>
           <label class="correct-answer"><input type="radio" name="q4" value="b">cem</label>
@@ -925,7 +926,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Qual frase traz numeral ordinal?</div>
+          <div class="q">Qual frase traz <span class="vocab-word" data-word="numeral ordinal"><span class="vocab-word" data-word="numeral">numeral</span> ordinal</span>?</div>
           <div class="mc-options">
           <label><input type="radio" name="q7" value="a">Comprei dez livros.</label>
           <label class="correct-answer"><input type="radio" name="q7" value="b">A segunda prova é amanhã.</label>
@@ -936,7 +937,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">O numeral relaciona-se principalmente a:</div>
+          <div class="q">O <span class="vocab-word" data-word="numeral">numeral</span> relaciona-se principalmente a:</div>
           <div class="mc-options">
           <label><input type="radio" name="q8" value="a">Emoção repentina</label>
           <label class="correct-answer"><input type="radio" name="q8" value="b">Quantidade, ordem, fração ou múltiplo</label>
@@ -955,14 +956,14 @@
         <details class="gabarito-box">
           <summary>📋 Gabarito comentado</summary>
           <div class="gabarito-list">
-          <div class="g-item"><b>Questão 1.</b> Em "Comprei DOIS presentes", “dois” é:<br><span class="g-ans">Resposta: Numeral</span><br>Numeral indica quantidade, ordem, fração ou múltiplo. “Dois” responde “quantos presentes?” → <strong>cardinal</strong>. Não é artigo (embora “um” possa ser artigo ou numeral conforme o contexto), nem adjetivo qualificativo típico.</div>
+          <div class="g-item"><b>Questão 1.</b> Em "Comprei DOIS presentes", “dois” é:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="numeral">Numeral</span></span><br><span class="vocab-word" data-word="numeral">Numeral</span> indica quantidade, ordem, fração ou múltiplo. “Dois” responde “quantos presentes?” → <strong>cardinal</strong>. Não é <span class="vocab-word" data-word="artigo">artigo</span> (embora “um” possa ser <span class="vocab-word" data-word="artigo">artigo</span> ou <span class="vocab-word" data-word="numeral">numeral</span> conforme o contexto), nem <span class="vocab-word" data-word="adjetivo">adjetivo</span> qualificativo típico.</div>
           <div class="g-item"><b>Questão 2.</b> Em "Comprei DOIS presentes", “dois” é:<br><span class="g-ans">Resposta: Ordinais</span><br>Ordinais marcam posição em uma sequência: primeiro, segundo, terceiro, décimo. Diferem dos cardinais (um, dois, três), que só quantificam sem ordenar.</div>
           <div class="g-item"><b>Questão 3.</b> Em "Comprei DOIS presentes", “dois” é:<br><span class="g-ans">Resposta: Multiplicativos</span><br>Multiplicativos expressam quantas vezes: dobro, triplo, quíntuplo. Fracionários expressam partes (metade, terço). Ordinais ordenam; não multiplicam.</div>
-          <div class="g-item"><b>Questão 4.</b> Em "Comprei DOIS presentes", “dois” é:<br><span class="g-ans">Resposta: cem</span><br>Cem é quantidade bruta → cardinal. “Segundo” é ordinal; “metade”, fracionário; “muito” é tipicamente advérbio ou pronome indefinido, não numeral estrito.</div>
+          <div class="g-item"><b>Questão 4.</b> Em "Comprei DOIS presentes", “dois” é:<br><span class="g-ans">Resposta: cem</span><br>Cem é quantidade bruta → cardinal. “Segundo” é ordinal; “metade”, fracionário; “muito” é tipicamente <span class="vocab-word" data-word="advérbio">advérbio</span> ou <span class="vocab-word" data-word="pronome indefinido"><span class="vocab-word" data-word="pronome">pronome</span> indefinido</span>, não <span class="vocab-word" data-word="numeral">numeral</span> estrito.</div>
           <div class="g-item"><b>Questão 5.</b> Em "Comprei DOIS presentes", “dois” é:<br><span class="g-ans">Resposta: Fracionários</span><br>Fracionários: metade, terço, quarto, dois terços… Indicam divisão do todo, não a contagem inteira nem a posição na fila.</div>
           <div class="g-item"><b>Questão 6.</b> Em "Comprei DOIS presentes", “dois” é:<br><span class="g-ans">Resposta: Ordem / posição</span><br>“Terceiro lugar” fala da posição no ranking, não de “três lugares” somados → valor ordinal.</div>
           <div class="g-item"><b>Questão 7.</b> Em "Comprei DOIS presentes", “dois” é:<br><span class="g-ans">Resposta: A segunda prova é amanhã.</span><br>“A segunda prova” ordena qual prova (a de número dois na sequência). “Dez livros” é cardinal; “dobro/metade” são multiplicativo/fracionário.</div>
-          <div class="g-item"><b>Questão 8.</b> Em "Comprei DOIS presentes", “dois” é:<br><span class="g-ans">Resposta: Quantidade, ordem, fração ou múltiplo</span><br>Resumo da classe: o numeral quantifica, ordena, fraciona ou multiplica em relação a um substantivo (expresso ou subentendido).</div>
+          <div class="g-item"><b>Questão 8.</b> Em "Comprei DOIS presentes", “dois” é:<br><span class="g-ans">Resposta: Quantidade, ordem, fração ou múltiplo</span><br>Resumo da classe: o <span class="vocab-word" data-word="numeral">numeral</span> quantifica, ordena, fraciona ou multiplica em relação a um <span class="vocab-word" data-word="substantivo">substantivo</span> (expresso ou subentendido).</div>
           </div>
         </details>
         <div class="callout info" style="margin-top:28px;">

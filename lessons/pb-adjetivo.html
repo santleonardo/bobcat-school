@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="vocab-card.js"></script>
 <style>
 
 
@@ -745,7 +746,7 @@
 
 <div class="mobile-topbar">
   <button class="mt-btn" id="menuToggle" aria-label="Abrir sumário">☰ Classes</button>
-  Adjetivo
+  <span class="vocab-word" data-word="adjetivo">Adjetivo</span>
   <a class="mt-btn" href="../index.html">🏠 App</a>
 </div>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
@@ -777,8 +778,8 @@
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Classe 3 de 10 · Português Básico</div>
-    <h2>🎨 Adjetivo<br><em>Qualidade e característica</em></h2>
-    <p>Descreve como é o substantivo. Leia com calma, observe os exemplos e pratique no final para salvar o progresso no app.</p>
+    <h2>🎨 <span class="vocab-word" data-word="adjetivo">Adjetivo</span><br><em>Qualidade e característica</em></h2>
+    <p>Descreve como é o <span class="vocab-word" data-word="substantivo">substantivo</span>. Leia com calma, observe os exemplos e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Classe 3/10</span>
       <span class="badge">8 exercícios</span>
@@ -792,36 +793,36 @@
         <span class="section-num">3</span>
         <div class="section-title-block">
           <p class="section-label">Classe gramatical</p>
-          <h2 class="section-title">Adjetivo</h2>
+          <h2 class="section-title"><span class="vocab-word" data-word="adjetivo">Adjetivo</span></h2>
           <p class="section-subtitle">Qualidade e característica</p>
         </div>
       </div>
 
       <div class="prose">
-        <p>O <strong>adjetivo</strong> caracteriza o substantivo: diz <em>como</em> é a pessoa, o objeto, o lugar ou a ideia — qualidade, estado, aparência, origem etc.</p>
+        <p>O <strong><span class="vocab-word" data-word="adjetivo">adjetivo</span></strong> caracteriza o <span class="vocab-word" data-word="substantivo">substantivo</span>: diz <em>como</em> é a pessoa, o objeto, o lugar ou a ideia — qualidade, estado, aparência, origem etc.</p>
         <p>Ex.: casa <strong>grande</strong> · dia <strong>ensolarado</strong> · pessoa <strong>gentil</strong> · filme <strong>chato</strong>.</p>
 
-        <h3>1. Concordância</h3>
-        <p>O adjetivo concorda em <strong>gênero</strong> e <strong>número</strong> com o substantivo a que se refere:</p>
+        <h3>1. <span class="vocab-word" data-word="concordância">Concordância</span></h3>
+        <p>O <span class="vocab-word" data-word="adjetivo">adjetivo</span> concorda em <strong>gênero</strong> e <strong>número</strong> com o <span class="vocab-word" data-word="substantivo">substantivo</span> a que se refere:</p>
         <p><em>aluno dedicado</em> · <em>aluna dedicada</em> · <em>alunos dedicados</em> · <em>alunas dedicadas</em>.</p>
 
         <h3>2. Posição</h3>
-        <p>Pode vir <strong>depois</strong> do substantivo (mais comum e objetivo): <em>homem rico</em>.</p>
+        <p>Pode vir <strong>depois</strong> do <span class="vocab-word" data-word="substantivo">substantivo</span> (mais comum e objetivo): <em>homem rico</em>.</p>
         <p>Ou <strong>antes</strong> (às vezes com matiz afetivo ou valor figurado): <em>pobre homem</em> (sentido de “infeliz”, não necessariamente sem dinheiro).</p>
 
-        <h3>3. Grau do adjetivo</h3>
+        <h3>3. Grau do <span class="vocab-word" data-word="adjetivo">adjetivo</span></h3>
         <p><strong>Comparativo:</strong> igualdade (<em>tão alto quanto</em>), superioridade (<em>mais alto que</em>), inferioridade (<em>menos alto que</em>).</p>
         <p><strong>Superlativo absoluto:</strong> <em>altíssimo</em> / <em>muito alto</em>.</p>
         <p><strong>Superlativo relativo:</strong> <em>o mais alto da turma</em>.</p>
         <p>Formas sintéticas importantes: <em>bom → melhor</em> · <em>mau → pior</em> · <em>grande → maior</em> · <em>pequeno → menor</em>. Evite “mais melhor”.</p>
 
         <h3>4. Locução adjetiva</h3>
-        <p>Grupo de palavras com valor de adjetivo: <em>de ouro</em> (= dourado), <em>sem vergonha</em>, <em>da cidade</em> (urbano, em certos contextos).</p>
+        <p>Grupo de palavras com valor de <span class="vocab-word" data-word="adjetivo">adjetivo</span>: <em>de ouro</em> (= dourado), <em>sem vergonha</em>, <em>da cidade</em> (urbano, em certos contextos).</p>
       </div>
 
       <div class="callout info">
         <strong>Dica prática</strong>
-        Se a palavra responde “como é?” em relação a um substantivo, há grande chance de ser adjetivo (ou locução adjetiva).
+        Se a palavra responde “como é?” em relação a um <span class="vocab-word" data-word="substantivo">substantivo</span>, há grande chance de ser <span class="vocab-word" data-word="adjetivo">adjetivo</span> (ou locução adjetiva).
       </div>
 
       <div class="class-card" style="margin:24px 0;">
@@ -835,8 +836,8 @@
       </div>
 
       <div class="ex-grid">
-        <div class="ex-box correct"><span class="ex-label">Correto</span><code>As alunas dedicadas foram aprovadas.</code><small>Adjetivo no feminino plural</small></div>
-        <div class="ex-box wrong"><span class="ex-label">Incorreto</span><code>As alunas dedicado foram aprovadas.</code><small>Falha de concordância</small></div>
+        <div class="ex-box correct"><span class="ex-label">Correto</span><code>As alunas dedicadas foram aprovadas.</code><small><span class="vocab-word" data-word="adjetivo">Adjetivo</span> no feminino plural</small></div>
+        <div class="ex-box wrong"><span class="ex-label">Incorreto</span><code>As alunas dedicado foram aprovadas.</code><small>Falha de <span class="vocab-word" data-word="concordância">concordância</span></small></div>
       </div>
 
     </section>
@@ -847,25 +848,25 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Aplique o que aprendeu sobre adjetivo</p>
+          <p class="section-subtitle">Aplique o que aprendeu sobre <span class="vocab-word" data-word="adjetivo">adjetivo</span></p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta em cada item. Ao finalizar, a pontuação é salva no seu perfil (é preciso acertar pelo menos 85% para concluir a lição).</p>
+        <p>Escolha a alternativa correta em cada item. Ao finalizar, a <span class="vocab-word" data-word="pontuação">pontuação</span> é salva no seu perfil (é preciso acertar pelo menos 85% para concluir a lição).</p>
 
         <div class="mc-item">
           <div class="q">Em <em>"pessoa muito GENTIL"</em>, “gentil” é:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q1" value="a">Substantivo</label>
-          <label><input type="radio" name="q1" value="b">Pronome</label>
-          <label class="correct-answer"><input type="radio" name="q1" value="c">Adjetivo</label>
-          <label><input type="radio" name="q1" value="d">Conjunção</label>
+          <label><input type="radio" name="q1" value="a"><span class="vocab-word" data-word="substantivo">Substantivo</span></label>
+          <label><input type="radio" name="q1" value="b"><span class="vocab-word" data-word="pronome">Pronome</span></label>
+          <label class="correct-answer"><input type="radio" name="q1" value="c"><span class="vocab-word" data-word="adjetivo">Adjetivo</span></label>
+          <label><input type="radio" name="q1" value="d"><span class="vocab-word" data-word="conjunção">Conjunção</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Qual palavra é adjetivo?</div>
+          <div class="q">Qual palavra é <span class="vocab-word" data-word="adjetivo">adjetivo</span>?</div>
           <div class="mc-options">
           <label><input type="radio" name="q2" value="a">correr</label>
           <label class="correct-answer"><input type="radio" name="q2" value="b">ensolarado</label>
@@ -876,7 +877,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Em <em>"As alunas dedicadas"</em>, o adjetivo concorda em:</div>
+          <div class="q">Em <em>"As alunas dedicadas"</em>, o <span class="vocab-word" data-word="adjetivo">adjetivo</span> concorda em:</div>
           <div class="mc-options">
           <label><input type="radio" name="q3" value="a">Só gênero</label>
           <label><input type="radio" name="q3" value="b">Só número</label>
@@ -913,14 +914,14 @@
           <div class="mc-options">
           <label><input type="radio" name="q6" value="a">Verbo</label>
           <label class="correct-answer"><input type="radio" name="q6" value="b">Locução adjetiva</label>
-          <label><input type="radio" name="q6" value="c">Artigo</label>
-          <label><input type="radio" name="q6" value="d">Numeral</label>
+          <label><input type="radio" name="q6" value="c"><span class="vocab-word" data-word="artigo">Artigo</span></label>
+          <label><input type="radio" name="q6" value="d"><span class="vocab-word" data-word="numeral">Numeral</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Qual frase está com concordância correta do adjetivo?</div>
+          <div class="q">Qual frase está com <span class="vocab-word" data-word="concordância">concordância</span> correta do <span class="vocab-word" data-word="adjetivo">adjetivo</span>?</div>
           <div class="mc-options">
           <label><input type="radio" name="q7" value="a">Os menino alegre brincavam.</label>
           <label class="correct-answer"><input type="radio" name="q7" value="b">Os meninos alegres brincavam.</label>
@@ -931,12 +932,12 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">O adjetivo caracteriza principalmente o:</div>
+          <div class="q">O <span class="vocab-word" data-word="adjetivo">adjetivo</span> caracteriza principalmente o:</div>
           <div class="mc-options">
           <label><input type="radio" name="q8" value="a">Verbo</label>
-          <label class="correct-answer"><input type="radio" name="q8" value="b">Substantivo</label>
-          <label><input type="radio" name="q8" value="c">Artigo isolado</label>
-          <label><input type="radio" name="q8" value="d">Só a interjeição</label>
+          <label class="correct-answer"><input type="radio" name="q8" value="b"><span class="vocab-word" data-word="substantivo">Substantivo</span></label>
+          <label><input type="radio" name="q8" value="c"><span class="vocab-word" data-word="artigo">Artigo</span> isolado</label>
+          <label><input type="radio" name="q8" value="d">Só a <span class="vocab-word" data-word="interjeição">interjeição</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -950,14 +951,14 @@
         <details class="gabarito-box">
           <summary>📋 Gabarito comentado</summary>
           <div class="gabarito-list">
-          <div class="g-item"><b>Questão 1.</b> Em "pessoa muito GENTIL", “gentil” é:<br><span class="g-ans">Resposta: Adjetivo</span><br>Adjetivo caracteriza o substantivo. Em “pessoa muito gentil”, <strong>gentil</strong> atribui qualidade à pessoa. “Muito” é advérbio de intensidade (modifica o adjetivo); a classe que descreve o nome é o adjetivo.</div>
-          <div class="g-item"><b>Questão 2.</b> Em "pessoa muito GENTIL", “gentil” é:<br><span class="g-ans">Resposta: ensolarado</span><br>Ensolarado descreve o dia → adjetivo. Correr é verbo; ontem, advérbio de tempo; porque, conjunção. O teste prático: a palavra responde “como é (o substantivo)?”</div>
-          <div class="g-item"><b>Questão 3.</b> Em "pessoa muito GENTIL", “gentil” é:<br><span class="g-ans">Resposta: Gênero e número</span><br>O adjetivo concorda em <strong>gênero e número</strong> com o substantivo: alunas (fem. pl.) → dedicadas (fem. pl.). “Dedicado” (masc. sing.) quebraria a concordância nominal.</div>
-          <div class="g-item"><b>Questão 4.</b> Em "pessoa muito GENTIL", “gentil” é:<br><span class="g-ans">Resposta: Superlativo</span><br>Superlativo absoluto intensifica a qualidade no grau máximo: belíssimo / muito belo. Comparativo compara dois termos (mais belo que). Diminutivo/coletivo são noções do substantivo, não desse grau adjetival.</div>
+          <div class="g-item"><b>Questão 1.</b> Em "pessoa muito GENTIL", “gentil” é:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="adjetivo">Adjetivo</span></span><br><span class="vocab-word" data-word="adjetivo">Adjetivo</span> caracteriza o <span class="vocab-word" data-word="substantivo">substantivo</span>. Em “pessoa muito gentil”, <strong>gentil</strong> atribui qualidade à pessoa. “Muito” é <span class="vocab-word" data-word="advérbio">advérbio</span> de intensidade (modifica o <span class="vocab-word" data-word="adjetivo">adjetivo</span>); a classe que descreve o nome é o <span class="vocab-word" data-word="adjetivo">adjetivo</span>.</div>
+          <div class="g-item"><b>Questão 2.</b> Em "pessoa muito GENTIL", “gentil” é:<br><span class="g-ans">Resposta: ensolarado</span><br>Ensolarado descreve o dia → <span class="vocab-word" data-word="adjetivo">adjetivo</span>. Correr é verbo; ontem, <span class="vocab-word" data-word="advérbio">advérbio</span> de tempo; porque, <span class="vocab-word" data-word="conjunção">conjunção</span>. O teste prático: a palavra responde “como é (o <span class="vocab-word" data-word="substantivo">substantivo</span>)?”</div>
+          <div class="g-item"><b>Questão 3.</b> Em "pessoa muito GENTIL", “gentil” é:<br><span class="g-ans">Resposta: Gênero e número</span><br>O <span class="vocab-word" data-word="adjetivo">adjetivo</span> concorda em <strong>gênero e número</strong> com o <span class="vocab-word" data-word="substantivo">substantivo</span>: alunas (fem. pl.) → dedicadas (fem. pl.). “Dedicado” (masc. sing.) quebraria a <span class="vocab-word" data-word="concordância nominal"><span class="vocab-word" data-word="concordância">concordância</span> nominal</span>.</div>
+          <div class="g-item"><b>Questão 4.</b> Em "pessoa muito GENTIL", “gentil” é:<br><span class="g-ans">Resposta: Superlativo</span><br>Superlativo absoluto intensifica a qualidade no grau máximo: belíssimo / muito belo. Comparativo compara dois termos (mais belo que). Diminutivo/coletivo são noções do <span class="vocab-word" data-word="substantivo">substantivo</span>, não desse grau adjetival.</div>
           <div class="g-item"><b>Questão 5.</b> Em "pessoa muito GENTIL", “gentil” é:<br><span class="g-ans">Resposta: melhor</span><br>Alguns adjetivos têm comparativo <strong>sintético</strong>: bom→melhor, mau→pior, grande→maior, pequeno→menor. “Mais bom” é rejeitado na norma culta; use melhor.</div>
-          <div class="g-item"><b>Questão 6.</b> Em "pessoa muito GENTIL", “gentil” é:<br><span class="g-ans">Resposta: Locução adjetiva</span><br>Locução adjetiva é um grupo (muitas vezes preposição + substantivo) com valor de adjetivo: de ouro ≈ dourado; sem vergonha; de mármore. Funciona como caracterizador do nome.</div>
-          <div class="g-item"><b>Questão 7.</b> Em "pessoa muito GENTIL", “gentil” é:<br><span class="g-ans">Resposta: Os meninos alegres brincavam.</span><br>Concordância correta: Os meninos (masc. pl.) alegres (masc. pl.) brincavam. Misturar singular/plural ou gênero gera erro típico de redação.</div>
-          <div class="g-item"><b>Questão 8.</b> Em "pessoa muito GENTIL", “gentil” é:<br><span class="g-ans">Resposta: Substantivo</span><br>Enquanto o advérbio modifica verbo/adjetivo/advérbio, o adjetivo tem por alvo principal o <strong>substantivo</strong> (ou termo de valor nominal).</div>
+          <div class="g-item"><b>Questão 6.</b> Em "pessoa muito GENTIL", “gentil” é:<br><span class="g-ans">Resposta: Locução adjetiva</span><br>Locução adjetiva é um grupo (muitas vezes <span class="vocab-word" data-word="preposição">preposição</span> + <span class="vocab-word" data-word="substantivo">substantivo</span>) com valor de <span class="vocab-word" data-word="adjetivo">adjetivo</span>: de ouro ≈ dourado; sem vergonha; de mármore. Funciona como caracterizador do nome.</div>
+          <div class="g-item"><b>Questão 7.</b> Em "pessoa muito GENTIL", “gentil” é:<br><span class="g-ans">Resposta: Os meninos alegres brincavam.</span><br><span class="vocab-word" data-word="concordância">Concordância</span> correta: Os meninos (masc. pl.) alegres (masc. pl.) brincavam. Misturar singular/plural ou gênero gera erro típico de redação.</div>
+          <div class="g-item"><b>Questão 8.</b> Em "pessoa muito GENTIL", “gentil” é:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="substantivo">Substantivo</span></span><br>Enquanto o <span class="vocab-word" data-word="advérbio">advérbio</span> modifica verbo/<span class="vocab-word" data-word="adjetivo">adjetivo</span>/<span class="vocab-word" data-word="advérbio">advérbio</span>, o <span class="vocab-word" data-word="adjetivo">adjetivo</span> tem por alvo principal o <strong><span class="vocab-word" data-word="substantivo">substantivo</span></strong> (ou termo de valor nominal).</div>
           </div>
         </details>
         <div class="callout info" style="margin-top:28px;">

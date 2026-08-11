@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="vocab-card.js"></script>
 <style>
 
 
@@ -745,7 +746,7 @@
 
 <div class="mobile-topbar">
   <button class="mt-btn" id="menuToggle" aria-label="Abrir sumário">☰ Classes</button>
-  Artigo
+  <span class="vocab-word" data-word="artigo">Artigo</span>
   <a class="mt-btn" href="../index.html">🏠 App</a>
 </div>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
@@ -777,7 +778,7 @@
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Classe 2 de 10 · Português Básico</div>
-    <h2>🔖 Artigo<br><em>Definido e indefinido</em></h2>
+    <h2>🔖 <span class="vocab-word" data-word="artigo">Artigo</span><br><em>Definido e indefinido</em></h2>
     <p>Indica se falamos de algo específico ou qualquer. Leia com calma, observe os exemplos e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Classe 2/10</span>
@@ -792,14 +793,14 @@
         <span class="section-num">2</span>
         <div class="section-title-block">
           <p class="section-label">Classe gramatical</p>
-          <h2 class="section-title">Artigo</h2>
+          <h2 class="section-title"><span class="vocab-word" data-word="artigo">Artigo</span></h2>
           <p class="section-subtitle">Definido e indefinido</p>
         </div>
       </div>
 
       <div class="prose">
-        <p>O <strong>artigo</strong> é a palavra que vem <strong>antes do substantivo</strong> (ou de um grupo nominal) e ajuda a indicar se estamos falando de algo <em>já determinado</em> ou de algo <em>qualquer</em>.</p>
-        <p>Ele também marca <strong>gênero</strong> (masculino/feminino) e <strong>número</strong> (singular/plural) do substantivo.</p>
+        <p>O <strong><span class="vocab-word" data-word="artigo">artigo</span></strong> é a palavra que vem <strong>antes do <span class="vocab-word" data-word="substantivo">substantivo</span></strong> (ou de um grupo nominal) e ajuda a indicar se estamos falando de algo <em>já determinado</em> ou de algo <em>qualquer</em>.</p>
+        <p>Ele também marca <strong>gênero</strong> (masculino/feminino) e <strong>número</strong> (singular/plural) do <span class="vocab-word" data-word="substantivo">substantivo</span>.</p>
 
         <h3>1. Artigos definidos</h3>
         <p><strong>o, a, os, as</strong> — apontam para algo específico ou já conhecido no contexto.</p>
@@ -810,11 +811,11 @@
         <p>Ex.: <em>Vi <strong>um</strong> gato no quintal.</em> · <em>Preciso de <strong>uma</strong> caneta.</em></p>
 
         <h3>3. Combinações e contrações</h3>
-        <p>Na língua falada e escrita, artigo + preposição se fundem com frequência:</p>
-        <p><strong>de + o = do</strong> · <strong>de + a = da</strong> · <strong>em + o = no</strong> · <strong>em + a = na</strong> · <strong>a + o = ao</strong> · <strong>a + a = à</strong> (crase).</p>
+        <p>Na língua falada e escrita, <span class="vocab-word" data-word="artigo">artigo</span> + <span class="vocab-word" data-word="preposição">preposição</span> se fundem com frequência:</p>
+        <p><strong>de + o = do</strong> · <strong>de + a = da</strong> · <strong>em + o = no</strong> · <strong>em + a = na</strong> · <strong>a + o = ao</strong> · <strong>a + a = à</strong> (<span class="vocab-word" data-word="crase">crase</span>).</p>
         <p>Ex.: <em>O caderno está em cima <strong>da</strong> mesa.</em> (= de + a)</p>
 
-        <h3>4. Artigo e sentido</h3>
+        <h3>4. <span class="vocab-word" data-word="artigo">Artigo</span> e sentido</h3>
         <p>Trocar definido por indefinido muda o sentido:</p>
         <p><em>Procuro <strong>o</strong> professor.</em> (um professor específico) × <em>Procuro <strong>um</strong> professor.</em> (qualquer professor que possa ajudar)</p>
       </div>
@@ -847,7 +848,7 @@
 
       <div class="callout">
         <strong>Na prática</strong>
-        <em>"O menino saiu cedo."</em> — <strong>O</strong> é artigo definido; determina o substantivo <em>menino</em>.
+        <em>"O menino saiu cedo."</em> — <strong>O</strong> é <span class="vocab-word" data-word="artigo definido"><span class="vocab-word" data-word="artigo">artigo</span> definido</span>; determina o <span class="vocab-word" data-word="substantivo">substantivo</span> <em>menino</em>.
       </div>
 
     </section>
@@ -858,30 +859,30 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Aplique o que aprendeu sobre artigo</p>
+          <p class="section-subtitle">Aplique o que aprendeu sobre <span class="vocab-word" data-word="artigo">artigo</span></p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta em cada item. Ao finalizar, a pontuação é salva no seu perfil (é preciso acertar pelo menos 85% para concluir a lição).</p>
+        <p>Escolha a alternativa correta em cada item. Ao finalizar, a <span class="vocab-word" data-word="pontuação">pontuação</span> é salva no seu perfil (é preciso acertar pelo menos 85% para concluir a lição).</p>
 
         <div class="mc-item">
           <div class="q">Em <em>"O menino saiu cedo."</em>, “O” é:</div>
           <div class="mc-options">
-          <label class="correct-answer"><input type="radio" name="q1" value="a">Artigo</label>
-          <label><input type="radio" name="q1" value="b">Pronome</label>
-          <label><input type="radio" name="q1" value="c">Preposição</label>
-          <label><input type="radio" name="q1" value="d">Substantivo</label>
+          <label class="correct-answer"><input type="radio" name="q1" value="a"><span class="vocab-word" data-word="artigo">Artigo</span></label>
+          <label><input type="radio" name="q1" value="b"><span class="vocab-word" data-word="pronome">Pronome</span></label>
+          <label><input type="radio" name="q1" value="c"><span class="vocab-word" data-word="preposição">Preposição</span></label>
+          <label><input type="radio" name="q1" value="d"><span class="vocab-word" data-word="substantivo">Substantivo</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Em <em>"um carro"</em>, o artigo é:</div>
+          <div class="q">Em <em>"um carro"</em>, o <span class="vocab-word" data-word="artigo">artigo</span> é:</div>
           <div class="mc-options">
           <label><input type="radio" name="q2" value="a">Definido</label>
           <label class="correct-answer"><input type="radio" name="q2" value="b">Indefinido</label>
           <label><input type="radio" name="q2" value="c">Possessivo</label>
-          <label><input type="radio" name="q2" value="d">Numeral</label>
+          <label><input type="radio" name="q2" value="d"><span class="vocab-word" data-word="numeral">Numeral</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -900,10 +901,10 @@
         <div class="mc-item">
           <div class="q">Em <em>"da mesa"</em> (de + a), há:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q4" value="a">Só preposição</label>
-          <label class="correct-answer"><input type="radio" name="q4" value="b">Preposição + artigo</label>
-          <label><input type="radio" name="q4" value="c">Só artigo</label>
-          <label><input type="radio" name="q4" value="d">Conjunção</label>
+          <label><input type="radio" name="q4" value="a">Só <span class="vocab-word" data-word="preposição">preposição</span></label>
+          <label class="correct-answer"><input type="radio" name="q4" value="b"><span class="vocab-word" data-word="preposição">Preposição</span> + <span class="vocab-word" data-word="artigo">artigo</span></label>
+          <label><input type="radio" name="q4" value="c">Só <span class="vocab-word" data-word="artigo">artigo</span></label>
+          <label><input type="radio" name="q4" value="d"><span class="vocab-word" data-word="conjunção">Conjunção</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -914,7 +915,7 @@
           <label><input type="radio" name="q5" value="a">Qualquer porta</label>
           <label class="correct-answer"><input type="radio" name="q5" value="b">Uma porta específica / conhecida</label>
           <label><input type="radio" name="q5" value="c">Um verbo</label>
-          <label><input type="radio" name="q5" value="d">Um advérbio</label>
+          <label><input type="radio" name="q5" value="d">Um <span class="vocab-word" data-word="advérbio">advérbio</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -931,7 +932,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Qual frase usa artigo <strong>indefinido</strong>?</div>
+          <div class="q">Qual frase usa <span class="vocab-word" data-word="artigo">artigo</span> <strong>indefinido</strong>?</div>
           <div class="mc-options">
           <label><input type="radio" name="q7" value="a">Os alunos chegaram.</label>
           <label class="correct-answer"><input type="radio" name="q7" value="b">Vi um gato no quintal.</label>
@@ -942,7 +943,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Em <em>"a + a"</em> (preposição + artigo), a forma correta com crase é:</div>
+          <div class="q">Em <em>"a + a"</em> (<span class="vocab-word" data-word="preposição">preposição</span> + <span class="vocab-word" data-word="artigo">artigo</span>), a forma correta com <span class="vocab-word" data-word="crase">crase</span> é:</div>
           <div class="mc-options">
           <label><input type="radio" name="q8" value="a">aa</label>
           <label class="correct-answer"><input type="radio" name="q8" value="b">à</label>
@@ -961,14 +962,14 @@
         <details class="gabarito-box">
           <summary>📋 Gabarito comentado</summary>
           <div class="gabarito-list">
-          <div class="g-item"><b>Questão 1.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: Artigo</span><br>O artigo vem antes do substantivo e ajuda a determiná-lo. Em “O menino saiu cedo”, <strong>O</strong> é artigo <strong>definido</strong> masculino singular: aponta para um menino específico ou já identificável no contexto. Não é pronome (não substitui o nome) nem preposição (não liga termos).</div>
+          <div class="g-item"><b>Questão 1.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="artigo">Artigo</span></span><br>O <span class="vocab-word" data-word="artigo">artigo</span> vem antes do <span class="vocab-word" data-word="substantivo">substantivo</span> e ajuda a determiná-lo. Em “O menino saiu cedo”, <strong>O</strong> é <span class="vocab-word" data-word="artigo">artigo</span> <strong>definido</strong> masculino singular: aponta para um menino específico ou já identificável no contexto. Não é <span class="vocab-word" data-word="pronome">pronome</span> (não substitui o nome) nem <span class="vocab-word" data-word="preposição">preposição</span> (não liga termos).</div>
           <div class="g-item"><b>Questão 2.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: Indefinido</span><br>Artigos <strong>indefinidos</strong> (um, uma, uns, umas) apresentam algo ainda não particularizado — “qualquer um” da espécie. Em “um carro”, não se trata daquele carro já conhecido, e sim de um exemplar qualquer.</div>
-          <div class="g-item"><b>Questão 3.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: o, a, os, as</span><br>Quadro fixo: definidos = <strong>o, a, os, as</strong>; indefinidos = <strong>um, uma, uns, umas</strong>. “Meu/sua” são possessivos; “este/aquele”, demonstrativos — classes diferentes, embora também acompanhem o substantivo.</div>
-          <div class="g-item"><b>Questão 4.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: Preposição + artigo</span><br>Na fala e na escrita, preposição e artigo se fundem: de + a = <strong>da</strong>, de + o = do, em + a = na, a + a = à. Em “em cima da mesa”, “da” carrega preposição (relação) + artigo (determinação de “mesa”).</div>
+          <div class="g-item"><b>Questão 3.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: o, a, os, as</span><br>Quadro fixo: definidos = <strong>o, a, os, as</strong>; indefinidos = <strong>um, uma, uns, umas</strong>. “Meu/sua” são possessivos; “este/aquele”, demonstrativos — classes diferentes, embora também acompanhem o <span class="vocab-word" data-word="substantivo">substantivo</span>.</div>
+          <div class="g-item"><b>Questão 4.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="preposição">Preposição</span> + <span class="vocab-word" data-word="artigo">artigo</span></span><br>Na fala e na escrita, <span class="vocab-word" data-word="preposição">preposição</span> e <span class="vocab-word" data-word="artigo">artigo</span> se fundem: de + a = <strong>da</strong>, de + o = do, em + a = na, a + a = à. Em “em cima da mesa”, “da” carrega <span class="vocab-word" data-word="preposição">preposição</span> (relação) + <span class="vocab-word" data-word="artigo">artigo</span> (determinação de “mesa”).</div>
           <div class="g-item"><b>Questão 5.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: Uma porta específica / conhecida</span><br>“Feche a porta” usa definido porque a porta já faz parte da situação comunicativa (aquela porta do ambiente). Se dissesse “feche uma porta”, sugeriria qualquer porta, sem identificação prévia.</div>
           <div class="g-item"><b>Questão 6.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: no</span><br>Combinações usuais: em+o=<strong>no</strong>, em+a=na, de+o=do, de+a=da, a+o=ao, a+a=à, por+o=pelo, por+a=pela. Reconhecer essas fusões evita classificar “no/da” como uma só classe isolada.</div>
           <div class="g-item"><b>Questão 7.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: Vi um gato no quintal.</span><br>“Vi um gato no quintal” introduz o animal pela primeira vez, sem torná-lo único e já conhecido → indefinido. “Os alunos” / “A porta” / “As casas” usam definidos.</div>
-          <div class="g-item"><b>Questão 8.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: à</span><br>Quando a preposição <strong>a</strong> se junta ao artigo <strong>a</strong>, a fusão marca-se com acento grave: <strong>à</strong> (crase). Não se escreve “aa” nem se confunde com o “á” de outras palavras.</div>
+          <div class="g-item"><b>Questão 8.</b> Em "O menino saiu cedo.", “O” é:<br><span class="g-ans">Resposta: à</span><br>Quando a <span class="vocab-word" data-word="preposição">preposição</span> <strong>a</strong> se junta ao <span class="vocab-word" data-word="artigo">artigo</span> <strong>a</strong>, a fusão marca-se com acento grave: <strong>à</strong> (<span class="vocab-word" data-word="crase">crase</span>). Não se escreve “aa” nem se confunde com o “á” de outras palavras.</div>
           </div>
         </details>
         <div class="callout info" style="margin-top:28px;">

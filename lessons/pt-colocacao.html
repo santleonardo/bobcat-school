@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="vocab-card.js"></script>
 <style>
 
 
@@ -699,7 +700,7 @@
 
 <div class="mobile-topbar">
   <button class="mt-btn" id="menuToggle" aria-label="Abrir sumário">☰ Capítulos</button>
-  Colocação Pronominal
+  <span class="vocab-word" data-word="colocação pronominal">Colocação Pronominal</span>
   <a class="mt-btn" href="../index.html">🏠 App</a>
 </div>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
@@ -731,7 +732,7 @@
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Capítulo 6 de 10 · Gramática Aplicada</div>
-    <h2>📎 Colocação Pronominal<br><em>Próclise, mesóclise e ênclise</em></h2>
+    <h2>📎 <span class="vocab-word" data-word="colocação pronominal">Colocação Pronominal</span><br><em><span class="vocab-word" data-word="próclise">Próclise</span>, <span class="vocab-word" data-word="mesóclise">mesóclise</span> e <span class="vocab-word" data-word="ênclise">ênclise</span></em></h2>
     <p>Posição dos pronomes oblíquos átonos. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Capítulo 6/10</span>
@@ -747,8 +748,8 @@
         <span class="section-num">6</span>
         <div class="section-title-block">
           <p class="section-label">Capítulo VI</p>
-          <h2 class="section-title">Colocação Pronominal</h2>
-          <p class="section-subtitle">Próclise, mesóclise e ênclise</p>
+          <h2 class="section-title"><span class="vocab-word" data-word="colocação pronominal">Colocação Pronominal</span></h2>
+          <p class="section-subtitle"><span class="vocab-word" data-word="próclise">Próclise</span>, <span class="vocab-word" data-word="mesóclise">mesóclise</span> e <span class="vocab-word" data-word="ênclise">ênclise</span></p>
         </div>
       </div>
 
@@ -757,23 +758,23 @@
 
         <div class="ex-grid triple">
           <div class="ex-box neutral">
-            <span class="ex-label">Próclise</span>
+            <span class="ex-label"><span class="vocab-word" data-word="próclise">Próclise</span></span>
             <code>Ele <mark>me</mark> chamou.</code>
-            <small>Pronome <strong>antes</strong> do verbo</small>
+            <small><span class="vocab-word" data-word="pronome">Pronome</span> <strong>antes</strong> do verbo</small>
           </div>
           <div class="ex-box neutral">
-            <span class="ex-label">Ênclise</span>
+            <span class="ex-label"><span class="vocab-word" data-word="ênclise">Ênclise</span></span>
             <code>Chamou<mark>-me</mark> à sala.</code>
-            <small>Pronome <strong>após</strong> o verbo (com hífen)</small>
+            <small><span class="vocab-word" data-word="pronome">Pronome</span> <strong>após</strong> o verbo (com <span class="vocab-word" data-word="hífen">hífen</span>)</small>
           </div>
           <div class="ex-box neutral">
-            <span class="ex-label">Mesóclise</span>
+            <span class="ex-label"><span class="vocab-word" data-word="mesóclise">Mesóclise</span></span>
             <code>Chamar<mark>-me</mark>-á amanhã.</code>
-            <small>Pronome <strong>no meio</strong> do verbo (futuro)</small>
+            <small><span class="vocab-word" data-word="pronome">Pronome</span> <strong>no meio</strong> do verbo (futuro)</small>
           </div>
         </div>
 
-        <h3>Casos de Próclise Obrigatória</h3>
+        <h3>Casos de <span class="vocab-word" data-word="próclise">Próclise</span> Obrigatória</h3>
         <ul class="rule-list">
           <li><strong>Palavras atrativas negativas:</strong> <em>Não <mark>me</mark> ligou.</em></li>
           <li><strong>Pronomes indefinidos, demonstrativos e interrogativos:</strong> <em>Alguém <mark>te</mark> procurou. Quem <mark>te</mark> contou?</em></li>
@@ -782,45 +783,45 @@
           <li><strong>Orações exclamativas e optativas:</strong> <em>Deus <mark>te</mark> abençoe!</em></li>
         </ul>
 
-        <h3>Casos de Ênclise Obrigatória</h3>
+        <h3>Casos de <span class="vocab-word" data-word="ênclise">Ênclise</span> Obrigatória</h3>
         <ul class="rule-list">
-          <li><strong>Início de oração:</strong> <em>Diga<mark>-me</mark> a verdade.</em></li>
-          <li><strong>Verbo no imperativo afirmativo:</strong> <em>Chame<mark>-me</mark> quando chegar.</em></li>
-          <li><strong>Verbo no gerúndio (sem "em"):</strong> <em>Saiu sorrindo<mark>-se</mark>.</em></li>
-          <li><strong>Verbo no infinitivo impessoal:</strong> <em>É difícil entendê<mark>-la</mark>.</em></li>
+          <li><strong>Início de <span class="vocab-word" data-word="oração">oração</span>:</strong> <em>Diga<mark>-me</mark> a verdade.</em></li>
+          <li><strong>Verbo no <span class="vocab-word" data-word="imperativo">imperativo</span> afirmativo:</strong> <em>Chame<mark>-me</mark> quando chegar.</em></li>
+          <li><strong>Verbo no <span class="vocab-word" data-word="gerúndio">gerúndio</span> (sem "em"):</strong> <em>Saiu sorrindo<mark>-se</mark>.</em></li>
+          <li><strong>Verbo no <span class="vocab-word" data-word="infinitivo">infinitivo</span> impessoal:</strong> <em>É difícil entendê<mark>-la</mark>.</em></li>
         </ul>
 
-        <h3>Mesóclise</h3>
-        <p>Usada com verbos no futuro do presente e no futuro do pretérito, quando não há fator de próclise:</p>
+        <h3><span class="vocab-word" data-word="mesóclise">Mesóclise</span></h3>
+        <p>Usada com verbos no futuro do presente e no futuro do pretérito, quando não há fator de <span class="vocab-word" data-word="próclise">próclise</span>:</p>
         <div class="ex-grid">
           <div class="ex-box correct">
-            <span class="ex-label">✓ Mesóclise correta</span>
+            <span class="ex-label">✓ <span class="vocab-word" data-word="mesóclise">Mesóclise</span> correta</span>
             <code>Diga<mark>r</mark>-<mark>te</mark>-ei a verdade.</code>
             <small>Futuro do presente sem fator atrativo</small>
           </div>
           <div class="ex-box correct">
-            <span class="ex-label">✓ Próclise no futuro (com negativa)</span>
+            <span class="ex-label">✓ <span class="vocab-word" data-word="próclise">Próclise</span> no futuro (com negativa)</span>
             <code>Não <mark>te</mark> direi nada.</code>
-            <small>A negativa atrai o pronome → próclise</small>
+            <small>A negativa atrai o <span class="vocab-word" data-word="pronome">pronome</span> → <span class="vocab-word" data-word="próclise">próclise</span></small>
           </div>
         </div>
 
         <div class="callout danger">
           <strong>Erro gravíssimo</strong>
-          Iniciar oração com pronome oblíquo átono é erro na norma culta escrita: <em><mark class="red">"Me liga mais tarde"</mark></em> é uso coloquial. O correto é: <em>"Liga-me mais tarde"</em> ou, com contexto anterior: <em>"Ele me ligou mais tarde."</em>
+          Iniciar <span class="vocab-word" data-word="oração">oração</span> com <span class="vocab-word" data-word="pronome oblíquo"><span class="vocab-word" data-word="pronome">pronome</span> oblíquo</span> átono é erro na norma culta escrita: <em><mark class="red">"Me liga mais tarde"</mark></em> é uso coloquial. O correto é: <em>"Liga-me mais tarde"</em> ou, com contexto anterior: <em>"Ele me ligou mais tarde."</em>
         </div>
       </div>
     
 
       <div class="callout danger">
         <strong>Norma culta escrita</strong>
-        Evite iniciar oração com oblíquo átono: prefira <em>Liga-me</em> / <em>Diga-me</em> a “Me liga” (uso coloquial).
+        Evite iniciar <span class="vocab-word" data-word="oração">oração</span> com oblíquo átono: prefira <em>Liga-me</em> / <em>Diga-me</em> a “Me liga” (uso coloquial).
       </div>
       <div class="prose">
         <h3>Resumo operacional</h3>
-        <p><strong>Próclise</strong> (antes): atrativos — negação, relativos, indefinidos, advérbios sem pausa, subordinadas…</p>
-        <p><strong>Ênclise</strong> (depois): início de oração, imperativo afirmativo, infinitivo em vários casos…</p>
-        <p><strong>Mesóclise</strong> (meio): futuro do presente/pretérito sem atrativo — <em>dir-te-ei</em>.</p>
+        <p><strong><span class="vocab-word" data-word="próclise">Próclise</span></strong> (antes): atrativos — negação, relativos, indefinidos, advérbios sem pausa, subordinadas…</p>
+        <p><strong><span class="vocab-word" data-word="ênclise">Ênclise</span></strong> (depois): início de <span class="vocab-word" data-word="oração">oração</span>, <span class="vocab-word" data-word="imperativo">imperativo</span> afirmativo, <span class="vocab-word" data-word="infinitivo">infinitivo</span> em vários casos…</p>
+        <p><strong><span class="vocab-word" data-word="mesóclise">Mesóclise</span></strong> (meio): futuro do presente/pretérito sem atrativo — <em>dir-te-ei</em>.</p>
       </div>
 
     </section>
@@ -831,18 +832,18 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Fixação deste capítulo — colocação pronominal</p>
+          <p class="section-subtitle">Fixação deste capítulo — <span class="vocab-word" data-word="colocação pronominal">colocação pronominal</span></p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no perfil (mínimo 85% para concluir a lição).</p>
+        <p>Escolha a alternativa correta. Ao finalizar, a <span class="vocab-word" data-word="pontuação">pontuação</span> é salva no perfil (mínimo 85% para concluir a lição).</p>
 
         <div class="mc-item">
-          <div class="q">Em início de oração (norma culta), prefere-se:</div>
+          <div class="q">Em início de <span class="vocab-word" data-word="oração">oração</span> (norma culta), prefere-se:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q1" value="a">Próclise: “Me liga”</label>
-          <label class="correct-answer"><input type="radio" name="q1" value="b">Ênclise: “Liga-me”</label>
-          <label><input type="radio" name="q1" value="c">Mesóclise obrigatória sempre</label>
+          <label><input type="radio" name="q1" value="a"><span class="vocab-word" data-word="próclise">Próclise</span>: “Me liga”</label>
+          <label class="correct-answer"><input type="radio" name="q1" value="b"><span class="vocab-word" data-word="ênclise">Ênclise</span>: “Liga-me”</label>
+          <label><input type="radio" name="q1" value="c"><span class="vocab-word" data-word="mesóclise">Mesóclise</span> obrigatória sempre</label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -850,19 +851,19 @@
         <div class="mc-item">
           <div class="q">Com palavra negativa (“não”), a tendência é:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q2" value="a">Ênclise</label>
-          <label class="correct-answer"><input type="radio" name="q2" value="b">Próclise</label>
-          <label><input type="radio" name="q2" value="c">Mesóclise</label>
+          <label><input type="radio" name="q2" value="a"><span class="vocab-word" data-word="ênclise">Ênclise</span></label>
+          <label class="correct-answer"><input type="radio" name="q2" value="b"><span class="vocab-word" data-word="próclise">Próclise</span></label>
+          <label><input type="radio" name="q2" value="c"><span class="vocab-word" data-word="mesóclise">Mesóclise</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Mesóclise ocorre tipicamente com:</div>
+          <div class="q"><span class="vocab-word" data-word="mesóclise">Mesóclise</span> ocorre tipicamente com:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q3" value="a">Presente do indicativo</label>
+          <label><input type="radio" name="q3" value="a">Presente do <span class="vocab-word" data-word="indicativo">indicativo</span></label>
           <label class="correct-answer"><input type="radio" name="q3" value="b">Futuro do presente / futuro do pretérito</label>
-          <label><input type="radio" name="q3" value="c">Só gerúndio</label>
+          <label><input type="radio" name="q3" value="c">Só <span class="vocab-word" data-word="gerúndio">gerúndio</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -870,9 +871,9 @@
         <div class="mc-item">
           <div class="q">Em <em>"Não me ligou."</em>, a colocação é:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q4" value="a">Ênclise</label>
-          <label class="correct-answer"><input type="radio" name="q4" value="b">Próclise</label>
-          <label><input type="radio" name="q4" value="c">Mesóclise</label>
+          <label><input type="radio" name="q4" value="a"><span class="vocab-word" data-word="ênclise">Ênclise</span></label>
+          <label class="correct-answer"><input type="radio" name="q4" value="b"><span class="vocab-word" data-word="próclise">Próclise</span></label>
+          <label><input type="radio" name="q4" value="c"><span class="vocab-word" data-word="mesóclise">Mesóclise</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -880,9 +881,9 @@
         <div class="mc-item">
           <div class="q">“Diga-me a verdade” exemplifica:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q5" value="a">Próclise</label>
-          <label class="correct-answer"><input type="radio" name="q5" value="b">Ênclise</label>
-          <label><input type="radio" name="q5" value="c">Mesóclise</label>
+          <label><input type="radio" name="q5" value="a"><span class="vocab-word" data-word="próclise">Próclise</span></label>
+          <label class="correct-answer"><input type="radio" name="q5" value="b"><span class="vocab-word" data-word="ênclise">Ênclise</span></label>
+          <label><input type="radio" name="q5" value="c"><span class="vocab-word" data-word="mesóclise">Mesóclise</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -900,9 +901,9 @@
         <div class="mc-item">
           <div class="q">Com futuro e atrativo negativo, usa-se:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q7" value="a">Mesóclise obrigatória</label>
-          <label class="correct-answer"><input type="radio" name="q7" value="b">Próclise: “Não te direi…”</label>
-          <label><input type="radio" name="q7" value="c">Artigo definido</label>
+          <label><input type="radio" name="q7" value="a"><span class="vocab-word" data-word="mesóclise">Mesóclise</span> obrigatória</label>
+          <label class="correct-answer"><input type="radio" name="q7" value="b"><span class="vocab-word" data-word="próclise">Próclise</span>: “Não te direi…”</label>
+          <label><input type="radio" name="q7" value="c"><span class="vocab-word" data-word="artigo definido"><span class="vocab-word" data-word="artigo">Artigo</span> definido</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -911,8 +912,8 @@
           <div class="q">Iniciar frase com “Me conta…” na escrita formal é:</div>
           <div class="mc-options">
           <label><input type="radio" name="q8" value="a">Sempre a única forma culta</label>
-          <label class="correct-answer"><input type="radio" name="q8" value="b">Uso coloquial; a norma culta prefere ênclise ou outra construção</label>
-          <label><input type="radio" name="q8" value="c">Erro de crase</label>
+          <label class="correct-answer"><input type="radio" name="q8" value="b">Uso coloquial; a norma culta prefere <span class="vocab-word" data-word="ênclise">ênclise</span> ou outra construção</label>
+          <label><input type="radio" name="q8" value="c">Erro de <span class="vocab-word" data-word="crase">crase</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -926,14 +927,14 @@
         <details class="gabarito-box">
           <summary>📋 Gabarito comentado</summary>
           <div class="gabarito-list">
-          <div class="g-item"><b>Questão 1.</b> Em início de oração (norma culta), prefere-se:<br><span class="g-ans">Resposta: Ênclise: “Liga-me”</span><br>Na escrita formal, evita-se próclise em início absoluto de oração. Prefere-se ênclise (“Liga-me”, “Diga-me”) ou outra construção. “Me liga” é marcado como coloquial.</div>
-          <div class="g-item"><b>Questão 2.</b> Em início de oração (norma culta), prefere-se:<br><span class="g-ans">Resposta: Próclise</span><br>Palavras atrativas (negação, certos advérbios, relativos, indefinidos, subordinativas) puxam o oblíquo para antes do verbo → próclise (“Não me ligou”).</div>
-          <div class="g-item"><b>Questão 3.</b> Em início de oração (norma culta), prefere-se:<br><span class="g-ans">Resposta: Futuro do presente / futuro do pretérito</span><br>Mesóclise (pronome no meio do verbo) é típica do futuro do presente e do futuro do pretérito quando não há atrativo: dir-te-ei, far-se-ia.</div>
-          <div class="g-item"><b>Questão 4.</b> Em início de oração (norma culta), prefere-se:<br><span class="g-ans">Resposta: Próclise</span><br>“Não” atrai o pronome: Não <strong>me</strong> ligou (próclise), não “Não ligou-me” na preferência culta com atrativo.</div>
-          <div class="g-item"><b>Questão 5.</b> Em início de oração (norma culta), prefere-se:<br><span class="g-ans">Resposta: Ênclise</span><br>Ênclise = pronome depois do verbo, ligado por hífen na escrita: Diga-me, fez-se, contar-lhe.</div>
-          <div class="g-item"><b>Questão 6.</b> Em início de oração (norma culta), prefere-se:<br><span class="g-ans">Resposta: me, te, se, o, a, lhe…</span><br>Átonos oblíquos: me, te, se, o, a, lhe, nos, vos, os, as, lhes. Retos (eu, tu, ele) não se colocam por próclise/ênclise da mesma forma.</div>
-          <div class="g-item"><b>Questão 7.</b> Em início de oração (norma culta), prefere-se:<br><span class="g-ans">Resposta: Próclise: “Não te direi…”</span><br>Havendo atrativo, mesmo com futuro a próclise prevalece: “Não te direi nada” (não “Não dir-te-ei” com o atrativo ignorado).</div>
-          <div class="g-item"><b>Questão 8.</b> Em início de oração (norma culta), prefere-se:<br><span class="g-ans">Resposta: Uso coloquial; a norma culta prefere ênclise ou outra construção</span><br>O julgamento normativo escolar classifica a próclise em arranque de frase como inadequada à norma culta escrita, embora seja corrente na fala.</div>
+          <div class="g-item"><b>Questão 1.</b> Em início de <span class="vocab-word" data-word="oração">oração</span> (norma culta), prefere-se:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="ênclise">Ênclise</span>: “Liga-me”</span><br>Na escrita formal, evita-se <span class="vocab-word" data-word="próclise">próclise</span> em início absoluto de <span class="vocab-word" data-word="oração">oração</span>. Prefere-se <span class="vocab-word" data-word="ênclise">ênclise</span> (“Liga-me”, “Diga-me”) ou outra construção. “Me liga” é marcado como coloquial.</div>
+          <div class="g-item"><b>Questão 2.</b> Em início de <span class="vocab-word" data-word="oração">oração</span> (norma culta), prefere-se:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="próclise">Próclise</span></span><br>Palavras atrativas (negação, certos advérbios, relativos, indefinidos, subordinativas) puxam o oblíquo para antes do verbo → <span class="vocab-word" data-word="próclise">próclise</span> (“Não me ligou”).</div>
+          <div class="g-item"><b>Questão 3.</b> Em início de <span class="vocab-word" data-word="oração">oração</span> (norma culta), prefere-se:<br><span class="g-ans">Resposta: Futuro do presente / futuro do pretérito</span><br><span class="vocab-word" data-word="mesóclise">Mesóclise</span> (<span class="vocab-word" data-word="pronome">pronome</span> no meio do verbo) é típica do futuro do presente e do futuro do pretérito quando não há atrativo: dir-te-ei, far-se-ia.</div>
+          <div class="g-item"><b>Questão 4.</b> Em início de <span class="vocab-word" data-word="oração">oração</span> (norma culta), prefere-se:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="próclise">Próclise</span></span><br>“Não” atrai o <span class="vocab-word" data-word="pronome">pronome</span>: Não <strong>me</strong> ligou (<span class="vocab-word" data-word="próclise">próclise</span>), não “Não ligou-me” na preferência culta com atrativo.</div>
+          <div class="g-item"><b>Questão 5.</b> Em início de <span class="vocab-word" data-word="oração">oração</span> (norma culta), prefere-se:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="ênclise">Ênclise</span></span><br><span class="vocab-word" data-word="ênclise">Ênclise</span> = <span class="vocab-word" data-word="pronome">pronome</span> depois do verbo, ligado por <span class="vocab-word" data-word="hífen">hífen</span> na escrita: Diga-me, fez-se, contar-lhe.</div>
+          <div class="g-item"><b>Questão 6.</b> Em início de <span class="vocab-word" data-word="oração">oração</span> (norma culta), prefere-se:<br><span class="g-ans">Resposta: me, te, se, o, a, lhe…</span><br>Átonos oblíquos: me, te, se, o, a, lhe, nos, vos, os, as, lhes. Retos (eu, tu, ele) não se colocam por <span class="vocab-word" data-word="próclise">próclise</span>/<span class="vocab-word" data-word="ênclise">ênclise</span> da mesma forma.</div>
+          <div class="g-item"><b>Questão 7.</b> Em início de <span class="vocab-word" data-word="oração">oração</span> (norma culta), prefere-se:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="próclise">Próclise</span>: “Não te direi…”</span><br>Havendo atrativo, mesmo com futuro a <span class="vocab-word" data-word="próclise">próclise</span> prevalece: “Não te direi nada” (não “Não dir-te-ei” com o atrativo ignorado).</div>
+          <div class="g-item"><b>Questão 8.</b> Em início de <span class="vocab-word" data-word="oração">oração</span> (norma culta), prefere-se:<br><span class="g-ans">Resposta: Uso coloquial; a norma culta prefere <span class="vocab-word" data-word="ênclise">ênclise</span> ou outra construção</span><br>O julgamento normativo escolar classifica a <span class="vocab-word" data-word="próclise">próclise</span> em arranque de frase como inadequada à norma culta escrita, embora seja corrente na fala.</div>
           </div>
         </details>
         <div class="callout info" style="margin-top:28px;">

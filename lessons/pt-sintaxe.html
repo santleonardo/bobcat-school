@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="vocab-card.js"></script>
 <style>
 
 
@@ -699,7 +700,7 @@
 
 <div class="mobile-topbar">
   <button class="mt-btn" id="menuToggle" aria-label="Abrir sumário">☰ Capítulos</button>
-  <span class="mt-title">Sintaxe</span>
+  <span class="mt-title"><span class="vocab-word" data-word="sintaxe">Sintaxe</span></span>
   <a class="mt-btn" href="../index.html">🏠 App</a>
 </div>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
@@ -731,8 +732,8 @@
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Capítulo 2 de 10 · Gramática Aplicada</div>
-    <h2>🧩 Sintaxe<br><em>A estrutura e os termos da oração</em></h2>
-    <p>Sujeito, predicado, objetos e termos acessórios. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
+    <h2>🧩 <span class="vocab-word" data-word="sintaxe">Sintaxe</span><br><em>A estrutura e os termos da <span class="vocab-word" data-word="oração">oração</span></em></h2>
+    <p><span class="vocab-word" data-word="sujeito">Sujeito</span>, <span class="vocab-word" data-word="predicado">predicado</span>, objetos e termos acessórios. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Capítulo 2/10</span>
       <span class="badge">12 exercícios</span>
@@ -747,29 +748,29 @@
         <span class="section-num">2</span>
         <div class="section-title-block">
           <p class="section-label">Capítulo II</p>
-          <h2 class="section-title">Sintaxe</h2>
-          <p class="section-subtitle">A estrutura e os termos da oração</p>
+          <h2 class="section-title"><span class="vocab-word" data-word="sintaxe">Sintaxe</span></h2>
+          <p class="section-subtitle">A estrutura e os termos da <span class="vocab-word" data-word="oração">oração</span></p>
         </div>
       </div>
 
       <div class="prose">
-        <p>A sintaxe analisa como as palavras se combinam para formar frases, orações e períodos. Conhecer os termos sintáticos é indispensável para escrever com clareza e precisão.</p>
+        <p>A <span class="vocab-word" data-word="sintaxe">sintaxe</span> analisa como as palavras se combinam para formar frases, orações e períodos. Conhecer os termos sintáticos é indispensável para escrever com clareza e precisão.</p>
 
         <h3>Termos Essenciais</h3>
         <div class="ex-grid">
           <div class="ex-box gold">
-            <span class="ex-label">Sujeito</span>
+            <span class="ex-label"><span class="vocab-word" data-word="sujeito">Sujeito</span></span>
             <code>O aluno estudou bastante.</code>
             <small>"O aluno" — de quem se fala; pratica a ação do verbo</small>
           </div>
           <div class="ex-box gold">
-            <span class="ex-label">Predicado</span>
+            <span class="ex-label"><span class="vocab-word" data-word="predicado">Predicado</span></span>
             <code>O aluno <mark>estudou bastante</mark>.</code>
-            <small>Tudo que se diz sobre o sujeito</small>
+            <small>Tudo que se diz sobre o <span class="vocab-word" data-word="sujeito">sujeito</span></small>
           </div>
         </div>
 
-        <h4>Tipos de Sujeito</h4>
+        <h4>Tipos de <span class="vocab-word" data-word="sujeito">Sujeito</span></h4>
         <div class="tbl-wrap">
           <table>
             <thead>
@@ -786,30 +787,30 @@
         </div>
 
         <h3>Núcleo dos Termos Sintáticos</h3>
-        <p>Quase todo termo da oração pode ser <em>uma palavra só</em> ou <em>um grupo de palavras</em>. Quando é um grupo, uma dessas palavras é a mais importante — sem ela, o termo perde o sentido. Essa palavra central é o <strong>núcleo</strong>. As demais só existem para modificar, especificar ou complementar esse núcleo.</p>
+        <p>Quase todo termo da <span class="vocab-word" data-word="oração">oração</span> pode ser <em>uma palavra só</em> ou <em>um grupo de palavras</em>. Quando é um grupo, uma dessas palavras é a mais importante — sem ela, o termo perde o sentido. Essa palavra central é o <strong>núcleo</strong>. As demais só existem para modificar, especificar ou complementar esse núcleo.</p>
 
         <div class="callout gold">
           <strong>Como achar o núcleo</strong>
-          Retire mentalmente os artigos, adjetivos, pronomes e outros modificadores. A palavra que sobra — geralmente um substantivo, pronome ou, no caso do predicado verbal, o próprio verbo — é o núcleo.
+          Retire mentalmente os artigos, adjetivos, pronomes e outros modificadores. A palavra que sobra — geralmente um <span class="vocab-word" data-word="substantivo">substantivo</span>, <span class="vocab-word" data-word="pronome">pronome</span> ou, no caso do <span class="vocab-word" data-word="predicado verbal"><span class="vocab-word" data-word="predicado">predicado</span> verbal</span>, o próprio verbo — é o núcleo.
         </div>
 
-        <h4>Núcleo do Sujeito</h4>
-        <p>O <strong>núcleo do sujeito</strong> é o substantivo (ou pronome) central da frase que funciona como sujeito. Ele concorda em número e pessoa com o verbo — é justamente essa concordância que ajuda a encontrá-lo.</p>
+        <h4><span class="vocab-word" data-word="núcleo do sujeito">Núcleo do <span class="vocab-word" data-word="sujeito">Sujeito</span></span></h4>
+        <p>O <strong><span class="vocab-word" data-word="núcleo do sujeito">núcleo do <span class="vocab-word" data-word="sujeito">sujeito</span></span></strong> é o <span class="vocab-word" data-word="substantivo">substantivo</span> (ou <span class="vocab-word" data-word="pronome">pronome</span>) central da frase que funciona como <span class="vocab-word" data-word="sujeito">sujeito</span>. Ele concorda em número e pessoa com o verbo — é justamente essa <span class="vocab-word" data-word="concordância">concordância</span> que ajuda a encontrá-lo.</p>
         <div class="ex-grid">
           <div class="ex-box gold">
-            <span class="ex-label">Sujeito completo</span>
+            <span class="ex-label"><span class="vocab-word" data-word="sujeito">Sujeito</span> completo</span>
             <code>Os alunos mais dedicados da turma <mark>passaram</mark>.</code>
-            <small>Sujeito: "Os alunos mais dedicados da turma"</small>
+            <small><span class="vocab-word" data-word="sujeito">Sujeito</span>: "Os alunos mais dedicados da turma"</small>
           </div>
           <div class="ex-box correct">
-            <span class="ex-label">Núcleo do sujeito</span>
+            <span class="ex-label"><span class="vocab-word" data-word="núcleo do sujeito">Núcleo do <span class="vocab-word" data-word="sujeito">sujeito</span></span></span>
             <code>Os alunos mais dedicados da turma passaram.</code>
             <small>Núcleo: <strong>alunos</strong> — os demais termos ("os", "mais dedicados", "da turma") só o modificam</small>
           </div>
         </div>
         <div class="callout danger">
           <strong>Pegadinha clássica de prova</strong>
-          "Sujeito" e "núcleo do sujeito" são respostas diferentes! Em <em>"A capital do Brasil é linda."</em>, o sujeito inteiro é <mark>"A capital do Brasil"</mark>, mas o núcleo é só <strong>capital</strong> (não "Brasil" — que apenas especifica <em>de qual</em> capital se fala).
+          "<span class="vocab-word" data-word="sujeito">Sujeito</span>" e "<span class="vocab-word" data-word="núcleo do sujeito">núcleo do <span class="vocab-word" data-word="sujeito">sujeito</span></span>" são respostas diferentes! Em <em>"A capital do Brasil é linda."</em>, o <span class="vocab-word" data-word="sujeito">sujeito</span> inteiro é <mark>"A capital do Brasil"</mark>, mas o núcleo é só <strong>capital</strong> (não "Brasil" — que apenas especifica <em>de qual</em> capital se fala).
         </div>
 
         <h4>Núcleo em outros termos</h4>
@@ -819,48 +820,48 @@
               <tr><th>Termo</th><th>O que é o núcleo</th><th>Exemplo</th></tr>
             </thead>
             <tbody>
-              <tr><td><strong>Núcleo do predicado verbal</strong></td><td>O próprio verbo significativo</td><td><em>A criança <mark>dormiu</mark> cedo.</em> → núcleo: dormiu</td></tr>
-              <tr><td><strong>Núcleo do predicado nominal</strong></td><td>O predicativo (o adjetivo/substantivo ligado pelo verbo de ligação)</td><td><em>O dia está muito <mark>quente</mark>.</em> → núcleo: quente</td></tr>
-              <tr><td><strong>Núcleo do objeto direto</strong></td><td>O substantivo central do complemento</td><td><em>Comprei um lindo <mark>carro</mark> novo.</em> → núcleo: carro</td></tr>
-              <tr><td><strong>Núcleo do objeto indireto</strong></td><td>O substantivo regido pela preposição</td><td><em>Obedeço aos meus <mark>pais</mark>.</em> → núcleo: pais</td></tr>
-              <tr><td><strong>Núcleo do adjunto adnominal</strong></td><td>Quando o adjunto é uma locução, o substantivo dentro dela</td><td><em>Bolsa de <mark>couro</mark>.</em> → núcleo do adjunto: couro</td></tr>
-              <tr><td><strong>Núcleo do aposto</strong></td><td>O substantivo central da expressão explicativa</td><td><em>Machado, o maior <mark>romancista</mark> do país, nasceu no Rio.</em> → núcleo: romancista</td></tr>
+              <tr><td><strong>Núcleo do <span class="vocab-word" data-word="predicado verbal"><span class="vocab-word" data-word="predicado">predicado</span> verbal</span></strong></td><td>O próprio verbo significativo</td><td><em>A criança <mark>dormiu</mark> cedo.</em> → núcleo: dormiu</td></tr>
+              <tr><td><strong>Núcleo do <span class="vocab-word" data-word="predicado nominal"><span class="vocab-word" data-word="predicado">predicado</span> nominal</span></strong></td><td>O <span class="vocab-word" data-word="predicativo">predicativo</span> (o <span class="vocab-word" data-word="adjetivo">adjetivo</span>/<span class="vocab-word" data-word="substantivo">substantivo</span> ligado pelo <span class="vocab-word" data-word="verbo de ligação">verbo de ligação</span>)</td><td><em>O dia está muito <mark>quente</mark>.</em> → núcleo: quente</td></tr>
+              <tr><td><strong>Núcleo do <span class="vocab-word" data-word="objeto direto">objeto direto</span></strong></td><td>O <span class="vocab-word" data-word="substantivo">substantivo</span> central do complemento</td><td><em>Comprei um lindo <mark>carro</mark> novo.</em> → núcleo: carro</td></tr>
+              <tr><td><strong>Núcleo do <span class="vocab-word" data-word="objeto indireto">objeto indireto</span></strong></td><td>O <span class="vocab-word" data-word="substantivo">substantivo</span> regido pela <span class="vocab-word" data-word="preposição">preposição</span></td><td><em>Obedeço aos meus <mark>pais</mark>.</em> → núcleo: pais</td></tr>
+              <tr><td><strong>Núcleo do <span class="vocab-word" data-word="adjunto adnominal">adjunto adnominal</span></strong></td><td>Quando o adjunto é uma locução, o <span class="vocab-word" data-word="substantivo">substantivo</span> dentro dela</td><td><em>Bolsa de <mark>couro</mark>.</em> → núcleo do adjunto: couro</td></tr>
+              <tr><td><strong>Núcleo do <span class="vocab-word" data-word="aposto">aposto</span></strong></td><td>O <span class="vocab-word" data-word="substantivo">substantivo</span> central da expressão explicativa</td><td><em>Machado, o maior <mark>romancista</mark> do país, nasceu no Rio.</em> → núcleo: romancista</td></tr>
             </tbody>
           </table>
         </div>
 
         <div class="callout info">
           <strong>Atenção</strong>
-          O <em>adjunto adnominal</em> em si é sempre um modificador — ele não tem núcleo próprio quando é uma única palavra (como um adjetivo: <em>"casa <mark>grande</mark>"</em>). Só falamos em "núcleo do adjunto" quando ele é uma locução inteira (uma preposição + substantivo), como em "casa de campo".
+          O <em><span class="vocab-word" data-word="adjunto adnominal">adjunto adnominal</span></em> em si é sempre um modificador — ele não tem núcleo próprio quando é uma única palavra (como um <span class="vocab-word" data-word="adjetivo">adjetivo</span>: <em>"casa <mark>grande</mark>"</em>). Só falamos em "núcleo do adjunto" quando ele é uma locução inteira (uma <span class="vocab-word" data-word="preposição">preposição</span> + <span class="vocab-word" data-word="substantivo">substantivo</span>), como em "casa de campo".
         </div>
 
         <h3>Termos Integrantes</h3>
         <ul class="rule-list">
-          <li><strong>Objeto Direto (OD):</strong> complemento sem preposição — <em>Comprei <mark>um livro</mark>.</em></li>
-          <li><strong>Objeto Indireto (OI):</strong> complemento com preposição — <em>Gosto <mark>de música</mark>.</em></li>
-          <li><strong>Complemento Nominal:</strong> completa substantivo, adjetivo ou advérbio — <em>Tenho medo <mark>de altura</mark>.</em></li>
-          <li><strong>Agente da Passiva:</strong> pratica a ação na voz passiva — <em>O livro foi escrito <mark>por ela</mark>.</em></li>
+          <li><strong><span class="vocab-word" data-word="objeto direto">Objeto Direto</span> (OD):</strong> complemento sem <span class="vocab-word" data-word="preposição">preposição</span> — <em>Comprei <mark>um livro</mark>.</em></li>
+          <li><strong><span class="vocab-word" data-word="objeto indireto">Objeto Indireto</span> (OI):</strong> complemento com <span class="vocab-word" data-word="preposição">preposição</span> — <em>Gosto <mark>de música</mark>.</em></li>
+          <li><strong><span class="vocab-word" data-word="complemento nominal">Complemento Nominal</span>:</strong> completa <span class="vocab-word" data-word="substantivo">substantivo</span>, <span class="vocab-word" data-word="adjetivo">adjetivo</span> ou <span class="vocab-word" data-word="advérbio">advérbio</span> — <em>Tenho medo <mark>de altura</mark>.</em></li>
+          <li><strong><span class="vocab-word" data-word="agente da passiva">Agente da Passiva</span>:</strong> pratica a ação na <span class="vocab-word" data-word="voz passiva">voz passiva</span> — <em>O livro foi escrito <mark>por ela</mark>.</em></li>
         </ul>
 
         <h3>Termos Acessórios</h3>
         <div class="ex-grid">
           <div class="ex-box neutral">
-            <span class="ex-label">Adjunto Adnominal</span>
+            <span class="ex-label"><span class="vocab-word" data-word="adjunto adnominal">Adjunto Adnominal</span></span>
             <code>A <mark>bela</mark> <mark>jovem</mark> <mark>paulista</mark> sorriu.</code>
-            <small>Modifica o substantivo; não usa cópula</small>
+            <small>Modifica o <span class="vocab-word" data-word="substantivo">substantivo</span>; não usa cópula</small>
           </div>
           <div class="ex-box neutral">
-            <span class="ex-label">Adjunto Adverbial</span>
+            <span class="ex-label"><span class="vocab-word" data-word="adjunto adverbial">Adjunto Adverbial</span></span>
             <code>Ela chegou <mark>ontem</mark> <mark>à noite</mark>.</code>
-            <small>Modifica o verbo, adjetivo ou advérbio</small>
+            <small>Modifica o verbo, <span class="vocab-word" data-word="adjetivo">adjetivo</span> ou <span class="vocab-word" data-word="advérbio">advérbio</span></small>
           </div>
           <div class="ex-box neutral">
-            <span class="ex-label">Aposto</span>
+            <span class="ex-label"><span class="vocab-word" data-word="aposto">Aposto</span></span>
             <code>Machado de Assis, <mark>grande romancista</mark>, nasceu no Rio.</code>
             <small>Explica ou esclarece um termo anterior</small>
           </div>
           <div class="ex-box neutral">
-            <span class="ex-label">Vocativo</span>
+            <span class="ex-label"><span class="vocab-word" data-word="vocativo">Vocativo</span></span>
             <code><mark>João</mark>, venha aqui!</code>
             <small>Chama ou interpela alguém; isolado por vírgula</small>
           </div>
@@ -868,25 +869,25 @@
 
         <div class="callout info">
           <strong>Diferença importante</strong>
-          Predicativo do sujeito usa verbo de ligação (ser, estar, parecer, ficar…): <em>"Ela ficou feliz."</em> | Adjunto adnominal acompanha diretamente o substantivo: <em>"Ela tinha um rosto feliz."</em>
+          <span class="vocab-word" data-word="predicativo do sujeito"><span class="vocab-word" data-word="predicativo">Predicativo</span> do <span class="vocab-word" data-word="sujeito">sujeito</span></span> usa <span class="vocab-word" data-word="verbo de ligação">verbo de ligação</span> (ser, estar, parecer, ficar…): <em>"Ela ficou feliz."</em> | <span class="vocab-word" data-word="adjunto adnominal">Adjunto adnominal</span> acompanha diretamente o <span class="vocab-word" data-word="substantivo">substantivo</span>: <em>"Ela tinha um rosto feliz."</em>
         </div>
       </div>
     
 
       <div class="callout info">
         <strong>Como estudar este capítulo</strong>
-        Separe sujeito e predicado em frases curtas. Depois identifique objetos (direto/indireto) e termos acessórios (adjunto, aposto, vocativo).
+        Separe <span class="vocab-word" data-word="sujeito">sujeito</span> e <span class="vocab-word" data-word="predicado">predicado</span> em frases curtas. Depois identifique objetos (direto/indireto) e termos acessórios (adjunto, <span class="vocab-word" data-word="aposto">aposto</span>, <span class="vocab-word" data-word="vocativo">vocativo</span>).
       </div>
       <div class="prose">
         <h3>Perguntas-guia</h3>
-        <p><strong>Sujeito:</strong> de quem / do que se fala?</p>
-        <p><strong>Predicado:</strong> o que se diz a respeito do sujeito?</p>
-        <p><strong>OD:</strong> o verbo pede complemento <em>sem</em> preposição obrigatória?</p>
-        <p><strong>OI:</strong> o complemento vem <em>com</em> preposição exigida pelo verbo?</p>
+        <p><strong><span class="vocab-word" data-word="sujeito">Sujeito</span>:</strong> de quem / do que se fala?</p>
+        <p><strong><span class="vocab-word" data-word="predicado">Predicado</span>:</strong> o que se diz a respeito do <span class="vocab-word" data-word="sujeito">sujeito</span>?</p>
+        <p><strong>OD:</strong> o verbo pede complemento <em>sem</em> <span class="vocab-word" data-word="preposição">preposição</span> obrigatória?</p>
+        <p><strong>OI:</strong> o complemento vem <em>com</em> <span class="vocab-word" data-word="preposição">preposição</span> exigida pelo verbo?</p>
       </div>
       <div class="ex-grid">
-        <div class="ex-box neutral"><span class="ex-label">Análise</span><code>Maria comprou um livro.</code><small>Sujeito: Maria · OD: um livro</small></div>
-        <div class="ex-box neutral"><span class="ex-label">Análise</span><code>João, venha aqui!</code><small>Vocativo: João</small></div>
+        <div class="ex-box neutral"><span class="ex-label">Análise</span><code>Maria comprou um livro.</code><small><span class="vocab-word" data-word="sujeito">Sujeito</span>: Maria · OD: um livro</small></div>
+        <div class="ex-box neutral"><span class="ex-label">Análise</span><code>João, venha aqui!</code><small><span class="vocab-word" data-word="vocativo">Vocativo</span>: João</small></div>
       </div>
 
     </section>
@@ -897,14 +898,14 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Fixação deste capítulo — sintaxe</p>
+          <p class="section-subtitle">Fixação deste capítulo — <span class="vocab-word" data-word="sintaxe">sintaxe</span></p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no perfil (mínimo 85% para concluir a lição).</p>
+        <p>Escolha a alternativa correta. Ao finalizar, a <span class="vocab-word" data-word="pontuação">pontuação</span> é salva no perfil (mínimo 85% para concluir a lição).</p>
 
         <div class="mc-item">
-          <div class="q">Em <em>"Choveu muito ontem."</em>, o sujeito é:</div>
+          <div class="q">Em <em>"Choveu muito ontem."</em>, o <span class="vocab-word" data-word="sujeito">sujeito</span> é:</div>
           <div class="mc-options">
           <label><input type="radio" name="q1" value="a">Simples: “muito”</label>
           <label><input type="radio" name="q1" value="b">Oculto: “ele”</label>
@@ -917,10 +918,10 @@
         <div class="mc-item">
           <div class="q">Em <em>"Comprei um livro."</em>, “um livro” é:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q2" value="a">Objeto indireto</label>
-          <label class="correct-answer"><input type="radio" name="q2" value="b">Objeto direto</label>
-          <label><input type="radio" name="q2" value="c">Adjunto adverbial</label>
-          <label><input type="radio" name="q2" value="d">Predicativo</label>
+          <label><input type="radio" name="q2" value="a"><span class="vocab-word" data-word="objeto indireto">Objeto indireto</span></label>
+          <label class="correct-answer"><input type="radio" name="q2" value="b"><span class="vocab-word" data-word="objeto direto">Objeto direto</span></label>
+          <label><input type="radio" name="q2" value="c"><span class="vocab-word" data-word="adjunto adverbial">Adjunto adverbial</span></label>
+          <label><input type="radio" name="q2" value="d"><span class="vocab-word" data-word="predicativo">Predicativo</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -928,16 +929,16 @@
         <div class="mc-item">
           <div class="q">Em <em>"João, venha aqui!"</em>, “João” é:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q3" value="a">Sujeito</label>
-          <label><input type="radio" name="q3" value="b">Aposto</label>
-          <label class="correct-answer"><input type="radio" name="q3" value="c">Vocativo</label>
-          <label><input type="radio" name="q3" value="d">Objeto direto</label>
+          <label><input type="radio" name="q3" value="a"><span class="vocab-word" data-word="sujeito">Sujeito</span></label>
+          <label><input type="radio" name="q3" value="b"><span class="vocab-word" data-word="aposto">Aposto</span></label>
+          <label class="correct-answer"><input type="radio" name="q3" value="c"><span class="vocab-word" data-word="vocativo">Vocativo</span></label>
+          <label><input type="radio" name="q3" value="d"><span class="vocab-word" data-word="objeto direto">Objeto direto</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">O predicado de <em>"Ela chegou cansada."</em> é:</div>
+          <div class="q">O <span class="vocab-word" data-word="predicado">predicado</span> de <em>"Ela chegou cansada."</em> é:</div>
           <div class="mc-options">
           <label><input type="radio" name="q4" value="a">Verbal</label>
           <label><input type="radio" name="q4" value="b">Nominal</label>
@@ -950,21 +951,21 @@
         <div class="mc-item">
           <div class="q">Em <em>"Gosto de música."</em>, “de música” é tipicamente:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q5" value="a">Objeto direto</label>
-          <label class="correct-answer"><input type="radio" name="q5" value="b">Objeto indireto</label>
-          <label><input type="radio" name="q5" value="c">Vocativo</label>
-          <label><input type="radio" name="q5" value="d">Artigo</label>
+          <label><input type="radio" name="q5" value="a"><span class="vocab-word" data-word="objeto direto">Objeto direto</span></label>
+          <label class="correct-answer"><input type="radio" name="q5" value="b"><span class="vocab-word" data-word="objeto indireto">Objeto indireto</span></label>
+          <label><input type="radio" name="q5" value="c"><span class="vocab-word" data-word="vocativo">Vocativo</span></label>
+          <label><input type="radio" name="q5" value="d"><span class="vocab-word" data-word="artigo">Artigo</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">“Pedro e Ana chegaram” tem sujeito:</div>
+          <div class="q">“Pedro e Ana chegaram” tem <span class="vocab-word" data-word="sujeito">sujeito</span>:</div>
           <div class="mc-options">
           <label><input type="radio" name="q6" value="a">Simples</label>
           <label class="correct-answer"><input type="radio" name="q6" value="b">Composto</label>
           <label><input type="radio" name="q6" value="c">Inexistente</label>
-          <label><input type="radio" name="q6" value="d">Só predicativo</label>
+          <label><input type="radio" name="q6" value="d">Só <span class="vocab-word" data-word="predicativo">predicativo</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -972,27 +973,27 @@
         <div class="mc-item">
           <div class="q">Em <em>"Machado de Assis, grande romancista, nasceu no Rio."</em>, o trecho entre vírgulas é:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q7" value="a">Vocativo</label>
-          <label class="correct-answer"><input type="radio" name="q7" value="b">Aposto</label>
-          <label><input type="radio" name="q7" value="c">Objeto direto</label>
-          <label><input type="radio" name="q7" value="d">Agente da passiva</label>
+          <label><input type="radio" name="q7" value="a"><span class="vocab-word" data-word="vocativo">Vocativo</span></label>
+          <label class="correct-answer"><input type="radio" name="q7" value="b"><span class="vocab-word" data-word="aposto">Aposto</span></label>
+          <label><input type="radio" name="q7" value="c"><span class="vocab-word" data-word="objeto direto">Objeto direto</span></label>
+          <label><input type="radio" name="q7" value="d"><span class="vocab-word" data-word="agente da passiva">Agente da passiva</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Adjunto adverbial modifica principalmente:</div>
+          <div class="q"><span class="vocab-word" data-word="adjunto adverbial">Adjunto adverbial</span> modifica principalmente:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q8" value="a">Só o artigo</label>
-          <label class="correct-answer"><input type="radio" name="q8" value="b">Verbo, adjetivo ou advérbio</label>
-          <label><input type="radio" name="q8" value="c">Só o substantivo sem verbo</label>
-          <label><input type="radio" name="q8" value="d">Só a interjeição</label>
+          <label><input type="radio" name="q8" value="a">Só o <span class="vocab-word" data-word="artigo">artigo</span></label>
+          <label class="correct-answer"><input type="radio" name="q8" value="b">Verbo, <span class="vocab-word" data-word="adjetivo">adjetivo</span> ou <span class="vocab-word" data-word="advérbio">advérbio</span></label>
+          <label><input type="radio" name="q8" value="c">Só o <span class="vocab-word" data-word="substantivo">substantivo</span> sem verbo</label>
+          <label><input type="radio" name="q8" value="d">Só a <span class="vocab-word" data-word="interjeição">interjeição</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Em <em>"Adjunto adverbial modifica principalmente:"</em> — considerando o exemplo <em>"Os alunos mais dedicados da turma passaram."</em>, o <strong>núcleo do sujeito</strong> é:</div>
+          <div class="q">Em <em>"<span class="vocab-word" data-word="adjunto adverbial">Adjunto adverbial</span> modifica principalmente:"</em> — considerando o exemplo <em>"Os alunos mais dedicados da turma passaram."</em>, o <strong><span class="vocab-word" data-word="núcleo do sujeito">núcleo do <span class="vocab-word" data-word="sujeito">sujeito</span></span></strong> é:</div>
           <div class="mc-options">
           <label><input type="radio" name="q9" value="a">turma</label>
           <label class="correct-answer"><input type="radio" name="q9" value="b">alunos</label>
@@ -1003,7 +1004,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Em <em>"A capital do Brasil é linda."</em>, o núcleo do sujeito é:</div>
+          <div class="q">Em <em>"A capital do Brasil é linda."</em>, o <span class="vocab-word" data-word="núcleo do sujeito">núcleo do <span class="vocab-word" data-word="sujeito">sujeito</span></span> é:</div>
           <div class="mc-options">
           <label><input type="radio" name="q10" value="a">Brasil</label>
           <label class="correct-answer"><input type="radio" name="q10" value="b">capital</label>
@@ -1014,7 +1015,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Em <em>"Comprei um lindo carro novo."</em>, o núcleo do objeto direto é:</div>
+          <div class="q">Em <em>"Comprei um lindo carro novo."</em>, o núcleo do <span class="vocab-word" data-word="objeto direto">objeto direto</span> é:</div>
           <div class="mc-options">
           <label><input type="radio" name="q11" value="a">lindo</label>
           <label><input type="radio" name="q11" value="b">novo</label>
@@ -1025,7 +1026,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Em <em>"O dia está muito quente."</em>, o núcleo do predicado (nominal) é:</div>
+          <div class="q">Em <em>"O dia está muito quente."</em>, o núcleo do <span class="vocab-word" data-word="predicado">predicado</span> (nominal) é:</div>
           <div class="mc-options">
           <label><input type="radio" name="q12" value="a">dia</label>
           <label><input type="radio" name="q12" value="b">está</label>
@@ -1044,18 +1045,18 @@
         <details class="gabarito-box">
           <summary>📋 Gabarito comentado</summary>
           <div class="gabarito-list">
-          <div class="g-item"><b>Questão 1.</b> Em "Choveu muito ontem.", o sujeito é:<br><span class="g-ans">Resposta: Inexistente (verbo impessoal)</span><br>Verbos impessoais de fenômeno (chover, haver em sentido de existir, fazer de tempo) não têm sujeito actante. Em “Choveu muito ontem”, não há “alguém que chove” → sujeito inexistente.</div>
-          <div class="g-item"><b>Questão 2.</b> Em "Choveu muito ontem.", o sujeito é:<br><span class="g-ans">Resposta: Objeto direto</span><br>Objeto direto completa verbo transitivo direto sem preposição obrigatória: comprei <strong>um livro</strong>. Objeto indireto viria com preposição exigida (gosto <strong>de</strong> música).</div>
-          <div class="g-item"><b>Questão 3.</b> Em "Choveu muito ontem.", o sujeito é:<br><span class="g-ans">Resposta: Vocativo</span><br>Vocativo chama o interlocutor e isolado por vírgula: “João, venha aqui!”. Não é sujeito de “venha” na mesma estrutura de declaração; é termo independente de chamamento.</div>
-          <div class="g-item"><b>Questão 4.</b> Em "Choveu muito ontem.", o sujeito é:<br><span class="g-ans">Resposta: Verbo-nominal</span><br>Predicado verbo-nominal combina verbo significativo + predicativo: “chegou” (processo) + “cansada” (estado do sujeito). Predicado só verbal não traria predicativo; só nominal giraria em torno de verbo de ligação.</div>
-          <div class="g-item"><b>Questão 5.</b> Em "Choveu muito ontem.", o sujeito é:<br><span class="g-ans">Resposta: Objeto indireto</span><br>Com regência de, o complemento de gostar é objeto indireto: gosto <strong>de música</strong>. A preposição é exigência do verbo, não mero adjunto livre.</div>
-          <div class="g-item"><b>Questão 6.</b> Em "Choveu muito ontem.", o sujeito é:<br><span class="g-ans">Resposta: Composto</span><br>Sujeito composto tem mais de um núcleo: Pedro <strong>e</strong> Ana. Sujeito simples tem um só núcleo (“Pedro chegou”).</div>
-          <div class="g-item"><b>Questão 7.</b> Em "Choveu muito ontem.", o sujeito é:<br><span class="g-ans">Resposta: Aposto</span><br>Aposto explica ou identifica o termo anterior: “Machado de Assis, <strong>grande romancista</strong>, …”. Vocativo chamaria o ouvinte; não explica o nome próprio nessa estrutura.</div>
-          <div class="g-item"><b>Questão 8.</b> Em "Choveu muito ontem.", o sujeito é:<br><span class="g-ans">Resposta: Verbo, adjetivo ou advérbio</span><br>Adjunto adverbial expressa circunstância (tempo, modo, lugar…) e modifica verbo, adjetivo ou advérbio — não é complemento selecionado como OD/OI, embora às vezes a fronteira exija análise fina.</div>
-          <div class="g-item"><b>Questão 9.</b> Em "Os alunos mais dedicados da turma passaram.", o núcleo do sujeito é:<br><span class="g-ans">Resposta: alunos</span><br>O núcleo é a palavra central do sujeito, com a qual o verbo concorda. "Os", "mais dedicados" e "da turma" são só modificadores de "alunos" — o sujeito inteiro é a frase toda, mas o núcleo é uma palavra só.</div>
-          <div class="g-item"><b>Questão 10.</b> Em "A capital do Brasil é linda.", o núcleo do sujeito é:<br><span class="g-ans">Resposta: capital</span><br>"Brasil" apenas especifica de qual capital se fala (é um adjunto adnominal em forma de locução); o núcleo continua sendo "capital", que concorda com o verbo "é".</div>
-          <div class="g-item"><b>Questão 11.</b> Em "Comprei um lindo carro novo.", o núcleo do objeto direto é:<br><span class="g-ans">Resposta: carro</span><br>"Um", "lindo" e "novo" modificam o substantivo "carro", que é o núcleo do objeto direto — a palavra que realmente sofre a ação de "comprei".</div>
-          <div class="g-item"><b>Questão 12.</b> Em "O dia está muito quente.", o núcleo do predicado (nominal) é:<br><span class="g-ans">Resposta: quente</span><br>No predicado nominal, o núcleo não é o verbo de ligação ("está"), e sim o predicativo do sujeito — a palavra que efetivamente descreve o sujeito.</div>
+          <div class="g-item"><b>Questão 1.</b> Em "Choveu muito ontem.", o <span class="vocab-word" data-word="sujeito">sujeito</span> é:<br><span class="g-ans">Resposta: Inexistente (verbo impessoal)</span><br>Verbos impessoais de fenômeno (chover, haver em sentido de existir, fazer de tempo) não têm <span class="vocab-word" data-word="sujeito">sujeito</span> actante. Em “Choveu muito ontem”, não há “alguém que chove” → <span class="vocab-word" data-word="sujeito">sujeito</span> inexistente.</div>
+          <div class="g-item"><b>Questão 2.</b> Em "Choveu muito ontem.", o <span class="vocab-word" data-word="sujeito">sujeito</span> é:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="objeto direto">Objeto direto</span></span><br><span class="vocab-word" data-word="objeto direto">Objeto direto</span> completa <span class="vocab-word" data-word="verbo transitivo">verbo <span class="vocab-word" data-word="transitivo">transitivo</span></span> direto sem <span class="vocab-word" data-word="preposição">preposição</span> obrigatória: comprei <strong>um livro</strong>. <span class="vocab-word" data-word="objeto indireto">Objeto indireto</span> viria com <span class="vocab-word" data-word="preposição">preposição</span> exigida (gosto <strong>de</strong> música).</div>
+          <div class="g-item"><b>Questão 3.</b> Em "Choveu muito ontem.", o <span class="vocab-word" data-word="sujeito">sujeito</span> é:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="vocativo">Vocativo</span></span><br><span class="vocab-word" data-word="vocativo">Vocativo</span> chama o interlocutor e isolado por vírgula: “João, venha aqui!”. Não é <span class="vocab-word" data-word="sujeito">sujeito</span> de “venha” na mesma estrutura de declaração; é termo independente de chamamento.</div>
+          <div class="g-item"><b>Questão 4.</b> Em "Choveu muito ontem.", o <span class="vocab-word" data-word="sujeito">sujeito</span> é:<br><span class="g-ans">Resposta: Verbo-nominal</span><br><span class="vocab-word" data-word="predicado verbo-nominal"><span class="vocab-word" data-word="predicado">Predicado</span> verbo-nominal</span> combina verbo significativo + <span class="vocab-word" data-word="predicativo">predicativo</span>: “chegou” (processo) + “cansada” (estado do <span class="vocab-word" data-word="sujeito">sujeito</span>). <span class="vocab-word" data-word="predicado">Predicado</span> só verbal não traria <span class="vocab-word" data-word="predicativo">predicativo</span>; só nominal giraria em torno de <span class="vocab-word" data-word="verbo de ligação">verbo de ligação</span>.</div>
+          <div class="g-item"><b>Questão 5.</b> Em "Choveu muito ontem.", o <span class="vocab-word" data-word="sujeito">sujeito</span> é:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="objeto indireto">Objeto indireto</span></span><br>Com <span class="vocab-word" data-word="regência">regência</span> de, o complemento de gostar é <span class="vocab-word" data-word="objeto indireto">objeto indireto</span>: gosto <strong>de música</strong>. A <span class="vocab-word" data-word="preposição">preposição</span> é exigência do verbo, não mero adjunto livre.</div>
+          <div class="g-item"><b>Questão 6.</b> Em "Choveu muito ontem.", o <span class="vocab-word" data-word="sujeito">sujeito</span> é:<br><span class="g-ans">Resposta: Composto</span><br><span class="vocab-word" data-word="sujeito">Sujeito</span> composto tem mais de um núcleo: Pedro <strong>e</strong> Ana. <span class="vocab-word" data-word="sujeito">Sujeito</span> simples tem um só núcleo (“Pedro chegou”).</div>
+          <div class="g-item"><b>Questão 7.</b> Em "Choveu muito ontem.", o <span class="vocab-word" data-word="sujeito">sujeito</span> é:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="aposto">Aposto</span></span><br><span class="vocab-word" data-word="aposto">Aposto</span> explica ou identifica o termo anterior: “Machado de Assis, <strong>grande romancista</strong>, …”. <span class="vocab-word" data-word="vocativo">Vocativo</span> chamaria o ouvinte; não explica o nome próprio nessa estrutura.</div>
+          <div class="g-item"><b>Questão 8.</b> Em "Choveu muito ontem.", o <span class="vocab-word" data-word="sujeito">sujeito</span> é:<br><span class="g-ans">Resposta: Verbo, <span class="vocab-word" data-word="adjetivo">adjetivo</span> ou <span class="vocab-word" data-word="advérbio">advérbio</span></span><br><span class="vocab-word" data-word="adjunto adverbial">Adjunto adverbial</span> expressa circunstância (tempo, modo, lugar…) e modifica verbo, <span class="vocab-word" data-word="adjetivo">adjetivo</span> ou <span class="vocab-word" data-word="advérbio">advérbio</span> — não é complemento selecionado como OD/OI, embora às vezes a fronteira exija análise fina.</div>
+          <div class="g-item"><b>Questão 9.</b> Em "Os alunos mais dedicados da turma passaram.", o <span class="vocab-word" data-word="núcleo do sujeito">núcleo do <span class="vocab-word" data-word="sujeito">sujeito</span></span> é:<br><span class="g-ans">Resposta: alunos</span><br>O núcleo é a palavra central do <span class="vocab-word" data-word="sujeito">sujeito</span>, com a qual o verbo concorda. "Os", "mais dedicados" e "da turma" são só modificadores de "alunos" — o <span class="vocab-word" data-word="sujeito">sujeito</span> inteiro é a frase toda, mas o núcleo é uma palavra só.</div>
+          <div class="g-item"><b>Questão 10.</b> Em "A capital do Brasil é linda.", o <span class="vocab-word" data-word="núcleo do sujeito">núcleo do <span class="vocab-word" data-word="sujeito">sujeito</span></span> é:<br><span class="g-ans">Resposta: capital</span><br>"Brasil" apenas especifica de qual capital se fala (é um <span class="vocab-word" data-word="adjunto adnominal">adjunto adnominal</span> em forma de locução); o núcleo continua sendo "capital", que concorda com o verbo "é".</div>
+          <div class="g-item"><b>Questão 11.</b> Em "Comprei um lindo carro novo.", o núcleo do <span class="vocab-word" data-word="objeto direto">objeto direto</span> é:<br><span class="g-ans">Resposta: carro</span><br>"Um", "lindo" e "novo" modificam o <span class="vocab-word" data-word="substantivo">substantivo</span> "carro", que é o núcleo do <span class="vocab-word" data-word="objeto direto">objeto direto</span> — a palavra que realmente sofre a ação de "comprei".</div>
+          <div class="g-item"><b>Questão 12.</b> Em "O dia está muito quente.", o núcleo do <span class="vocab-word" data-word="predicado">predicado</span> (nominal) é:<br><span class="g-ans">Resposta: quente</span><br>No <span class="vocab-word" data-word="predicado nominal"><span class="vocab-word" data-word="predicado">predicado</span> nominal</span>, o núcleo não é o <span class="vocab-word" data-word="verbo de ligação">verbo de ligação</span> ("está"), e sim o <span class="vocab-word" data-word="predicativo do sujeito"><span class="vocab-word" data-word="predicativo">predicativo</span> do <span class="vocab-word" data-word="sujeito">sujeito</span></span> — a palavra que efetivamente descreve o <span class="vocab-word" data-word="sujeito">sujeito</span>.</div>
           </div>
         </details>
         <div class="callout info" style="margin-top:28px;">

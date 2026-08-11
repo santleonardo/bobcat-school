@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="vocab-card.js"></script>
 <style>
 
 
@@ -699,7 +700,7 @@
 
 <div class="mobile-topbar">
   <button class="mt-btn" id="menuToggle" aria-label="Abrir sumário">☰ Capítulos</button>
-  <span class="mt-title">Ortografia</span>
+  <span class="mt-title"><span class="vocab-word" data-word="ortografia">Ortografia</span></span>
   <a class="mt-btn" href="../index.html">🏠 App</a>
 </div>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
@@ -731,8 +732,8 @@
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Capítulo 8 de 10 · Gramática Aplicada</div>
-    <h2>📝 Ortografia<br><em>Grafias, dígrafos e as dúvidas mais comuns</em></h2>
-    <p>Uso de S, Z, X, CH, G, J, H e hífen. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
+    <h2>📝 <span class="vocab-word" data-word="ortografia">Ortografia</span><br><em>Grafias, dígrafos e as dúvidas mais comuns</em></h2>
+    <p>Uso de S, Z, X, CH, G, J, H e <span class="vocab-word" data-word="hífen">hífen</span>. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Capítulo 8/10</span>
       <span class="badge">8 exercícios</span>
@@ -747,25 +748,25 @@
         <span class="section-num">8</span>
         <div class="section-title-block">
           <p class="section-label">Capítulo VIII</p>
-          <h2 class="section-title">Ortografia</h2>
+          <h2 class="section-title"><span class="vocab-word" data-word="ortografia">Ortografia</span></h2>
           <p class="section-subtitle">Grafias, dígrafos e as dúvidas mais comuns</p>
         </div>
       </div>
 
       <div class="prose">
-        <p>A ortografia trata da grafia correta das palavras. O Novo Acordo Ortográfico de 2009 unificou a escrita nos países lusófonos, trazendo mudanças que ainda geram dúvidas.</p>
+        <p>A <span class="vocab-word" data-word="ortografia">ortografia</span> trata da grafia correta das palavras. O Novo Acordo Ortográfico de 2009 unificou a escrita nos países lusófonos, trazendo mudanças que ainda geram dúvidas.</p>
 
         <h3>Uso do S, Z, X, CH, SS</h3>
         <div class="tbl-wrap">
           <table>
             <thead>
-              <tr><th>Letra / dígrafo</th><th>Regra principal</th><th>Exemplos</th></tr>
+              <tr><th>Letra / <span class="vocab-word" data-word="dígrafo">dígrafo</span></th><th>Regra principal</th><th>Exemplos</th></tr>
             </thead>
             <tbody>
               <tr><td><strong>S (som /z/)</strong></td><td>Entre vogais, após dif. vogal + cons.</td><td><em>casa, mesa, camisa</em></td></tr>
               <tr><td><strong>Z</strong></td><td>Raízes com z; sufixos -izar, -ização</td><td><em>beleza, civilização, realizar</em></td></tr>
               <tr><td><strong>SS</strong></td><td>Entre vogais, som /s/ forte</td><td><em>passo, missão, assunto</em></td></tr>
-              <tr><td><strong>X (som /ʃ/)</strong></td><td>Após ditongo; início palavras indígenas/africanas</td><td><em>caixote, beijo (não!), xadrez</em></td></tr>
+              <tr><td><strong>X (som /ʃ/)</strong></td><td>Após <span class="vocab-word" data-word="ditongo">ditongo</span>; início palavras indígenas/africanas</td><td><em>caixote, beijo (não!), xadrez</em></td></tr>
               <tr><td><strong>CH</strong></td><td>Palavras de origem grega/italiana</td><td><em>chave, chocolate, cheque</em></td></tr>
             </tbody>
           </table>
@@ -804,18 +805,18 @@
           </div>
         </div>
 
-        <h3>Hífen — Principais Regras (Novo Acordo)</h3>
+        <h3><span class="vocab-word" data-word="hífen">Hífen</span> — Principais Regras (Novo Acordo)</h3>
         <ul class="rule-list">
-          <li><strong>Prefixo + H:</strong> usa hífen — <em>anti-higiênico, super-herói</em></li>
-          <li><strong>Prefixo com mesma letra final/inicial:</strong> usa hífen — <em>micro-ondas, anti-inflamatório</em></li>
-          <li><strong>Prefixo "sub" + b:</strong> usa hífen — <em>sub-base</em></li>
-          <li><strong>Prefixo + vogal (regra geral):</strong> sem hífen — <em>antiaéreo, superamigo, autoescola</em></li>
-          <li><strong>Prefixo + consoante (não r, s):</strong> sem hífen — <em>anteprojeto, semicírculo</em></li>
+          <li><strong>Prefixo + H:</strong> usa <span class="vocab-word" data-word="hífen">hífen</span> — <em>anti-higiênico, super-herói</em></li>
+          <li><strong>Prefixo com mesma letra final/inicial:</strong> usa <span class="vocab-word" data-word="hífen">hífen</span> — <em>micro-ondas, anti-inflamatório</em></li>
+          <li><strong>Prefixo "sub" + b:</strong> usa <span class="vocab-word" data-word="hífen">hífen</span> — <em>sub-base</em></li>
+          <li><strong>Prefixo + vogal (regra geral):</strong> sem <span class="vocab-word" data-word="hífen">hífen</span> — <em>antiaéreo, superamigo, autoescola</em></li>
+          <li><strong>Prefixo + consoante (não r, s):</strong> sem <span class="vocab-word" data-word="hífen">hífen</span> — <em>anteprojeto, semicírculo</em></li>
         </ul>
 
         <div class="callout danger">
           <strong>Mudança importante do Acordo de 2009</strong>
-          <em>Autoescola</em> (antes: auto-escola) e <em>socioeconômico</em> perderam o hífen. Mas <em>auto-retrato</em> tornou-se <em>autorretrato</em> (aglutinação). Consulte sempre o vocabulário ortográfico oficial (VOLP) em casos de dúvida.
+          <em>Autoescola</em> (antes: auto-escola) e <em>socioeconômico</em> perderam o <span class="vocab-word" data-word="hífen">hífen</span>. Mas <em>auto-retrato</em> tornou-se <em>autorretrato</em> (aglutinação). Consulte sempre o vocabulário ortográfico oficial (VOLP) em casos de dúvida.
         </div>
       </div>
     
@@ -825,8 +826,8 @@
         Monte mini-listas de dúvida (s/z, g/j, x/ch) e revise com frases suas, não só com listas isoladas.
       </div>
       <div class="prose">
-        <h3>Hífen (núcleo do Acordo)</h3>
-        <p>Prefixo + H → hífen (<em>anti-higiênico</em>). Mesma vogal em encontro → hífen (<em>micro-ondas</em>). Muitos casos sem hífen: <em>autoescola, antiaéreo</em>.</p>
+        <h3><span class="vocab-word" data-word="hífen">Hífen</span> (núcleo do Acordo)</h3>
+        <p>Prefixo + H → <span class="vocab-word" data-word="hífen">hífen</span> (<em>anti-higiênico</em>). Mesma vogal em encontro → <span class="vocab-word" data-word="hífen">hífen</span> (<em>micro-ondas</em>). Muitos casos sem <span class="vocab-word" data-word="hífen">hífen</span>: <em>autoescola, antiaéreo</em>.</p>
         <p>Consulte o VOLP em dúvidas finas — a regra geral ajuda, mas o léxico oficial decide casos-limite.</p>
       </div>
 
@@ -838,11 +839,11 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Fixação deste capítulo — ortografia</p>
+          <p class="section-subtitle">Fixação deste capítulo — <span class="vocab-word" data-word="ortografia">ortografia</span></p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no perfil (mínimo 85% para concluir a lição).</p>
+        <p>Escolha a alternativa correta. Ao finalizar, a <span class="vocab-word" data-word="pontuação">pontuação</span> é salva no perfil (mínimo 85% para concluir a lição).</p>
 
         <div class="mc-item">
           <div class="q">A grafia correta é:</div>
@@ -899,7 +900,7 @@
           <div class="mc-options">
           <label><input type="radio" name="q6" value="a">Com grafia irregular inventada</label>
           <label class="correct-answer"><input type="radio" name="q6" value="b">Nas formas corretas usuais</label>
-          <label><input type="radio" name="q6" value="c">Sempre com hífen</label>
+          <label><input type="radio" name="q6" value="c">Sempre com <span class="vocab-word" data-word="hífen">hífen</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -907,8 +908,8 @@
         <div class="mc-item">
           <div class="q">Micro + ondas:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q7" value="a">microondas (sem hífen sempre)</label>
-          <label class="correct-answer"><input type="radio" name="q7" value="b">micro-ondas (hífen pela mesma vogal)</label>
+          <label><input type="radio" name="q7" value="a">microondas (sem <span class="vocab-word" data-word="hífen">hífen</span> sempre)</label>
+          <label class="correct-answer"><input type="radio" name="q7" value="b">micro-ondas (<span class="vocab-word" data-word="hífen">hífen</span> pela mesma vogal)</label>
           <label><input type="radio" name="q7" value="c">micro ondas</label>
           </div>
         
@@ -917,7 +918,7 @@
         <div class="mc-item">
           <div class="q">O VOLP serve para:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q8" value="a">Só regras de crase</label>
+          <label><input type="radio" name="q8" value="a">Só regras de <span class="vocab-word" data-word="crase">crase</span></label>
           <label class="correct-answer"><input type="radio" name="q8" value="b">Consultar a grafia oficial em dúvidas</label>
           <label><input type="radio" name="q8" value="c">Só conjugação verbal</label>
           </div>
@@ -934,12 +935,12 @@
           <summary>📋 Gabarito comentado</summary>
           <div class="gabarito-list">
           <div class="g-item"><b>Questão 1.</b> A grafia correta é:<br><span class="g-ans">Resposta: adivinhar</span><br>A grafia correta é <strong>adivinhar</strong> (com i). “Advinhar” é erro ortográfico frequente, mas não standard.</div>
-          <div class="g-item"><b>Questão 2.</b> A grafia correta é:<br><span class="g-ans">Resposta: autoescola</span><br>Pelo Acordo de 2009, autoescola, autossustentável, infraestrutura etc. perderam hífen em vários encontros em que a regra nova não o exige. “Auto-escola” ficou ultrapassada.</div>
-          <div class="g-item"><b>Questão 3.</b> A grafia correta é:<br><span class="g-ans">Resposta: CH</span><br>O dígrafo CH aparece em chave, chuva, chocolate, chamamento. Não se troca por X nessas bases.</div>
-          <div class="g-item"><b>Questão 4.</b> A grafia correta é:<br><span class="g-ans">Resposta: anti-higiênico</span><br>Regra produtiva: prefixo terminado em vogal + palavra iniciada por H → hífen (anti-higiênico, super-homem).</div>
+          <div class="g-item"><b>Questão 2.</b> A grafia correta é:<br><span class="g-ans">Resposta: autoescola</span><br>Pelo Acordo de 2009, autoescola, autossustentável, infraestrutura etc. perderam <span class="vocab-word" data-word="hífen">hífen</span> em vários encontros em que a regra nova não o exige. “Auto-escola” ficou ultrapassada.</div>
+          <div class="g-item"><b>Questão 3.</b> A grafia correta é:<br><span class="g-ans">Resposta: CH</span><br>O <span class="vocab-word" data-word="dígrafo">dígrafo</span> CH aparece em chave, chuva, chocolate, chamamento. Não se troca por X nessas bases.</div>
+          <div class="g-item"><b>Questão 4.</b> A grafia correta é:<br><span class="g-ans">Resposta: anti-higiênico</span><br>Regra produtiva: prefixo terminado em vogal + palavra iniciada por H → <span class="vocab-word" data-word="hífen">hífen</span> (anti-higiênico, super-homem).</div>
           <div class="g-item"><b>Questão 5.</b> A grafia correta é:<br><span class="g-ans">Resposta: ss (passo, missão)</span><br>Entre vogais, o som /s/ “forte” costuma graficar-se com <strong>ss</strong> (passo, missão, assunto), distinguindo-se do /z/ de “casa”.</div>
           <div class="g-item"><b>Questão 6.</b> A grafia correta é:<br><span class="g-ans">Resposta: Nas formas corretas usuais</span><br>Exceção (com ç) e estrangeiro (com e após str) são as formas corretas; hipercorreções geram grafias inventadas.</div>
-          <div class="g-item"><b>Questão 7.</b> A grafia correta é:<br><span class="g-ans">Resposta: micro-ondas (hífen pela mesma vogal)</span><br>Encontro de vogais iguais na fronteira do prefixo favorece hífen: micro-ondas, anti-inflamatório. A regra visa legibilidade e padrão oficial.</div>
+          <div class="g-item"><b>Questão 7.</b> A grafia correta é:<br><span class="g-ans">Resposta: micro-ondas (<span class="vocab-word" data-word="hífen">hífen</span> pela mesma vogal)</span><br>Encontro de vogais iguais na fronteira do prefixo favorece <span class="vocab-word" data-word="hífen">hífen</span>: micro-ondas, anti-inflamatório. A regra visa legibilidade e padrão oficial.</div>
           <div class="g-item"><b>Questão 8.</b> A grafia correta é:<br><span class="g-ans">Resposta: Consultar a grafia oficial em dúvidas</span><br>O Vocabulário Ortográfico da Língua Portuguesa (VOLP) é a referência lexical oficial para dirimir dúvidas de grafia e hifenização.</div>
           </div>
         </details>

@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="vocab-card.js"></script>
 <style>
   :root {
     --ink:        #2B2D42;
@@ -634,7 +635,7 @@
     <div class="hero-eyebrow">Gramática Aplicada · Nível Introdutório</div>
     <h2>Manual Básico de<br><em>Classes Gramaticais</em></h2>
     <p>
-      O que é substantivo, verbo, pronome e as outras classes — do jeito simples,
+      O que é <span class="vocab-word" data-word="substantivo">substantivo</span>, verbo, <span class="vocab-word" data-word="pronome">pronome</span> e as outras classes — do jeito simples,
       com exemplos claros e um exercício interativo no final.
     </p>
     <div class="hero-badges">
@@ -696,16 +697,16 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td><strong>Substantivo</strong></td><td>Nome de seres, coisas, sentimentos</td><td>cidade, amor, Brasil</td><td>Variável</td></tr>
-            <tr><td><strong>Artigo</strong></td><td>Determina o substantivo</td><td>o, a, um, uma</td><td>Variável</td></tr>
-            <tr><td><strong>Adjetivo</strong></td><td>Caracteriza o substantivo</td><td>belo, difícil, verde</td><td>Variável</td></tr>
-            <tr><td><strong>Numeral</strong></td><td>Indica quantidade ou ordem</td><td>dois, primeiro, dobro</td><td>Variável</td></tr>
-            <tr><td><strong>Pronome</strong></td><td>Substitui ou acompanha o substantivo</td><td>eu, meu, quem, este</td><td>Variável</td></tr>
+            <tr><td><strong><span class="vocab-word" data-word="substantivo">Substantivo</span></strong></td><td>Nome de seres, coisas, sentimentos</td><td>cidade, amor, Brasil</td><td>Variável</td></tr>
+            <tr><td><strong><span class="vocab-word" data-word="artigo">Artigo</span></strong></td><td>Determina o <span class="vocab-word" data-word="substantivo">substantivo</span></td><td>o, a, um, uma</td><td>Variável</td></tr>
+            <tr><td><strong><span class="vocab-word" data-word="adjetivo">Adjetivo</span></strong></td><td>Caracteriza o <span class="vocab-word" data-word="substantivo">substantivo</span></td><td>belo, difícil, verde</td><td>Variável</td></tr>
+            <tr><td><strong><span class="vocab-word" data-word="numeral">Numeral</span></strong></td><td>Indica quantidade ou ordem</td><td>dois, primeiro, dobro</td><td>Variável</td></tr>
+            <tr><td><strong><span class="vocab-word" data-word="pronome">Pronome</span></strong></td><td>Substitui ou acompanha o <span class="vocab-word" data-word="substantivo">substantivo</span></td><td>eu, meu, quem, este</td><td>Variável</td></tr>
             <tr><td><strong>Verbo</strong></td><td>Indica ação, estado ou fenômeno</td><td>correr, ser, chover</td><td>Variável</td></tr>
-            <tr><td><strong>Advérbio</strong></td><td>Modifica verbo, adjetivo ou advérbio</td><td>muito, aqui, ontem</td><td>Invariável</td></tr>
-            <tr><td><strong>Preposição</strong></td><td>Liga palavras estabelecendo relação</td><td>de, em, para, com</td><td>Invariável</td></tr>
-            <tr><td><strong>Conjunção</strong></td><td>Liga orações ou termos</td><td>e, mas, porque, embora</td><td>Invariável</td></tr>
-            <tr><td><strong>Interjeição</strong></td><td>Exprime emoção ou chamado</td><td>Ah! Ei! Bravo!</td><td>Invariável</td></tr>
+            <tr><td><strong><span class="vocab-word" data-word="advérbio">Advérbio</span></strong></td><td>Modifica verbo, <span class="vocab-word" data-word="adjetivo">adjetivo</span> ou <span class="vocab-word" data-word="advérbio">advérbio</span></td><td>muito, aqui, ontem</td><td>Invariável</td></tr>
+            <tr><td><strong><span class="vocab-word" data-word="preposição">Preposição</span></strong></td><td>Liga palavras estabelecendo relação</td><td>de, em, para, com</td><td>Invariável</td></tr>
+            <tr><td><strong><span class="vocab-word" data-word="conjunção">Conjunção</span></strong></td><td>Liga orações ou termos</td><td>e, mas, porque, embora</td><td>Invariável</td></tr>
+            <tr><td><strong><span class="vocab-word" data-word="interjeição">Interjeição</span></strong></td><td>Exprime emoção ou chamado</td><td>Ah! Ei! Bravo!</td><td>Invariável</td></tr>
           </tbody>
         </table>
       </div>
@@ -716,7 +717,7 @@
       <div class="class-grid">
 
         <div class="class-card" id="substantivo">
-          <div class="head"><span class="icon">🧑‍🤝‍🧑</span><h3>Substantivo</h3></div>
+          <div class="head"><span class="icon">🧑‍🤝‍🧑</span><h3><span class="vocab-word" data-word="substantivo">Substantivo</span></h3></div>
           <p class="what">É o nome de tudo: pessoas, animais, lugares, objetos e até sentimentos.</p>
           <div class="examples">
             <span><b>Pessoas:</b> Maria, professor, criança</span>
@@ -727,8 +728,8 @@
         </div>
 
         <div class="class-card" id="artigo">
-          <div class="head"><span class="icon">🔖</span><h3>Artigo</h3></div>
-          <p class="what">Vem antes do substantivo e ajuda a indicar se estamos falando de algo já conhecido ou não.</p>
+          <div class="head"><span class="icon">🔖</span><h3><span class="vocab-word" data-word="artigo">Artigo</span></h3></div>
+          <p class="what">Vem antes do <span class="vocab-word" data-word="substantivo">substantivo</span> e ajuda a indicar se estamos falando de algo já conhecido ou não.</p>
           <div class="examples">
             <span><b>Definidos</b> (algo específico): o, a, os, as — <i>"o carro"</i></span>
             <span><b>Indefinidos</b> (algo qualquer): um, uma, uns, umas — <i>"um carro"</i></span>
@@ -736,8 +737,8 @@
         </div>
 
         <div class="class-card" id="adjetivo">
-          <div class="head"><span class="icon">🎨</span><h3>Adjetivo</h3></div>
-          <p class="what">Descreve como é o substantivo — uma característica, qualidade ou defeito.</p>
+          <div class="head"><span class="icon">🎨</span><h3><span class="vocab-word" data-word="adjetivo">Adjetivo</span></h3></div>
+          <p class="what">Descreve como é o <span class="vocab-word" data-word="substantivo">substantivo</span> — uma característica, qualidade ou defeito.</p>
           <div class="examples">
             <span><i>Uma casa</i> <b>grande</b></span>
             <span><i>Um dia</i> <b>ensolarado</b></span>
@@ -747,7 +748,7 @@
         </div>
 
         <div class="class-card" id="numeral">
-          <div class="head"><span class="icon">🔢</span><h3>Numeral</h3></div>
+          <div class="head"><span class="icon">🔢</span><h3><span class="vocab-word" data-word="numeral">Numeral</span></h3></div>
           <p class="what">Indica quantidade, ordem ou quantas vezes algo acontece.</p>
           <div class="examples">
             <span><b>Quantidade:</b> dois, cem, mil</span>
@@ -757,8 +758,8 @@
         </div>
 
         <div class="class-card" id="pronome">
-          <div class="head"><span class="icon">👉</span><h3>Pronome</h3></div>
-          <p class="what">Substitui ou acompanha o substantivo, para não precisar repeti-lo o tempo todo.</p>
+          <div class="head"><span class="icon">👉</span><h3><span class="vocab-word" data-word="pronome">Pronome</span></h3></div>
+          <p class="what">Substitui ou acompanha o <span class="vocab-word" data-word="substantivo">substantivo</span>, para não precisar repeti-lo o tempo todo.</p>
           <div class="examples">
             <span><b>Pessoal:</b> eu, você, ele, nós — <i>"Ela chegou."</i></span>
             <span><b>Possessivo:</b> meu, seu, nosso — <i>"Este é o meu livro."</i></span>
@@ -777,8 +778,8 @@
         </div>
 
         <div class="class-card" id="adverbio">
-          <div class="head"><span class="icon">⚡</span><h3>Advérbio</h3></div>
-          <p class="what">Modifica um verbo, um adjetivo ou outro advérbio — geralmente indica como, quando, onde ou quanto.</p>
+          <div class="head"><span class="icon">⚡</span><h3><span class="vocab-word" data-word="advérbio">Advérbio</span></h3></div>
+          <p class="what">Modifica um verbo, um <span class="vocab-word" data-word="adjetivo">adjetivo</span> ou outro <span class="vocab-word" data-word="advérbio">advérbio</span> — geralmente indica como, quando, onde ou quanto.</p>
           <div class="examples">
             <span><b>Modo:</b> Ela fala <i>bem</i>.</span>
             <span><b>Tempo:</b> Chego <i>amanhã</i>.</span>
@@ -788,7 +789,7 @@
         </div>
 
         <div class="class-card" id="preposicao">
-          <div class="head"><span class="icon">🔗</span><h3>Preposição</h3></div>
+          <div class="head"><span class="icon">🔗</span><h3><span class="vocab-word" data-word="preposição">Preposição</span></h3></div>
           <p class="what">Liga duas palavras, criando uma relação entre elas (não tem sentido sozinha).</p>
           <div class="examples">
             <span><i>Livro</i> <b>de</b> <i>história</i></span>
@@ -798,7 +799,7 @@
         </div>
 
         <div class="class-card" id="conjuncao">
-          <div class="head"><span class="icon">🧷</span><h3>Conjunção</h3></div>
+          <div class="head"><span class="icon">🧷</span><h3><span class="vocab-word" data-word="conjunção">Conjunção</span></h3></div>
           <p class="what">Liga duas frases ou duas palavras de mesmo tipo, mostrando a relação entre elas.</p>
           <div class="examples">
             <span><b>Adição:</b> Estudei <i>e</i> passei.</span>
@@ -808,7 +809,7 @@
         </div>
 
         <div class="class-card" id="interjeicao">
-          <div class="head"><span class="icon">❗</span><h3>Interjeição</h3></div>
+          <div class="head"><span class="icon">❗</span><h3><span class="vocab-word" data-word="interjeição">Interjeição</span></h3></div>
           <p class="what">Expressa uma emoção repentina — alegria, dor, surpresa, chamado.</p>
           <div class="examples">
             <span><b>Ai!</b> (dor)</span>
@@ -841,68 +842,68 @@
         <div class="q">1. O <span class="target">CACHORRO</span> correu no parque.</div>
         <div class="mc-options">
           <label><input type="radio" name="q1" value="a">Verbo</label>
-          <label class="correct-answer"><input type="radio" name="q1" value="b">Substantivo</label>
-          <label><input type="radio" name="q1" value="c">Adjetivo</label>
-          <label><input type="radio" name="q1" value="d">Advérbio</label>
+          <label class="correct-answer"><input type="radio" name="q1" value="b"><span class="vocab-word" data-word="substantivo">Substantivo</span></label>
+          <label><input type="radio" name="q1" value="c"><span class="vocab-word" data-word="adjetivo">Adjetivo</span></label>
+          <label><input type="radio" name="q1" value="d"><span class="vocab-word" data-word="advérbio">Advérbio</span></label>
         </div>
       </div>
 
       <div class="mc-item">
         <div class="q">2. Ela é uma pessoa muito <span class="target">GENTIL</span>.</div>
         <div class="mc-options">
-          <label><input type="radio" name="q2" value="a">Substantivo</label>
-          <label><input type="radio" name="q2" value="b">Pronome</label>
-          <label class="correct-answer"><input type="radio" name="q2" value="c">Adjetivo</label>
-          <label><input type="radio" name="q2" value="d">Conjunção</label>
+          <label><input type="radio" name="q2" value="a"><span class="vocab-word" data-word="substantivo">Substantivo</span></label>
+          <label><input type="radio" name="q2" value="b"><span class="vocab-word" data-word="pronome">Pronome</span></label>
+          <label class="correct-answer"><input type="radio" name="q2" value="c"><span class="vocab-word" data-word="adjetivo">Adjetivo</span></label>
+          <label><input type="radio" name="q2" value="d"><span class="vocab-word" data-word="conjunção">Conjunção</span></label>
         </div>
       </div>
 
       <div class="mc-item">
         <div class="q">3. <span class="target">EU</span> gosto de música.</div>
         <div class="mc-options">
-          <label class="correct-answer"><input type="radio" name="q3" value="a">Pronome</label>
+          <label class="correct-answer"><input type="radio" name="q3" value="a"><span class="vocab-word" data-word="pronome">Pronome</span></label>
           <label><input type="radio" name="q3" value="b">Verbo</label>
-          <label><input type="radio" name="q3" value="c">Artigo</label>
-          <label><input type="radio" name="q3" value="d">Interjeição</label>
+          <label><input type="radio" name="q3" value="c"><span class="vocab-word" data-word="artigo">Artigo</span></label>
+          <label><input type="radio" name="q3" value="d"><span class="vocab-word" data-word="interjeição">Interjeição</span></label>
         </div>
       </div>
 
       <div class="mc-item">
         <div class="q">4. Nós vamos <span class="target">ESTUDAR</span> hoje à noite.</div>
         <div class="mc-options">
-          <label><input type="radio" name="q4" value="a">Substantivo</label>
+          <label><input type="radio" name="q4" value="a"><span class="vocab-word" data-word="substantivo">Substantivo</span></label>
           <label class="correct-answer"><input type="radio" name="q4" value="b">Verbo</label>
-          <label><input type="radio" name="q4" value="c">Advérbio</label>
-          <label><input type="radio" name="q4" value="d">Numeral</label>
+          <label><input type="radio" name="q4" value="c"><span class="vocab-word" data-word="advérbio">Advérbio</span></label>
+          <label><input type="radio" name="q4" value="d"><span class="vocab-word" data-word="numeral">Numeral</span></label>
         </div>
       </div>
 
       <div class="mc-item">
         <div class="q">5. Ele chegou <span class="target">ONTEM</span> à tarde.</div>
         <div class="mc-options">
-          <label><input type="radio" name="q5" value="a">Substantivo</label>
-          <label><input type="radio" name="q5" value="b">Preposição</label>
-          <label class="correct-answer"><input type="radio" name="q5" value="c">Advérbio</label>
-          <label><input type="radio" name="q5" value="d">Pronome</label>
+          <label><input type="radio" name="q5" value="a"><span class="vocab-word" data-word="substantivo">Substantivo</span></label>
+          <label><input type="radio" name="q5" value="b"><span class="vocab-word" data-word="preposição">Preposição</span></label>
+          <label class="correct-answer"><input type="radio" name="q5" value="c"><span class="vocab-word" data-word="advérbio">Advérbio</span></label>
+          <label><input type="radio" name="q5" value="d"><span class="vocab-word" data-word="pronome">Pronome</span></label>
         </div>
       </div>
 
       <div class="mc-item">
         <div class="q">6. O caderno está em cima <span class="target">DA</span> mesa. <span style="font-weight:400;color:var(--slate);">(de + a)</span></div>
         <div class="mc-options">
-          <label><input type="radio" name="q6" value="a">Conjunção</label>
-          <label class="correct-answer"><input type="radio" name="q6" value="b">Preposição (combinada com artigo)</label>
-          <label><input type="radio" name="q6" value="c">Adjetivo</label>
-          <label><input type="radio" name="q6" value="d">Interjeição</label>
+          <label><input type="radio" name="q6" value="a"><span class="vocab-word" data-word="conjunção">Conjunção</span></label>
+          <label class="correct-answer"><input type="radio" name="q6" value="b"><span class="vocab-word" data-word="preposição">Preposição</span> (combinada com <span class="vocab-word" data-word="artigo">artigo</span>)</label>
+          <label><input type="radio" name="q6" value="c"><span class="vocab-word" data-word="adjetivo">Adjetivo</span></label>
+          <label><input type="radio" name="q6" value="d"><span class="vocab-word" data-word="interjeição">Interjeição</span></label>
         </div>
       </div>
 
       <div class="mc-item">
         <div class="q">7. Comprei <span class="target">DOIS</span> presentes para ela.</div>
         <div class="mc-options">
-          <label><input type="radio" name="q7" value="a">Artigo</label>
-          <label><input type="radio" name="q7" value="b">Adjetivo</label>
-          <label class="correct-answer"><input type="radio" name="q7" value="c">Numeral</label>
+          <label><input type="radio" name="q7" value="a"><span class="vocab-word" data-word="artigo">Artigo</span></label>
+          <label><input type="radio" name="q7" value="b"><span class="vocab-word" data-word="adjetivo">Adjetivo</span></label>
+          <label class="correct-answer"><input type="radio" name="q7" value="c"><span class="vocab-word" data-word="numeral">Numeral</span></label>
           <label><input type="radio" name="q7" value="d">Verbo</label>
         </div>
       </div>
@@ -910,30 +911,30 @@
       <div class="mc-item">
         <div class="q">8. Queria sair, <span class="target">MAS</span> estava chovendo.</div>
         <div class="mc-options">
-          <label><input type="radio" name="q8" value="a">Advérbio</label>
-          <label class="correct-answer"><input type="radio" name="q8" value="b">Conjunção</label>
-          <label><input type="radio" name="q8" value="c">Substantivo</label>
-          <label><input type="radio" name="q8" value="d">Pronome</label>
+          <label><input type="radio" name="q8" value="a"><span class="vocab-word" data-word="advérbio">Advérbio</span></label>
+          <label class="correct-answer"><input type="radio" name="q8" value="b"><span class="vocab-word" data-word="conjunção">Conjunção</span></label>
+          <label><input type="radio" name="q8" value="c"><span class="vocab-word" data-word="substantivo">Substantivo</span></label>
+          <label><input type="radio" name="q8" value="d"><span class="vocab-word" data-word="pronome">Pronome</span></label>
         </div>
       </div>
 
       <div class="mc-item">
         <div class="q">9. <span class="target">NOSSA!</span> Que susto você me deu!</div>
         <div class="mc-options">
-          <label><input type="radio" name="q9" value="a">Adjetivo</label>
+          <label><input type="radio" name="q9" value="a"><span class="vocab-word" data-word="adjetivo">Adjetivo</span></label>
           <label><input type="radio" name="q9" value="b">Verbo</label>
-          <label class="correct-answer"><input type="radio" name="q9" value="c">Interjeição</label>
-          <label><input type="radio" name="q9" value="d">Numeral</label>
+          <label class="correct-answer"><input type="radio" name="q9" value="c"><span class="vocab-word" data-word="interjeição">Interjeição</span></label>
+          <label><input type="radio" name="q9" value="d"><span class="vocab-word" data-word="numeral">Numeral</span></label>
         </div>
       </div>
 
       <div class="mc-item">
         <div class="q">10. <span class="target">O</span> menino saiu cedo.</div>
         <div class="mc-options">
-          <label class="correct-answer"><input type="radio" name="q10" value="a">Artigo</label>
-          <label><input type="radio" name="q10" value="b">Pronome</label>
-          <label><input type="radio" name="q10" value="c">Preposição</label>
-          <label><input type="radio" name="q10" value="d">Substantivo</label>
+          <label class="correct-answer"><input type="radio" name="q10" value="a"><span class="vocab-word" data-word="artigo">Artigo</span></label>
+          <label><input type="radio" name="q10" value="b"><span class="vocab-word" data-word="pronome">Pronome</span></label>
+          <label><input type="radio" name="q10" value="c"><span class="vocab-word" data-word="preposição">Preposição</span></label>
+          <label><input type="radio" name="q10" value="d"><span class="vocab-word" data-word="substantivo">Substantivo</span></label>
         </div>
       </div>
 

@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="vocab-card.js"></script>
 <style>
 
 
@@ -745,7 +746,7 @@
 
 <div class="mobile-topbar">
   <button class="mt-btn" id="menuToggle" aria-label="Abrir sumário">☰ Classes</button>
-  Substantivo
+  <span class="vocab-word" data-word="substantivo">Substantivo</span>
   <a class="mt-btn" href="../index.html">🏠 App</a>
 </div>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
@@ -777,7 +778,7 @@
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Classe 1 de 10 · Português Básico</div>
-    <h2>🧑‍🤝‍🧑 Substantivo<br><em>O nome de tudo</em></h2>
+    <h2>🧑‍🤝‍🧑 <span class="vocab-word" data-word="substantivo">Substantivo</span><br><em>O nome de tudo</em></h2>
     <p>Pessoas, animais, lugares, objetos, sentimentos e coleções. Leia com calma, observe os exemplos e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Classe 1/10</span>
@@ -792,14 +793,14 @@
         <span class="section-num">1</span>
         <div class="section-title-block">
           <p class="section-label">Classe gramatical</p>
-          <h2 class="section-title">Substantivo</h2>
+          <h2 class="section-title"><span class="vocab-word" data-word="substantivo">Substantivo</span></h2>
           <p class="section-subtitle">O nome de tudo</p>
         </div>
       </div>
 
       <div class="prose">
-        <p>O <strong>substantivo</strong> é a classe que <strong>nomeia</strong>. Tudo o que existe (ou que imaginamos) pode receber um nome: pessoas, animais, lugares, objetos, sentimentos, ideias e até conjuntos de seres.</p>
-        <p>Na frase, o substantivo costuma ser o <em>núcleo</em> do sujeito ou do complemento. Ex.: <strong>A menina</strong> leu <strong>o livro</strong>.</p>
+        <p>O <strong><span class="vocab-word" data-word="substantivo">substantivo</span></strong> é a classe que <strong>nomeia</strong>. Tudo o que existe (ou que imaginamos) pode receber um nome: pessoas, animais, lugares, objetos, sentimentos, ideias e até conjuntos de seres.</p>
+        <p>Na frase, o <span class="vocab-word" data-word="substantivo">substantivo</span> costuma ser o <em>núcleo</em> do <span class="vocab-word" data-word="sujeito">sujeito</span> ou do complemento. Ex.: <strong>A menina</strong> leu <strong>o livro</strong>.</p>
 
         <h3>1. Comum e próprio</h3>
         <p><strong>Comum:</strong> nome genérico de seres da mesma espécie — <em>cidade, professor, rio, país</em>.</p>
@@ -810,7 +811,7 @@
         <p><strong>Abstrato:</strong> nomeia qualidades, ações ou estados dependentes de outro ser — <em>beleza, corrida, medo, liberdade, honestidade</em>.</p>
 
         <h3>3. Coletivo</h3>
-        <p>Substantivo <strong>coletivo</strong> nomeia, no singular, um conjunto de seres da mesma espécie: <em>cardume</em> (peixes), <em>enxame</em> (abelhas), <em>multidão</em> (pessoas), <em>alcateia</em> (lobos), <em>biblioteca</em> (livros).</p>
+        <p><span class="vocab-word" data-word="substantivo">Substantivo</span> <strong>coletivo</strong> nomeia, no singular, um conjunto de seres da mesma espécie: <em>cardume</em> (peixes), <em>enxame</em> (abelhas), <em>multidão</em> (pessoas), <em>alcateia</em> (lobos), <em>biblioteca</em> (livros).</p>
 
         <h3>4. Simples, composto, primitivo e derivado</h3>
         <p><strong>Simples:</strong> um radical — <em>flor, pé, sol</em>.</p>
@@ -826,7 +827,7 @@
 
       <div class="callout info">
         <strong>Dica prática</strong>
-        Para achar o substantivo, pergunte: <em>“O que / quem está sendo nomeado nesta frase?”</em> A resposta costuma ser o substantivo (ou um grupo em torno dele).
+        Para achar o <span class="vocab-word" data-word="substantivo">substantivo</span>, pergunte: <em>“O que / quem está sendo nomeado nesta frase?”</em> A resposta costuma ser o <span class="vocab-word" data-word="substantivo">substantivo</span> (ou um grupo em torno dele).
       </div>
 
       <div class="class-card" style="margin:24px 0;">
@@ -866,25 +867,25 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Aplique o que aprendeu sobre substantivo</p>
+          <p class="section-subtitle">Aplique o que aprendeu sobre <span class="vocab-word" data-word="substantivo">substantivo</span></p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta em cada item. Ao finalizar, a pontuação é salva no seu perfil (é preciso acertar pelo menos 85% para concluir a lição).</p>
+        <p>Escolha a alternativa correta em cada item. Ao finalizar, a <span class="vocab-word" data-word="pontuação">pontuação</span> é salva no seu perfil (é preciso acertar pelo menos 85% para concluir a lição).</p>
 
         <div class="mc-item">
           <div class="q">Em <em>"O CACHORRO correu no parque."</em>, a palavra destacada é:</div>
           <div class="mc-options">
           <label><input type="radio" name="q1" value="a">Verbo</label>
-          <label class="correct-answer"><input type="radio" name="q1" value="b">Substantivo</label>
-          <label><input type="radio" name="q1" value="c">Adjetivo</label>
-          <label><input type="radio" name="q1" value="d">Advérbio</label>
+          <label class="correct-answer"><input type="radio" name="q1" value="b"><span class="vocab-word" data-word="substantivo">Substantivo</span></label>
+          <label><input type="radio" name="q1" value="c"><span class="vocab-word" data-word="adjetivo">Adjetivo</span></label>
+          <label><input type="radio" name="q1" value="d"><span class="vocab-word" data-word="advérbio">Advérbio</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Qual opção é um substantivo <strong>próprio</strong>?</div>
+          <div class="q">Qual opção é um <span class="vocab-word" data-word="substantivo">substantivo</span> <strong>próprio</strong>?</div>
           <div class="mc-options">
           <label><input type="radio" name="q2" value="a">cidade</label>
           <label class="correct-answer"><input type="radio" name="q2" value="b">Brasil</label>
@@ -906,12 +907,12 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">“Cardume” é exemplo de substantivo:</div>
+          <div class="q">“Cardume” é exemplo de <span class="vocab-word" data-word="substantivo">substantivo</span>:</div>
           <div class="mc-options">
           <label><input type="radio" name="q4" value="a">Próprio</label>
           <label class="correct-answer"><input type="radio" name="q4" value="b">Coletivo</label>
-          <label><input type="radio" name="q4" value="c">Adjetivo</label>
-          <label><input type="radio" name="q4" value="d">Pronome</label>
+          <label><input type="radio" name="q4" value="c"><span class="vocab-word" data-word="adjetivo">Adjetivo</span></label>
+          <label><input type="radio" name="q4" value="d"><span class="vocab-word" data-word="pronome">Pronome</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -933,24 +934,24 @@
           <label><input type="radio" name="q6" value="a">Diminutivo</label>
           <label class="correct-answer"><input type="radio" name="q6" value="b">Aumentativo</label>
           <label><input type="radio" name="q6" value="c">Comparativo</label>
-          <label><input type="radio" name="q6" value="d">Superlativo de adjetivo</label>
+          <label><input type="radio" name="q6" value="d">Superlativo de <span class="vocab-word" data-word="adjetivo">adjetivo</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">“Guarda-chuva” é substantivo:</div>
+          <div class="q">“Guarda-chuva” é <span class="vocab-word" data-word="substantivo">substantivo</span>:</div>
           <div class="mc-options">
           <label><input type="radio" name="q7" value="a">Simples</label>
           <label class="correct-answer"><input type="radio" name="q7" value="b">Composto</label>
-          <label><input type="radio" name="q7" value="c">Artigo</label>
+          <label><input type="radio" name="q7" value="c"><span class="vocab-word" data-word="artigo">Artigo</span></label>
           <label><input type="radio" name="q7" value="d">Verbo</label>
           </div>
         
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Qual frase tem substantivo <strong>abstrato</strong>?</div>
+          <div class="q">Qual frase tem <span class="vocab-word" data-word="substantivo">substantivo</span> <strong>abstrato</strong>?</div>
           <div class="mc-options">
           <label><input type="radio" name="q8" value="a">O gato dormiu.</label>
           <label class="correct-answer"><input type="radio" name="q8" value="b">A honestidade importa.</label>
@@ -969,14 +970,14 @@
         <details class="gabarito-box">
           <summary>📋 Gabarito comentado</summary>
           <div class="gabarito-list">
-          <div class="g-item"><b>Questão 1.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: Substantivo</span><br>Substantivo é a classe que <em>nomeia</em>. Em “O cachorro correu no parque”, a palavra <strong>cachorro</strong> designa um animal — não descreve (adjetivo), não indica ação (verbo) nem circunstância (advérbio). Trata-se de um substantivo <strong>comum</strong> (nome genérico da espécie) e <strong>concreto</strong> (existência independente).</div>
-          <div class="g-item"><b>Questão 2.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: Brasil</span><br>Substantivo <strong>próprio</strong> identifica um ser particular e, em geral, escreve-se com inicial maiúscula: Brasil, Maria, Amazonas. Já “cidade”, “professor” e “alegria” são comuns (ou abstrato, no caso de alegria): nomeiam classes ou ideias, não um indivíduo único.</div>
+          <div class="g-item"><b>Questão 1.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="substantivo">Substantivo</span></span><br><span class="vocab-word" data-word="substantivo">Substantivo</span> é a classe que <em>nomeia</em>. Em “O cachorro correu no parque”, a palavra <strong>cachorro</strong> designa um animal — não descreve (<span class="vocab-word" data-word="adjetivo">adjetivo</span>), não indica ação (verbo) nem circunstância (<span class="vocab-word" data-word="advérbio">advérbio</span>). Trata-se de um <span class="vocab-word" data-word="substantivo">substantivo</span> <strong>comum</strong> (nome genérico da espécie) e <strong>concreto</strong> (existência independente).</div>
+          <div class="g-item"><b>Questão 2.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: Brasil</span><br><span class="vocab-word" data-word="substantivo">Substantivo</span> <strong>próprio</strong> identifica um ser particular e, em geral, escreve-se com inicial maiúscula: Brasil, Maria, Amazonas. Já “cidade”, “professor” e “alegria” são comuns (ou abstrato, no caso de alegria): nomeiam classes ou ideias, não um indivíduo único.</div>
           <div class="g-item"><b>Questão 3.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: Abstratos</span><br>Substantivos <strong>abstratos</strong> nomeiam qualidades, ações ou estados que dependem de outro ser para serem concebidos: amor, medo, liberdade, honestidade. Diferem dos concretos (mesa, cão), que designam entidades com existência autônoma no mundo físico ou imaginário concreto.</div>
-          <div class="g-item"><b>Questão 4.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: Coletivo</span><br>Coletivo é o substantivo que, no <strong>singular</strong>, nomeia um conjunto de seres da mesma espécie: cardume (peixes), enxame (abelhas), multidão (pessoas), alcateia (lobos). Não é preciso usar o plural do nome dos elementos para expressar a ideia de grupo.</div>
-          <div class="g-item"><b>Questão 5.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: 2</span><br>Na frase “A menina leu o livro”, há dois núcleos nominais: <strong>menina</strong> (sujeito) e <strong>livro</strong> (objeto direto). Ambos são substantivos. Artigos (“A”, “o”) e o verbo “leu” pertencem a outras classes.</div>
-          <div class="g-item"><b>Questão 6.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: Aumentativo</span><br>O grau <strong>aumentativo</strong> amplia a ideia do substantivo, muitas vezes com sufixos como -ão, -ona, -aço: casa → casarão, livro → livrão. O diminutivo reduz (casinha, livrinho). Não confundir com graus do adjetivo (comparativo/superlativo).</div>
-          <div class="g-item"><b>Questão 7.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: Composto</span><br>Substantivo <strong>composto</strong> reúne mais de um radical. Em guarda-chuva, “guarda” + “chuva” se justapõem (em geral com hífen). Já o simples tem um só radical (flor, sol). Compostos também podem nascer por aglutinação (planalto).</div>
-          <div class="g-item"><b>Questão 8.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: A honestidade importa.</span><br>“A honestidade importa”: honestidade nomeia uma qualidade moral, não um objeto tocável → substantivo abstrato. Nas outras opções, gato, mesa e rio são concretos.</div>
+          <div class="g-item"><b>Questão 4.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: Coletivo</span><br>Coletivo é o <span class="vocab-word" data-word="substantivo">substantivo</span> que, no <strong>singular</strong>, nomeia um conjunto de seres da mesma espécie: cardume (peixes), enxame (abelhas), multidão (pessoas), alcateia (lobos). Não é preciso usar o plural do nome dos elementos para expressar a ideia de grupo.</div>
+          <div class="g-item"><b>Questão 5.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: 2</span><br>Na frase “A menina leu o livro”, há dois núcleos nominais: <strong>menina</strong> (<span class="vocab-word" data-word="sujeito">sujeito</span>) e <strong>livro</strong> (<span class="vocab-word" data-word="objeto direto">objeto direto</span>). Ambos são substantivos. Artigos (“A”, “o”) e o verbo “leu” pertencem a outras classes.</div>
+          <div class="g-item"><b>Questão 6.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: Aumentativo</span><br>O grau <strong>aumentativo</strong> amplia a ideia do <span class="vocab-word" data-word="substantivo">substantivo</span>, muitas vezes com sufixos como -ão, -ona, -aço: casa → casarão, livro → livrão. O diminutivo reduz (casinha, livrinho). Não confundir com graus do <span class="vocab-word" data-word="adjetivo">adjetivo</span> (comparativo/superlativo).</div>
+          <div class="g-item"><b>Questão 7.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: Composto</span><br><span class="vocab-word" data-word="substantivo">Substantivo</span> <strong>composto</strong> reúne mais de um radical. Em guarda-chuva, “guarda” + “chuva” se justapõem (em geral com <span class="vocab-word" data-word="hífen">hífen</span>). Já o simples tem um só radical (flor, sol). Compostos também podem nascer por aglutinação (planalto).</div>
+          <div class="g-item"><b>Questão 8.</b> Em "O CACHORRO correu no parque.", a palavra destacada é:<br><span class="g-ans">Resposta: A honestidade importa.</span><br>“A honestidade importa”: honestidade nomeia uma qualidade moral, não um objeto tocável → <span class="vocab-word" data-word="substantivo abstrato"><span class="vocab-word" data-word="substantivo">substantivo</span> abstrato</span>. Nas outras opções, gato, mesa e rio são concretos.</div>
           </div>
         </details>
         <div class="callout info" style="margin-top:28px;">

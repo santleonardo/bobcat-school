@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="vocab-card.js"></script>
 <style>
 
 
@@ -699,7 +700,7 @@
 
 <div class="mobile-topbar">
   <button class="mt-btn" id="menuToggle" aria-label="Abrir sumário">☰ Capítulos</button>
-  <span class="mt-title">Pontuação</span>
+  <span class="mt-title"><span class="vocab-word" data-word="pontuação">Pontuação</span></span>
   <a class="mt-btn" href="../index.html">🏠 App</a>
 </div>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
@@ -731,7 +732,7 @@
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Capítulo 9 de 10 · Gramática Aplicada</div>
-    <h2>✒️ Pontuação<br><em>Vírgula, ponto, dois-pontos e outros sinais</em></h2>
+    <h2>✒️ <span class="vocab-word" data-word="pontuação">Pontuação</span><br><em>Vírgula, ponto, dois-pontos e outros sinais</em></h2>
     <p>Vírgula, ponto e vírgula, dois-pontos e demais sinais. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Capítulo 9/10</span>
@@ -747,29 +748,29 @@
         <span class="section-num">9</span>
         <div class="section-title-block">
           <p class="section-label">Capítulo IX</p>
-          <h2 class="section-title">Pontuação</h2>
+          <h2 class="section-title"><span class="vocab-word" data-word="pontuação">Pontuação</span></h2>
           <p class="section-subtitle">Vírgula, ponto, dois-pontos e outros sinais</p>
         </div>
       </div>
 
       <div class="prose">
-        <p>A pontuação organiza o texto, indica pausas e estrutura o raciocínio. O uso incorreto da vírgula é o erro mais frequente em redações e textos profissionais.</p>
+        <p>A <span class="vocab-word" data-word="pontuação">pontuação</span> organiza o texto, indica pausas e estrutura o raciocínio. O uso incorreto da vírgula é o erro mais frequente em redações e textos profissionais.</p>
 
         <h3>A Vírgula</h3>
         <h4>Usos Obrigatórios</h4>
         <ul class="rule-list">
-          <li><strong>Aposto explicativo:</strong> <em>Machado de Assis<mark>,</mark> maior escritor brasileiro<mark>,</mark> nasceu no Rio.</em></li>
-          <li><strong>Vocativo:</strong> <em><mark>Professora,</mark> tenho uma dúvida.</em></li>
-          <li><strong>Adjunto adverbial deslocado:</strong> <em>No dia seguinte<mark>,</mark> tudo mudou.</em></li>
+          <li><strong><span class="vocab-word" data-word="aposto">Aposto</span> explicativo:</strong> <em>Machado de Assis<mark>,</mark> maior escritor brasileiro<mark>,</mark> nasceu no Rio.</em></li>
+          <li><strong><span class="vocab-word" data-word="vocativo">Vocativo</span>:</strong> <em><mark>Professora,</mark> tenho uma dúvida.</em></li>
+          <li><strong><span class="vocab-word" data-word="adjunto adverbial">Adjunto adverbial</span> deslocado:</strong> <em>No dia seguinte<mark>,</mark> tudo mudou.</em></li>
           <li><strong>Orações coordenadas assindéticas:</strong> <em>Entrou<mark>,</mark> sentou<mark>,</mark> calou-se.</em></li>
           <li><strong>Orações subordinadas adverbiais antepostas:</strong> <em>Quando cheguei<mark>,</mark> já havia iniciado.</em></li>
-          <li><strong>Conjunção "mas", "porém", "contudo":</strong> <em>Estudou muito<mark>,</mark> mas não passou.</em></li>
+          <li><strong><span class="vocab-word" data-word="conjunção">Conjunção</span> "mas", "porém", "contudo":</strong> <em>Estudou muito<mark>,</mark> mas não passou.</em></li>
         </ul>
 
         <h4>Vírgula Proibida</h4>
         <div class="ex-grid">
           <div class="ex-box wrong">
-            <span class="ex-label">✗ Nunca separe sujeito do predicado</span>
+            <span class="ex-label">✗ Nunca separe <span class="vocab-word" data-word="sujeito">sujeito</span> do <span class="vocab-word" data-word="predicado">predicado</span></span>
             <code>O aluno<mark class="red">,</mark> estudou bastante.</code>
           </div>
           <div class="ex-box wrong">
@@ -794,7 +795,7 @@
           <li><strong>Antes de explicação ou conclusão:</strong> <em>Sabia o motivo<mark>:</mark> ela estava cansada.</em></li>
         </ul>
 
-        <h3>Demais Sinais de Pontuação</h3>
+        <h3>Demais Sinais de <span class="vocab-word" data-word="pontuação">Pontuação</span></h3>
         <div class="tbl-wrap">
           <table>
             <thead>
@@ -803,8 +804,8 @@
             <tbody>
               <tr><td><strong>Reticências (...)</strong></td><td>Suspensão, hesitação, omissão</td><td><em>Não sei... talvez...</em></td></tr>
               <tr><td><strong>Parênteses ( )</strong></td><td>Informação acessória, inserção</td><td><em>O Brasil (1500) foi descoberto...</em></td></tr>
-              <tr><td><strong>Travessão —</strong></td><td>Diálogo, aposto, destaque</td><td><em>— Venha aqui — disse ela.</em></td></tr>
-              <tr><td><strong>Aspas " "</strong></td><td>Citação, ironia, estrangeirismo</td><td><em>Ele é muito "eficiente".</em></td></tr>
+              <tr><td><strong>Travessão —</strong></td><td>Diálogo, <span class="vocab-word" data-word="aposto">aposto</span>, destaque</td><td><em>— Venha aqui — disse ela.</em></td></tr>
+              <tr><td><strong>Aspas " "</strong></td><td>Citação, <span class="vocab-word" data-word="ironia">ironia</span>, estrangeirismo</td><td><em>Ele é muito "eficiente".</em></td></tr>
               <tr><td><strong>! e ?</strong></td><td>Exclamação e interrogação</td><td><em>Que lindo! Você vem?</em></td></tr>
             </tbody>
           </table>
@@ -819,11 +820,11 @@
 
       <div class="callout danger">
         <strong>Nunca</strong>
-        Separe sujeito do predicado nem verbo do objeto só com vírgula: *O aluno, estudou* / *Comprei, um livro* estão errados.
+        Separe <span class="vocab-word" data-word="sujeito">sujeito</span> do <span class="vocab-word" data-word="predicado">predicado</span> nem verbo do objeto só com vírgula: *O aluno, estudou* / *Comprei, um livro* estão errados.
       </div>
       <div class="prose">
         <h3>Vírgula — usos que mais caem</h3>
-        <p>Aposto, vocativo, adjunto deslocado, enumeração, adversativas (mas/porém), adverbiais antepostas.</p>
+        <p><span class="vocab-word" data-word="aposto">Aposto</span>, <span class="vocab-word" data-word="vocativo">vocativo</span>, adjunto deslocado, enumeração, adversativas (mas/porém), adverbiais antepostas.</p>
         <p>Leia em voz alta: pausa de sentido + mudança de bloco sintático costuma indicar vírgula necessária.</p>
       </div>
 
@@ -835,11 +836,11 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Fixação deste capítulo — pontuação</p>
+          <p class="section-subtitle">Fixação deste capítulo — <span class="vocab-word" data-word="pontuação">pontuação</span></p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no perfil (mínimo 85% para concluir a lição).</p>
+        <p>Escolha a alternativa correta. Ao finalizar, a <span class="vocab-word" data-word="pontuação">pontuação</span> é salva no perfil (mínimo 85% para concluir a lição).</p>
 
         <div class="mc-item">
           <div class="q">Em <em>"Os alunos que estudaram, passaram na prova."</em>, a vírgula:</div>
@@ -862,7 +863,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Separar sujeito e predicado só com vírgula:</div>
+          <div class="q">Separar <span class="vocab-word" data-word="sujeito">sujeito</span> e <span class="vocab-word" data-word="predicado">predicado</span> só com vírgula:</div>
           <div class="mc-options">
           <label><input type="radio" name="q3" value="a">É obrigatório</label>
           <label class="correct-answer"><input type="radio" name="q3" value="b">É proibido na norma culta</label>
@@ -882,7 +883,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Vocativo deve vir isolado por vírgula: qual está correto?</div>
+          <div class="q"><span class="vocab-word" data-word="vocativo">Vocativo</span> deve vir isolado por vírgula: qual está correto?</div>
           <div class="mc-options">
           <label><input type="radio" name="q5" value="a">Maria venha aqui.</label>
           <label class="correct-answer"><input type="radio" name="q5" value="b">Maria, venha aqui.</label>
@@ -896,7 +897,7 @@
           <div class="mc-options">
           <label><input type="radio" name="q6" value="a">É inadequada sempre</label>
           <label class="correct-answer"><input type="radio" name="q6" value="b">É uso típico com adversativa</label>
-          <label><input type="radio" name="q6" value="c">Troca “mas” por artigo</label>
+          <label><input type="radio" name="q6" value="c">Troca “mas” por <span class="vocab-word" data-word="artigo">artigo</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -916,7 +917,7 @@
           <div class="mc-options">
           <label><input type="radio" name="q8" value="a">Só finalizar o texto</label>
           <label class="correct-answer"><input type="radio" name="q8" value="b">Separar itens de série complexa / orações com vírgulas internas</label>
-          <label><input type="radio" name="q8" value="c">Substituir o sujeito</label>
+          <label><input type="radio" name="q8" value="c">Substituir o <span class="vocab-word" data-word="sujeito">sujeito</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -930,14 +931,14 @@
         <details class="gabarito-box">
           <summary>📋 Gabarito comentado</summary>
           <div class="gabarito-list">
-          <div class="g-item"><b>Questão 1.</b> Em "Os alunos que estudaram, passaram na prova.", a vírgula:<br><span class="g-ans">Resposta: Muda o sentido (restritiva × explicativa)</span><br>Sem vírgula, “que estudaram” restringe o conjunto (só os que estudaram passaram). Com vírgula, a oração tende a ser explicativa (sugere que os alunos — todos — estudaram). A vírgula, portanto, muda o sentido.</div>
-          <div class="g-item"><b>Questão 2.</b> Em "Os alunos que estudaram, passaram na prova.", a vírgula:<br><span class="g-ans">Resposta: “Ana comprou pão, leite e frutas.”</span><br>Em enumerações, separa-se os termos por vírgula: pão, leite e frutas. Não se isola o sujeito “Ana” do verbo sem justificativa sintática.</div>
-          <div class="g-item"><b>Questão 3.</b> Em "Os alunos que estudaram, passaram na prova.", a vírgula:<br><span class="g-ans">Resposta: É proibido na norma culta</span><br>Regra negativa fundamental: não separar sujeito de predicado nem verbo de objeto apenas com vírgula (“O aluno, estudou” / “Comprei, um livro”).</div>
+          <div class="g-item"><b>Questão 1.</b> Em "Os alunos que estudaram, passaram na prova.", a vírgula:<br><span class="g-ans">Resposta: Muda o sentido (restritiva × explicativa)</span><br>Sem vírgula, “que estudaram” restringe o conjunto (só os que estudaram passaram). Com vírgula, a <span class="vocab-word" data-word="oração">oração</span> tende a ser explicativa (sugere que os alunos — todos — estudaram). A vírgula, portanto, muda o sentido.</div>
+          <div class="g-item"><b>Questão 2.</b> Em "Os alunos que estudaram, passaram na prova.", a vírgula:<br><span class="g-ans">Resposta: “Ana comprou pão, leite e frutas.”</span><br>Em enumerações, separa-se os termos por vírgula: pão, leite e frutas. Não se isola o <span class="vocab-word" data-word="sujeito">sujeito</span> “Ana” do verbo sem justificativa sintática.</div>
+          <div class="g-item"><b>Questão 3.</b> Em "Os alunos que estudaram, passaram na prova.", a vírgula:<br><span class="g-ans">Resposta: É proibido na norma culta</span><br>Regra negativa fundamental: não separar <span class="vocab-word" data-word="sujeito">sujeito</span> de <span class="vocab-word" data-word="predicado">predicado</span> nem verbo de objeto apenas com vírgula (“O aluno, estudou” / “Comprei, um livro”).</div>
           <div class="g-item"><b>Questão 4.</b> Em "Os alunos que estudaram, passaram na prova.", a vírgula:<br><span class="g-ans">Resposta: Dois-pontos</span><br>Dois-pontos anunciam enumeração, esclarecimento, citação ou desdobramento do que foi dito (“Comprei três coisas: pão, leite e ovos”).</div>
-          <div class="g-item"><b>Questão 5.</b> Em "Os alunos que estudaram, passaram na prova.", a vírgula:<br><span class="g-ans">Resposta: Maria, venha aqui.</span><br>Vocativo isola-se por vírgula: “Maria, venha aqui.” Sem a vírgula, “Maria” pode ser lido como sujeito de outra estrutura, gerando ambiguidade.</div>
+          <div class="g-item"><b>Questão 5.</b> Em "Os alunos que estudaram, passaram na prova.", a vírgula:<br><span class="g-ans">Resposta: Maria, venha aqui.</span><br><span class="vocab-word" data-word="vocativo">Vocativo</span> isola-se por vírgula: “Maria, venha aqui.” Sem a vírgula, “Maria” pode ser lido como <span class="vocab-word" data-word="sujeito">sujeito</span> de outra estrutura, gerando <span class="vocab-word" data-word="ambiguidade">ambiguidade</span>.</div>
           <div class="g-item"><b>Questão 6.</b> Em "Os alunos que estudaram, passaram na prova.", a vírgula:<br><span class="g-ans">Resposta: É uso típico com adversativa</span><br>Conjunções adversativas (mas, porém, contudo) costumam ser precedidas de vírgula quando ligam orações: “Estudou muito, mas não passou.”</div>
-          <div class="g-item"><b>Questão 7.</b> Em "Os alunos que estudaram, passaram na prova.", a vírgula:<br><span class="g-ans">Resposta: O aluno, estudou bastante.</span><br>“O aluno, estudou bastante” viola a proibição de separar sujeito e predicado. As outras frases exemplificam usos legítimos (adjunto deslocado; enumeração).</div>
-          <div class="g-item"><b>Questão 8.</b> Em "Os alunos que estudaram, passaram na prova.", a vírgula:<br><span class="g-ans">Resposta: Separar itens de série complexa / orações com vírgulas internas</span><br>Ponto e vírgula articula partes de um período já repleto de vírgulas ou separa itens complexos de uma lista, marcando pausa intermediária entre vírgula e ponto.</div>
+          <div class="g-item"><b>Questão 7.</b> Em "Os alunos que estudaram, passaram na prova.", a vírgula:<br><span class="g-ans">Resposta: O aluno, estudou bastante.</span><br>“O aluno, estudou bastante” viola a proibição de separar <span class="vocab-word" data-word="sujeito">sujeito</span> e <span class="vocab-word" data-word="predicado">predicado</span>. As outras frases exemplificam usos legítimos (adjunto deslocado; enumeração).</div>
+          <div class="g-item"><b>Questão 8.</b> Em "Os alunos que estudaram, passaram na prova.", a vírgula:<br><span class="g-ans">Resposta: Separar itens de série complexa / orações com vírgulas internas</span><br>Ponto e vírgula articula partes de um <span class="vocab-word" data-word="período">período</span> já repleto de vírgulas ou separa itens complexos de uma lista, marcando pausa intermediária entre vírgula e ponto.</div>
           </div>
         </details>
         <div class="callout info" style="margin-top:28px;">

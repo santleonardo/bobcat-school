@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="vocab-card.js"></script>
 <style>
 
 
@@ -732,7 +733,7 @@
   <div class="hero">
     <div class="hero-eyebrow">Capítulo 10 de 10 · Gramática Aplicada</div>
     <h2>📖 Interpretação de Textos<br><em>Leitura, análise e inferência</em></h2>
-    <p>Níveis de leitura, tipologias, coesão e recursos de linguagem. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
+    <p>Níveis de leitura, tipologias, <span class="vocab-word" data-word="coesão">coesão</span> e recursos de linguagem. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Capítulo 10/10</span>
       <span class="badge">8 exercícios</span>
@@ -783,22 +784,22 @@
             <tbody>
               <tr><td><strong>Narrativo</strong></td><td>Contar eventos</td><td>Personagens, tempo, espaço, enredo, narrador</td><td>Conto, romance, fábula</td></tr>
               <tr><td><strong>Descritivo</strong></td><td>Caracterizar</td><td>Adjetivos, verbos de estado, detalhamento</td><td>Perfil, autorretrato</td></tr>
-              <tr><td><strong>Dissertativo</strong></td><td>Expor e defender</td><td>Tese, argumentos, conclusão</td><td>Artigo, editorial, redação</td></tr>
+              <tr><td><strong>Dissertativo</strong></td><td>Expor e defender</td><td>Tese, argumentos, conclusão</td><td><span class="vocab-word" data-word="artigo">Artigo</span>, editorial, redação</td></tr>
               <tr><td><strong>Expositivo</strong></td><td>Informar</td><td>Objetividade, dados, explicações</td><td>Verbete, notícia, resumo</td></tr>
-              <tr><td><strong>Injuntivo</strong></td><td>Instruir/ordenar</td><td>Verbos no imperativo, sequência</td><td>Manual, receita, bula</td></tr>
+              <tr><td><strong>Injuntivo</strong></td><td>Instruir/ordenar</td><td>Verbos no <span class="vocab-word" data-word="imperativo">imperativo</span>, sequência</td><td>Manual, receita, bula</td></tr>
             </tbody>
           </table>
         </div>
 
-        <h3>Coesão e Coerência</h3>
+        <h3><span class="vocab-word" data-word="coesão">Coesão</span> e <span class="vocab-word" data-word="coerência">Coerência</span></h3>
         <div class="ex-grid">
           <div class="ex-box gold">
-            <span class="ex-label">Coesão</span>
+            <span class="ex-label"><span class="vocab-word" data-word="coesão">Coesão</span></span>
             <code>Liga as partes do texto com conectivos, pronomes e referências.</code>
             <small><em>"João entrou. <mark>Ele</mark> sorriu. <mark>Em seguida</mark>, sentou-se."</em></small>
           </div>
           <div class="ex-box gold">
-            <span class="ex-label">Coerência</span>
+            <span class="ex-label"><span class="vocab-word" data-word="coerência">Coerência</span></span>
             <code>Harmonia lógica entre as ideias do texto.</code>
             <small><em>Um texto pode ser coeso mas incoerente: "O sol brilhou. Portanto, o mar é azul."</em></small>
           </div>
@@ -811,11 +812,11 @@
               <tr><th>Recurso</th><th>Definição</th><th>Exemplo</th></tr>
             </thead>
             <tbody>
-              <tr><td><strong>Metáfora</strong></td><td>Comparação implícita</td><td><em>"A vida é uma viagem."</em></td></tr>
-              <tr><td><strong>Metonímia</strong></td><td>Uma coisa pelo todo ou parte</td><td><em>"Ler Machado" (= obras de Machado)</em></td></tr>
-              <tr><td><strong>Ironia</strong></td><td>Diz o contrário do que pensa</td><td><em>"Que beleza de redação!" (sobre texto ruim)</em></td></tr>
-              <tr><td><strong>Eufemismo</strong></td><td>Suaviza ideia desagradável</td><td><em>"Ele nos deixou" (= morreu)</em></td></tr>
-              <tr><td><strong>Hipérbole</strong></td><td>Exagero expressivo</td><td><em>"Já te disse mil vezes!"</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="metáfora">Metáfora</span></strong></td><td>Comparação implícita</td><td><em>"A vida é uma viagem."</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="metonímia">Metonímia</span></strong></td><td>Uma coisa pelo todo ou parte</td><td><em>"Ler Machado" (= obras de Machado)</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="ironia">Ironia</span></strong></td><td>Diz o contrário do que pensa</td><td><em>"Que beleza de redação!" (sobre texto ruim)</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="eufemismo">Eufemismo</span></strong></td><td>Suaviza ideia desagradável</td><td><em>"Ele nos deixou" (= morreu)</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="hipérbole">Hipérbole</span></strong></td><td>Exagero expressivo</td><td><em>"Já te disse mil vezes!"</em></td></tr>
               <tr><td><strong>Antítese</strong></td><td>Ideias opostas juntas</td><td><em>"O rico e o pobre, lado a lado."</em></td></tr>
               <tr><td><strong>Anáfora</strong></td><td>Repetição no início de frases</td><td><em>"Não há paz. Não há descanso. Não há saída."</em></td></tr>
             </tbody>
@@ -838,7 +839,7 @@
           <code style="font-size:14px;line-height:1.7;display:block;margin-bottom:12px;">"A tecnologia não é neutra. Ela carrega em si os valores de quem a cria e os interesses de quem a financia. Acreditar que o algoritmo é imparcial é tão ingênuo quanto acreditar que o jornal não tem dono."</code>
           <small style="line-height:1.8;">
             <strong>Tema:</strong> Tecnologia e parcialidade dos algoritmos.<br>
-            <strong>Recurso:</strong> Comparação ("é tão ingênuo quanto") e ironia velada ("acreditar que").<br>
+            <strong>Recurso:</strong> Comparação ("é tão ingênuo quanto") e <span class="vocab-word" data-word="ironia">ironia</span> velada ("acreditar que").<br>
             <strong>Intenção do autor:</strong> Argumentar contra a ideia de neutralidade tecnológica.<br>
             <strong>Inferência possível:</strong> O autor defende pensamento crítico sobre o uso de tecnologia.
           </small>
@@ -846,7 +847,7 @@
 
         <div class="callout info">
           <strong>Lembre-se</strong>
-          Interpretar bem é a síntese de todo o manual: quem domina gramática, vocabulário, coesão e estrutura textual lê com muito mais profundidade e responde questões com muito mais segurança.
+          Interpretar bem é a síntese de todo o manual: quem domina gramática, vocabulário, <span class="vocab-word" data-word="coesão">coesão</span> e estrutura textual lê com muito mais profundidade e responde questões com muito mais segurança.
         </div>
 
         <div class="ornament">· · ·</div>
@@ -861,7 +862,7 @@
       <div class="prose">
         <h3>Três níveis</h3>
         <p><strong>Denotativo:</strong> o que está escrito · <strong>Conotativo:</strong> o que se sugere · <strong>Crítico:</strong> propósito e ponto de vista do autor.</p>
-        <p>Coesão = amarração linguística; coerência = lógica das ideias. Um texto pode ser coeso e incoerente.</p>
+        <p><span class="vocab-word" data-word="coesão">Coesão</span> = amarração linguística; <span class="vocab-word" data-word="coerência">coerência</span> = lógica das ideias. Um texto pode ser coeso e incoerente.</p>
       </div>
 
     </section>
@@ -876,7 +877,7 @@
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no perfil (mínimo 85% para concluir a lição).</p>
+        <p>Escolha a alternativa correta. Ao finalizar, a <span class="vocab-word" data-word="pontuação">pontuação</span> é salva no perfil (mínimo 85% para concluir a lição).</p>
 
         <div class="mc-item">
           <div class="q">“Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:</div>
@@ -909,7 +910,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Coesão textual refere-se principalmente a:</div>
+          <div class="q"><span class="vocab-word" data-word="coesão">Coesão</span> textual refere-se principalmente a:</div>
           <div class="mc-options">
           <label><input type="radio" name="q4" value="a">Harmonia lógica apenas</label>
           <label class="correct-answer"><input type="radio" name="q4" value="b">Ligação entre partes (conectivos, pronomes…)</label>
@@ -919,9 +920,9 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Coerência refere-se principalmente a:</div>
+          <div class="q"><span class="vocab-word" data-word="coerência">Coerência</span> refere-se principalmente a:</div>
           <div class="mc-options">
-          <label><input type="radio" name="q5" value="a">Só pontuação</label>
+          <label><input type="radio" name="q5" value="a">Só <span class="vocab-word" data-word="pontuação">pontuação</span></label>
           <label class="correct-answer"><input type="radio" name="q5" value="b">Harmonia lógica entre as ideias</label>
           <label><input type="radio" name="q5" value="c">Só a fonte da letra</label>
           </div>
@@ -939,11 +940,11 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Metáfora é:</div>
+          <div class="q"><span class="vocab-word" data-word="metáfora">Metáfora</span> é:</div>
           <div class="mc-options">
           <label class="correct-answer"><input type="radio" name="q7" value="a">Comparação implícita</label>
           <label><input type="radio" name="q7" value="b">Sempre sentido literal</label>
-          <label><input type="radio" name="q7" value="c">Só erro de concordância</label>
+          <label><input type="radio" name="q7" value="c">Só erro de <span class="vocab-word" data-word="concordância">concordância</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -967,13 +968,13 @@
         <details class="gabarito-box">
           <summary>📋 Gabarito comentado</summary>
           <div class="gabarito-list">
-          <div class="g-item"><b>Questão 1.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Valoriza antecipação e persistência</span><br>A metáfora plantar/colher projeta esforço antecipado e recompensa futura. O trecho valoriza quem age cedo e permanece, em contraste com quem apenas sonha — não é manual agrícola literal.</div>
+          <div class="g-item"><b>Questão 1.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Valoriza antecipação e persistência</span><br>A <span class="vocab-word" data-word="metáfora">metáfora</span> plantar/colher projeta esforço antecipado e recompensa futura. O trecho valoriza quem age cedo e permanece, em contraste com quem apenas sonha — não é manual agrícola literal.</div>
           <div class="g-item"><b>Questão 2.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Conotativa / inferencial</span><br>Nível conotativo/inferencial recupera o não dito explicitamente: ironias, subentendidos, implicações. O denotativo fica no sentido literal da superfície textual.</div>
           <div class="g-item"><b>Questão 3.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Dissertativo</span><br>Dissertação (argumentativa) organiza tese, desenvolvimento com argumentos e conclusão. Narrativa conta fatos; injunção instrui/ordena.</div>
-          <div class="g-item"><b>Questão 4.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Ligação entre partes (conectivos, pronomes…)</span><br>Coesão é a rede de recursos que amarra o texto (pronomes de retomada, conectivos, elipses, repetições controladas). Sem coesão, o fio referencial se perde.</div>
-          <div class="g-item"><b>Questão 5.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Harmonia lógica entre as ideias</span><br>Coerência diz respeito à compatibilidade lógica e semântica das ideias. Um texto pode estar coeso (bem “costurado”) e ainda assim incoerente (ideias que não se sustentam mutuamente).</div>
+          <div class="g-item"><b>Questão 4.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Ligação entre partes (conectivos, pronomes…)</span><br><span class="vocab-word" data-word="coesão">Coesão</span> é a rede de recursos que amarra o texto (pronomes de retomada, conectivos, elipses, repetições controladas). Sem <span class="vocab-word" data-word="coesão">coesão</span>, o fio referencial se perde.</div>
+          <div class="g-item"><b>Questão 5.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Harmonia lógica entre as ideias</span><br><span class="vocab-word" data-word="coerência">Coerência</span> diz respeito à compatibilidade lógica e <span class="vocab-word" data-word="semântica">semântica</span> das ideias. Um texto pode estar coeso (bem “costurado”) e ainda assim incoerente (ideias que não se sustentam mutuamente).</div>
           <div class="g-item"><b>Questão 6.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Merecem atenção — costumam absolutizar demais</span><br>Em itens de prova, quantificadores absolutos (sempre, nunca, apenas, jamais) merecem leitura crítica: bastam para invalidar afirmativas que o texto trata de modo parcial ou matizado.</div>
-          <div class="g-item"><b>Questão 7.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Comparação implícita</span><br>Metáfora compara de forma implícita (“a vida é uma viagem”), sem conectar com “como/tal qual”. Diferente da comparação explícita (símile).</div>
+          <div class="g-item"><b>Questão 7.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Comparação implícita</span><br><span class="vocab-word" data-word="metáfora">Metáfora</span> compara de forma implícita (“a vida é uma viagem”), sem conectar com “como/tal qual”. Diferente da comparação explícita (símile).</div>
           <div class="g-item"><b>Questão 8.</b> “Quem planta cedo, colhe mais tarde os frutos que outros só sonharam plantar.” A ideia central é:<br><span class="g-ans">Resposta: Localizar no texto o trecho que sustenta a resposta</span><br>Estratégia sólida: localizar no texto o trecho que autoriza a alternativa. Responder só pelo senso comum, sem âncora textual, é a fonte clássica de erro em interpretação.</div>
           </div>
         </details>

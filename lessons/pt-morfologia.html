@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="vocab-card.js"></script>
 <style>
 
 
@@ -699,7 +700,7 @@
 
 <div class="mobile-topbar">
   <button class="mt-btn" id="menuToggle" aria-label="Abrir sumário">☰ Capítulos</button>
-  <span class="mt-title">Morfologia</span>
+  <span class="mt-title"><span class="vocab-word" data-word="morfologia">Morfologia</span></span>
   <a class="mt-btn" href="../index.html">🏠 App</a>
 </div>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
@@ -731,7 +732,7 @@
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Capítulo 1 de 10 · Gramática Aplicada</div>
-    <h2>🔤 Morfologia<br><em>As classes de palavras e suas funções</em></h2>
+    <h2>🔤 <span class="vocab-word" data-word="morfologia">Morfologia</span><br><em>As classes de palavras e suas funções</em></h2>
     <p>Classes gramaticais, formação e flexão das palavras. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Capítulo 1/10</span>
@@ -747,13 +748,13 @@
         <span class="section-num">1</span>
         <div class="section-title-block">
           <p class="section-label">Capítulo I</p>
-          <h2 class="section-title">Morfologia</h2>
+          <h2 class="section-title"><span class="vocab-word" data-word="morfologia">Morfologia</span></h2>
           <p class="section-subtitle">As classes de palavras e suas funções</p>
         </div>
       </div>
 
       <div class="prose">
-        <p>A morfologia estuda a estrutura e a classificação das palavras. Em português, existem <strong>dez classes gramaticais</strong>, divididas entre variáveis (sofrem flexão) e invariáveis.</p>
+        <p>A <span class="vocab-word" data-word="morfologia">morfologia</span> estuda a estrutura e a classificação das palavras. Em português, existem <strong>dez classes gramaticais</strong>, divididas entre variáveis (sofrem flexão) e invariáveis.</p>
 
         <h3>As 10 Classes Gramaticais</h3>
         <div class="tbl-wrap">
@@ -767,16 +768,16 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td><strong>Substantivo</strong></td><td>Nome de seres, coisas, sentimentos</td><td><em>cidade, amor, Brasil</em></td><td>Variável</td></tr>
-              <tr><td><strong>Artigo</strong></td><td>Determina o substantivo</td><td><em>o, a, um, uma</em></td><td>Variável</td></tr>
-              <tr><td><strong>Adjetivo</strong></td><td>Caracteriza o substantivo</td><td><em>belo, difícil, verde</em></td><td>Variável</td></tr>
-              <tr><td><strong>Numeral</strong></td><td>Indica quantidade ou ordem</td><td><em>dois, primeiro, dobro</em></td><td>Variável</td></tr>
-              <tr><td><strong>Pronome</strong></td><td>Substitui ou acompanha o substantivo</td><td><em>eu, meu, quem, este</em></td><td>Variável</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="substantivo">Substantivo</span></strong></td><td>Nome de seres, coisas, sentimentos</td><td><em>cidade, amor, Brasil</em></td><td>Variável</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="artigo">Artigo</span></strong></td><td>Determina o <span class="vocab-word" data-word="substantivo">substantivo</span></td><td><em>o, a, um, uma</em></td><td>Variável</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="adjetivo">Adjetivo</span></strong></td><td>Caracteriza o <span class="vocab-word" data-word="substantivo">substantivo</span></td><td><em>belo, difícil, verde</em></td><td>Variável</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="numeral">Numeral</span></strong></td><td>Indica quantidade ou ordem</td><td><em>dois, primeiro, dobro</em></td><td>Variável</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="pronome">Pronome</span></strong></td><td>Substitui ou acompanha o <span class="vocab-word" data-word="substantivo">substantivo</span></td><td><em>eu, meu, quem, este</em></td><td>Variável</td></tr>
               <tr><td><strong>Verbo</strong></td><td>Indica ação, estado ou fenômeno</td><td><em>correr, ser, chover</em></td><td>Variável</td></tr>
-              <tr><td><strong>Advérbio</strong></td><td>Modifica verbo, adjetivo ou advérbio</td><td><em>muito, aqui, ontem</em></td><td>Invariável*</td></tr>
-              <tr><td><strong>Preposição</strong></td><td>Liga palavras estabelecendo relação</td><td><em>de, em, para, com</em></td><td>Invariável</td></tr>
-              <tr><td><strong>Conjunção</strong></td><td>Liga orações ou termos</td><td><em>e, mas, porque, embora</em></td><td>Invariável</td></tr>
-              <tr><td><strong>Interjeição</strong></td><td>Exprime emoção ou chamado</td><td><em>Ah! Ei! Bravo!</em></td><td>Invariável</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="advérbio">Advérbio</span></strong></td><td>Modifica verbo, <span class="vocab-word" data-word="adjetivo">adjetivo</span> ou <span class="vocab-word" data-word="advérbio">advérbio</span></td><td><em>muito, aqui, ontem</em></td><td>Invariável*</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="preposição">Preposição</span></strong></td><td>Liga palavras estabelecendo relação</td><td><em>de, em, para, com</em></td><td>Invariável</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="conjunção">Conjunção</span></strong></td><td>Liga orações ou termos</td><td><em>e, mas, porque, embora</em></td><td>Invariável</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="interjeição">Interjeição</span></strong></td><td>Exprime emoção ou chamado</td><td><em>Ah! Ei! Bravo!</em></td><td>Invariável</td></tr>
             </tbody>
           </table>
         </div>
@@ -813,23 +814,23 @@
           <div class="ex-box gold">
             <span class="ex-label">Justaposição</span>
             <code>guarda + chuva = guarda-chuva</code>
-            <small>Elementos justapostos sem alteração fonética</small>
+            <small>Elementos justapostos sem alteração <span class="vocab-word" data-word="fonética">fonética</span></small>
           </div>
           <div class="ex-box gold">
             <span class="ex-label">Aglutinação</span>
             <code>plano + alto → planalto</code>
-            <small>Elementos unidos com alteração fonética</small>
+            <small>Elementos unidos com alteração <span class="vocab-word" data-word="fonética">fonética</span></small>
           </div>
         </div>
 
-        <h3>Flexão do Substantivo</h3>
+        <h3>Flexão do <span class="vocab-word" data-word="substantivo">Substantivo</span></h3>
         <ul class="rule-list">
           <li><strong>Gênero:</strong> masculino/feminino — <em>o gato / a gata · o cantor / a cantora</em></li>
           <li><strong>Número:</strong> singular/plural — <em>flor / flores · irmão / irmãos</em></li>
           <li><strong>Grau:</strong> aumentativo/diminutivo — <em>casarão / casinha · livrão / livrinho</em></li>
         </ul>
 
-        <h3>Grau do Adjetivo</h3>
+        <h3>Grau do <span class="vocab-word" data-word="adjetivo">Adjetivo</span></h3>
         <div class="ex-grid triple">
           <div class="ex-box neutral">
             <span class="ex-label">Comparativo de Igualdade</span>
@@ -854,11 +855,11 @@
 
       <div class="callout info">
         <strong>Como estudar este capítulo</strong>
-        Memorize as 10 classes e a diferença variável × invariável. Em seguida, treine formação de palavras (prefixo, sufixo, composição) e os graus do adjetivo.
+        Memorize as 10 classes e a diferença variável × invariável. Em seguida, treine formação de palavras (prefixo, sufixo, composição) e os graus do <span class="vocab-word" data-word="adjetivo">adjetivo</span>.
       </div>
       <div class="prose">
         <h3>Roteiro prático</h3>
-        <p>1) Classifique palavras de um parágrafo do jornal em substantivo, adjetivo, verbo etc.</p>
+        <p>1) Classifique palavras de um parágrafo do jornal em <span class="vocab-word" data-word="substantivo">substantivo</span>, <span class="vocab-word" data-word="adjetivo">adjetivo</span>, verbo etc.</p>
         <p>2) Monte famílias: <em>flor → florista → floricultura</em> (derivação).</p>
         <p>3) Compare graus: <em>bom / melhor / ótimo</em> — evite “mais melhor”.</p>
       </div>
@@ -875,11 +876,11 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Fixação deste capítulo — morfologia</p>
+          <p class="section-subtitle">Fixação deste capítulo — <span class="vocab-word" data-word="morfologia">morfologia</span></p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no perfil (mínimo 85% para concluir a lição).</p>
+        <p>Escolha a alternativa correta. Ao finalizar, a <span class="vocab-word" data-word="pontuação">pontuação</span> é salva no perfil (mínimo 85% para concluir a lição).</p>
 
         <div class="mc-item">
           <div class="q">A palavra <em>empobrecer</em> é formada por:</div>
@@ -895,16 +896,16 @@
         <div class="mc-item">
           <div class="q">Qual classe é <strong>invariável</strong>?</div>
           <div class="mc-options">
-          <label><input type="radio" name="q2" value="a">Substantivo</label>
-          <label><input type="radio" name="q2" value="b">Adjetivo</label>
-          <label class="correct-answer"><input type="radio" name="q2" value="c">Preposição</label>
+          <label><input type="radio" name="q2" value="a"><span class="vocab-word" data-word="substantivo">Substantivo</span></label>
+          <label><input type="radio" name="q2" value="b"><span class="vocab-word" data-word="adjetivo">Adjetivo</span></label>
+          <label class="correct-answer"><input type="radio" name="q2" value="c"><span class="vocab-word" data-word="preposição">Preposição</span></label>
           <label><input type="radio" name="q2" value="d">Verbo</label>
           </div>
         
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Em <em>"casarão"</em>, o grau do substantivo é:</div>
+          <div class="q">Em <em>"casarão"</em>, o grau do <span class="vocab-word" data-word="substantivo">substantivo</span> é:</div>
           <div class="mc-options">
           <label><input type="radio" name="q3" value="a">Diminutivo</label>
           <label class="correct-answer"><input type="radio" name="q3" value="b">Aumentativo</label>
@@ -931,7 +932,7 @@
           <label><input type="radio" name="q5" value="a">Derivação prefixal</label>
           <label class="correct-answer"><input type="radio" name="q5" value="b">Composição por justaposição</label>
           <label><input type="radio" name="q5" value="c">Parassíntese</label>
-          <label><input type="radio" name="q5" value="d">Artigo definido</label>
+          <label><input type="radio" name="q5" value="d"><span class="vocab-word" data-word="artigo definido"><span class="vocab-word" data-word="artigo">Artigo</span> definido</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -948,7 +949,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Todas as proparoxítonas, quanto à acentuação, são:</div>
+          <div class="q">Todas as <span class="vocab-word" data-word="proparoxítona">proparoxítonas</span>, quanto à acentuação, são:</div>
           <div class="mc-options">
           <label><input type="radio" name="q7" value="a">Nunca acentuadas</label>
           <label class="correct-answer"><input type="radio" name="q7" value="b">Sempre acentuadas</label>
@@ -979,12 +980,12 @@
           <summary>📋 Gabarito comentado</summary>
           <div class="gabarito-list">
           <div class="g-item"><b>Questão 1.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: Parassíntese (prefixo + sufixo juntos)</span><br>Parassíntese ocorre quando prefixo e sufixo são acrescentados <strong>simultaneamente</strong> a uma base, de modo que a retirada de um dos afixos não deixa palavra atestada com o mesmo processo: em- + pobr- + -ecer → empobrecer. Não é só prefixação nem só sufixação.</div>
-          <div class="g-item"><b>Questão 2.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: Preposição</span><br>Classes invariáveis (não flexionam em gênero/número como o nome): advérbio, preposição, conjunção e interjeição. Substantivo, adjetivo e verbo são variáveis. Preposição entra no grupo invariável.</div>
-          <div class="g-item"><b>Questão 3.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: Aumentativo</span><br>Grau aumentativo do substantivo amplia a noção (casarão, livrão). Diminutivo reduz (casinha). Comparativo/superlativo são graus típicos do adjetivo, não desse exemplo.</div>
+          <div class="g-item"><b>Questão 2.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="preposição">Preposição</span></span><br>Classes invariáveis (não flexionam em gênero/número como o nome): <span class="vocab-word" data-word="advérbio">advérbio</span>, <span class="vocab-word" data-word="preposição">preposição</span>, <span class="vocab-word" data-word="conjunção">conjunção</span> e <span class="vocab-word" data-word="interjeição">interjeição</span>. <span class="vocab-word" data-word="substantivo">Substantivo</span>, <span class="vocab-word" data-word="adjetivo">adjetivo</span> e verbo são variáveis. <span class="vocab-word" data-word="preposição">Preposição</span> entra no grupo invariável.</div>
+          <div class="g-item"><b>Questão 3.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: Aumentativo</span><br>Grau aumentativo do <span class="vocab-word" data-word="substantivo">substantivo</span> amplia a noção (casarão, livrão). Diminutivo reduz (casinha). Comparativo/superlativo são graus típicos do <span class="vocab-word" data-word="adjetivo">adjetivo</span>, não desse exemplo.</div>
           <div class="g-item"><b>Questão 4.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: melhor</span><br>Formas sintéticas irregulares: bom→melhor, mau→pior, grande→maior, pequeno→menor. “Mais bom” é desvio da norma; “boníssimo/ótimo” são superlativos, não o comparativo pedido.</div>
-          <div class="g-item"><b>Questão 5.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: Composição por justaposição</span><br>Composição por justaposição une radicais preservando a identidade de cada um (muitas vezes com hífen): guarda-chuva, beija-flor. Aglutinação funde com alteração (planalto).</div>
+          <div class="g-item"><b>Questão 5.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: Composição por justaposição</span><br>Composição por justaposição une radicais preservando a identidade de cada um (muitas vezes com <span class="vocab-word" data-word="hífen">hífen</span>): guarda-chuva, beija-flor. Aglutinação funde com alteração (planalto).</div>
           <div class="g-item"><b>Questão 6.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: Aglutinação</span><br>Em planalto, plano + alto sofrem fusão com perda segmentável nítida → aglutinação. Justaposição manteria os elementos mais “intactos”.</div>
-          <div class="g-item"><b>Questão 7.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: Sempre acentuadas</span><br>Regra geral de acentuação: <strong>todas</strong> as proparoxítonas são acentuadas (médico, árvore, público), independentemente da terminação.</div>
+          <div class="g-item"><b>Questão 7.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: Sempre acentuadas</span><br>Regra geral de acentuação: <strong>todas</strong> as <span class="vocab-word" data-word="proparoxítona">proparoxítonas</span> são acentuadas (médico, árvore, público), independentemente da terminação.</div>
           <div class="g-item"><b>Questão 8.</b> A palavra empobrecer é formada por:<br><span class="g-ans">Resposta: Superlativo absoluto</span><br>Superlativo absoluto sintético usa sufixo (-íssimo): belíssimo. O analítico usa “muito belo”. Comparativo compara dois termos (“mais belo que”).</div>
           </div>
         </details>

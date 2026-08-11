@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="vocab-card.js"></script>
 <style>
 
 
@@ -699,7 +700,7 @@
 
 <div class="mobile-topbar">
   <button class="mt-btn" id="menuToggle" aria-label="Abrir sumário">☰ Capítulos</button>
-  <span class="mt-title">Regência</span>
+  <span class="mt-title"><span class="vocab-word" data-word="regência">Regência</span></span>
   <a class="mt-btn" href="../index.html">🏠 App</a>
 </div>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
@@ -731,8 +732,8 @@
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Capítulo 4 de 10 · Gramática Aplicada</div>
-    <h2>🔗 Regência<br><em>Verbal e nominal — o uso correto das preposições</em></h2>
-    <p>Regência verbal e nominal, preposições exigidas. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
+    <h2>🔗 <span class="vocab-word" data-word="regência">Regência</span><br><em>Verbal e nominal — o uso correto das preposições</em></h2>
+    <p><span class="vocab-word" data-word="regência verbal"><span class="vocab-word" data-word="regência">Regência</span> verbal</span> e nominal, preposições exigidas. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Capítulo 4/10</span>
       <span class="badge">8 exercícios</span>
@@ -747,19 +748,19 @@
         <span class="section-num">4</span>
         <div class="section-title-block">
           <p class="section-label">Capítulo IV</p>
-          <h2 class="section-title">Regência</h2>
+          <h2 class="section-title"><span class="vocab-word" data-word="regência">Regência</span></h2>
           <p class="section-subtitle">Verbal e nominal — o uso correto das preposições</p>
         </div>
       </div>
 
       <div class="prose">
-        <p>Regência é a relação de dependência entre um termo regente (verbo ou nome) e seu complemento. O regente exige (ou não) uma preposição específica antes do complemento.</p>
+        <p><span class="vocab-word" data-word="regência">Regência</span> é a relação de dependência entre um termo regente (verbo ou nome) e seu complemento. O regente exige (ou não) uma <span class="vocab-word" data-word="preposição">preposição</span> específica antes do complemento.</p>
 
-        <h3>Regência Verbal</h3>
+        <h3><span class="vocab-word" data-word="regência verbal"><span class="vocab-word" data-word="regência">Regência</span> Verbal</span></h3>
         <div class="tbl-wrap">
           <table>
             <thead>
-              <tr><th>Verbo</th><th>Regência</th><th>Exemplo Correto</th></tr>
+              <tr><th>Verbo</th><th><span class="vocab-word" data-word="regência">Regência</span></th><th>Exemplo Correto</th></tr>
             </thead>
             <tbody>
               <tr><td><strong>Assistir</strong> (ver)</td><td>VI + a</td><td><em>Assisti <mark>ao</mark> filme.</em></td></tr>
@@ -782,20 +783,20 @@
           <div class="ex-box correct">
             <span class="ex-label">✓ Correto</span>
             <code>Assisti ao jogo ontem.</code>
-            <small>Assistir (ver) exige preposição "a"</small>
+            <small>Assistir (ver) exige <span class="vocab-word" data-word="preposição">preposição</span> "a"</small>
           </div>
           <div class="ex-box wrong">
             <span class="ex-label">✗ Incorreto</span>
             <code>Assisti o jogo ontem.</code>
-            <small>Omissão da preposição obrigatória</small>
+            <small>Omissão da <span class="vocab-word" data-word="preposição">preposição</span> obrigatória</small>
           </div>
         </div>
 
-        <h3>Regência Nominal</h3>
+        <h3><span class="vocab-word" data-word="regência nominal"><span class="vocab-word" data-word="regência">Regência</span> Nominal</span></h3>
         <div class="tbl-wrap">
           <table>
             <thead>
-              <tr><th>Nome</th><th>Preposição</th><th>Exemplo</th></tr>
+              <tr><th>Nome</th><th><span class="vocab-word" data-word="preposição">Preposição</span></th><th>Exemplo</th></tr>
             </thead>
             <tbody>
               <tr><td><strong>Acessível</strong></td><td>a</td><td><em>acessível <mark>a</mark> todos</em></td></tr>
@@ -812,7 +813,7 @@
 
         <div class="callout danger">
           <strong>Erro clássico</strong>
-          "Prefiro X <strong>do que</strong> Y" está errado. A regência correta de <em>preferir</em> é com <strong>"a"</strong>: <em>"Prefiro chá <strong>a</strong> café."</em> "Do que" é conjunção comparativa, não preposição.
+          "Prefiro X <strong>do que</strong> Y" está errado. A <span class="vocab-word" data-word="regência">regência</span> correta de <em>preferir</em> é com <strong>"a"</strong>: <em>"Prefiro chá <strong>a</strong> café."</em> "Do que" é <span class="vocab-word" data-word="conjunção">conjunção</span> comparativa, não <span class="vocab-word" data-word="preposição">preposição</span>.
         </div>
       </div>
     
@@ -824,7 +825,7 @@
       <div class="prose">
         <h3>Tabela mental útil</h3>
         <p><strong>Assistir</strong> (ver) → a · <strong>Gostar</strong> → de · <strong>Obedecer</strong> → a · <strong>Namorar</strong> → VT direto (sem “com” na norma culta).</p>
-        <p>Sempre que errar uma preposição, volte ao verbo/nome regente e pergunte: “o que este termo exige?”</p>
+        <p>Sempre que errar uma <span class="vocab-word" data-word="preposição">preposição</span>, volte ao verbo/nome regente e pergunte: “o que este termo exige?”</p>
       </div>
       <div class="ex-grid">
         <div class="ex-box correct"><span class="ex-label">Correto</span><code>Assisti ao filme.</code></div>
@@ -839,11 +840,11 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Fixação deste capítulo — regência</p>
+          <p class="section-subtitle">Fixação deste capítulo — <span class="vocab-word" data-word="regência">regência</span></p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no perfil (mínimo 85% para concluir a lição).</p>
+        <p>Escolha a alternativa correta. Ao finalizar, a <span class="vocab-word" data-word="pontuação">pontuação</span> é salva no perfil (mínimo 85% para concluir a lição).</p>
 
         <div class="mc-item">
           <div class="q">Em <em>"Assisti ___ filme."</em> (ver), o correto é:</div>
@@ -856,7 +857,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">A regência de <em>preferir</em> é:</div>
+          <div class="q">A <span class="vocab-word" data-word="regência">regência</span> de <em>preferir</em> é:</div>
           <div class="mc-options">
           <label><input type="radio" name="q2" value="a">Prefiro chá do que café</label>
           <label class="correct-answer"><input type="radio" name="q2" value="b">Prefiro chá a café</label>
@@ -871,7 +872,7 @@
           <label class="correct-answer"><input type="radio" name="q3" value="a">de</label>
           <label><input type="radio" name="q3" value="b">a</label>
           <label><input type="radio" name="q3" value="c">com</label>
-          <label><input type="radio" name="q3" value="d">(sem preposição)</label>
+          <label><input type="radio" name="q3" value="d">(sem <span class="vocab-word" data-word="preposição">preposição</span>)</label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -887,7 +888,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">“Obedecer” regência:</div>
+          <div class="q">“Obedecer” <span class="vocab-word" data-word="regência">regência</span>:</div>
           <div class="mc-options">
           <label><input type="radio" name="q5" value="a">Obedeceu o regulamento</label>
           <label class="correct-answer"><input type="radio" name="q5" value="b">Obedeceu ao regulamento</label>
@@ -920,8 +921,8 @@
           <div class="q">“Implicar” (= acarretar), na norma culta contemporânea, tende a:</div>
           <div class="mc-options">
           <label><input type="radio" name="q8" value="a">Exigir sempre “em”</label>
-          <label class="correct-answer"><input type="radio" name="q8" value="b">Transitivo direto: implica mudanças</label>
-          <label><input type="radio" name="q8" value="c">Ser só interjeição</label>
+          <label class="correct-answer"><input type="radio" name="q8" value="b"><span class="vocab-word" data-word="transitivo">Transitivo</span> direto: implica mudanças</label>
+          <label><input type="radio" name="q8" value="c">Ser só <span class="vocab-word" data-word="interjeição">interjeição</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -935,14 +936,14 @@
         <details class="gabarito-box">
           <summary>📋 Gabarito comentado</summary>
           <div class="gabarito-list">
-          <div class="g-item"><b>Questão 1.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Assisti ao filme</span><br>Assistir no sentido de “ver/presenciar” regência indireta com <strong>a</strong>: assistir ao filme / ao jogo. Sem a preposição, a frase foge à norma culta dessa acepção.</div>
+          <div class="g-item"><b>Questão 1.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Assisti ao filme</span><br>Assistir no sentido de “ver/presenciar” <span class="vocab-word" data-word="regência">regência</span> indireta com <strong>a</strong>: assistir ao filme / ao jogo. Sem a <span class="vocab-word" data-word="preposição">preposição</span>, a frase foge à norma culta dessa acepção.</div>
           <div class="g-item"><b>Questão 2.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Prefiro chá a café</span><br>Preferir rege dois complementos com <strong>a</strong> no segundo termo: preferir X <strong>a</strong> Y. “Do que” é padrão de comparativos com “mais”, não de preferir.</div>
-          <div class="g-item"><b>Questão 3.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: de</span><br>Gostar seleciona <strong>de</strong>: gostar de música, de alguém. Omitir a preposição ou trocá-la altera a regência culta.</div>
-          <div class="g-item"><b>Questão 4.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Namoro a Carla</span><br>Na norma culta contemporânea ensinada em manuais, namorar é transitivo direto: namorar alguém (não “namorar com”). O “com” é uso corrente coloquial, mas não a resposta de prova nesse item.</div>
-          <div class="g-item"><b>Questão 5.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Obedeceu ao regulamento</span><br>Obedecer / desobedecer regem objeto indireto com <strong>a</strong>: obedecer ao regulamento, às regras.</div>
-          <div class="g-item"><b>Questão 6.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Aspiro ao cargo</span><br>Aspirar (= almejar) pede <strong>a</strong>: aspirar ao cargo. Aspirar (= inalar) é transitivo direto: aspirar o aroma — sentidos diferentes, regências diferentes.</div>
+          <div class="g-item"><b>Questão 3.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: de</span><br>Gostar seleciona <strong>de</strong>: gostar de música, de alguém. Omitir a <span class="vocab-word" data-word="preposição">preposição</span> ou trocá-la altera a <span class="vocab-word" data-word="regência">regência</span> culta.</div>
+          <div class="g-item"><b>Questão 4.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Namoro a Carla</span><br>Na norma culta contemporânea ensinada em manuais, namorar é <span class="vocab-word" data-word="transitivo">transitivo</span> direto: namorar alguém (não “namorar com”). O “com” é uso corrente coloquial, mas não a resposta de prova nesse item.</div>
+          <div class="g-item"><b>Questão 5.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Obedeceu ao regulamento</span><br>Obedecer / desobedecer regem <span class="vocab-word" data-word="objeto indireto">objeto indireto</span> com <strong>a</strong>: obedecer ao regulamento, às regras.</div>
+          <div class="g-item"><b>Questão 6.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Aspiro ao cargo</span><br>Aspirar (= almejar) pede <strong>a</strong>: aspirar ao cargo. Aspirar (= inalar) é <span class="vocab-word" data-word="transitivo">transitivo</span> direto: aspirar o aroma — sentidos diferentes, regências diferentes.</div>
           <div class="g-item"><b>Questão 7.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Assisti ao jogo ontem.</span><br>Mesma regra de assistir (ver): assisti <strong>ao</strong> jogo. “Assisti o jogo” é o erro clássico cobrado em exercícios.</div>
-          <div class="g-item"><b>Questão 8.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: Transitivo direto: implica mudanças</span><br>Implicar no sentido de “acarretar/ensejar” tende a transitivo direto na norma atual: isso implica mudanças. Construções com “em” existem em outros sentidos/usos, mas a opção alinhada ao manual é a VTD.</div>
+          <div class="g-item"><b>Questão 8.</b> Em "Assisti ___ filme." (ver), o correto é:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="transitivo">Transitivo</span> direto: implica mudanças</span><br>Implicar no sentido de “acarretar/ensejar” tende a <span class="vocab-word" data-word="transitivo">transitivo</span> direto na norma atual: isso implica mudanças. Construções com “em” existem em outros sentidos/usos, mas a opção alinhada ao manual é a VTD.</div>
           </div>
         </details>
         <div class="callout info" style="margin-top:28px;">

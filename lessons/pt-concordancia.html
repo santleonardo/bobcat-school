@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="vocab-card.js"></script>
 <style>
 
 
@@ -699,7 +700,7 @@
 
 <div class="mobile-topbar">
   <button class="mt-btn" id="menuToggle" aria-label="Abrir sumário">☰ Capítulos</button>
-  Concordância
+  <span class="vocab-word" data-word="concordância">Concordância</span>
   <a class="mt-btn" href="../index.html">🏠 App</a>
 </div>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
@@ -731,8 +732,8 @@
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Capítulo 3 de 10 · Gramática Aplicada</div>
-    <h2>🤝 Concordância<br><em>Nominal e verbal — regras e casos especiais</em></h2>
-    <p>Concordância nominal e verbal, casos especiais. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
+    <h2>🤝 <span class="vocab-word" data-word="concordância">Concordância</span><br><em>Nominal e verbal — regras e casos especiais</em></h2>
+    <p><span class="vocab-word" data-word="concordância nominal"><span class="vocab-word" data-word="concordância">Concordância</span> nominal</span> e verbal, casos especiais. Estude a teoria, observe os exemplos comentados e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Capítulo 3/10</span>
       <span class="badge">8 exercícios</span>
@@ -747,39 +748,39 @@
         <span class="section-num">3</span>
         <div class="section-title-block">
           <p class="section-label">Capítulo III</p>
-          <h2 class="section-title">Concordância</h2>
+          <h2 class="section-title"><span class="vocab-word" data-word="concordância">Concordância</span></h2>
           <p class="section-subtitle">Nominal e verbal — regras e casos especiais</p>
         </div>
       </div>
 
       <div class="prose">
-        <h3>Concordância Nominal</h3>
-        <p>O adjetivo, o pronome adjetivo, o numeral e o artigo concordam em <strong>gênero e número</strong> com o substantivo a que se referem.</p>
+        <h3><span class="vocab-word" data-word="concordância nominal"><span class="vocab-word" data-word="concordância">Concordância</span> Nominal</span></h3>
+        <p>O <span class="vocab-word" data-word="adjetivo">adjetivo</span>, o <span class="vocab-word" data-word="pronome">pronome</span> <span class="vocab-word" data-word="adjetivo">adjetivo</span>, o <span class="vocab-word" data-word="numeral">numeral</span> e o <span class="vocab-word" data-word="artigo">artigo</span> concordam em <strong>gênero e número</strong> com o <span class="vocab-word" data-word="substantivo">substantivo</span> a que se referem.</p>
 
         <div class="ex-grid">
           <div class="ex-box correct">
             <span class="ex-label">✓ Correto</span>
             <code>As alunas dedicadas foram aprovadas.</code>
-            <small>Adjetivo concorda com o substantivo feminino plural</small>
+            <small><span class="vocab-word" data-word="adjetivo">Adjetivo</span> concorda com o <span class="vocab-word" data-word="substantivo">substantivo</span> feminino plural</small>
           </div>
           <div class="ex-box wrong">
             <span class="ex-label">✗ Incorreto</span>
             <code>As alunas dedicado foram aprovadas.</code>
-            <small>Adjetivo no masculino singular — erro de concordância</small>
+            <small><span class="vocab-word" data-word="adjetivo">Adjetivo</span> no masculino singular — erro de <span class="vocab-word" data-word="concordância">concordância</span></small>
           </div>
         </div>
 
-        <h4>Casos Especiais — Concordância Nominal</h4>
+        <h4>Casos Especiais — <span class="vocab-word" data-word="concordância nominal"><span class="vocab-word" data-word="concordância">Concordância</span> Nominal</span></h4>
         <ul class="rule-list">
-          <li><strong>Adjetivo pós-posto a vários substantivos:</strong> concorda com o mais próximo ou vai para o plural masculino — <em>"Comprei camiseta e short azul" OU "azuis".</em></li>
-          <li><strong>Adjetivo anteposto:</strong> concorda obrigatoriamente com o substantivo mais próximo — <em>"Bela casa e jardim."</em></li>
-          <li><strong>Adjetivo predicativo de sujeitos diferentes:</strong> plural masculino — <em>"Pedro e Ana estão cansados."</em></li>
-          <li><strong>Meio (= metade):</strong> concorda com o substantivo — <em>"Bebi meia xícara / meio copo."</em></li>
+          <li><strong><span class="vocab-word" data-word="adjetivo">Adjetivo</span> pós-posto a vários substantivos:</strong> concorda com o mais próximo ou vai para o plural masculino — <em>"Comprei camiseta e short azul" OU "azuis".</em></li>
+          <li><strong><span class="vocab-word" data-word="adjetivo">Adjetivo</span> anteposto:</strong> concorda obrigatoriamente com o <span class="vocab-word" data-word="substantivo">substantivo</span> mais próximo — <em>"Bela casa e jardim."</em></li>
+          <li><strong><span class="vocab-word" data-word="adjetivo">Adjetivo</span> <span class="vocab-word" data-word="predicativo">predicativo</span> de sujeitos diferentes:</strong> plural masculino — <em>"Pedro e Ana estão cansados."</em></li>
+          <li><strong>Meio (= metade):</strong> concorda com o <span class="vocab-word" data-word="substantivo">substantivo</span> — <em>"Bebi meia xícara / meio copo."</em></li>
           <li><strong>Bastante, muito, pouco:</strong> variam quando adjetivos — <em>"Bastantes alunos compareceram."</em></li>
         </ul>
 
-        <h3>Concordância Verbal</h3>
-        <p>O verbo concorda em <strong>número e pessoa</strong> com o sujeito.</p>
+        <h3><span class="vocab-word" data-word="concordância verbal"><span class="vocab-word" data-word="concordância">Concordância</span> Verbal</span></h3>
+        <p>O verbo concorda em <strong>número e pessoa</strong> com o <span class="vocab-word" data-word="sujeito">sujeito</span>.</p>
 
         <div class="ex-grid">
           <div class="ex-box correct">
@@ -792,19 +793,19 @@
           </div>
         </div>
 
-        <h4>Casos Especiais — Concordância Verbal</h4>
+        <h4>Casos Especiais — <span class="vocab-word" data-word="concordância verbal"><span class="vocab-word" data-word="concordância">Concordância</span> Verbal</span></h4>
         <div class="tbl-wrap">
           <table>
             <thead>
               <tr><th>Situação</th><th>Regra</th><th>Exemplo</th></tr>
             </thead>
             <tbody>
-              <tr><td><strong>Sujeito composto antes do verbo</strong></td><td>Verbo no plural</td><td><em>Pedro e Ana <mark>vieram</mark>.</em></td></tr>
-              <tr><td><strong>Sujeito composto após o verbo</strong></td><td>Pode concordar com o mais próximo</td><td><em>Chegou Pedro e Ana.</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="sujeito">Sujeito</span> composto antes do verbo</strong></td><td>Verbo no plural</td><td><em>Pedro e Ana <mark>vieram</mark>.</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="sujeito">Sujeito</span> composto após o verbo</strong></td><td>Pode concordar com o mais próximo</td><td><em>Chegou Pedro e Ana.</em></td></tr>
               <tr><td><strong>"A maioria de"</strong></td><td>Singular ou plural (ambos aceitos)</td><td><em>A maioria dos alunos <mark>passou</mark>/<mark>passaram</mark>.</em></td></tr>
-              <tr><td><strong>Sujeito = pronome relativo "que"</strong></td><td>Concorda com o antecedente</td><td><em>Fui eu que <mark>fiz</mark>.</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="sujeito">Sujeito</span> = <span class="vocab-word" data-word="pronome relativo"><span class="vocab-word" data-word="pronome">pronome</span> relativo</span> "que"</strong></td><td>Concorda com o antecedente</td><td><em>Fui eu que <mark>fiz</mark>.</em></td></tr>
               <tr><td><strong>Verbos impessoais (haver/fazer)</strong></td><td>Sempre no singular</td><td><em><mark>Há</mark> muitas pessoas. <mark>Faz</mark> dez anos.</em></td></tr>
-              <tr><td><strong>Sujeito com "nem um nem outro"</strong></td><td>Singular</td><td><em>Nem Pedro nem Ana <mark>veio</mark>.</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="sujeito">Sujeito</span> com "nem um nem outro"</strong></td><td>Singular</td><td><em>Nem Pedro nem Ana <mark>veio</mark>.</em></td></tr>
               <tr><td><strong>Expressão "um dos que"</strong></td><td>Verbo no plural</td><td><em>Ele é um dos que mais <mark>trabalham</mark>.</em></td></tr>
             </tbody>
           </table>
@@ -823,8 +824,8 @@
       </div>
       <div class="prose">
         <h3>Checklist rápido</h3>
-        <p>• Adjetivo concorda com o substantivo em gênero e número.</p>
-        <p>• Verbo concorda com o sujeito em pessoa e número.</p>
+        <p>• <span class="vocab-word" data-word="adjetivo">Adjetivo</span> concorda com o <span class="vocab-word" data-word="substantivo">substantivo</span> em gênero e número.</p>
+        <p>• Verbo concorda com o <span class="vocab-word" data-word="sujeito">sujeito</span> em pessoa e número.</p>
         <p>• “A maioria de…” admite singular (núcleo) ou plural (atração) — o singular é o mais tradicional.</p>
         <p>• Fazer/haver indicando tempo ou existência: singular.</p>
       </div>
@@ -837,11 +838,11 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Fixação deste capítulo — concordância</p>
+          <p class="section-subtitle">Fixação deste capítulo — <span class="vocab-word" data-word="concordância">concordância</span></p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta. Ao finalizar, a pontuação é salva no perfil (mínimo 85% para concluir a lição).</p>
+        <p>Escolha a alternativa correta. Ao finalizar, a <span class="vocab-word" data-word="pontuação">pontuação</span> é salva no perfil (mínimo 85% para concluir a lição).</p>
 
         <div class="mc-item">
           <div class="q">A frase <em>"Fazem dois anos que ele não vem aqui."</em> está correta?</div>
@@ -893,7 +894,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Em <em>"As alunas dedicadas"</em>, o adjetivo concorda em:</div>
+          <div class="q">Em <em>"As alunas dedicadas"</em>, o <span class="vocab-word" data-word="adjetivo">adjetivo</span> concorda em:</div>
           <div class="mc-options">
           <label><input type="radio" name="q6" value="a">Só número</label>
           <label class="correct-answer"><input type="radio" name="q6" value="b">Gênero e número</label>
@@ -903,7 +904,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Com sujeito composto antes do verbo, a regra geral é:</div>
+          <div class="q">Com <span class="vocab-word" data-word="sujeito">sujeito</span> composto antes do verbo, a regra geral é:</div>
           <div class="mc-options">
           <label><input type="radio" name="q7" value="a">Verbo no singular sempre</label>
           <label class="correct-answer"><input type="radio" name="q7" value="b">Verbo no plural</label>
@@ -932,12 +933,12 @@
           <summary>📋 Gabarito comentado</summary>
           <div class="gabarito-list">
           <div class="g-item"><b>Questão 1.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: Não — “Faz dois anos…” (fazer impessoal no singular)</span><br>O verbo <strong>fazer</strong> indicando tempo decorrido é impessoal e fica no singular: “Faz dois anos que…”. “Fazem dois anos” é desvio frequente, mas não atende a essa regra.</div>
-          <div class="g-item"><b>Questão 2.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: mais</span><br>Em “É necessário mais atenção”, não há sujeito lexical que force plural; a construção com “é necessário” + termo no singular é a forma natural. “Haverem mais” está inadequado aqui.</div>
-          <div class="g-item"><b>Questão 3.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: entregou</span><br>Com “a maioria de + plural”, a norma admite singular (concordância com o núcleo “maioria”) ou plural (atração pelo especificado). A concordância com o núcleo — “entregou” — é a mais tradicional.</div>
+          <div class="g-item"><b>Questão 2.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: mais</span><br>Em “É necessário mais atenção”, não há <span class="vocab-word" data-word="sujeito">sujeito</span> lexical que force plural; a construção com “é necessário” + termo no singular é a forma natural. “Haverem mais” está inadequado aqui.</div>
+          <div class="g-item"><b>Questão 3.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: entregou</span><br>Com “a maioria de + plural”, a norma admite singular (<span class="vocab-word" data-word="concordância">concordância</span> com o núcleo “maioria”) ou plural (atração pelo especificado). A <span class="vocab-word" data-word="concordância">concordância</span> com o núcleo — “entregou” — é a mais tradicional.</div>
           <div class="g-item"><b>Questão 4.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: Fica no singular</span><br>Haver (= existir) é impessoal: “Havia muitas pessoas”, nunca “haviam” nesse sentido. O objeto não transmite plural ao verbo.</div>
           <div class="g-item"><b>Questão 5.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: Havia muitas pessoas.</span><br>Única forma adequada entre as opções, no sentido de existir: <strong>Havia muitas pessoas</strong>. “Haviam/Houveram” como impessoal de existência são incorretos.</div>
-          <div class="g-item"><b>Questão 6.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: Gênero e número</span><br>Concordância nominal: o adjetivo espelha gênero e número do substantivo (alunas dedicadas). Falhar um dos traços já configura erro.</div>
-          <div class="g-item"><b>Questão 7.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: Verbo no plural</span><br>Sujeito composto anteposto ao verbo → verbo no plural (“Pedro e Ana chegaram”). Posposto, a língua admite, em certos casos, concordância com o núcleo mais próximo — mas a regra geral com sujeito antes é plural.</div>
+          <div class="g-item"><b>Questão 6.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: Gênero e número</span><br><span class="vocab-word" data-word="concordância nominal"><span class="vocab-word" data-word="concordância">Concordância</span> nominal</span>: o <span class="vocab-word" data-word="adjetivo">adjetivo</span> espelha gênero e número do <span class="vocab-word" data-word="substantivo">substantivo</span> (alunas dedicadas). Falhar um dos traços já configura erro.</div>
+          <div class="g-item"><b>Questão 7.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: Verbo no plural</span><br><span class="vocab-word" data-word="sujeito">Sujeito</span> composto anteposto ao verbo → verbo no plural (“Pedro e Ana chegaram”). Posposto, a língua admite, em certos casos, <span class="vocab-word" data-word="concordância">concordância</span> com o núcleo mais próximo — mas a regra geral com <span class="vocab-word" data-word="sujeito">sujeito</span> antes é plural.</div>
           <div class="g-item"><b>Questão 8.</b> A frase "Fazem dois anos que ele não vem aqui." está correta?<br><span class="g-ans">Resposta: Fazer de tempo decorrido é impessoal e singular</span><br>Mesma lógica de q1: fazer de tempo decorrido não flexiona no plural (“Faz dez anos”).</div>
           </div>
         </details>

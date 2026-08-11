@@ -27,8 +27,8 @@
   <div class="wrap hero-inner">
     <a class="back-link" href="../index.html" style="color:#fff;opacity:.9">← Voltar ao app</a>
     <span class="badge">🐾 Bobcat Language School · Introdutório</span>
-    <h1>Pronúncia Essencial do Inglês</h1>
-    <p class="lede">Alfabeto, vogais, consoantes e as combinações que mais aparecem no dia a dia. Ouça, repita e pratique.</p>
+    <h1><span class="vocab-word" data-word="pronúncia">Pronúncia</span> Essencial do Inglês</h1>
+    <p class="lede"><span class="vocab-word" data-word="alfabeto">Alfabeto</span>, <span class="vocab-word" data-word="vogal">vogais</span>, <span class="vocab-word" data-word="consoante">consoantes</span> e as combinações que mais aparecem no dia a dia. Ouça, repita e pratique.</p>
     <div class="hero-cta"><a href="#objetivos" class="btn">Começar a lição →</a></div>
   </div>
   <div class="scroll-hint">role para começar
@@ -41,8 +41,8 @@
 <section class="section" id="objetivos">
   <div class="section-head reveal"><span class="sec-num">1</span><div><h2 class="sec-title">🎯 Objetivos</h2><p class="sec-sub">Aula introdutória — antes das demais lições.</p></div></div>
   <div class="grid-3 reveal">
-    <div class="card obj-card"><span class="ic">🔤</span><h3>Alfabeto</h3><p>Pronunciar as 26 letras em inglês com exemplos.</p></div>
-    <div class="card obj-card"><span class="ic">🔊</span><h3>Vogais & combinações</h3><p>Sons de A E I O U e pares como SH, TH, OO.</p></div>
+    <div class="card obj-card"><span class="ic">🔤</span><h3><span class="vocab-word" data-word="alfabeto">Alfabeto</span></h3><p>Pronunciar as 26 letras em inglês com exemplos.</p></div>
+    <div class="card obj-card"><span class="ic">🔊</span><h3><span class="vocab-word" data-word="vogal">Vogais</span> & combinações</h3><p>Sons de A E I O U e pares como SH, TH, OO.</p></div>
     <div class="card obj-card"><span class="ic">🇧🇷</span><h3>Erros comuns</h3><p>Evitar "iscúl", "istópi" e outros hábitos do PB.</p></div>
   </div>
   <div class="callout tip reveal"><span class="ic">📢</span><div><p><b>Importante:</b> as pronúncias entre parênteses (ex.: <i>cat (Quét)</i>) são só aproximações para brasileiros. Ouça o áudio e repita.</p></div></div>
@@ -62,7 +62,7 @@
 </section>
 
 <section class="section" id="alphabet">
-  <div class="section-head reveal"><span class="sec-num">3</span><div><h2 class="sec-title">🔤 O Alfabeto Inglês</h2><p class="sec-sub">Toque 🔊 em cada letra.</p></div></div>
+  <div class="section-head reveal"><span class="sec-num">3</span><div><h2 class="sec-title">🔤 O <span class="vocab-word" data-word="alfabeto">Alfabeto</span> Inglês</h2><p class="sec-sub">Toque 🔊 em cada letra.</p></div></div>
   <div class="alpha-grid reveal" id="alphaGrid"></div>
 </section>
 
@@ -70,7 +70,7 @@
   <div class="section-head reveal"><span class="sec-num">4</span><div><h2 class="sec-title">📚 Combinações</h2></div></div>
   <div class="grid-2 reveal">
     <div class="card">
-      <h3 style="color:var(--orange-dark);margin-bottom:8px">Vogais</h3>
+      <h3 style="color:var(--orange-dark);margin-bottom:8px"><span class="vocab-word" data-word="vogal">Vogais</span></h3>
       <table class="lesson-table">
         <tr><th>Comb.</th><th>Exemplo</th><th></th></tr>
         <tr><td>AI</td><td>Rain (Rein)</td><td><button class="audio-btn" onclick="speak(this,'rain')">🔊</button></td></tr>
@@ -80,7 +80,7 @@
       </table>
     </div>
     <div class="card">
-      <h3 style="color:var(--orange-dark);margin-bottom:8px">Consoantes</h3>
+      <h3 style="color:var(--orange-dark);margin-bottom:8px"><span class="vocab-word" data-word="consoante">Consoantes</span></h3>
       <table class="lesson-table">
         <tr><th>Comb.</th><th>Exemplo</th><th></th></tr>
         <tr><td>SH</td><td>Ship (Shíp)</td><td><button class="audio-btn" onclick="speak(this,'ship')">🔊</button></td></tr>
@@ -103,19 +103,19 @@
   <div class="section-head reveal"><span class="sec-num">5</span><div><h2 class="sec-title">🎮 Exercícios</h2><p class="sec-sub">15 questões · cada acerto vale XP</p></div></div>
 
   <div class="game-wrap reveal">
-    <div class="game-title"><h3>Parte 1 — Qual letra tem esse som?</h3><p>Digite a letra do alfabeto</p></div>
+    <div class="game-title"><h3>Parte 1 — Qual letra tem esse som?</h3><p>Digite a letra do <span class="vocab-word" data-word="alfabeto">alfabeto</span></p></div>
     <div id="p1"></div>
     <div class="game-actions"><button class="btn sm" onclick="checkP1()">✨ Verificar</button><span class="score-badge" id="s1">0/5</span></div>
   </div>
 
   <div class="game-wrap reveal">
-    <div class="game-title"><h3>Parte 2 — Pronúncia correta</h3><p>Escolha a aproximação certa</p></div>
+    <div class="game-title"><h3>Parte 2 — <span class="vocab-word" data-word="pronúncia">Pronúncia</span> correta</h3><p>Escolha a aproximação certa</p></div>
     <div id="p2"></div>
     <div class="game-actions"><button class="btn sm" onclick="checkP2()">✨ Verificar</button><span class="score-badge" id="s2">0/5</span></div>
   </div>
 
   <div class="game-wrap reveal">
-    <div class="game-title"><h3>Parte 3 — Complete a pronúncia</h3><p>Escreva a aproximação (sem acento obrigatório)</p></div>
+    <div class="game-title"><h3>Parte 3 — Complete a <span class="vocab-word" data-word="pronúncia">pronúncia</span></h3><p>Escreva a aproximação (sem acento obrigatório)</p></div>
     <div id="p3"></div>
     <div class="game-actions"><button class="btn sm" onclick="checkP3()">✨ Verificar</button><span class="score-badge" id="s3">0/5</span></div>
   </div>
@@ -146,13 +146,14 @@
 
 <footer class="footer">
   <div class="school">🐾 Bobcat Language School</div>
-  <p style="margin:5px 0 0">Pronúncia Essencial do Inglês</p>
+  <p style="margin:5px 0 0"><span class="vocab-word" data-word="pronúncia">Pronúncia</span> Essencial do Inglês</p>
   <p style="margin:2px 0 0;font-size:11px;opacity:.6">Fotos: Pexels &amp; domínio público · Design interativo inspirado em Genially</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="vocab-card.js"></script>
 <script src="lesson-kit.js"></script>
 <script>
 const LESSON_ID = 'pronuncia-essencial';

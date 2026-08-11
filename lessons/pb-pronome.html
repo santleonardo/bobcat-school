@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="vocab-card.js"></script>
 <style>
 
 
@@ -745,7 +746,7 @@
 
 <div class="mobile-topbar">
   <button class="mt-btn" id="menuToggle" aria-label="Abrir sumário">☰ Classes</button>
-  Pronome
+  <span class="vocab-word" data-word="pronome">Pronome</span>
   <a class="mt-btn" href="../index.html">🏠 App</a>
 </div>
 <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
@@ -777,7 +778,7 @@
 <main>
   <div class="hero">
     <div class="hero-eyebrow">Classe 5 de 10 · Português Básico</div>
-    <h2>👉 Pronome<br><em>Substitui ou acompanha o nome</em></h2>
+    <h2>👉 <span class="vocab-word" data-word="pronome">Pronome</span><br><em>Substitui ou acompanha o nome</em></h2>
     <p>Pessoal, possessivo, demonstrativo e outros. Leia com calma, observe os exemplos e pratique no final para salvar o progresso no app.</p>
     <div class="hero-badges">
       <span class="badge">Classe 5/10</span>
@@ -792,16 +793,16 @@
         <span class="section-num">5</span>
         <div class="section-title-block">
           <p class="section-label">Classe gramatical</p>
-          <h2 class="section-title">Pronome</h2>
+          <h2 class="section-title"><span class="vocab-word" data-word="pronome">Pronome</span></h2>
           <p class="section-subtitle">Substitui ou acompanha o nome</p>
         </div>
       </div>
 
       <div class="prose">
-        <p>O <strong>pronome</strong> substitui ou acompanha o substantivo, evitando repetição e situando as pessoas do discurso, a posse ou a posição no espaço/texto.</p>
+        <p>O <strong><span class="vocab-word" data-word="pronome">pronome</span></strong> substitui ou acompanha o <span class="vocab-word" data-word="substantivo">substantivo</span>, evitando repetição e situando as pessoas do discurso, a posse ou a posição no espaço/texto.</p>
 
         <h3>1. Pronomes pessoais</h3>
-        <p><strong>Retos</strong> (sujeito): eu, tu, ele/ela, nós, vós, eles/elas — e, no uso brasileiro corrente, <em>você / vocês</em>.</p>
+        <p><strong>Retos</strong> (<span class="vocab-word" data-word="sujeito">sujeito</span>): eu, tu, ele/ela, nós, vós, eles/elas — e, no uso brasileiro corrente, <em>você / vocês</em>.</p>
         <p><strong>Oblíquos</strong> (complemento): me, te, se, o, a, lhe, nos, vos, os, as, lhes…</p>
         <p>Ex.: <em><strong>Ela</strong> chegou.</em> · <em>O professor <strong>me</strong> chamou.</em></p>
 
@@ -820,7 +821,7 @@
 
       <div class="callout info">
         <strong>Dica prática</strong>
-        Se a palavra está no lugar do nome (“Maria chegou” → “Ela chegou”) ou marca posse/posição (“meu”, “aquele”), pense em pronome.
+        Se a palavra está no lugar do nome (“Maria chegou” → “Ela chegou”) ou marca posse/posição (“meu”, “aquele”), pense em <span class="vocab-word" data-word="pronome">pronome</span>.
       </div>
 
       <div class="tbl-wrap">
@@ -852,25 +853,25 @@
         <div class="section-title-block">
           <p class="section-label">Prática</p>
           <h2 class="section-title">Exercícios</h2>
-          <p class="section-subtitle">Aplique o que aprendeu sobre pronome</p>
+          <p class="section-subtitle">Aplique o que aprendeu sobre <span class="vocab-word" data-word="pronome">pronome</span></p>
         </div>
       </div>
       <div class="prose">
-        <p>Escolha a alternativa correta em cada item. Ao finalizar, a pontuação é salva no seu perfil (é preciso acertar pelo menos 85% para concluir a lição).</p>
+        <p>Escolha a alternativa correta em cada item. Ao finalizar, a <span class="vocab-word" data-word="pontuação">pontuação</span> é salva no seu perfil (é preciso acertar pelo menos 85% para concluir a lição).</p>
 
         <div class="mc-item">
           <div class="q">Em <em>"EU gosto de música."</em>, “eu” é:</div>
           <div class="mc-options">
-          <label class="correct-answer"><input type="radio" name="q1" value="a">Pronome</label>
+          <label class="correct-answer"><input type="radio" name="q1" value="a"><span class="vocab-word" data-word="pronome">Pronome</span></label>
           <label><input type="radio" name="q1" value="b">Verbo</label>
-          <label><input type="radio" name="q1" value="c">Artigo</label>
-          <label><input type="radio" name="q1" value="d">Interjeição</label>
+          <label><input type="radio" name="q1" value="c"><span class="vocab-word" data-word="artigo">Artigo</span></label>
+          <label><input type="radio" name="q1" value="d"><span class="vocab-word" data-word="interjeição">Interjeição</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Em <em>"meu livro"</em>, “meu” é pronome:</div>
+          <div class="q">Em <em>"meu livro"</em>, “meu” é <span class="vocab-word" data-word="pronome">pronome</span>:</div>
           <div class="mc-options">
           <label><input type="radio" name="q2" value="a">Pessoal</label>
           <label class="correct-answer"><input type="radio" name="q2" value="b">Possessivo</label>
@@ -892,10 +893,10 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">O pronome serve principalmente para:</div>
+          <div class="q">O <span class="vocab-word" data-word="pronome">pronome</span> serve principalmente para:</div>
           <div class="mc-options">
           <label><input type="radio" name="q4" value="a">Indicar ação</label>
-          <label class="correct-answer"><input type="radio" name="q4" value="b">Substituir ou acompanhar o substantivo</label>
+          <label class="correct-answer"><input type="radio" name="q4" value="b">Substituir ou acompanhar o <span class="vocab-word" data-word="substantivo">substantivo</span></label>
           <label><input type="radio" name="q4" value="c">Ligar orações</label>
           <label><input type="radio" name="q4" value="d">Expressar emoção</label>
           </div>
@@ -903,12 +904,12 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Em <em>"O professor me chamou"</em>, “me” é pronome:</div>
+          <div class="q">Em <em>"O professor me chamou"</em>, “me” é <span class="vocab-word" data-word="pronome">pronome</span>:</div>
           <div class="mc-options">
           <label><input type="radio" name="q5" value="a">Possessivo</label>
           <label class="correct-answer"><input type="radio" name="q5" value="b">Pessoal oblíquo</label>
-          <label><input type="radio" name="q5" value="c">Artigo</label>
-          <label><input type="radio" name="q5" value="d">Numeral</label>
+          <label><input type="radio" name="q5" value="c"><span class="vocab-word" data-word="artigo">Artigo</span></label>
+          <label><input type="radio" name="q5" value="d"><span class="vocab-word" data-word="numeral">Numeral</span></label>
           </div>
         
         <div class="mc-comment"></div></div>
@@ -925,7 +926,7 @@
         <div class="mc-comment"></div></div>
 
         <div class="mc-item">
-          <div class="q">Qual opção é pronome possessivo?</div>
+          <div class="q">Qual opção é <span class="vocab-word" data-word="pronome possessivo"><span class="vocab-word" data-word="pronome">pronome</span> possessivo</span>?</div>
           <div class="mc-options">
           <label><input type="radio" name="q7" value="a">ela</label>
           <label class="correct-answer"><input type="radio" name="q7" value="b">nosso</label>
@@ -939,8 +940,8 @@
           <div class="q">Em <em>"Maria chegou. Ela sorriu."</em>, “Ela” evita:</div>
           <div class="mc-options">
           <label><input type="radio" name="q8" value="a">Usar verbo</label>
-          <label class="correct-answer"><input type="radio" name="q8" value="b">Repetir o substantivo Maria</label>
-          <label><input type="radio" name="q8" value="c">Usar artigo</label>
+          <label class="correct-answer"><input type="radio" name="q8" value="b">Repetir o <span class="vocab-word" data-word="substantivo">substantivo</span> Maria</label>
+          <label><input type="radio" name="q8" value="c">Usar <span class="vocab-word" data-word="artigo">artigo</span></label>
           <label><input type="radio" name="q8" value="d">Fazer plural</label>
           </div>
         
@@ -955,14 +956,14 @@
         <details class="gabarito-box">
           <summary>📋 Gabarito comentado</summary>
           <div class="gabarito-list">
-          <div class="g-item"><b>Questão 1.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Pronome</span><br>Pronomes pessoais retos (eu, tu, ele…) desempenham função de sujeito e representam as pessoas do discurso. “Eu” não nomeia um ser do mundo como substantivo; representa quem fala.</div>
-          <div class="g-item"><b>Questão 2.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Possessivo</span><br>Possessivos (meu, tua, seu, nosso…) indicam posse ou relação de pertencimento. Em “meu livro”, “meu” acompanha o substantivo e marca o possuidor.</div>
+          <div class="g-item"><b>Questão 1.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: <span class="vocab-word" data-word="pronome">Pronome</span></span><br>Pronomes pessoais retos (eu, tu, ele…) desempenham função de <span class="vocab-word" data-word="sujeito">sujeito</span> e representam as pessoas do discurso. “Eu” não nomeia um ser do mundo como <span class="vocab-word" data-word="substantivo">substantivo</span>; representa quem fala.</div>
+          <div class="g-item"><b>Questão 2.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Possessivo</span><br>Possessivos (meu, tua, seu, nosso…) indicam posse ou relação de pertencimento. Em “meu livro”, “meu” acompanha o <span class="vocab-word" data-word="substantivo">substantivo</span> e marca o possuidor.</div>
           <div class="g-item"><b>Questão 3.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Demonstrativos</span><br>Demonstrativos (este, esse, aquele e variantes) situam no espaço ou no texto. Em linhas gerais: este (perto de quem fala), esse (perto de quem ouve), aquele (longe de ambos) — com usos variáveis no português do Brasil.</div>
-          <div class="g-item"><b>Questão 4.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Substituir ou acompanhar o substantivo</span><br>Função nuclear: <strong>substituir</strong> o substantivo (“Maria chegou” → “Ela chegou”) ou <strong>acompanhá-lo</strong> (“este livro”, “meu livro”), evitando repetição e organizando a referência.</div>
-          <div class="g-item"><b>Questão 5.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Pessoal oblíquo</span><br>Oblíquos átonos (me, te, se, o, a, lhe…) funcionam como complemento, não como sujeito. Em “O professor me chamou”, “me” é objeto do verbo chamar.</div>
+          <div class="g-item"><b>Questão 4.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Substituir ou acompanhar o <span class="vocab-word" data-word="substantivo">substantivo</span></span><br>Função nuclear: <strong>substituir</strong> o <span class="vocab-word" data-word="substantivo">substantivo</span> (“Maria chegou” → “Ela chegou”) ou <strong>acompanhá-lo</strong> (“este livro”, “meu livro”), evitando repetição e organizando a referência.</div>
+          <div class="g-item"><b>Questão 5.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Pessoal oblíquo</span><br>Oblíquos átonos (me, te, se, o, a, lhe…) funcionam como complemento, não como <span class="vocab-word" data-word="sujeito">sujeito</span>. Em “O professor me chamou”, “me” é objeto do verbo chamar.</div>
           <div class="g-item"><b>Questão 6.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Indefinidos</span><br>Indefinidos (alguém, ninguém, tudo, algum, nenhum…) referem-se a seres ou quantidades de modo vago, sem identificar exatamente quem ou quantos.</div>
-          <div class="g-item"><b>Questão 7.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: nosso</span><br>“Nosso” é possessivo da 1ª pessoa do plural. “Ela” é pessoal; “aquele”, demonstrativo; “dois”, numeral.</div>
-          <div class="g-item"><b>Questão 8.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Repetir o substantivo Maria</span><br>A retomada por pronome é mecanismo de coesão: evita eco (“Maria… Maria…”) e mantém a referência clara (“Maria… Ela…”).</div>
+          <div class="g-item"><b>Questão 7.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: nosso</span><br>“Nosso” é possessivo da 1ª pessoa do plural. “Ela” é pessoal; “aquele”, demonstrativo; “dois”, <span class="vocab-word" data-word="numeral">numeral</span>.</div>
+          <div class="g-item"><b>Questão 8.</b> Em "EU gosto de música.", “eu” é:<br><span class="g-ans">Resposta: Repetir o <span class="vocab-word" data-word="substantivo">substantivo</span> Maria</span><br>A retomada por <span class="vocab-word" data-word="pronome">pronome</span> é mecanismo de <span class="vocab-word" data-word="coesão">coesão</span>: evita eco (“Maria… Maria…”) e mantém a referência clara (“Maria… Ela…”).</div>
           </div>
         </details>
         <div class="callout info" style="margin-top:28px;">

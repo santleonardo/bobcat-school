@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
+<script src="vocab-card.js"></script>
 <style>
   :root {
     --ink:        #2B2D42;
@@ -701,13 +702,13 @@
         <span class="section-num">1</span>
         <div class="section-title-block">
           <p class="section-label">Capítulo I</p>
-          <h2 class="section-title">Morfologia</h2>
+          <h2 class="section-title"><span class="vocab-word" data-word="morfologia">Morfologia</span></h2>
           <p class="section-subtitle">As classes de palavras e suas funções</p>
         </div>
       </div>
 
       <div class="prose">
-        <p>A morfologia estuda a estrutura e a classificação das palavras. Em português, existem <strong>dez classes gramaticais</strong>, divididas entre variáveis (sofrem flexão) e invariáveis.</p>
+        <p>A <span class="vocab-word" data-word="morfologia">morfologia</span> estuda a estrutura e a classificação das palavras. Em português, existem <strong>dez classes gramaticais</strong>, divididas entre variáveis (sofrem flexão) e invariáveis.</p>
 
         <h3>As 10 Classes Gramaticais</h3>
         <div class="tbl-wrap">
@@ -721,16 +722,16 @@
               </tr>
             </thead>
             <tbody>
-              <tr><td><strong>Substantivo</strong></td><td>Nome de seres, coisas, sentimentos</td><td><em>cidade, amor, Brasil</em></td><td>Variável</td></tr>
-              <tr><td><strong>Artigo</strong></td><td>Determina o substantivo</td><td><em>o, a, um, uma</em></td><td>Variável</td></tr>
-              <tr><td><strong>Adjetivo</strong></td><td>Caracteriza o substantivo</td><td><em>belo, difícil, verde</em></td><td>Variável</td></tr>
-              <tr><td><strong>Numeral</strong></td><td>Indica quantidade ou ordem</td><td><em>dois, primeiro, dobro</em></td><td>Variável</td></tr>
-              <tr><td><strong>Pronome</strong></td><td>Substitui ou acompanha o substantivo</td><td><em>eu, meu, quem, este</em></td><td>Variável</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="substantivo">Substantivo</span></strong></td><td>Nome de seres, coisas, sentimentos</td><td><em>cidade, amor, Brasil</em></td><td>Variável</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="artigo">Artigo</span></strong></td><td>Determina o <span class="vocab-word" data-word="substantivo">substantivo</span></td><td><em>o, a, um, uma</em></td><td>Variável</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="adjetivo">Adjetivo</span></strong></td><td>Caracteriza o <span class="vocab-word" data-word="substantivo">substantivo</span></td><td><em>belo, difícil, verde</em></td><td>Variável</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="numeral">Numeral</span></strong></td><td>Indica quantidade ou ordem</td><td><em>dois, primeiro, dobro</em></td><td>Variável</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="pronome">Pronome</span></strong></td><td>Substitui ou acompanha o <span class="vocab-word" data-word="substantivo">substantivo</span></td><td><em>eu, meu, quem, este</em></td><td>Variável</td></tr>
               <tr><td><strong>Verbo</strong></td><td>Indica ação, estado ou fenômeno</td><td><em>correr, ser, chover</em></td><td>Variável</td></tr>
-              <tr><td><strong>Advérbio</strong></td><td>Modifica verbo, adjetivo ou advérbio</td><td><em>muito, aqui, ontem</em></td><td>Invariável*</td></tr>
-              <tr><td><strong>Preposição</strong></td><td>Liga palavras estabelecendo relação</td><td><em>de, em, para, com</em></td><td>Invariável</td></tr>
-              <tr><td><strong>Conjunção</strong></td><td>Liga orações ou termos</td><td><em>e, mas, porque, embora</em></td><td>Invariável</td></tr>
-              <tr><td><strong>Interjeição</strong></td><td>Exprime emoção ou chamado</td><td><em>Ah! Ei! Bravo!</em></td><td>Invariável</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="advérbio">Advérbio</span></strong></td><td>Modifica verbo, <span class="vocab-word" data-word="adjetivo">adjetivo</span> ou <span class="vocab-word" data-word="advérbio">advérbio</span></td><td><em>muito, aqui, ontem</em></td><td>Invariável*</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="preposição">Preposição</span></strong></td><td>Liga palavras estabelecendo relação</td><td><em>de, em, para, com</em></td><td>Invariável</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="conjunção">Conjunção</span></strong></td><td>Liga orações ou termos</td><td><em>e, mas, porque, embora</em></td><td>Invariável</td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="interjeição">Interjeição</span></strong></td><td>Exprime emoção ou chamado</td><td><em>Ah! Ei! Bravo!</em></td><td>Invariável</td></tr>
             </tbody>
           </table>
         </div>
@@ -767,23 +768,23 @@
           <div class="ex-box gold">
             <span class="ex-label">Justaposição</span>
             <code>guarda + chuva = guarda-chuva</code>
-            <small>Elementos justapostos sem alteração fonética</small>
+            <small>Elementos justapostos sem alteração <span class="vocab-word" data-word="fonética">fonética</span></small>
           </div>
           <div class="ex-box gold">
             <span class="ex-label">Aglutinação</span>
             <code>plano + alto → planalto</code>
-            <small>Elementos unidos com alteração fonética</small>
+            <small>Elementos unidos com alteração <span class="vocab-word" data-word="fonética">fonética</span></small>
           </div>
         </div>
 
-        <h3>Flexão do Substantivo</h3>
+        <h3>Flexão do <span class="vocab-word" data-word="substantivo">Substantivo</span></h3>
         <ul class="rule-list">
           <li><strong>Gênero:</strong> masculino/feminino — <em>o gato / a gata · o cantor / a cantora</em></li>
           <li><strong>Número:</strong> singular/plural — <em>flor / flores · irmão / irmãos</em></li>
           <li><strong>Grau:</strong> aumentativo/diminutivo — <em>casarão / casinha · livrão / livrinho</em></li>
         </ul>
 
-        <h3>Grau do Adjetivo</h3>
+        <h3>Grau do <span class="vocab-word" data-word="adjetivo">Adjetivo</span></h3>
         <div class="ex-grid triple">
           <div class="ex-box neutral">
             <span class="ex-label">Comparativo de Igualdade</span>
@@ -815,29 +816,29 @@
         <span class="section-num">2</span>
         <div class="section-title-block">
           <p class="section-label">Capítulo II</p>
-          <h2 class="section-title">Sintaxe</h2>
-          <p class="section-subtitle">A estrutura e os termos da oração</p>
+          <h2 class="section-title"><span class="vocab-word" data-word="sintaxe">Sintaxe</span></h2>
+          <p class="section-subtitle">A estrutura e os termos da <span class="vocab-word" data-word="oração">oração</span></p>
         </div>
       </div>
 
       <div class="prose">
-        <p>A sintaxe analisa como as palavras se combinam para formar frases, orações e períodos. Conhecer os termos sintáticos é indispensável para escrever com clareza e precisão.</p>
+        <p>A <span class="vocab-word" data-word="sintaxe">sintaxe</span> analisa como as palavras se combinam para formar frases, orações e períodos. Conhecer os termos sintáticos é indispensável para escrever com clareza e precisão.</p>
 
         <h3>Termos Essenciais</h3>
         <div class="ex-grid">
           <div class="ex-box gold">
-            <span class="ex-label">Sujeito</span>
+            <span class="ex-label"><span class="vocab-word" data-word="sujeito">Sujeito</span></span>
             <code>O aluno estudou bastante.</code>
             <small>"O aluno" — de quem se fala; pratica a ação do verbo</small>
           </div>
           <div class="ex-box gold">
-            <span class="ex-label">Predicado</span>
+            <span class="ex-label"><span class="vocab-word" data-word="predicado">Predicado</span></span>
             <code>O aluno <mark>estudou bastante</mark>.</code>
-            <small>Tudo que se diz sobre o sujeito</small>
+            <small>Tudo que se diz sobre o <span class="vocab-word" data-word="sujeito">sujeito</span></small>
           </div>
         </div>
 
-        <h4>Tipos de Sujeito</h4>
+        <h4>Tipos de <span class="vocab-word" data-word="sujeito">Sujeito</span></h4>
         <div class="tbl-wrap">
           <table>
             <thead>
@@ -853,52 +854,52 @@
           </table>
         </div>
 
-        <h4>Tipos de Predicado</h4>
+        <h4>Tipos de <span class="vocab-word" data-word="predicado">Predicado</span></h4>
         <div class="ex-grid triple">
           <div class="ex-box neutral">
             <span class="ex-label">Verbal</span>
             <code>A criança <mark>dormiu</mark>.</code>
-            <small>Verbo intransitivo como núcleo</small>
+            <small><span class="vocab-word" data-word="verbo intransitivo">Verbo <span class="vocab-word" data-word="intransitivo">intransitivo</span></span> como núcleo</small>
           </div>
           <div class="ex-box neutral">
             <span class="ex-label">Nominal</span>
             <code>O dia está <mark>lindo</mark>.</code>
-            <small>Predicativo como núcleo</small>
+            <small><span class="vocab-word" data-word="predicativo">Predicativo</span> como núcleo</small>
           </div>
           <div class="ex-box neutral">
             <span class="ex-label">Verbo-nominal</span>
             <code>Ela <mark>chegou cansada</mark>.</code>
-            <small>Verbo + predicativo do sujeito</small>
+            <small>Verbo + <span class="vocab-word" data-word="predicativo do sujeito"><span class="vocab-word" data-word="predicativo">predicativo</span> do <span class="vocab-word" data-word="sujeito">sujeito</span></span></small>
           </div>
         </div>
 
         <h3>Termos Integrantes</h3>
         <ul class="rule-list">
-          <li><strong>Objeto Direto (OD):</strong> complemento sem preposição — <em>Comprei <mark>um livro</mark>.</em></li>
-          <li><strong>Objeto Indireto (OI):</strong> complemento com preposição — <em>Gosto <mark>de música</mark>.</em></li>
-          <li><strong>Complemento Nominal:</strong> completa substantivo, adjetivo ou advérbio — <em>Tenho medo <mark>de altura</mark>.</em></li>
-          <li><strong>Agente da Passiva:</strong> pratica a ação na voz passiva — <em>O livro foi escrito <mark>por ela</mark>.</em></li>
+          <li><strong><span class="vocab-word" data-word="objeto direto">Objeto Direto</span> (OD):</strong> complemento sem <span class="vocab-word" data-word="preposição">preposição</span> — <em>Comprei <mark>um livro</mark>.</em></li>
+          <li><strong><span class="vocab-word" data-word="objeto indireto">Objeto Indireto</span> (OI):</strong> complemento com <span class="vocab-word" data-word="preposição">preposição</span> — <em>Gosto <mark>de música</mark>.</em></li>
+          <li><strong><span class="vocab-word" data-word="complemento nominal">Complemento Nominal</span>:</strong> completa <span class="vocab-word" data-word="substantivo">substantivo</span>, <span class="vocab-word" data-word="adjetivo">adjetivo</span> ou <span class="vocab-word" data-word="advérbio">advérbio</span> — <em>Tenho medo <mark>de altura</mark>.</em></li>
+          <li><strong><span class="vocab-word" data-word="agente da passiva">Agente da Passiva</span>:</strong> pratica a ação na <span class="vocab-word" data-word="voz passiva">voz passiva</span> — <em>O livro foi escrito <mark>por ela</mark>.</em></li>
         </ul>
 
         <h3>Termos Acessórios</h3>
         <div class="ex-grid">
           <div class="ex-box neutral">
-            <span class="ex-label">Adjunto Adnominal</span>
+            <span class="ex-label"><span class="vocab-word" data-word="adjunto adnominal">Adjunto Adnominal</span></span>
             <code>A <mark>bela</mark> <mark>jovem</mark> <mark>paulista</mark> sorriu.</code>
-            <small>Modifica o substantivo; não usa cópula</small>
+            <small>Modifica o <span class="vocab-word" data-word="substantivo">substantivo</span>; não usa cópula</small>
           </div>
           <div class="ex-box neutral">
-            <span class="ex-label">Adjunto Adverbial</span>
+            <span class="ex-label"><span class="vocab-word" data-word="adjunto adverbial">Adjunto Adverbial</span></span>
             <code>Ela chegou <mark>ontem</mark> <mark>à noite</mark>.</code>
-            <small>Modifica o verbo, adjetivo ou advérbio</small>
+            <small>Modifica o verbo, <span class="vocab-word" data-word="adjetivo">adjetivo</span> ou <span class="vocab-word" data-word="advérbio">advérbio</span></small>
           </div>
           <div class="ex-box neutral">
-            <span class="ex-label">Aposto</span>
+            <span class="ex-label"><span class="vocab-word" data-word="aposto">Aposto</span></span>
             <code>Machado de Assis, <mark>grande romancista</mark>, nasceu no Rio.</code>
             <small>Explica ou esclarece um termo anterior</small>
           </div>
           <div class="ex-box neutral">
-            <span class="ex-label">Vocativo</span>
+            <span class="ex-label"><span class="vocab-word" data-word="vocativo">Vocativo</span></span>
             <code><mark>João</mark>, venha aqui!</code>
             <small>Chama ou interpela alguém; isolado por vírgula</small>
           </div>
@@ -906,7 +907,7 @@
 
         <div class="callout info">
           <strong>Diferença importante</strong>
-          Predicativo do sujeito usa verbo de ligação (ser, estar, parecer, ficar…): <em>"Ela ficou feliz."</em> | Adjunto adnominal acompanha diretamente o substantivo: <em>"Ela tinha um rosto feliz."</em>
+          <span class="vocab-word" data-word="predicativo do sujeito"><span class="vocab-word" data-word="predicativo">Predicativo</span> do <span class="vocab-word" data-word="sujeito">sujeito</span></span> usa <span class="vocab-word" data-word="verbo de ligação">verbo de ligação</span> (ser, estar, parecer, ficar…): <em>"Ela ficou feliz."</em> | <span class="vocab-word" data-word="adjunto adnominal">Adjunto adnominal</span> acompanha diretamente o <span class="vocab-word" data-word="substantivo">substantivo</span>: <em>"Ela tinha um rosto feliz."</em>
         </div>
       </div>
     </section>
@@ -920,39 +921,39 @@
         <span class="section-num">3</span>
         <div class="section-title-block">
           <p class="section-label">Capítulo III</p>
-          <h2 class="section-title">Concordância</h2>
+          <h2 class="section-title"><span class="vocab-word" data-word="concordância">Concordância</span></h2>
           <p class="section-subtitle">Nominal e verbal — regras e casos especiais</p>
         </div>
       </div>
 
       <div class="prose">
-        <h3>Concordância Nominal</h3>
-        <p>O adjetivo, o pronome adjetivo, o numeral e o artigo concordam em <strong>gênero e número</strong> com o substantivo a que se referem.</p>
+        <h3><span class="vocab-word" data-word="concordância nominal"><span class="vocab-word" data-word="concordância">Concordância</span> Nominal</span></h3>
+        <p>O <span class="vocab-word" data-word="adjetivo">adjetivo</span>, o <span class="vocab-word" data-word="pronome">pronome</span> <span class="vocab-word" data-word="adjetivo">adjetivo</span>, o <span class="vocab-word" data-word="numeral">numeral</span> e o <span class="vocab-word" data-word="artigo">artigo</span> concordam em <strong>gênero e número</strong> com o <span class="vocab-word" data-word="substantivo">substantivo</span> a que se referem.</p>
 
         <div class="ex-grid">
           <div class="ex-box correct">
             <span class="ex-label">✓ Correto</span>
             <code>As alunas dedicadas foram aprovadas.</code>
-            <small>Adjetivo concorda com o substantivo feminino plural</small>
+            <small><span class="vocab-word" data-word="adjetivo">Adjetivo</span> concorda com o <span class="vocab-word" data-word="substantivo">substantivo</span> feminino plural</small>
           </div>
           <div class="ex-box wrong">
             <span class="ex-label">✗ Incorreto</span>
             <code>As alunas dedicado foram aprovadas.</code>
-            <small>Adjetivo no masculino singular — erro de concordância</small>
+            <small><span class="vocab-word" data-word="adjetivo">Adjetivo</span> no masculino singular — erro de <span class="vocab-word" data-word="concordância">concordância</span></small>
           </div>
         </div>
 
-        <h4>Casos Especiais — Concordância Nominal</h4>
+        <h4>Casos Especiais — <span class="vocab-word" data-word="concordância nominal"><span class="vocab-word" data-word="concordância">Concordância</span> Nominal</span></h4>
         <ul class="rule-list">
-          <li><strong>Adjetivo pós-posto a vários substantivos:</strong> concorda com o mais próximo ou vai para o plural masculino — <em>"Comprei camiseta e short azul" OU "azuis".</em></li>
-          <li><strong>Adjetivo anteposto:</strong> concorda obrigatoriamente com o substantivo mais próximo — <em>"Bela casa e jardim."</em></li>
-          <li><strong>Adjetivo predicativo de sujeitos diferentes:</strong> plural masculino — <em>"Pedro e Ana estão cansados."</em></li>
-          <li><strong>Meio (= metade):</strong> concorda com o substantivo — <em>"Bebi meia xícara / meio copo."</em></li>
+          <li><strong><span class="vocab-word" data-word="adjetivo">Adjetivo</span> pós-posto a vários substantivos:</strong> concorda com o mais próximo ou vai para o plural masculino — <em>"Comprei camiseta e short azul" OU "azuis".</em></li>
+          <li><strong><span class="vocab-word" data-word="adjetivo">Adjetivo</span> anteposto:</strong> concorda obrigatoriamente com o <span class="vocab-word" data-word="substantivo">substantivo</span> mais próximo — <em>"Bela casa e jardim."</em></li>
+          <li><strong><span class="vocab-word" data-word="adjetivo">Adjetivo</span> <span class="vocab-word" data-word="predicativo">predicativo</span> de sujeitos diferentes:</strong> plural masculino — <em>"Pedro e Ana estão cansados."</em></li>
+          <li><strong>Meio (= metade):</strong> concorda com o <span class="vocab-word" data-word="substantivo">substantivo</span> — <em>"Bebi meia xícara / meio copo."</em></li>
           <li><strong>Bastante, muito, pouco:</strong> variam quando adjetivos — <em>"Bastantes alunos compareceram."</em></li>
         </ul>
 
-        <h3>Concordância Verbal</h3>
-        <p>O verbo concorda em <strong>número e pessoa</strong> com o sujeito.</p>
+        <h3><span class="vocab-word" data-word="concordância verbal"><span class="vocab-word" data-word="concordância">Concordância</span> Verbal</span></h3>
+        <p>O verbo concorda em <strong>número e pessoa</strong> com o <span class="vocab-word" data-word="sujeito">sujeito</span>.</p>
 
         <div class="ex-grid">
           <div class="ex-box correct">
@@ -965,19 +966,19 @@
           </div>
         </div>
 
-        <h4>Casos Especiais — Concordância Verbal</h4>
+        <h4>Casos Especiais — <span class="vocab-word" data-word="concordância verbal"><span class="vocab-word" data-word="concordância">Concordância</span> Verbal</span></h4>
         <div class="tbl-wrap">
           <table>
             <thead>
               <tr><th>Situação</th><th>Regra</th><th>Exemplo</th></tr>
             </thead>
             <tbody>
-              <tr><td><strong>Sujeito composto antes do verbo</strong></td><td>Verbo no plural</td><td><em>Pedro e Ana <mark>vieram</mark>.</em></td></tr>
-              <tr><td><strong>Sujeito composto após o verbo</strong></td><td>Pode concordar com o mais próximo</td><td><em>Chegou Pedro e Ana.</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="sujeito">Sujeito</span> composto antes do verbo</strong></td><td>Verbo no plural</td><td><em>Pedro e Ana <mark>vieram</mark>.</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="sujeito">Sujeito</span> composto após o verbo</strong></td><td>Pode concordar com o mais próximo</td><td><em>Chegou Pedro e Ana.</em></td></tr>
               <tr><td><strong>"A maioria de"</strong></td><td>Singular ou plural (ambos aceitos)</td><td><em>A maioria dos alunos <mark>passou</mark>/<mark>passaram</mark>.</em></td></tr>
-              <tr><td><strong>Sujeito = pronome relativo "que"</strong></td><td>Concorda com o antecedente</td><td><em>Fui eu que <mark>fiz</mark>.</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="sujeito">Sujeito</span> = <span class="vocab-word" data-word="pronome relativo"><span class="vocab-word" data-word="pronome">pronome</span> relativo</span> "que"</strong></td><td>Concorda com o antecedente</td><td><em>Fui eu que <mark>fiz</mark>.</em></td></tr>
               <tr><td><strong>Verbos impessoais (haver/fazer)</strong></td><td>Sempre no singular</td><td><em><mark>Há</mark> muitas pessoas. <mark>Faz</mark> dez anos.</em></td></tr>
-              <tr><td><strong>Sujeito com "nem um nem outro"</strong></td><td>Singular</td><td><em>Nem Pedro nem Ana <mark>veio</mark>.</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="sujeito">Sujeito</span> com "nem um nem outro"</strong></td><td>Singular</td><td><em>Nem Pedro nem Ana <mark>veio</mark>.</em></td></tr>
               <tr><td><strong>Expressão "um dos que"</strong></td><td>Verbo no plural</td><td><em>Ele é um dos que mais <mark>trabalham</mark>.</em></td></tr>
             </tbody>
           </table>
@@ -999,19 +1000,19 @@
         <span class="section-num">4</span>
         <div class="section-title-block">
           <p class="section-label">Capítulo IV</p>
-          <h2 class="section-title">Regência</h2>
+          <h2 class="section-title"><span class="vocab-word" data-word="regência">Regência</span></h2>
           <p class="section-subtitle">Verbal e nominal — o uso correto das preposições</p>
         </div>
       </div>
 
       <div class="prose">
-        <p>Regência é a relação de dependência entre um termo regente (verbo ou nome) e seu complemento. O regente exige (ou não) uma preposição específica antes do complemento.</p>
+        <p><span class="vocab-word" data-word="regência">Regência</span> é a relação de dependência entre um termo regente (verbo ou nome) e seu complemento. O regente exige (ou não) uma <span class="vocab-word" data-word="preposição">preposição</span> específica antes do complemento.</p>
 
-        <h3>Regência Verbal</h3>
+        <h3><span class="vocab-word" data-word="regência verbal"><span class="vocab-word" data-word="regência">Regência</span> Verbal</span></h3>
         <div class="tbl-wrap">
           <table>
             <thead>
-              <tr><th>Verbo</th><th>Regência</th><th>Exemplo Correto</th></tr>
+              <tr><th>Verbo</th><th><span class="vocab-word" data-word="regência">Regência</span></th><th>Exemplo Correto</th></tr>
             </thead>
             <tbody>
               <tr><td><strong>Assistir</strong> (ver)</td><td>VI + a</td><td><em>Assisti <mark>ao</mark> filme.</em></td></tr>
@@ -1034,20 +1035,20 @@
           <div class="ex-box correct">
             <span class="ex-label">✓ Correto</span>
             <code>Assisti ao jogo ontem.</code>
-            <small>Assistir (ver) exige preposição "a"</small>
+            <small>Assistir (ver) exige <span class="vocab-word" data-word="preposição">preposição</span> "a"</small>
           </div>
           <div class="ex-box wrong">
             <span class="ex-label">✗ Incorreto</span>
             <code>Assisti o jogo ontem.</code>
-            <small>Omissão da preposição obrigatória</small>
+            <small>Omissão da <span class="vocab-word" data-word="preposição">preposição</span> obrigatória</small>
           </div>
         </div>
 
-        <h3>Regência Nominal</h3>
+        <h3><span class="vocab-word" data-word="regência nominal"><span class="vocab-word" data-word="regência">Regência</span> Nominal</span></h3>
         <div class="tbl-wrap">
           <table>
             <thead>
-              <tr><th>Nome</th><th>Preposição</th><th>Exemplo</th></tr>
+              <tr><th>Nome</th><th><span class="vocab-word" data-word="preposição">Preposição</span></th><th>Exemplo</th></tr>
             </thead>
             <tbody>
               <tr><td><strong>Acessível</strong></td><td>a</td><td><em>acessível <mark>a</mark> todos</em></td></tr>
@@ -1064,7 +1065,7 @@
 
         <div class="callout danger">
           <strong>Erro clássico</strong>
-          "Prefiro X <strong>do que</strong> Y" está errado. A regência correta de <em>preferir</em> é com <strong>"a"</strong>: <em>"Prefiro chá <strong>a</strong> café."</em> "Do que" é conjunção comparativa, não preposição.
+          "Prefiro X <strong>do que</strong> Y" está errado. A <span class="vocab-word" data-word="regência">regência</span> correta de <em>preferir</em> é com <strong>"a"</strong>: <em>"Prefiro chá <strong>a</strong> café."</em> "Do que" é <span class="vocab-word" data-word="conjunção">conjunção</span> comparativa, não <span class="vocab-word" data-word="preposição">preposição</span>.
         </div>
       </div>
     </section>
@@ -1078,27 +1079,27 @@
         <span class="section-num">5</span>
         <div class="section-title-block">
           <p class="section-label">Capítulo V</p>
-          <h2 class="section-title">Crase</h2>
+          <h2 class="section-title"><span class="vocab-word" data-word="crase">Crase</span></h2>
           <p class="section-subtitle">Quando e como usar o acento grave</p>
         </div>
       </div>
 
       <div class="prose">
-        <p>Crase é a <strong>fusão da preposição "a" com o artigo definido "a(s)"</strong>, indicada pelo acento grave (<mark>à</mark>). Ocorre também na fusão de "a" com pronomes demonstrativos "a(s)" = aquela(s), aquilo.</p>
+        <p><span class="vocab-word" data-word="crase">Crase</span> é a <strong>fusão da <span class="vocab-word" data-word="preposição">preposição</span> "a" com o <span class="vocab-word" data-word="artigo definido"><span class="vocab-word" data-word="artigo">artigo</span> definido</span> "a(s)"</strong>, indicada pelo acento grave (<mark>à</mark>). Ocorre também na fusão de "a" com pronomes demonstrativos "a(s)" = aquela(s), aquilo.</p>
 
         <div class="callout info">
           <strong>Teste prático</strong>
-          Substitua o termo feminino por um masculino equivalente. Se aparecer "ao", há crase. <br>
-          <em>"Fui à escola."</em> → <em>"Fui ao colégio."</em> ✓ (tem crase) <br>
-          <em>"Fui a pé."</em> → <em>"Fui a pé."</em> (sem artigo, sem crase)
+          Substitua o termo feminino por um masculino equivalente. Se aparecer "ao", há <span class="vocab-word" data-word="crase">crase</span>. <br>
+          <em>"Fui à escola."</em> → <em>"Fui ao colégio."</em> ✓ (tem <span class="vocab-word" data-word="crase">crase</span>) <br>
+          <em>"Fui a pé."</em> → <em>"Fui a pé."</em> (sem <span class="vocab-word" data-word="artigo">artigo</span>, sem <span class="vocab-word" data-word="crase">crase</span>)
         </div>
 
-        <h3>Casos Obrigatórios de Crase</h3>
+        <h3>Casos Obrigatórios de <span class="vocab-word" data-word="crase">Crase</span></h3>
         <div class="ex-grid">
           <div class="ex-box correct">
-            <span class="ex-label">Substantivo feminino com artigo</span>
+            <span class="ex-label"><span class="vocab-word" data-word="substantivo">Substantivo</span> feminino com <span class="vocab-word" data-word="artigo">artigo</span></span>
             <code>Fomos <mark>à</mark> farmácia.</code>
-            <small>preposição "a" + artigo "a" = à</small>
+            <small><span class="vocab-word" data-word="preposição">preposição</span> "a" + <span class="vocab-word" data-word="artigo">artigo</span> "a" = à</small>
           </div>
           <div class="ex-box correct">
             <span class="ex-label">Horas determinadas</span>
@@ -1117,27 +1118,27 @@
           </div>
         </div>
 
-        <h3>Casos em que a Crase é Proibida</h3>
+        <h3>Casos em que a <span class="vocab-word" data-word="crase">Crase</span> é Proibida</h3>
         <ul class="rule-list">
           <li><strong>Antes de palavra masculina:</strong> <em>Andei a pé / Assistiu a um jogo.</em></li>
           <li><strong>Antes de verbo:</strong> <em>Estava disposto a viajar.</em></li>
           <li><strong>Antes de pronomes pessoais/de tratamento:</strong> <em>Escrevi a ela / Dirigi-me a Vossa Senhoria.</em></li>
           <li><strong>Antes de "que" e "quem":</strong> <em>A mulher a quem me referi.</em></li>
-          <li><strong>Antes de substantivos no plural sem artigo:</strong> <em>Saímos a prazos curtos.</em></li>
+          <li><strong>Antes de substantivos no plural sem <span class="vocab-word" data-word="artigo">artigo</span>:</strong> <em>Saímos a prazos curtos.</em></li>
           <li><strong>Antes de pronomes indefinidos:</strong> <em>Chegou a tempo / falou a alguém.</em></li>
         </ul>
 
-        <h3>Crase Facultativa</h3>
+        <h3><span class="vocab-word" data-word="crase">Crase</span> Facultativa</h3>
         <div class="ex-grid">
           <div class="ex-box gold">
             <span class="ex-label">Nomes próprios femininos de pessoa</span>
             <code>Escrevi a/à Carla.</code>
-            <small>Com ou sem crase — ambas corretas</small>
+            <small>Com ou sem <span class="vocab-word" data-word="crase">crase</span> — ambas corretas</small>
           </div>
           <div class="ex-box gold">
-            <span class="ex-label">Pronome possessivo feminino</span>
+            <span class="ex-label"><span class="vocab-word" data-word="pronome possessivo"><span class="vocab-word" data-word="pronome">Pronome</span> possessivo</span> feminino</span>
             <code>Refiro-me a/à sua proposta.</code>
-            <small>Facultativa quando não há artigo definido claro</small>
+            <small>Facultativa quando não há <span class="vocab-word" data-word="artigo definido"><span class="vocab-word" data-word="artigo">artigo</span> definido</span> claro</small>
           </div>
         </div>
       </div>
@@ -1152,8 +1153,8 @@
         <span class="section-num">6</span>
         <div class="section-title-block">
           <p class="section-label">Capítulo VI</p>
-          <h2 class="section-title">Colocação Pronominal</h2>
-          <p class="section-subtitle">Próclise, mesóclise e ênclise</p>
+          <h2 class="section-title"><span class="vocab-word" data-word="colocação pronominal">Colocação Pronominal</span></h2>
+          <p class="section-subtitle"><span class="vocab-word" data-word="próclise">Próclise</span>, <span class="vocab-word" data-word="mesóclise">mesóclise</span> e <span class="vocab-word" data-word="ênclise">ênclise</span></p>
         </div>
       </div>
 
@@ -1162,23 +1163,23 @@
 
         <div class="ex-grid triple">
           <div class="ex-box neutral">
-            <span class="ex-label">Próclise</span>
+            <span class="ex-label"><span class="vocab-word" data-word="próclise">Próclise</span></span>
             <code>Ele <mark>me</mark> chamou.</code>
-            <small>Pronome <strong>antes</strong> do verbo</small>
+            <small><span class="vocab-word" data-word="pronome">Pronome</span> <strong>antes</strong> do verbo</small>
           </div>
           <div class="ex-box neutral">
-            <span class="ex-label">Ênclise</span>
+            <span class="ex-label"><span class="vocab-word" data-word="ênclise">Ênclise</span></span>
             <code>Chamou<mark>-me</mark> à sala.</code>
-            <small>Pronome <strong>após</strong> o verbo (com hífen)</small>
+            <small><span class="vocab-word" data-word="pronome">Pronome</span> <strong>após</strong> o verbo (com <span class="vocab-word" data-word="hífen">hífen</span>)</small>
           </div>
           <div class="ex-box neutral">
-            <span class="ex-label">Mesóclise</span>
+            <span class="ex-label"><span class="vocab-word" data-word="mesóclise">Mesóclise</span></span>
             <code>Chamar<mark>-me</mark>-á amanhã.</code>
-            <small>Pronome <strong>no meio</strong> do verbo (futuro)</small>
+            <small><span class="vocab-word" data-word="pronome">Pronome</span> <strong>no meio</strong> do verbo (futuro)</small>
           </div>
         </div>
 
-        <h3>Casos de Próclise Obrigatória</h3>
+        <h3>Casos de <span class="vocab-word" data-word="próclise">Próclise</span> Obrigatória</h3>
         <ul class="rule-list">
           <li><strong>Palavras atrativas negativas:</strong> <em>Não <mark>me</mark> ligou.</em></li>
           <li><strong>Pronomes indefinidos, demonstrativos e interrogativos:</strong> <em>Alguém <mark>te</mark> procurou. Quem <mark>te</mark> contou?</em></li>
@@ -1187,32 +1188,32 @@
           <li><strong>Orações exclamativas e optativas:</strong> <em>Deus <mark>te</mark> abençoe!</em></li>
         </ul>
 
-        <h3>Casos de Ênclise Obrigatória</h3>
+        <h3>Casos de <span class="vocab-word" data-word="ênclise">Ênclise</span> Obrigatória</h3>
         <ul class="rule-list">
-          <li><strong>Início de oração:</strong> <em>Diga<mark>-me</mark> a verdade.</em></li>
-          <li><strong>Verbo no imperativo afirmativo:</strong> <em>Chame<mark>-me</mark> quando chegar.</em></li>
-          <li><strong>Verbo no gerúndio (sem "em"):</strong> <em>Saiu sorrindo<mark>-se</mark>.</em></li>
-          <li><strong>Verbo no infinitivo impessoal:</strong> <em>É difícil entendê<mark>-la</mark>.</em></li>
+          <li><strong>Início de <span class="vocab-word" data-word="oração">oração</span>:</strong> <em>Diga<mark>-me</mark> a verdade.</em></li>
+          <li><strong>Verbo no <span class="vocab-word" data-word="imperativo">imperativo</span> afirmativo:</strong> <em>Chame<mark>-me</mark> quando chegar.</em></li>
+          <li><strong>Verbo no <span class="vocab-word" data-word="gerúndio">gerúndio</span> (sem "em"):</strong> <em>Saiu sorrindo<mark>-se</mark>.</em></li>
+          <li><strong>Verbo no <span class="vocab-word" data-word="infinitivo">infinitivo</span> impessoal:</strong> <em>É difícil entendê<mark>-la</mark>.</em></li>
         </ul>
 
-        <h3>Mesóclise</h3>
-        <p>Usada com verbos no futuro do presente e no futuro do pretérito, quando não há fator de próclise:</p>
+        <h3><span class="vocab-word" data-word="mesóclise">Mesóclise</span></h3>
+        <p>Usada com verbos no futuro do presente e no futuro do pretérito, quando não há fator de <span class="vocab-word" data-word="próclise">próclise</span>:</p>
         <div class="ex-grid">
           <div class="ex-box correct">
-            <span class="ex-label">✓ Mesóclise correta</span>
+            <span class="ex-label">✓ <span class="vocab-word" data-word="mesóclise">Mesóclise</span> correta</span>
             <code>Diga<mark>r</mark>-<mark>te</mark>-ei a verdade.</code>
             <small>Futuro do presente sem fator atrativo</small>
           </div>
           <div class="ex-box correct">
-            <span class="ex-label">✓ Próclise no futuro (com negativa)</span>
+            <span class="ex-label">✓ <span class="vocab-word" data-word="próclise">Próclise</span> no futuro (com negativa)</span>
             <code>Não <mark>te</mark> direi nada.</code>
-            <small>A negativa atrai o pronome → próclise</small>
+            <small>A negativa atrai o <span class="vocab-word" data-word="pronome">pronome</span> → <span class="vocab-word" data-word="próclise">próclise</span></small>
           </div>
         </div>
 
         <div class="callout danger">
           <strong>Erro gravíssimo</strong>
-          Iniciar oração com pronome oblíquo átono é erro na norma culta escrita: <em><mark class="red">"Me liga mais tarde"</mark></em> é uso coloquial. O correto é: <em>"Liga-me mais tarde"</em> ou, com contexto anterior: <em>"Ele me ligou mais tarde."</em>
+          Iniciar <span class="vocab-word" data-word="oração">oração</span> com <span class="vocab-word" data-word="pronome oblíquo"><span class="vocab-word" data-word="pronome">pronome</span> oblíquo</span> átono é erro na norma culta escrita: <em><mark class="red">"Me liga mais tarde"</mark></em> é uso coloquial. O correto é: <em>"Liga-me mais tarde"</em> ou, com contexto anterior: <em>"Ele me ligou mais tarde."</em>
         </div>
       </div>
     </section>
@@ -1232,22 +1233,22 @@
       </div>
 
       <div class="prose">
-        <p>A acentuação gráfica obedece ao <strong>Novo Acordo Ortográfico</strong> em vigor no Brasil desde 2009. As regras partem da classificação das palavras quanto à sílaba tônica.</p>
+        <p>A acentuação gráfica obedece ao <strong>Novo Acordo Ortográfico</strong> em vigor no Brasil desde 2009. As regras partem da classificação das palavras quanto à <span class="vocab-word" data-word="sílaba tônica">sílaba tônica</span>.</p>
 
         <h3>Classificação Quanto à Tonicidade</h3>
         <div class="ex-grid triple">
           <div class="ex-box neutral">
-            <span class="ex-label">Oxítona</span>
+            <span class="ex-label"><span class="vocab-word" data-word="oxítona">Oxítona</span></span>
             <code>ca-fé · so-fá · ju-iz</code>
             <small>Tônica na última sílaba</small>
           </div>
           <div class="ex-box neutral">
-            <span class="ex-label">Paroxítona</span>
+            <span class="ex-label"><span class="vocab-word" data-word="paroxítona">Paroxítona</span></span>
             <code>ca-sa · ló-gi-ca · di-fí-cil</code>
             <small>Tônica na penúltima sílaba</small>
           </div>
           <div class="ex-box neutral">
-            <span class="ex-label">Proparoxítona</span>
+            <span class="ex-label"><span class="vocab-word" data-word="proparoxítona">Proparoxítona</span></span>
             <code>pú-bli-co · má-gi-ca</code>
             <small>Tônica na antepenúltima — todas acentuadas!</small>
           </div>
@@ -1260,31 +1261,31 @@
               <tr><th>Classe</th><th>Quando acentua</th><th>Exemplos</th></tr>
             </thead>
             <tbody>
-              <tr><td><strong>Oxítonas</strong></td><td>Terminadas em: a(s), e(s), o(s), em, ens</td><td><em>café, avó, também, parabéns</em></td></tr>
-              <tr><td><strong>Paroxítonas</strong></td><td>Terminadas em tudo exceto: a(s), e(s), o(s), em, ens</td><td><em>difícil, hífen, álbum, vírus, tórax</em></td></tr>
-              <tr><td><strong>Proparoxítonas</strong></td><td>Sempre acentuadas</td><td><em>pátio, médico, cômodo, fôlego</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="oxítona">Oxítonas</span></strong></td><td>Terminadas em: a(s), e(s), o(s), em, ens</td><td><em>café, avó, também, parabéns</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="paroxítona">Paroxítonas</span></strong></td><td>Terminadas em tudo exceto: a(s), e(s), o(s), em, ens</td><td><em>difícil, <span class="vocab-word" data-word="hífen">hífen</span>, álbum, vírus, tórax</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="proparoxítona">Proparoxítonas</span></strong></td><td>Sempre acentuadas</td><td><em>pátio, médico, cômodo, fôlego</em></td></tr>
             </tbody>
           </table>
         </div>
 
         <h3>Casos Especiais</h3>
-        <h4>Hiato — vogais abertas i e u</h4>
+        <h4><span class="vocab-word" data-word="hiato">Hiato</span> — vogais abertas i e u</h4>
         <div class="ex-grid">
           <div class="ex-box correct">
-            <span class="ex-label">✓ Acento no hiato</span>
+            <span class="ex-label">✓ Acento no <span class="vocab-word" data-word="hiato">hiato</span></span>
             <code>sa-ú-de · pa-ís · ba-ú</code>
-            <small>i e u tônicos em hiato após vogal</small>
+            <small>i e u tônicos em <span class="vocab-word" data-word="hiato">hiato</span> após vogal</small>
           </div>
           <div class="ex-box correct">
             <span class="ex-label">✓ Sem acento (regra do Acordo)</span>
             <code>fei-ura · ru-im · ba-inha</code>
-            <small>Após ditongo, não se acentua mais</small>
+            <small>Após <span class="vocab-word" data-word="ditongo">ditongo</span>, não se acentua mais</small>
           </div>
         </div>
 
         <h4>Supressão de Acento pelo Novo Acordo</h4>
         <ul class="rule-list">
-          <li><strong>Ditongos abertos "ei" e "oi" em paroxítonas:</strong> <em>ideia (antes: idéia) · heroico (heróico)</em></li>
+          <li><strong>Ditongos abertos "ei" e "oi" em <span class="vocab-word" data-word="paroxítona">paroxítonas</span>:</strong> <em>ideia (antes: idéia) · heroico (heróico)</em></li>
           <li><strong>Trema suprimido</strong> exceto em nomes estrangeiros: <em>linguiça, aguentar</em> (sem trema)</li>
           <li><strong>Acento diferencial eliminado</strong> na maioria dos casos: <em>para (prep.) = para (verbo) · polo = pólo</em></li>
           <li><strong>Acento diferencial mantido:</strong> <em>pôde (pret.) × pode (pres.) · pôr (verbo) × por (prep.)</em></li>
@@ -1292,7 +1293,7 @@
 
         <div class="callout">
           <strong>Atenção especial</strong>
-          As palavras <strong>pôde</strong> (pretérito perfeito) e <strong>pode</strong> (presente) ainda se distinguem pelo acento. Igualmente: <strong>pôr</strong> (verbo) e <strong>por</strong> (preposição).
+          As palavras <strong>pôde</strong> (pretérito perfeito) e <strong>pode</strong> (presente) ainda se distinguem pelo acento. Igualmente: <strong>pôr</strong> (verbo) e <strong>por</strong> (<span class="vocab-word" data-word="preposição">preposição</span>).
         </div>
       </div>
     </section>
@@ -1306,25 +1307,25 @@
         <span class="section-num">8</span>
         <div class="section-title-block">
           <p class="section-label">Capítulo VIII</p>
-          <h2 class="section-title">Ortografia</h2>
+          <h2 class="section-title"><span class="vocab-word" data-word="ortografia">Ortografia</span></h2>
           <p class="section-subtitle">Grafias, dígrafos e as dúvidas mais comuns</p>
         </div>
       </div>
 
       <div class="prose">
-        <p>A ortografia trata da grafia correta das palavras. O Novo Acordo Ortográfico de 2009 unificou a escrita nos países lusófonos, trazendo mudanças que ainda geram dúvidas.</p>
+        <p>A <span class="vocab-word" data-word="ortografia">ortografia</span> trata da grafia correta das palavras. O Novo Acordo Ortográfico de 2009 unificou a escrita nos países lusófonos, trazendo mudanças que ainda geram dúvidas.</p>
 
         <h3>Uso do S, Z, X, CH, SS</h3>
         <div class="tbl-wrap">
           <table>
             <thead>
-              <tr><th>Letra / dígrafo</th><th>Regra principal</th><th>Exemplos</th></tr>
+              <tr><th>Letra / <span class="vocab-word" data-word="dígrafo">dígrafo</span></th><th>Regra principal</th><th>Exemplos</th></tr>
             </thead>
             <tbody>
               <tr><td><strong>S (som /z/)</strong></td><td>Entre vogais, após dif. vogal + cons.</td><td><em>casa, mesa, camisa</em></td></tr>
               <tr><td><strong>Z</strong></td><td>Raízes com z; sufixos -izar, -ização</td><td><em>beleza, civilização, realizar</em></td></tr>
               <tr><td><strong>SS</strong></td><td>Entre vogais, som /s/ forte</td><td><em>passo, missão, assunto</em></td></tr>
-              <tr><td><strong>X (som /ʃ/)</strong></td><td>Após ditongo; início palavras indígenas/africanas</td><td><em>caixote, beijo (não!), xadrez</em></td></tr>
+              <tr><td><strong>X (som /ʃ/)</strong></td><td>Após <span class="vocab-word" data-word="ditongo">ditongo</span>; início palavras indígenas/africanas</td><td><em>caixote, beijo (não!), xadrez</em></td></tr>
               <tr><td><strong>CH</strong></td><td>Palavras de origem grega/italiana</td><td><em>chave, chocolate, cheque</em></td></tr>
             </tbody>
           </table>
@@ -1363,18 +1364,18 @@
           </div>
         </div>
 
-        <h3>Hífen — Principais Regras (Novo Acordo)</h3>
+        <h3><span class="vocab-word" data-word="hífen">Hífen</span> — Principais Regras (Novo Acordo)</h3>
         <ul class="rule-list">
-          <li><strong>Prefixo + H:</strong> usa hífen — <em>anti-higiênico, super-herói</em></li>
-          <li><strong>Prefixo com mesma letra final/inicial:</strong> usa hífen — <em>micro-ondas, anti-inflamatório</em></li>
-          <li><strong>Prefixo "sub" + b:</strong> usa hífen — <em>sub-base</em></li>
-          <li><strong>Prefixo + vogal (regra geral):</strong> sem hífen — <em>antiaéreo, superamigo, autoescola</em></li>
-          <li><strong>Prefixo + consoante (não r, s):</strong> sem hífen — <em>anteprojeto, semicírculo</em></li>
+          <li><strong>Prefixo + H:</strong> usa <span class="vocab-word" data-word="hífen">hífen</span> — <em>anti-higiênico, super-herói</em></li>
+          <li><strong>Prefixo com mesma letra final/inicial:</strong> usa <span class="vocab-word" data-word="hífen">hífen</span> — <em>micro-ondas, anti-inflamatório</em></li>
+          <li><strong>Prefixo "sub" + b:</strong> usa <span class="vocab-word" data-word="hífen">hífen</span> — <em>sub-base</em></li>
+          <li><strong>Prefixo + vogal (regra geral):</strong> sem <span class="vocab-word" data-word="hífen">hífen</span> — <em>antiaéreo, superamigo, autoescola</em></li>
+          <li><strong>Prefixo + consoante (não r, s):</strong> sem <span class="vocab-word" data-word="hífen">hífen</span> — <em>anteprojeto, semicírculo</em></li>
         </ul>
 
         <div class="callout danger">
           <strong>Mudança importante do Acordo de 2009</strong>
-          <em>Autoescola</em> (antes: auto-escola) e <em>socioeconômico</em> perderam o hífen. Mas <em>auto-retrato</em> tornou-se <em>autorretrato</em> (aglutinação). Consulte sempre o vocabulário ortográfico oficial (VOLP) em casos de dúvida.
+          <em>Autoescola</em> (antes: auto-escola) e <em>socioeconômico</em> perderam o <span class="vocab-word" data-word="hífen">hífen</span>. Mas <em>auto-retrato</em> tornou-se <em>autorretrato</em> (aglutinação). Consulte sempre o vocabulário ortográfico oficial (VOLP) em casos de dúvida.
         </div>
       </div>
     </section>
@@ -1388,29 +1389,29 @@
         <span class="section-num">9</span>
         <div class="section-title-block">
           <p class="section-label">Capítulo IX</p>
-          <h2 class="section-title">Pontuação</h2>
+          <h2 class="section-title"><span class="vocab-word" data-word="pontuação">Pontuação</span></h2>
           <p class="section-subtitle">Vírgula, ponto, dois-pontos e outros sinais</p>
         </div>
       </div>
 
       <div class="prose">
-        <p>A pontuação organiza o texto, indica pausas e estrutura o raciocínio. O uso incorreto da vírgula é o erro mais frequente em redações e textos profissionais.</p>
+        <p>A <span class="vocab-word" data-word="pontuação">pontuação</span> organiza o texto, indica pausas e estrutura o raciocínio. O uso incorreto da vírgula é o erro mais frequente em redações e textos profissionais.</p>
 
         <h3>A Vírgula</h3>
         <h4>Usos Obrigatórios</h4>
         <ul class="rule-list">
-          <li><strong>Aposto explicativo:</strong> <em>Machado de Assis<mark>,</mark> maior escritor brasileiro<mark>,</mark> nasceu no Rio.</em></li>
-          <li><strong>Vocativo:</strong> <em><mark>Professora,</mark> tenho uma dúvida.</em></li>
-          <li><strong>Adjunto adverbial deslocado:</strong> <em>No dia seguinte<mark>,</mark> tudo mudou.</em></li>
+          <li><strong><span class="vocab-word" data-word="aposto">Aposto</span> explicativo:</strong> <em>Machado de Assis<mark>,</mark> maior escritor brasileiro<mark>,</mark> nasceu no Rio.</em></li>
+          <li><strong><span class="vocab-word" data-word="vocativo">Vocativo</span>:</strong> <em><mark>Professora,</mark> tenho uma dúvida.</em></li>
+          <li><strong><span class="vocab-word" data-word="adjunto adverbial">Adjunto adverbial</span> deslocado:</strong> <em>No dia seguinte<mark>,</mark> tudo mudou.</em></li>
           <li><strong>Orações coordenadas assindéticas:</strong> <em>Entrou<mark>,</mark> sentou<mark>,</mark> calou-se.</em></li>
           <li><strong>Orações subordinadas adverbiais antepostas:</strong> <em>Quando cheguei<mark>,</mark> já havia iniciado.</em></li>
-          <li><strong>Conjunção "mas", "porém", "contudo":</strong> <em>Estudou muito<mark>,</mark> mas não passou.</em></li>
+          <li><strong><span class="vocab-word" data-word="conjunção">Conjunção</span> "mas", "porém", "contudo":</strong> <em>Estudou muito<mark>,</mark> mas não passou.</em></li>
         </ul>
 
         <h4>Vírgula Proibida</h4>
         <div class="ex-grid">
           <div class="ex-box wrong">
-            <span class="ex-label">✗ Nunca separe sujeito do predicado</span>
+            <span class="ex-label">✗ Nunca separe <span class="vocab-word" data-word="sujeito">sujeito</span> do <span class="vocab-word" data-word="predicado">predicado</span></span>
             <code>O aluno<mark class="red">,</mark> estudou bastante.</code>
           </div>
           <div class="ex-box wrong">
@@ -1435,7 +1436,7 @@
           <li><strong>Antes de explicação ou conclusão:</strong> <em>Sabia o motivo<mark>:</mark> ela estava cansada.</em></li>
         </ul>
 
-        <h3>Demais Sinais de Pontuação</h3>
+        <h3>Demais Sinais de <span class="vocab-word" data-word="pontuação">Pontuação</span></h3>
         <div class="tbl-wrap">
           <table>
             <thead>
@@ -1444,8 +1445,8 @@
             <tbody>
               <tr><td><strong>Reticências (...)</strong></td><td>Suspensão, hesitação, omissão</td><td><em>Não sei... talvez...</em></td></tr>
               <tr><td><strong>Parênteses ( )</strong></td><td>Informação acessória, inserção</td><td><em>O Brasil (1500) foi descoberto...</em></td></tr>
-              <tr><td><strong>Travessão —</strong></td><td>Diálogo, aposto, destaque</td><td><em>— Venha aqui — disse ela.</em></td></tr>
-              <tr><td><strong>Aspas " "</strong></td><td>Citação, ironia, estrangeirismo</td><td><em>Ele é muito "eficiente".</em></td></tr>
+              <tr><td><strong>Travessão —</strong></td><td>Diálogo, <span class="vocab-word" data-word="aposto">aposto</span>, destaque</td><td><em>— Venha aqui — disse ela.</em></td></tr>
+              <tr><td><strong>Aspas " "</strong></td><td>Citação, <span class="vocab-word" data-word="ironia">ironia</span>, estrangeirismo</td><td><em>Ele é muito "eficiente".</em></td></tr>
               <tr><td><strong>! e ?</strong></td><td>Exclamação e interrogação</td><td><em>Que lindo! Você vem?</em></td></tr>
             </tbody>
           </table>
@@ -1503,22 +1504,22 @@
             <tbody>
               <tr><td><strong>Narrativo</strong></td><td>Contar eventos</td><td>Personagens, tempo, espaço, enredo, narrador</td><td>Conto, romance, fábula</td></tr>
               <tr><td><strong>Descritivo</strong></td><td>Caracterizar</td><td>Adjetivos, verbos de estado, detalhamento</td><td>Perfil, autorretrato</td></tr>
-              <tr><td><strong>Dissertativo</strong></td><td>Expor e defender</td><td>Tese, argumentos, conclusão</td><td>Artigo, editorial, redação</td></tr>
+              <tr><td><strong>Dissertativo</strong></td><td>Expor e defender</td><td>Tese, argumentos, conclusão</td><td><span class="vocab-word" data-word="artigo">Artigo</span>, editorial, redação</td></tr>
               <tr><td><strong>Expositivo</strong></td><td>Informar</td><td>Objetividade, dados, explicações</td><td>Verbete, notícia, resumo</td></tr>
-              <tr><td><strong>Injuntivo</strong></td><td>Instruir/ordenar</td><td>Verbos no imperativo, sequência</td><td>Manual, receita, bula</td></tr>
+              <tr><td><strong>Injuntivo</strong></td><td>Instruir/ordenar</td><td>Verbos no <span class="vocab-word" data-word="imperativo">imperativo</span>, sequência</td><td>Manual, receita, bula</td></tr>
             </tbody>
           </table>
         </div>
 
-        <h3>Coesão e Coerência</h3>
+        <h3><span class="vocab-word" data-word="coesão">Coesão</span> e <span class="vocab-word" data-word="coerência">Coerência</span></h3>
         <div class="ex-grid">
           <div class="ex-box gold">
-            <span class="ex-label">Coesão</span>
+            <span class="ex-label"><span class="vocab-word" data-word="coesão">Coesão</span></span>
             <code>Liga as partes do texto com conectivos, pronomes e referências.</code>
             <small><em>"João entrou. <mark>Ele</mark> sorriu. <mark>Em seguida</mark>, sentou-se."</em></small>
           </div>
           <div class="ex-box gold">
-            <span class="ex-label">Coerência</span>
+            <span class="ex-label"><span class="vocab-word" data-word="coerência">Coerência</span></span>
             <code>Harmonia lógica entre as ideias do texto.</code>
             <small><em>Um texto pode ser coeso mas incoerente: "O sol brilhou. Portanto, o mar é azul."</em></small>
           </div>
@@ -1531,11 +1532,11 @@
               <tr><th>Recurso</th><th>Definição</th><th>Exemplo</th></tr>
             </thead>
             <tbody>
-              <tr><td><strong>Metáfora</strong></td><td>Comparação implícita</td><td><em>"A vida é uma viagem."</em></td></tr>
-              <tr><td><strong>Metonímia</strong></td><td>Uma coisa pelo todo ou parte</td><td><em>"Ler Machado" (= obras de Machado)</em></td></tr>
-              <tr><td><strong>Ironia</strong></td><td>Diz o contrário do que pensa</td><td><em>"Que beleza de redação!" (sobre texto ruim)</em></td></tr>
-              <tr><td><strong>Eufemismo</strong></td><td>Suaviza ideia desagradável</td><td><em>"Ele nos deixou" (= morreu)</em></td></tr>
-              <tr><td><strong>Hipérbole</strong></td><td>Exagero expressivo</td><td><em>"Já te disse mil vezes!"</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="metáfora">Metáfora</span></strong></td><td>Comparação implícita</td><td><em>"A vida é uma viagem."</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="metonímia">Metonímia</span></strong></td><td>Uma coisa pelo todo ou parte</td><td><em>"Ler Machado" (= obras de Machado)</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="ironia">Ironia</span></strong></td><td>Diz o contrário do que pensa</td><td><em>"Que beleza de redação!" (sobre texto ruim)</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="eufemismo">Eufemismo</span></strong></td><td>Suaviza ideia desagradável</td><td><em>"Ele nos deixou" (= morreu)</em></td></tr>
+              <tr><td><strong><span class="vocab-word" data-word="hipérbole">Hipérbole</span></strong></td><td>Exagero expressivo</td><td><em>"Já te disse mil vezes!"</em></td></tr>
               <tr><td><strong>Antítese</strong></td><td>Ideias opostas juntas</td><td><em>"O rico e o pobre, lado a lado."</em></td></tr>
               <tr><td><strong>Anáfora</strong></td><td>Repetição no início de frases</td><td><em>"Não há paz. Não há descanso. Não há saída."</em></td></tr>
             </tbody>
@@ -1558,7 +1559,7 @@
           <code style="font-size:14px;line-height:1.7;display:block;margin-bottom:12px;">"A tecnologia não é neutra. Ela carrega em si os valores de quem a cria e os interesses de quem a financia. Acreditar que o algoritmo é imparcial é tão ingênuo quanto acreditar que o jornal não tem dono."</code>
           <small style="line-height:1.8;">
             <strong>Tema:</strong> Tecnologia e parcialidade dos algoritmos.<br>
-            <strong>Recurso:</strong> Comparação ("é tão ingênuo quanto") e ironia velada ("acreditar que").<br>
+            <strong>Recurso:</strong> Comparação ("é tão ingênuo quanto") e <span class="vocab-word" data-word="ironia">ironia</span> velada ("acreditar que").<br>
             <strong>Intenção do autor:</strong> Argumentar contra a ideia de neutralidade tecnológica.<br>
             <strong>Inferência possível:</strong> O autor defende pensamento crítico sobre o uso de tecnologia.
           </small>
@@ -1566,7 +1567,7 @@
 
         <div class="callout info">
           <strong>Lembre-se</strong>
-          Interpretar bem é a síntese de todo o manual: quem domina gramática, vocabulário, coesão e estrutura textual lê com muito mais profundidade e responde questões com muito mais segurança.
+          Interpretar bem é a síntese de todo o manual: quem domina gramática, vocabulário, <span class="vocab-word" data-word="coesão">coesão</span> e estrutura textual lê com muito mais profundidade e responde questões com muito mais segurança.
         </div>
 
         <div class="ornament">· · ·</div>
@@ -1588,9 +1589,9 @@
       </div>
 
       <div class="prose">
-        <p>Pratique o que foi visto nos capítulos anteriores. Escolha a alternativa correta em cada questão e, ao final, clique em <strong>Finalizar e salvar progresso</strong> para registrar sua pontuação no app.</p>
+        <p>Pratique o que foi visto nos capítulos anteriores. Escolha a alternativa correta em cada questão e, ao final, clique em <strong>Finalizar e salvar progresso</strong> para registrar sua <span class="vocab-word" data-word="pontuação">pontuação</span> no app.</p>
 
-        <h3>Concordância</h3>
+        <h3><span class="vocab-word" data-word="concordância">Concordância</span></h3>
 
         <div class="mc-item">
           <div class="q">1. A frase <em>"Fazem dois anos que ele não vem aqui."</em> está correta?</div>
@@ -1611,19 +1612,19 @@
 
         <div class="mc-item">
           <div class="q">3. Complete: <em>"A maioria dos alunos ___ o exercício."</em>
-            <span class="hint">As duas formas são aceitas; a concordância com o núcleo "maioria" é a mais tradicional.</span>
+            <span class="hint">As duas formas são aceitas; a <span class="vocab-word" data-word="concordância">concordância</span> com o núcleo "maioria" é a mais tradicional.</span>
           </div>
           <div class="mc-options">
-            <label class="correct-answer"><input type="radio" name="q3" value="a"> entregou (concordância com o núcleo)</label>
+            <label class="correct-answer"><input type="radio" name="q3" value="a"> entregou (<span class="vocab-word" data-word="concordância">concordância</span> com o núcleo)</label>
             <label><input type="radio" name="q3" value="b"> entregaram (única forma correta)</label>
             <label><input type="radio" name="q3" value="c"> entrega</label>
           </div>
         </div>
 
-        <h3>Crase</h3>
+        <h3><span class="vocab-word" data-word="crase">Crase</span></h3>
 
         <div class="mc-item">
-          <div class="q">4. <em>"Cheguei ___ escola às 8h."</em> — usa crase?</div>
+          <div class="q">4. <em>"Cheguei ___ escola às 8h."</em> — usa <span class="vocab-word" data-word="crase">crase</span>?</div>
           <div class="mc-options">
             <label class="correct-answer"><input type="radio" name="q4" value="a"> Sim: "Cheguei à escola às 8h."</label>
             <label><input type="radio" name="q4" value="b"> Não: "Cheguei a escola às 8h."</label>
@@ -1631,7 +1632,7 @@
         </div>
 
         <div class="mc-item">
-          <div class="q">5. <em>"Prefiro viajar ___ pé."</em> — usa crase?</div>
+          <div class="q">5. <em>"Prefiro viajar ___ pé."</em> — usa <span class="vocab-word" data-word="crase">crase</span>?</div>
           <div class="mc-options">
             <label><input type="radio" name="q5" value="a"> Sim: "Prefiro viajar à pé."</label>
             <label class="correct-answer"><input type="radio" name="q5" value="b"> Não: "Prefiro viajar a pé."</label>
@@ -1644,7 +1645,7 @@
           <div class="q">6. Qual grafia <strong>não</strong> existe em português?</div>
           <div class="mc-options">
             <label><input type="radio" name="q6" value="a"> pratico (verbo: eu pratico)</label>
-            <label><input type="radio" name="q6" value="b"> prático (adjetivo)</label>
+            <label><input type="radio" name="q6" value="b"> prático (<span class="vocab-word" data-word="adjetivo">adjetivo</span>)</label>
             <label class="correct-answer"><input type="radio" name="q6" value="c"> praticó</label>
           </div>
         </div>
@@ -1657,11 +1658,11 @@
           </div>
         </div>
 
-        <h3>Pontuação</h3>
+        <h3><span class="vocab-word" data-word="pontuação">Pontuação</span></h3>
 
         <div class="mc-item">
           <div class="q">8. Em <em>"Os alunos que estudaram, passaram na prova."</em>, a vírgula:
-            <span class="hint">Sem vírgula a oração é restritiva; com vírgula, explicativa.</span>
+            <span class="hint">Sem vírgula a <span class="vocab-word" data-word="oração">oração</span> é restritiva; com vírgula, explicativa.</span>
           </div>
           <div class="mc-options">
             <label class="correct-answer"><input type="radio" name="q8" value="a"> Muda o sentido da frase (restritiva × explicativa)</label>
@@ -1688,7 +1689,7 @@
           <div class="mc-options">
             <label class="correct-answer"><input type="radio" name="q10" value="a"> Valoriza antecipação e persistência: quem começa cedo alcança o que outros só sonham</label>
             <label><input type="radio" name="q10" value="b"> Critica quem planta cedo demais</label>
-            <label><input type="radio" name="q10" value="c"> Fala apenas de agricultura, sem metáfora</label>
+            <label><input type="radio" name="q10" value="c"> Fala apenas de agricultura, sem <span class="vocab-word" data-word="metáfora">metáfora</span></label>
           </div>
         </div>
 
