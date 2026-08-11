@@ -1272,6 +1272,58 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
 
 .empty-note { font-size: 13px; color: var(--ink-soft); text-align: center; margin-top: 30px; line-height: 1.5; }
 
+/* ── Seus dados e privacidade (LGPD) — mesma paleta da tela Landing ── */
+.lgpd-card {
+  background: linear-gradient(160deg, var(--land-bg-2), var(--land-bg));
+  border: 1px solid var(--land-line);
+  border-radius: var(--radius-lg);
+  padding: 20px 18px;
+  margin-top: 24px;
+  box-shadow: var(--clay-well);
+}
+.lgpd-card-title {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--land-ink);
+  margin: 0 0 8px 0;
+}
+.lgpd-card-sub {
+  font-size: 12.5px;
+  color: var(--land-ink-soft);
+  line-height: 1.5;
+  margin: 0 0 16px 0;
+}
+.lgpd-btn {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 16px;
+  border-radius: 14px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  text-align: center;
+  transition: transform .12s, box-shadow .15s;
+}
+.lgpd-btn-download {
+  background: var(--land-card);
+  border: 1px solid var(--land-line);
+  color: var(--land-ink);
+  margin-bottom: 10px;
+}
+.lgpd-btn-download:hover { border-color: var(--land-red-glow); color: var(--land-red-glow); }
+.lgpd-btn-download:active { transform: translateY(1px); }
+.lgpd-btn-delete {
+  background: linear-gradient(135deg, var(--land-red-glow), var(--land-red-2));
+  color: var(--land-ink);
+  box-shadow: 0 8px 20px rgba(225,58,38,0.35);
+}
+.lgpd-btn-delete:hover { box-shadow: 0 10px 24px rgba(225,58,38,0.45); transform: translateY(-1px); }
+.lgpd-btn-delete:active { transform: translateY(1px); box-shadow: 0 4px 10px rgba(225,58,38,0.35); }
+
 /* Bottom nav */
 .bottom-nav {
   position: fixed;
