@@ -7,7 +7,7 @@
 // esse número — é o que avisa o navegador que existe uma versão nova do
 // service worker para instalar. Sem isso, o navegador pode continuar
 // rodando a versão antiga do service worker por bastante tempo.
-const CACHE_NAME = 'bobcat-app-v32';
+const CACHE_NAME = 'bobcat-app-v33';
 
 const APP_SHELL = [
   './',
@@ -76,6 +76,7 @@ const APP_SHELL = [
   './lessons/pt-concordancia.html',
   './lessons/pt-sintaxe.html',
   './lessons/pt-morfologia.html',
+  './lessons/caca-palavras-portugues.html',
 ];
 
 // Extensões tratadas como "app shell": sempre tenta buscar a versão mais

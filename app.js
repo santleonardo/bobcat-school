@@ -187,6 +187,14 @@ const EXTRAS = [
     icon: '🎮',
     description: 'Mesmo conteúdo da Lição 2 oficial, no formato Genially/jogos (progresso compartilhado)',
     url: 'lessons/licao-2-interativa.html'
+  },
+  {
+    id: 'caca-palavras-portugues',
+    group: 'Jogos',
+    name: 'Caça-Palavras — Português',
+    icon: '🔎',
+    description: 'Classes gramaticais, áreas da gramática e sinais de pontuação escondidos na grade',
+    url: 'lessons/caca-palavras-portugues.html'
   }
 
 ];
