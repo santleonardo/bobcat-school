@@ -84,11 +84,12 @@
   .dpad .right{grid-column:3;grid-row:2}
   .dpad .hint{grid-column:2;grid-row:3;font-size:15px}
 
-  .field-actions{display:flex;justify-content:center}
+  .field-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
   .shuffle-btn{background:var(--cream-2);border:1.5px solid var(--border);color:var(--ink-soft);
     padding:8px 16px;border-radius:10px;font-size:12.5px;font-weight:700;cursor:pointer;
     display:flex;align-items:center;gap:6px}
   .shuffle-btn:active{border-color:var(--orange);color:var(--ink)}
+  .mode-btn.active{background:var(--orange);border-color:var(--orange);color:#fff}
 
   .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);opacity:0;
     background:var(--cream-2);border:1px solid var(--border);color:var(--ink);padding:11px 18px;
@@ -138,6 +139,7 @@
       <button class="hint" id="hintBtn">💡</button>
     </div>
     <div class="field-actions">
+      <button class="shuffle-btn mode-btn" id="modeBtn" aria-pressed="false">👉 Modo: Empurrar</button>
       <button class="shuffle-btn" id="shuffleBtn">🔀 Reorganizar campo</button>
     </div>
   </div>
@@ -148,7 +150,7 @@
     <button class="btn" id="nextBtn">Próxima frase →</button>
   </div>
 
-  <p class="hint-text">Ande com o D-pad, as setas do teclado ou arraste o dedo no campo. Encoste numa caixinha e continue andando pra empurrá-la. Cuidado: algumas palavras no campo estão escritas <b>errado</b> — só as certas, na ordem certa, sobem até a faixa dourada.</p>
+  <p class="hint-text">Ande com o D-pad, as setas do teclado ou arraste o dedo no campo. Encoste numa caixinha e continue andando pra empurrá-la. Toque em "Modo: Empurrar" (ou tecle <b>P</b>) pra trocar pro modo <b>Puxar</b> e arrastar de volta uma caixinha que ficou atrás de você. Cuidado: algumas palavras no campo estão escritas <b>errado</b> — só as certas, na ordem certa, sobem até a faixa dourada.</p>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -422,6 +424,50 @@ function shakeTile(tile){
   setTimeout(() => tile.el && tile.el.classList.remove('shake'), 320);
 }
 
+/* Puxar: o jogador anda pra frente e, se houver uma caixinha bem atrás dele
+   (do lado oposto do movimento), ela é arrastada junto pra casa que o
+   jogador acabou de deixar — útil quando não dá pra chegar do outro lado
+   pra empurrar. */
+function pull(dir){
+  const v = VECT[dir];
+  const nr = player.row + v.dr, nc = player.col + v.dc;
+  if (nc < 0 || nc >= COLS || nr < 0 || nr >= ROWS) return;
+  if (nr === 0){
+    // o jogador nunca anda direto pra dentro da faixa de chegada.
+    return;
+  }
+  if (tileAt(nr, nc)){
+    GameSound.play('wrong');
+    showToast('🚧 Tem uma caixinha na frente — troque pro modo "Empurrar" pra mover essa daí.', 'bad');
+    return;
+  }
+
+  const br = player.row - v.dr, bc = player.col - v.dc; // casa atrás do jogador
+  const behindTile = tileAt(br, bc);
+
+  if (!behindTile){
+    // nada pra puxar — o jogador só anda.
+    player.row = nr; player.col = nc;
+    GameSound.play('move');
+    renderAll();
+    return;
+  }
+
+  const boxNewRow = player.row, boxNewCol = player.col; // caixinha ocupa a casa que o jogador deixou
+  if (boxNewRow === ROWS - 1){
+    // mesma regra do empurrar: a última linha é só corredor, sem caixinha.
+    GameSound.play('wrong');
+    shakeTile(behindTile);
+    showToast('🚧 Essa fileira de baixo é só passagem — não dá pra puxar a caixinha pra lá.', 'bad');
+    return;
+  }
+
+  behindTile.row = boxNewRow; behindTile.col = boxNewCol;
+  player.row = nr; player.col = nc;
+  GameSound.play('push');
+  renderAll();
+}
+
 function tryDeliver(tile, playerLandRow, playerLandCol){
   if (tile.isDecoy){
     GameSound.play('wrong');
@@ -512,16 +558,37 @@ function showToast(msg, kind){
 }
 
 /* ─── Controles ─── */
+let pullModeOn = false;
+
+function setPullMode(on){
+  pullModeOn = on;
+  const btn = document.getElementById('modeBtn');
+  btn.classList.toggle('active', pullModeOn);
+  btn.textContent = pullModeOn ? '🫳 Modo: Puxar' : '👉 Modo: Empurrar';
+  btn.setAttribute('aria-pressed', pullModeOn ? 'true' : 'false');
+}
+
+function toggleMode(){
+  GameSound.play('click');
+  setPullMode(!pullModeOn);
+}
+
+function handleMove(dir){
+  if (pullModeOn) pull(dir); else move(dir);
+}
+
 document.querySelectorAll('.dpad button[data-dir]').forEach(btn => {
-  btn.addEventListener('click', () => move(btn.dataset.dir));
+  btn.addEventListener('click', () => handleMove(btn.dataset.dir));
 });
 document.getElementById('hintBtn').addEventListener('click', showHint);
 document.getElementById('nextBtn').addEventListener('click', loadRound);
 document.getElementById('shuffleBtn').addEventListener('click', shuffleField);
+document.getElementById('modeBtn').addEventListener('click', toggleMode);
 
 window.addEventListener('keydown', e => {
   const map = { ArrowUp:'N', ArrowDown:'S', ArrowLeft:'W', ArrowRight:'E', w:'N', s:'S', a:'W', d:'E' };
-  if (map[e.key]){ e.preventDefault(); move(map[e.key]); }
+  if (map[e.key]){ e.preventDefault(); handleMove(map[e.key]); return; }
+  if (e.key === 'p' || e.key === 'P'){ e.preventDefault(); toggleMode(); }
 });
 
 // swipe support
@@ -535,8 +602,8 @@ fieldOuter.addEventListener('touchend', e => {
   const t = e.changedTouches[0];
   const dx = t.clientX - touchStart.x, dy = t.clientY - touchStart.y;
   if (Math.max(Math.abs(dx),Math.abs(dy)) < 22) { touchStart = null; return; }
-  if (Math.abs(dx) > Math.abs(dy)) move(dx > 0 ? 'E' : 'W');
-  else move(dy > 0 ? 'S' : 'N');
+  if (Math.abs(dx) > Math.abs(dy)) handleMove(dx > 0 ? 'E' : 'W');
+  else handleMove(dy > 0 ? 'S' : 'N');
   touchStart = null;
 });
 
