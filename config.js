@@ -19,5 +19,5 @@ window.APP_CONFIG = {
   // Chave pública VAPID (Web Push). A privada fica só na Vercel (VAPID_PRIVATE_KEY).
   // Gere um par novo com: npx web-push generate-vapid-keys
   // Depois cole a pública aqui e a privada + pública nas env vars da Vercel.
-  vapidPublicKey: 'BPzNxMpNXIKyzKG7x2HYgq2dYBvDudKLPNWW4zfjvTV6tpY6MxGtzRyyGHE4UGz9KGWO_RfGS7Dbqm206K5'
+  vapidPublicKey: 'BPzNxMpNXIKyzKG7x2HYgq2dYBvDudKLPNWW4zfjvTV6tpY6MxGtzRyyGHE4UGz9KGWO_RfGS7Dbqm206K5BOmU'
 };
