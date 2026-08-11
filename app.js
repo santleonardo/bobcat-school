@@ -939,34 +939,6 @@ async function confirmResetPassword() {
   alert('Progresso zerado.');
 }
 
-// ─── Esconder/expandir a lista de lições (tela Home) ───────────────────────
-function setupLessonListToggle() {
-  const btn = document.getElementById('btn-lesson-list-toggle');
-  const list = document.getElementById('lesson-list');
-  const label = document.getElementById('lesson-list-toggle-label');
-  const icon = document.getElementById('lesson-list-toggle-icon');
-  if (!btn || !list) return;
-
-  const STORAGE_KEY = 'bobcat_lesson_list_collapsed';
-
-  function applyState(collapsed) {
-    list.classList.toggle('hidden', collapsed);
-    btn.classList.toggle('collapsed', collapsed);
-    btn.setAttribute('aria-expanded', String(!collapsed));
-    label.textContent = collapsed ? 'Mostrar' : 'Esconder';
-  }
-
-  let collapsed = false;
-  try { collapsed = localStorage.getItem(STORAGE_KEY) === '1'; } catch (e) { /* ignore */ }
-  applyState(collapsed);
-
-  btn.addEventListener('click', () => {
-    collapsed = !collapsed;
-    applyState(collapsed);
-    try { localStorage.setItem(STORAGE_KEY, collapsed ? '1' : '0'); } catch (e) { /* ignore quota */ }
-  });
-}
-
 function setupResetPasswordModal() {
   document.getElementById('reset-password-cancel').addEventListener('click', closeResetPasswordModal);
   document.getElementById('reset-password-confirm').addEventListener('click', confirmResetPassword);
@@ -1345,27 +1317,56 @@ function renderLessonCardsInto(containerId, progress) {
   list.innerHTML = '';
   const lockStatus = computeLockStatus(progress);
   const groups = groupLessonsByLevel();
+  const collapsedLevels = getCollapsedLevels();
   groups.forEach(({ level, lessons }) => {
     const section = document.createElement('div');
     section.className = 'level-group';
     const countLabel = lessons.length === 1 ? '1 lição' : lessons.length + ' lições';
+    const collapsed = collapsedLevels.has(level);
     section.innerHTML = `
-      <div class="level-group-title">
+      <button type="button" class="level-group-title${collapsed ? ' collapsed' : ''}">
+        <span class="chevron" aria-hidden="true">▾</span>
         <span class="label">${level}</span>
         <span class="line"></span>
         <span class="count">${countLabel}</span>
-      </div>
+      </button>
     `;
+    const cardsWrap = document.createElement('div');
+    cardsWrap.className = 'level-group-lessons' + (collapsed ? ' hidden' : '');
     lessons.forEach(lesson => {
       const locked = lockStatus[lesson.id];
       const card = document.createElement('div');
       card.className = 'lesson-card' + (locked ? ' locked' : '');
       card.innerHTML = buildLessonCardHTML(lesson, progress, locked);
       card.addEventListener('click', () => locked ? showLockedMessage(lesson) : openLesson(lesson));
-      section.appendChild(card);
+      cardsWrap.appendChild(card);
     });
+    section.querySelector('.level-group-title').addEventListener('click', () => {
+      const nowCollapsed = cardsWrap.classList.toggle('hidden');
+      section.querySelector('.level-group-title').classList.toggle('collapsed', nowCollapsed);
+      toggleCollapsedLevel(level, nowCollapsed);
+    });
+    section.appendChild(cardsWrap);
     list.appendChild(section);
   });
+}
+
+// Níveis (A1, A2...) que o aluno recolheu, salvo por aparelho — vale tanto
+// para a lista da Home quanto para a do perfil, já que usam o mesmo nome de nível.
+const COLLAPSED_LEVELS_KEY = 'bobcat_collapsed_lesson_levels';
+
+function getCollapsedLevels() {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(COLLAPSED_LEVELS_KEY) || '[]'));
+  } catch (e) {
+    return new Set();
+  }
+}
+
+function toggleCollapsedLevel(level, collapsed) {
+  const set = getCollapsedLevels();
+  if (collapsed) set.add(level); else set.delete(level);
+  try { localStorage.setItem(COLLAPSED_LEVELS_KEY, JSON.stringify([...set])); } catch (e) { /* ignore quota */ }
 }
 
 function computeProgressStats(progress) {
@@ -1423,7 +1424,6 @@ async function boot() {
   setupProfileScreen();
   setupProfileViewScreen();
   setupResetPasswordModal();
-  setupLessonListToggle();
 
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => showScreen(btn.dataset.screen));
