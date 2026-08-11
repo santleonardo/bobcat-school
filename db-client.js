@@ -639,6 +639,104 @@ function getLocalPushReminderTimes() {
   }
 }
 
+// ---------- Baixar meus dados (LGPD — direito de acesso/portabilidade) ----------
+// Junta tudo que o app guarda sobre o aluno: perfil, progresso das lições,
+// personalidades de IA + histórico de conversas, mensagens trocadas com o
+// professor e as preferências de notificação/lembrete. Usado pelo botão
+// "Baixar meus dados" na tela de Perfil.
+async function exportMyData() {
+  const profile = await getProfile();
+  const progress = await getProgress();
+  const personas = await getAiChatPersonas();
+
+  const historico = {};
+  for (const p of personas) {
+    historico[p.id] = await getAiChatHistoryFor(p.id);
+  }
+
+  const mensagens = messagingAvailable() ? await getMyMessages() : [];
+
+  let pushSubscriptions = [];
+  if (useSupabase && supabaseClient && currentUserId) {
+    const { data, error } = await supabaseClient
+      .from('push_subscriptions')
+      .select('endpoint, user_agent, reminder_times, created_at, updated_at, last_reminder_sent_at')
+      .eq('user_id', currentUserId);
+    if (error) console.error('exportMyData (push_subscriptions):', error);
+    pushSubscriptions = data || [];
+  } else {
+    const local = getLocalPushSubscription();
+    if (local && local.endpoint) {
+      pushSubscriptions = [{ endpoint: local.endpoint, reminder_times: getLocalPushReminderTimes() }];
+    }
+  }
+
+  return {
+    gerado_em: new Date().toISOString(),
+    modo_de_armazenamento: useSupabase ? 'nuvem (Supabase)' : 'somente neste aparelho (localStorage)',
+    perfil: profile,
+    progresso_das_licoes: progress,
+    personalidades_de_ia: personas,
+    historico_de_conversas_com_ia: historico,
+    mensagens_com_o_professor: mensagens,
+    notificacoes_push: pushSubscriptions
+  };
+}
+
+// ---------- Excluir minha conta (LGPD — direito de eliminação) ----------
+// Apaga por completo os dados do aluno. Com Supabase: chama a função
+// serverless /api/delete-account, que remove o usuário do Supabase Auth —
+// e, por causa dos "on delete cascade" definidos em schema.sql, isso já
+// arrasta junto o perfil, progresso, mensagens, personalidades de IA,
+// histórico de conversas, notificações push e a senha de zerar progresso.
+// Sem Supabase, apaga só o que está salvo neste aparelho (localStorage).
+async function deleteMyAccount() {
+  if (!useSupabase || !supabaseClient || !currentUserId) {
+    clearAllLocalAppData();
+    return { ok: true, localOnly: true };
+  }
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  const accessToken = session && session.access_token;
+  if (!accessToken) {
+    return { ok: false, message: 'Sessão expirada. Faça login de novo e tente outra vez.' };
+  }
+
+  try {
+    const res = await fetch('/api/delete-account', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + accessToken }
+    });
+    const result = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      return { ok: false, message: result.error || 'Não foi possível excluir a conta. Tente novamente.' };
+    }
+  } catch (e) {
+    console.error('deleteMyAccount:', e);
+    return { ok: false, message: 'Erro de conexão ao excluir a conta. Verifique a internet e tente de novo.' };
+  }
+
+  currentUserId = null;
+  clearAllLocalAppData();
+  return { ok: true };
+}
+
+// Apaga tudo que o app guarda neste aparelho (localStorage): perfil e
+// progresso locais, personalidades de IA e conversas, cache de vocabulário,
+// preferências de lembrete/push etc. Usado ao excluir a conta (e, em modo
+// sem Supabase, é a própria exclusão — não existe outro lugar pra apagar).
+function clearAllLocalAppData() {
+  try {
+    const prefixes = ['bobcat_', 'aiChatPersonas', 'aiChatTtsEnabled', 'aiChatHistory_', 'vocabCache_'];
+    const keys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && prefixes.some(p => k === p || k.startsWith(p))) keys.push(k);
+    }
+    keys.forEach(k => localStorage.removeItem(k));
+  } catch (e) { /* ignore */ }
+}
+
 // ---------- Resumo da última conversa com a IA (só para personalizar o lembrete) ----------
 
 const AI_LAST_CONVO_MAX_MESSAGES = 8; // suficiente pra dar contexto ao Gemini sem pesar o payload

@@ -951,6 +951,93 @@ function setupResetPasswordModal() {
   });
 }
 
+// ---------- Baixar meus dados (LGPD) ----------
+
+async function downloadMyData() {
+  const btn = document.getElementById('btn-download-data');
+  const originalText = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Preparando...';
+  try {
+    const data = await exportMyData();
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const dateStamp = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `bobcat-meus-dados-${dateStamp}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    console.error('downloadMyData:', e);
+    alert('Não foi possível gerar o arquivo agora. Tente de novo em instantes.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalText;
+  }
+}
+
+// ---------- Modal de confirmação: excluir conta (LGPD) ----------
+
+function openDeleteAccountModal() {
+  const modal = document.getElementById('delete-account-modal');
+  const input = document.getElementById('delete-account-input');
+  const error = document.getElementById('delete-account-error');
+  input.value = '';
+  error.classList.add('hidden');
+  modal.classList.remove('hidden');
+  input.focus();
+}
+
+function closeDeleteAccountModal() {
+  document.getElementById('delete-account-modal').classList.add('hidden');
+}
+
+async function confirmDeleteAccount() {
+  const input = document.getElementById('delete-account-input');
+  const error = document.getElementById('delete-account-error');
+  const confirmBtn = document.getElementById('delete-account-confirm');
+
+  if (input.value.trim().toUpperCase() !== 'EXCLUIR') {
+    error.textContent = 'Digite exatamente EXCLUIR para confirmar.';
+    error.classList.remove('hidden');
+    return;
+  }
+
+  confirmBtn.disabled = true;
+  confirmBtn.textContent = 'Excluindo...';
+  const result = await deleteMyAccount();
+  confirmBtn.disabled = false;
+  confirmBtn.textContent = 'Excluir permanentemente';
+
+  if (!result.ok) {
+    error.textContent = result.message || 'Não foi possível excluir a conta. Tente novamente.';
+    error.classList.remove('hidden');
+    return;
+  }
+
+  closeDeleteAccountModal();
+  alert('Sua conta e todos os seus dados foram excluídos.');
+  document.getElementById('bottom-nav').style.display = 'none';
+  setAuthMode('login');
+  showScreen('auth');
+}
+
+function setupDeleteAccountModal() {
+  document.getElementById('delete-account-cancel').addEventListener('click', closeDeleteAccountModal);
+  document.getElementById('delete-account-confirm').addEventListener('click', confirmDeleteAccount);
+  document.getElementById('delete-account-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'delete-account-modal') closeDeleteAccountModal();
+  });
+  document.getElementById('delete-account-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); confirmDeleteAccount(); }
+    if (e.key === 'Escape') closeDeleteAccountModal();
+  });
+}
+
 function setupProfileViewScreen() {
   initAvatarPicker('avatar-picker-edit', (avatar) => { selectedAvatarEdit = avatar; });
 
@@ -979,6 +1066,9 @@ function setupProfileViewScreen() {
   });
 
   document.getElementById('btn-reset-progress').addEventListener('click', openResetPasswordModal);
+
+  document.getElementById('btn-download-data').addEventListener('click', downloadMyData);
+  document.getElementById('btn-delete-account').addEventListener('click', openDeleteAccountModal);
 
   document.getElementById('btn-logout').addEventListener('click', async () => {
     if (!confirm('Sair da conta? Você vai precisar do usuário e senha para entrar de novo.')) return;
@@ -1424,6 +1514,7 @@ async function boot() {
   setupProfileScreen();
   setupProfileViewScreen();
   setupResetPasswordModal();
+  setupDeleteAccountModal();
 
   document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => showScreen(btn.dataset.screen));

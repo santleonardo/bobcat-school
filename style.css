@@ -1625,7 +1625,7 @@ a.menu-btn#btn-bobcat-ville .menu-btn-icon {
 .modal-card h3 { margin: 0 0 8px 0; font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: 17px; color: var(--pine-deep); display: flex; align-items: center; gap: 8px; }
 .modal-card h3 .modal-icon { width: 19px; height: 19px; flex-shrink: 0; color: var(--terracotta-deep); }
 .modal-card p { margin: 0 0 14px 0; font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
-.modal-card input[type=password] {
+.modal-card input[type=password], .modal-card input[type=text] {
   width: 100%;
   padding: 12px 13px;
   border: none;
@@ -1636,7 +1636,7 @@ a.menu-btn#btn-bobcat-ville .menu-btn-icon {
   box-shadow: var(--clay-well);
   box-sizing: border-box;
 }
-.modal-card input[type=password]:focus { outline: none; box-shadow: var(--clay-well), 0 0 0 3px rgba(224,134,84,0.28); }
+.modal-card input[type=password]:focus, .modal-card input[type=text]:focus { outline: none; box-shadow: var(--clay-well), 0 0 0 3px rgba(224,134,84,0.28); }
 .modal-error { color: var(--bad); font-size: 12.5px; margin: 8px 0 0 0 !important; }
 .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
 .modal-actions .btn { margin-top: 0; }
