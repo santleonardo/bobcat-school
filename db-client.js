@@ -496,27 +496,6 @@ async function handleLessonFinish(lessonId, correct, total, kind) {
     msg.textContent = 'Salvando progresso...';
   }
 
-  // As páginas de lição carregam db-client.js mas, ao contrário do app
-  // principal (index.html) e do nivelamento, não chamavam initDataLayer()
-  // antes de salvar. Sem isso, useSupabase/currentUserId ficavam nos
-  // valores padrão (false/null) e o progresso ia parar só no localStorage
-  // daquele navegador — nunca na conta na nuvem do aluno. Resultado: a
-  // lição aparecia "concluída" na hora, mas ao voltar para o app (que lê
-  // o progresso da nuvem) ou atualizar a página, tudo sumia. Garantimos
-  // aqui que a camada de dados foi inicializada antes de ler/gravar nada.
-  if (!dataLayerReady) {
-    await initDataLayer();
-  }
-
-  if (useSupabase && !currentUserId) {
-    if (msg) {
-      msg.style.display = 'block';
-      msg.style.color = '#C0392B';
-      msg.textContent = '⚠️ Você não está logado na conta na nuvem — faça login pelo app (index.html) antes de concluir a lição, senão o progresso não será salvo.';
-    }
-    return false;
-  }
-
   // progresso anterior (para bônus de melhoria)
   const allProgress = await getProgress();
   const prev = allProgress[lessonId] || null;
