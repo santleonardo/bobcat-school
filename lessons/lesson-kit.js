@@ -246,6 +246,14 @@
     });
   }
 
+  /** Alias for older lesson scripts that called complete({correct, total}) */
+  function complete(arg1, arg2, arg3) {
+    if (arg1 && typeof arg1 === 'object') {
+      return finishLesson(arg1.correct, arg1.total, arg1.kind || 'correct');
+    }
+    return finishLesson(arg1, arg2, arg3);
+  }
+
   global.BobcatLesson = {
     init: init,
     addXP: addXP,
@@ -255,6 +263,7 @@
     speak: speak,
     buildFlipCards: buildFlipCards,
     finishLesson: finishLesson,
+    complete: complete,
     getXP: function () { return XP; },
     getConfig: function () { return Object.assign({}, config); }
   };

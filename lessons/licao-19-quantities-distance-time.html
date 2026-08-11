@@ -241,13 +241,20 @@ function checkFill(){
   if(SCORE.correct >= Math.floor(TOTAL_Q*0.8) && window.BobcatLesson) BobcatLesson.fireConfetti();
 }
 
-document.getElementById('btnFinish').addEventListener('click', function(){
+document.getElementById('btnFinish').addEventListener('click', async function(){
   SCORE.correct = qCorrect + fillCorrect;
   SCORE.total = TOTAL_Q;
-  document.getElementById('finishMsg').style.display = 'block';
-  if(window.BobcatLesson){
-    BobcatLesson.complete({ correct: SCORE.correct, total: SCORE.total });
-    BobcatLesson.fireConfetti();
+  if(window.BobcatLesson && typeof BobcatLesson.finishLesson === 'function'){
+    await BobcatLesson.finishLesson(SCORE.correct, SCORE.total, 'correct');
+  } else {
+    var msg = document.getElementById('finishMsg');
+    if(msg){
+      var pct = SCORE.total ? Math.round((SCORE.correct/SCORE.total)*100) : 0;
+      msg.style.display = 'block';
+      msg.textContent = pct >= 85
+        ? ('🎉 Lição concluída ('+pct+'%)!')
+        : ('📌 '+SCORE.correct+'/'+SCORE.total+' ('+pct+'%). Precisa de pelo menos 85%.');
+    }
   }
 });
 
