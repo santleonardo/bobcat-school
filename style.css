@@ -107,25 +107,25 @@ html[data-theme="dark"] {
 html[data-theme="light"] {
   --orange: #E08654;
   --orange-dark: #B75E3D;
-  --cream: #FBDFC1;
-  --cream-2: #FCE8D2;
+  --cream: #FFFFFF;
+  --cream-2: #F5F5F3;
   --ink: #262B21;
   --ok: #3C7A52;
   --bad: #C13F2E;
-  --border: #EBDCC0;
+  --border: #E8E4DC;
 
-  --paper: #F3ECDD;
-  --paper-alt: #EAE0CB;
+  --paper: #FFFFFF;
+  --paper-alt: #F3F2EE;
   --ink-soft: #6E7264;
   --ink-faint: #9A9686;
   --terracotta: var(--orange);
   --terracotta-deep: var(--orange-dark);
-  --terracotta-tonal: #FBDCC0;
+  --terracotta-tonal: #FDE8D8;
   --pine: #3C5645;
   --pine-deep: #202B22;
   --pine-tint: #DCEAD9;
   --gold: #D9A947;
-  --surface: #FFFDF8;
+  --surface: #FFFFFF;
 
   --clay-raised:
     7px 9px 18px rgba(120, 84, 45, 0.20),
@@ -144,7 +144,7 @@ html[data-theme="light"] {
   --shadow-warm: var(--clay-raised-deep);
   --shadow-soft: var(--clay-raised);
 
-  --body-glow: radial-gradient(1200px 420px at 50% -120px, rgba(224,134,84,0.14), transparent 60%);
+  --body-glow: radial-gradient(1200px 420px at 50% -120px, rgba(224,134,84,0.10), transparent 60%);
   --hello-bg:
     radial-gradient(420px 200px at 90% -20%, rgba(217,123,84,0.45), transparent 60%),
     linear-gradient(135deg, var(--pine-deep) 0%, var(--pine) 100%);

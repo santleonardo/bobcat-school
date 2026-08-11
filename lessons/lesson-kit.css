@@ -280,10 +280,10 @@ button{font-family:inherit;cursor:pointer}
 /* Light theme overrides (synced with main app via data-theme) */
 html[data-theme="light"] {
   --orange:#E08654;--orange-dark:#B75E3D;--orange-light:#F2A06A;
-  --cream:#FBDFC1;--cream-2:#FCE8D2;--cream-3:#F3ECDD;
+  --cream:#FFFFFF;--cream-2:#F5F5F3;--cream-3:#FFFFFF;
   --ink:#262B21;--ink-soft:#6E7264;
   --ok:#3C7A52;--ok-bg:#EAF7EF;--bad:#C13F2E;--bad-bg:#FBEAE8;
-  --border:#EBDCC0;--teal:#2A7F8C;--plum:#8C4A6A;--gold:#D9A947;
+  --border:#E8E4DC;--teal:#2A7F8C;--plum:#8C4A6A;--gold:#D9A947;
   --shadow:0 4px 16px rgba(180,120,80,.08);
 }
 html[data-theme="light"] .hud { background: rgba(253,247,241,.92); }
