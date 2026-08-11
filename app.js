@@ -113,7 +113,7 @@ const EXTRAS = [
     group: 'Manual Prático — Língua Portuguesa',
     name: 'Português 2 — Sintaxe',
     icon: '🧩',
-    description: 'Sujeito, predicado, objetos e termos acessórios',
+    description: 'Sujeito, predicado, objetos, termos acessórios e o núcleo de cada termo',
     url: 'lessons/pt-sintaxe.html'
   },
   {
