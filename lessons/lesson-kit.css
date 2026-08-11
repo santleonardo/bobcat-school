@@ -460,3 +460,22 @@ html[data-theme="light"] .vocab-card-listen,
 html[data-theme="light"] .vocab-card-pos {
   background: #f5f0ea;
 }
+
+
+/* Next lesson nav */
+.lesson-nav-next{margin-top:20px;text-align:center}
+.lesson-nav-next .btn-next-lesson{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--orange);color:#fff;border:none;
+  padding:14px 22px;border-radius:12px;font-size:15px;font-weight:700;
+  text-decoration:none;box-shadow:0 4px 14px rgba(255,91,61,.35);
+  transition:transform .15s,background .15s
+}
+.lesson-nav-next .btn-next-lesson:hover{background:var(--orange-dark);transform:translateY(-1px);color:#fff}
+.lesson-nav-next .btn-next-lesson .sub{font-size:12px;font-weight:500;opacity:.9;display:block;margin-top:2px}
+.lesson-nav-next .btn-back-menu{
+  display:inline-flex;align-items:center;gap:8px;margin-top:10px;
+  background:transparent;color:var(--orange-dark);border:2px solid var(--orange);
+  padding:12px 20px;border-radius:12px;font-size:14px;font-weight:700;text-decoration:none
+}
+.lesson-nav-next .btn-back-menu:hover{background:var(--orange);color:#fff}
