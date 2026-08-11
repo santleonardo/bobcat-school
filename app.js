@@ -769,6 +769,17 @@ async function renderProfileView() {
   document.getElementById('profile-stat-completed').textContent = stats.completed;
   document.getElementById('profile-stat-score').textContent = stats.avgPct !== null ? stats.avgPct + '%' : '—';
   document.getElementById('profile-stat-total').textContent = stats.total;
+  const game = await computeGameStats(progress);
+  const xpP = document.getElementById('profile-stat-xp');
+  if (xpP) xpP.textContent = game.totalXP;
+  const stP = document.getElementById('profile-stat-streak');
+  if (stP) stP.textContent = game.streak;
+  renderAchievementsGrid(game.achievements, game.achievementDefs);
+  // level sub line with XP
+  const levelSub = document.getElementById('profile-level-display');
+  if (levelSub && profile) {
+    levelSub.textContent = 'Fase ' + profile.level + ' · ' + game.totalXP + ' XP · 🔥 ' + game.streak + 'd';
+  }
   renderLessonCardsInto('profile-lesson-list', progress);
 
   document.getElementById('edit-name').value = profile.name;
@@ -1325,10 +1336,15 @@ async function renderHome() {
 
   const progress = await getProgress();
   const stats = computeProgressStats(progress);
+  const game = await computeGameStats(progress);
 
   document.getElementById('stat-completed').textContent = stats.completed;
+  const xpEl = document.getElementById('stat-xp');
+  if (xpEl) xpEl.textContent = game.totalXP;
+  document.getElementById('stat-streak').textContent = game.streak;
   document.getElementById('stat-score').textContent = stats.avgPct !== null ? stats.avgPct + '%' : '—';
-  document.getElementById('stat-streak').textContent = stats.total;
+  const achEl = document.getElementById('stat-achievements');
+  if (achEl) achEl.textContent = (game.achievements || []).length;
 
   renderLessonCardsInto('lesson-list', progress);
 }
@@ -1469,6 +1485,41 @@ function computeProgressStats(progress) {
     );
   }
   return { completed: completedLessons.length, avgPct, total: LESSONS.length };
+}
+
+async function computeGameStats(progress) {
+  let game = { totalXP: 0, achievements: [], hadPerfect: false, hadImprove: false, history: [] };
+  try {
+    if (typeof getGamification === 'function') game = await getGamification();
+  } catch (e) { /* ignore */ }
+  const streak = (typeof computeStreak === 'function')
+    ? computeStreak(progress, game)
+    : 0;
+  return {
+    totalXP: game.totalXP || 0,
+    streak: streak,
+    achievements: game.achievements || [],
+    achievementDefs: (typeof ACHIEVEMENTS !== 'undefined') ? ACHIEVEMENTS : []
+  };
+}
+
+function renderAchievementsGrid(unlockedIds, defs) {
+  const grid = document.getElementById('achievements-grid');
+  if (!grid) return;
+  const have = new Set(unlockedIds || []);
+  const list = defs && defs.length ? defs : [];
+  if (!list.length) {
+    grid.innerHTML = '<p class="bk-hint">Continue estudando para desbloquear conquistas.</p>';
+    return;
+  }
+  grid.innerHTML = list.map(a => {
+    const on = have.has(a.id);
+    return `<div class="achievement-card${on ? ' unlocked' : ''}" title="${a.desc}">
+      <div class="achievement-icon">${a.icon}</div>
+      <div class="achievement-title">${a.title}</div>
+      <div class="achievement-desc">${a.desc}</div>
+    </div>`;
+  }).join('');
 }
 
 function openLesson(lesson) {

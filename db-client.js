@@ -11,7 +11,198 @@
 
 const PROFILE_KEY = 'bobcat_profile';
 const PROGRESS_KEY = 'bobcat_progress';
+
 const PASSING_PCT = 85; // nota mínima (85% / 8.5) para considerar a lição concluída
+
+// ─── Gamificação (XP global, streak, conquistas) ─────────────────────────
+// Persistido em localStorage. Com login, a chave inclui o userId para não
+// misturar contas no mesmo aparelho. Sem alteração de schema no Supabase.
+const GAME_KEY_BASE = 'bobcat_gamification';
+
+const ACHIEVEMENTS = [
+  { id: 'first_lesson',  icon: '🌱', title: 'Primeiro passo',   desc: 'Conclua 1 lição',              check: (s) => s.completedCount >= 1 },
+  { id: 'lessons_5',     icon: '📘', title: 'Em ritmo',         desc: 'Conclua 5 lições',             check: (s) => s.completedCount >= 5 },
+  { id: 'lessons_10',    icon: '📚', title: 'Dez lições',       desc: 'Conclua 10 lições',            check: (s) => s.completedCount >= 10 },
+  { id: 'lessons_20',    icon: '🎓', title: 'Dedicação',        desc: 'Conclua 20 lições',            check: (s) => s.completedCount >= 20 },
+  { id: 'perfect_score', icon: '💯', title: 'Nota 10',          desc: 'Acerte 100% em uma lição',     check: (s) => s.hadPerfect },
+  { id: 'improver',      icon: '📈', title: 'Melhorou!',        desc: 'Refaça uma lição com nota maior', check: (s) => s.hadImprove },
+  { id: 'streak_3',      icon: '🔥', title: '3 dias seguidos',  desc: 'Pratique 3 dias seguidos',     check: (s) => s.streak >= 3 },
+  { id: 'streak_7',      icon: '⚡', title: 'Uma semana',       desc: 'Pratique 7 dias seguidos',     check: (s) => s.streak >= 7 },
+  { id: 'xp_500',        icon: '⭐', title: '500 XP',           desc: 'Acumule 500 XP',               check: (s) => s.totalXP >= 500 },
+  { id: 'xp_1000',       icon: '🏆', title: '1000 XP',          desc: 'Acumule 1000 XP',              check: (s) => s.totalXP >= 1000 },
+];
+
+function gameStorageKey() {
+  if (useSupabase && currentUserId) return GAME_KEY_BASE + '_' + currentUserId;
+  return GAME_KEY_BASE;
+}
+
+function defaultGameState() {
+  return {
+    totalXP: 0,
+    achievements: [],      // ids desbloqueados
+    hadPerfect: false,
+    hadImprove: false,
+    history: []            // { date: 'YYYY-MM-DD', lessonId, xp, pct } recent activity
+  };
+}
+
+async function getGamification() {
+  try {
+    const raw = localStorage.getItem(gameStorageKey());
+    if (!raw) return defaultGameState();
+    const data = JSON.parse(raw);
+    return Object.assign(defaultGameState(), data);
+  } catch (e) {
+    return defaultGameState();
+  }
+}
+
+async function saveGamification(state) {
+  try {
+    localStorage.setItem(gameStorageKey(), JSON.stringify(state));
+  } catch (e) { /* quota */ }
+}
+
+/** Dias de atividade a partir do progresso (lastAttempt / last_attempt). */
+function collectActivityDays(progress) {
+  const days = new Set();
+  Object.keys(progress || {}).forEach(function (id) {
+    const p = progress[id];
+    if (!p) return;
+    const iso = p.lastAttempt || p.last_attempt;
+    if (!iso) return;
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return;
+    days.add(d.toISOString().slice(0, 10));
+  });
+  // também dias do histórico de gamificação
+  return days;
+}
+
+/** Streak real: dias consecutivos com atividade, terminando hoje ou ontem. */
+function computeStreak(progress, gameState) {
+  const days = collectActivityDays(progress);
+  if (gameState && Array.isArray(gameState.history)) {
+    gameState.history.forEach(function (h) { if (h && h.date) days.add(h.date); });
+  }
+  if (days.size === 0) return 0;
+
+  const today = new Date();
+  const todayStr = today.toISOString().slice(0, 10);
+  const y = new Date(today); y.setDate(y.getDate() - 1);
+  const yStr = y.toISOString().slice(0, 10);
+
+  let cursor;
+  if (days.has(todayStr)) cursor = today;
+  else if (days.has(yStr)) cursor = y;
+  else return 0;
+
+  let streak = 0;
+  for (;;) {
+    const key = cursor.toISOString().slice(0, 10);
+    if (!days.has(key)) break;
+    streak++;
+    cursor = new Date(cursor);
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  return streak;
+}
+
+/**
+ * Calcula XP da tentativa e atualiza estado global.
+ * prev = progresso anterior da mesma lição (ou null).
+ * sessionXP = XP ganho no HUD da lição (opcional).
+ */
+async function applyLessonRewards(lessonId, correct, total, prev, sessionXP) {
+  const pct = total > 0 ? (correct / total) * 100 : 0;
+  const completed = pct >= PASSING_PCT;
+  const state = await getGamification();
+  const progress = await getProgress();
+
+  let gained = 0;
+  // XP base: 10 por acerto
+  gained += Math.max(0, correct) * 10;
+  // bônus de sessão do HUD (parcial, evita double-count com o base)
+  if (sessionXP && sessionXP > 0) gained += Math.min(Math.round(sessionXP * 0.25), 50);
+  // primeira conclusão desta lição
+  const wasCompleted = prev && prev.completed;
+  if (completed && !wasCompleted) gained += 50;
+  // 100%
+  if (total > 0 && correct >= total) {
+    gained += 100;
+    state.hadPerfect = true;
+  }
+  // bônus por melhorar a nota ao refazer
+  if (prev && prev.total > 0) {
+    const oldPct = (prev.correct / prev.total) * 100;
+    if (pct > oldPct + 0.5) {
+      const delta = Math.round(pct - oldPct);
+      gained += 25 + Math.min(delta, 50); // +25 base + até 50 pelo delta
+      state.hadImprove = true;
+    }
+  }
+
+  state.totalXP = (state.totalXP || 0) + gained;
+
+  const todayStr = new Date().toISOString().slice(0, 10);
+  state.history = Array.isArray(state.history) ? state.history : [];
+  state.history.push({ date: todayStr, lessonId: lessonId, xp: gained, pct: Math.round(pct) });
+  if (state.history.length > 60) state.history = state.history.slice(-60);
+
+  // stats para conquistas — progresso já foi salvo pelo caller
+  const fresh = await getProgress();
+  const completedCount = Object.keys(fresh).filter(function (id) {
+    return fresh[id] && fresh[id].completed;
+  }).length;
+
+  // hadPerfect também se qualquer progresso tiver 100%
+  Object.keys(fresh).forEach(function (id) {
+    const p = fresh[id];
+    if (p && p.total > 0 && p.correct >= p.total) state.hadPerfect = true;
+  });
+  if (total > 0 && correct >= total) state.hadPerfect = true;
+
+  const streak = computeStreak(fresh, state);
+  const snap = {
+    completedCount: completedCount,
+    hadPerfect: !!state.hadPerfect,
+    hadImprove: !!state.hadImprove,
+    streak: streak,
+    totalXP: state.totalXP
+  };
+
+  const unlockedNow = [];
+  const have = new Set(state.achievements || []);
+  ACHIEVEMENTS.forEach(function (a) {
+    if (have.has(a.id)) return;
+    try {
+      if (a.check(snap)) {
+        have.add(a.id);
+        unlockedNow.push(a);
+        gained += 30; // bônus por conquista
+        state.totalXP += 30;
+      }
+    } catch (e) { /* ignore */ }
+  });
+  state.achievements = Array.from(have);
+
+  await saveGamification(state);
+
+  return {
+    gained: gained,
+    totalXP: state.totalXP,
+    streak: streak,
+    unlocked: unlockedNow,
+    completed: completed,
+    pct: pct
+  };
+}
+
+async function resetGamification() {
+  try { localStorage.removeItem(gameStorageKey()); } catch (e) { /* ignore */ }
+}
+
 
 let supabaseClient = null;
 let currentUserId = null;
@@ -298,17 +489,30 @@ function collectLessonAnswers() {
 // marcada como concluída e o app vai redirecionar); false se o aluno precisa
 // tentar novamente (nesse caso o botão de finalizar continua liberado).
 async function handleLessonFinish(lessonId, correct, total, kind) {
-  const msg = document.getElementById('finishMessage');
+  const msg = document.getElementById('finishMsg') || document.getElementById('finishMessage');
   if (msg) {
     msg.style.display = 'block';
-    msg.style.color = '#888';
+    msg.style.color = '#6B6B6B';
     msg.textContent = 'Salvando progresso...';
   }
 
-  await initDataLayer();
-  const answers = collectLessonAnswers();
+  // progresso anterior (para bônus de melhoria)
+  const allProgress = await getProgress();
+  const prev = allProgress[lessonId] || null;
+
+  const answers = typeof collectLessonAnswers === 'function' ? collectLessonAnswers() : [];
   const { completed, pct } = await saveLessonProgressData(lessonId, correct, total, answers);
   const roundedPct = Math.round(pct);
+
+  // XP de sessão do HUD da lição (se disponível)
+  let sessionXP = 0;
+  try {
+    if (window.BobcatLesson && typeof BobcatLesson.getXP === 'function') {
+      sessionXP = BobcatLesson.getXP() || 0;
+    }
+  } catch (e) { /* ignore */ }
+
+  const rewards = await applyLessonRewards(lessonId, correct, total, prev, sessionXP);
 
   const cloudNote = isUsingCloud() ? ' (☁️)' : ' (💾)';
   const verb = kind === 'filled' ? 'preencheu' : 'acertou';
@@ -316,25 +520,37 @@ async function handleLessonFinish(lessonId, correct, total, kind) {
 
   if (!msg) return completed;
 
+  let extra = '';
+  if (rewards && rewards.gained > 0) {
+    extra = ' · +' + rewards.gained + ' XP (total ' + rewards.totalXP + ')';
+  }
+  if (rewards && rewards.unlocked && rewards.unlocked.length) {
+    extra += ' · 🏅 ' + rewards.unlocked.map(function (a) { return a.title; }).join(', ');
+  }
+  if (rewards && rewards.streak > 0) {
+    extra += ' · 🔥 ' + rewards.streak + 'd';
+  }
+
   if (completed) {
     msg.style.color = '#1e6b40';
     msg.textContent = '🎉 Parabéns! Você ' + verb + ' ' + correct + ' de ' + total + ' ' + noun +
-      ' (' + roundedPct + '%) — lição concluída' + cloudNote + '. Voltando ao app...';
-    setTimeout(() => { window.location.href = '../index.html'; }, 2600);
+      ' (' + roundedPct + '%) — lição concluída' + cloudNote + extra + '. Voltando ao app...';
+    if (typeof confetti === 'function') {
+      try { confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } }); } catch (e) {}
+    }
+    setTimeout(function () { window.location.href = '../index.html'; }, 2800);
   } else {
     msg.style.color = '#C0392B';
     msg.textContent = '📌 Você ' + verb + ' ' + correct + ' de ' + total + ' ' + noun +
-      ' (' + roundedPct + '%). É preciso pelo menos ' + PASSING_PCT + '% (nota 8,5) para concluir a lição e desbloquear a próxima. Revise as respostas e tente novamente!' + cloudNote;
-    // Lição não concluída: mostra a Trilha de Erro para ajudar o aluno a
-    // entender o que errou antes de tentar de novo (só quando há gabarito
-    // real, kind === 'correct' — lições "filled" não têm certo/errado).
-    if (kind !== 'filled') renderErrorTrail(msg, answers);
+      ' (' + roundedPct + '%). É preciso pelo menos ' + PASSING_PCT + '% (nota 8,5) para concluir a lição e desbloquear a próxima.' + extra + cloudNote;
+    if (kind !== 'filled' && typeof renderErrorTrail === 'function') renderErrorTrail(msg, answers);
   }
 
   return completed;
 }
 
 async function resetAllProgress() {
+  await resetGamification();
   if (useSupabase) {
     if (!currentUserId) return;
     const { error } = await supabaseClient.from('progress').delete().eq('user_id', currentUserId);
@@ -676,6 +892,7 @@ async function exportMyData() {
     modo_de_armazenamento: useSupabase ? 'nuvem (Supabase)' : 'somente neste aparelho (localStorage)',
     perfil: profile,
     progresso_das_licoes: progress,
+    gamificacao: await getGamification(),
     personalidades_de_ia: personas,
     historico_de_conversas_com_ia: historico,
     mensagens_com_o_professor: mensagens,
