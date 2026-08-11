@@ -203,6 +203,14 @@ const EXTRAS = [
     icon: '🐾',
     description: 'Percorra o labirinto e encontre sujeito, verbo, complementos e adjuntos na ordem certa — frase e tema novos a cada rodada',
     url: 'lessons/labirinto-sintaxe.html'
+  },
+  {
+    id: 'empurra-palavras',
+    group: 'Jogos',
+    name: 'Empurra-Palavras',
+    icon: '📦',
+    description: 'Empurre as caixinhas de palavras até os lugares certos para montar a frase',
+    url: 'lessons/empurra-palavras.html'
   }
 
 ];
