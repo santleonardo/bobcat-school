@@ -271,11 +271,123 @@
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setup);
-  } else {
-    setup();
+
+  // ─── Pause (manuais de Português e páginas sem lesson-kit) ───
+  function injectPauseStyles() {
+    if (document.getElementById('lesson-pause-styles')) return;
+    var css = document.createElement('style');
+    css.id = 'lesson-pause-styles';
+    css.textContent = [
+      '.float-pause-btn{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));right:calc(16px + env(safe-area-inset-right));z-index:90;',
+      'width:48px;height:48px;border-radius:50%;border:none;background:#C1121F;color:#fff;font-size:18px;cursor:pointer;',
+      'box-shadow:0 6px 18px rgba(193,18,31,.4);display:flex;align-items:center;justify-content:center}',
+      '.float-pause-btn:active{transform:scale(.94)}',
+      '.lesson-pause-overlay{position:fixed;inset:0;z-index:500;background:rgba(20,16,12,.55);backdrop-filter:blur(3px);',
+      'display:flex;align-items:center;justify-content:center;padding:20px}',
+      '.lesson-pause-overlay.hidden{display:none!important}',
+      '.lesson-pause-card{background:#FDFAF5;border:1px solid #E8E4DC;border-radius:18px;box-shadow:0 14px 32px rgba(0,0,0,.35);',
+      'padding:26px 22px;width:100%;max-width:320px;text-align:center;color:#2B2D42;font-family:Inter,system-ui,sans-serif}',
+      '.lesson-pause-card .pause-icon{font-size:28px;margin-bottom:6px}',
+      '.lesson-pause-card .pause-title{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:18px;color:#C1121F;margin:0 0 6px}',
+      '.lesson-pause-card .pause-sub{font-size:13px;color:#555770;margin:0 0 20px;line-height:1.45}',
+      '.lesson-pause-actions{display:flex;flex-direction:column;gap:10px}',
+      '.lesson-pause-actions .pause-resume{border:none;border-radius:14px;padding:13px;font-weight:800;font-size:14px;color:#fff;',
+      'background:linear-gradient(135deg,#C1121F,#8B0E16);cursor:pointer}',
+      '.lesson-pause-actions .pause-exit{border:1.5px solid #E8E4DC;border-radius:14px;padding:12px;font-weight:700;font-size:13.5px;',
+      'color:#555770;background:transparent;text-decoration:none;display:block;width:100%;cursor:pointer;text-align:center}'
+    ].join('');
+    document.head.appendChild(css);
   }
 
-  global.BobcatVocabCard = { open: open, close: close };
+  function ensurePauseDom() {
+    if (document.getElementById('lesson-pause-overlay')) return;
+    injectPauseStyles();
+
+    // Prefer mobile topbar; else floating button
+    var topbar = document.querySelector('.mobile-topbar');
+    if (topbar && !document.getElementById('hudPauseBtn')) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'mt-btn';
+      btn.id = 'hudPauseBtn';
+      btn.setAttribute('aria-label', 'Pausar lição');
+      btn.textContent = '⏸️';
+      // insert before last child (App link) if possible
+      if (topbar.lastElementChild) topbar.insertBefore(btn, topbar.lastElementChild);
+      else topbar.appendChild(btn);
+    } else if (!document.getElementById('hudPauseBtn') && !document.querySelector('.hud-pause-btn')) {
+      var fab = document.createElement('button');
+      fab.type = 'button';
+      fab.className = 'float-pause-btn';
+      fab.id = 'hudPauseBtn';
+      fab.setAttribute('aria-label', 'Pausar lição');
+      fab.title = 'Pausar lição';
+      fab.textContent = '⏸️';
+      document.body.appendChild(fab);
+    }
+
+    var overlay = document.createElement('div');
+    overlay.className = 'lesson-pause-overlay hidden';
+    overlay.id = 'lesson-pause-overlay';
+    overlay.innerHTML =
+      '<div class="lesson-pause-card" role="dialog" aria-modal="true">' +
+        '<div class="pause-icon">⏸️</div>' +
+        '<p class="pause-title">Lição pausada</p>' +
+        '<p class="pause-sub">Pode continuar de onde parou ou voltar ao app. O progresso já salvo nas atividades permanece no perfil.</p>' +
+        '<div class="lesson-pause-actions">' +
+          '<button type="button" class="pause-resume" id="lesson-pause-resume">▶ Continuar lição</button>' +
+          '<a class="pause-exit" href="../index.html">← Voltar ao app</a>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+  }
+
+  function openPause() {
+    ensurePauseDom();
+    if ('speechSynthesis' in window) {
+      try { window.speechSynthesis.cancel(); } catch (e) {}
+    }
+    var overlay = document.getElementById('lesson-pause-overlay');
+    if (overlay) overlay.classList.remove('hidden');
+  }
+
+  function closePause() {
+    var overlay = document.getElementById('lesson-pause-overlay');
+    if (overlay) overlay.classList.add('hidden');
+  }
+
+  function setupPause() {
+    // Skip if lesson-kit already handles pause (English lessons)
+    if (global.BobcatLesson && typeof global.BobcatLesson.openPause === 'function') return;
+    ensurePauseDom();
+    var btn = document.getElementById('hudPauseBtn');
+    var overlay = document.getElementById('lesson-pause-overlay');
+    var resume = document.getElementById('lesson-pause-resume');
+    if (btn) btn.addEventListener('click', openPause);
+    if (resume) resume.addEventListener('click', closePause);
+    if (overlay) {
+      overlay.addEventListener('click', function (e) {
+        if (e.target.id === 'lesson-pause-overlay') closePause();
+      });
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      var ov = document.getElementById('lesson-pause-overlay');
+      if (ov && !ov.classList.contains('hidden')) closePause();
+    });
+  }
+
+
+  function boot() {
+    setup();
+    setupPause();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+
+  global.BobcatVocabCard = { open: open, close: close, openPause: openPause, closePause: closePause };
 })(typeof window !== 'undefined' ? window : this);

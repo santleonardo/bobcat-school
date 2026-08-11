@@ -453,6 +453,73 @@
     }
   }
 
+
+  // ─── Pause lesson ───────────────────────────────────────
+  function ensurePauseDom() {
+    if (document.getElementById('lesson-pause-overlay')) return;
+
+    // Button in HUD
+    var hudRight = document.querySelector('.hud-right') || document.getElementById('hud');
+    if (hudRight && !document.getElementById('hudPauseBtn')) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'hud-pause-btn';
+      btn.id = 'hudPauseBtn';
+      btn.setAttribute('aria-label', 'Pausar lição');
+      btn.title = 'Pausar lição';
+      btn.textContent = '⏸️';
+      hudRight.appendChild(btn);
+    }
+
+    var overlay = document.createElement('div');
+    overlay.className = 'lesson-pause-overlay hidden';
+    overlay.id = 'lesson-pause-overlay';
+    overlay.innerHTML =
+      '<div class="lesson-pause-card" role="dialog" aria-modal="true" aria-labelledby="lesson-pause-title">' +
+        '<div class="pause-icon">⏸️</div>' +
+        '<p class="pause-title" id="lesson-pause-title">Lição pausada</p>' +
+        '<p class="pause-sub">Pode continuar de onde parou ou voltar ao app. Seu progresso salvo nas atividades concluídas permanece no perfil.</p>' +
+        '<div class="lesson-pause-actions">' +
+          '<button type="button" class="pause-resume" id="lesson-pause-resume">▶ Continuar lição</button>' +
+          '<a class="pause-exit" id="lesson-pause-exit" href="../index.html">← Voltar ao app</a>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+  }
+
+  function openPause() {
+    ensurePauseDom();
+    if ('speechSynthesis' in window) {
+      try { window.speechSynthesis.cancel(); } catch (e) { /* ignore */ }
+    }
+    var overlay = document.getElementById('lesson-pause-overlay');
+    if (overlay) overlay.classList.remove('hidden');
+  }
+
+  function closePause() {
+    var overlay = document.getElementById('lesson-pause-overlay');
+    if (overlay) overlay.classList.add('hidden');
+  }
+
+  function setupPause() {
+    ensurePauseDom();
+    var btn = document.getElementById('hudPauseBtn');
+    var overlay = document.getElementById('lesson-pause-overlay');
+    var resume = document.getElementById('lesson-pause-resume');
+    if (btn) btn.addEventListener('click', openPause);
+    if (resume) resume.addEventListener('click', closePause);
+    if (overlay) {
+      overlay.addEventListener('click', function (e) {
+        if (e.target.id === 'lesson-pause-overlay') closePause();
+      });
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      var ov = document.getElementById('lesson-pause-overlay');
+      if (ov && !ov.classList.contains('hidden')) closePause();
+    });
+  }
+
   // ─── Init ───────────────────────────────────────────────
   function init(opts) {
     opts = opts || {};
@@ -464,6 +531,7 @@
     updateHUD();
     initReveal();
     setupVocabCard();
+    setupPause();
 
     // Delegate audio buttons with data-speak
     document.addEventListener('click', function (e) {
@@ -492,6 +560,8 @@
     buildFlipCards: buildFlipCards,
     finishLesson: finishLesson,
     complete: complete,
+    openPause: openPause,
+    closePause: closePause,
     getXP: function () { return XP; },
     getConfig: function () { return Object.assign({}, config); }
   };

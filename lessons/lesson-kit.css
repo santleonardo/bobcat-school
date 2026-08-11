@@ -479,3 +479,38 @@ html[data-theme="light"] .vocab-card-pos {
   padding:12px 20px;border-radius:12px;font-size:14px;font-weight:700;text-decoration:none
 }
 .lesson-nav-next .btn-back-menu:hover{background:var(--orange);color:#fff}
+
+/* ─── Pause lesson ─── */
+.hud-pause-btn{
+  width:34px;height:34px;border-radius:10px;border:1px solid var(--border);
+  background:var(--cream);color:var(--ink);font-size:14px;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:background .12s,transform .12s
+}
+.hud-pause-btn:hover{background:var(--cream-2)}
+.hud-pause-btn:active{transform:scale(.94)}
+.lesson-pause-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(20,16,12,.55);backdrop-filter:blur(3px);
+  display:flex;align-items:center;justify-content:center;padding:20px
+}
+.lesson-pause-overlay.hidden{display:none!important}
+.lesson-pause-card{
+  background:var(--cream);border:1px solid var(--border);border-radius:18px;
+  box-shadow:0 14px 32px rgba(0,0,0,.35);padding:26px 22px;width:100%;max-width:320px;text-align:center
+}
+.lesson-pause-card .pause-icon{font-size:28px;margin-bottom:6px}
+.lesson-pause-card .pause-title{font-family:"Poppins",sans-serif;font-weight:800;font-size:18px;color:var(--orange-dark);margin:0 0 6px}
+.lesson-pause-card .pause-sub{font-size:13px;color:var(--ink-soft);margin:0 0 20px;line-height:1.45}
+.lesson-pause-actions{display:flex;flex-direction:column;gap:10px}
+.lesson-pause-actions .pause-resume{
+  border:none;border-radius:14px;padding:13px;font-family:"Poppins",sans-serif;font-weight:800;font-size:14px;color:#fff;
+  background:linear-gradient(135deg,var(--orange),var(--orange-dark));cursor:pointer;box-shadow:0 4px 12px rgba(255,91,61,.3)
+}
+.lesson-pause-actions .pause-exit{
+  border:1.5px solid var(--border);border-radius:14px;padding:12px;font-family:"Poppins",sans-serif;font-weight:700;font-size:13.5px;
+  color:var(--ink-soft);background:transparent;text-decoration:none;display:block;width:100%;cursor:pointer;text-align:center
+}
+.lesson-pause-actions .pause-exit:hover{background:var(--cream-2);color:var(--ink)}
+html[data-theme="light"] .lesson-pause-card{background:#fff}
+html[data-theme="light"] .hud-pause-btn{background:#fff}
