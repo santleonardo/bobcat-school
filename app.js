@@ -1161,9 +1161,9 @@ async function renderTests() {
           <div class="level">${test.description}</div>
           <div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
             <span style="display:inline-block;color:#fff;padding:2px 10px;border-radius:4px;font-size:12px;font-weight:700;background:${lColor};">${detail.level} — ${detail.levelName}</span>
-            <span style="font-size:13px;font-weight:700;color:#B75E3D;">${detail.score}/${detail.total} (${detail.pct}%)</span>
+            <span style="font-size:13px;font-weight:700;color:#ff5b3d;">${detail.score}/${detail.total} (${detail.pct}%)</span>
           </div>
-          <div style="margin-top:4px;font-size:11.5px;color:#888;">${detail.variation || ''} • Tentativa ${detail.attempt}/${detail.maxAttempts}${dateStr ? ' • ' + dateStr : ''}</div>
+          <div style="margin-top:4px;font-size:11.5px;color:rgba(247,241,236,0.5);">${detail.variation || ''} • Tentativa ${detail.attempt}/${detail.maxAttempts}${dateStr ? ' • ' + dateStr : ''}</div>
           <div style="margin-top:4px;font-size:11.5px;color:${canRetake ? '#3C7A52' : '#B23B2E'};">${canRetake ? 'Você pode refazer o teste mais uma vez' : 'Todas as tentativas utilizadas'}</div>
           <div class="progress-track" style="margin-top:6px;"><div class="progress-fill" style="width:${pct}%;"></div></div>
         </div>
@@ -1506,6 +1506,57 @@ async function enterApp() {
   showScreen('menu');
 }
 
+
+// ---------- Theme (light / dark) ----------
+const THEME_KEY = 'bobcat_theme';
+
+function getStoredTheme() {
+  try {
+    const t = localStorage.getItem(THEME_KEY);
+    if (t === 'light' || t === 'dark') return t;
+  } catch (e) { /* ignore */ }
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
+  return 'dark';
+}
+
+function applyTheme(theme) {
+  const t = theme === 'light' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+  try { localStorage.setItem(THEME_KEY, t); } catch (e) { /* ignore */ }
+
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', t === 'light' ? '#33473B' : '#0a0a0b');
+
+  const btn = document.getElementById('btn-theme-toggle');
+  const knob = document.getElementById('theme-switch-knob');
+  const label = document.getElementById('theme-toggle-label');
+  if (btn) {
+    const isLight = t === 'light';
+    btn.setAttribute('aria-checked', isLight ? 'true' : 'false');
+    btn.setAttribute('aria-label', isLight ? 'Alternar para modo escuro' : 'Alternar para modo claro');
+  }
+  if (knob) knob.textContent = t === 'light' ? '☀️' : '🌙';
+  if (label) {
+    label.textContent = t === 'light'
+      ? 'Modo claro — papel e terracota'
+      : 'Modo escuro — cores da landing';
+  }
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || getStoredTheme();
+  applyTheme(current === 'light' ? 'dark' : 'light');
+}
+
+function setupThemeToggle() {
+  applyTheme(getStoredTheme());
+  const btn = document.getElementById('btn-theme-toggle');
+  if (btn && !btn.dataset.bound) {
+    btn.dataset.bound = '1';
+    btn.addEventListener('click', toggleTheme);
+  }
+}
+
 async function boot() {
   showLoadingState(true);
   await initDataLayer();
@@ -1545,6 +1596,7 @@ async function boot() {
     });
   }
 
+  setupThemeToggle();
   showLoadingState(false);
 
   // Landing first for visitors without session; returning students go straight in.

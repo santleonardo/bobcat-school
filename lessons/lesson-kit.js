@@ -13,6 +13,20 @@
  *     BobcatLesson.init({ lessonId: 'licao-2-perguntas-artigos', totalQuestions: 14 });
  *   </script>
  */
+
+(function applyBobcatTheme() {
+  try {
+    var t = localStorage.getItem('bobcat_theme');
+    if (t !== 'light' && t !== 'dark') {
+      t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    }
+    document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+})();
+
+
 (function (global) {
   'use strict';
 
