@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bobcat — Kit de componentes</title>
+<meta name="theme-color" content="#0a0a0b">
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('bobcat_theme');
+    if (t !== 'light' && t !== 'dark') {
+      t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    }
+    document.documentElement.setAttribute('data-theme', t);
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', t === 'light' ? '#33473B' : '#0a0a0b');
+  } catch (e) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./style.css">
+<style>
+  .kit-page { max-width: 480px; margin: 0 auto; padding: 20px 18px 48px; min-height: 100vh; }
+  .kit-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+  .kit-header h1 { font-family: var(--font-serif); font-size: 22px; margin: 0; color: var(--ink); }
+  .kit-block { margin-bottom: 28px; }
+  .kit-block h2 {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink-faint); margin: 0 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+  .kit-swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .kit-swatch {
+    border-radius: 14px; overflow: hidden; border: 1px solid var(--border);
+    box-shadow: var(--clay-raised); text-align: center;
+  }
+  .kit-swatch-color { height: 48px; }
+  .kit-swatch-name { font-size: 10px; padding: 6px 4px; color: var(--ink-soft); font-weight: 600; }
+  .kit-demo-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+<div class="kit-page">
+  <div class="kit-header">
+    <h1>🧩 Kit UI</h1>
+    <button type="button" class="bk-switch" id="kit-theme" role="switch" aria-checked="false" aria-label="Alternar tema">
+      <span class="bk-switch-knob" id="kit-theme-knob">🌙</span>
+    </button>
+  </div>
+  <p class="bk-lead">Componentes do Bobcat — claro e escuro. Use as classes <code style="color:var(--terracotta)">bk-*</code> no HTML.</p>
+
+  <div class="kit-block">
+    <h2>Cores</h2>
+    <div class="kit-swatches">
+      <div class="kit-swatch"><div class="kit-swatch-color" style="background:var(--paper)"></div><div class="kit-swatch-name">paper</div></div>
+      <div class="kit-swatch"><div class="kit-swatch-color" style="background:var(--surface)"></div><div class="kit-swatch-name">surface</div></div>
+      <div class="kit-swatch"><div class="kit-swatch-color" style="background:var(--terracotta)"></div><div class="kit-swatch-name">accent</div></div>
+      <div class="kit-swatch"><div class="kit-swatch-color" style="background:var(--ok)"></div><div class="kit-swatch-name">ok</div></div>
+      <div class="kit-swatch"><div class="kit-swatch-color" style="background:var(--ink)"></div><div class="kit-swatch-name">ink</div></div>
+      <div class="kit-swatch"><div class="kit-swatch-color" style="background:var(--cream)"></div><div class="kit-swatch-name">cream</div></div>
+      <div class="kit-swatch"><div class="kit-swatch-color" style="background:var(--gold)"></div><div class="kit-swatch-name">gold</div></div>
+      <div class="kit-swatch"><div class="kit-swatch-color" style="background:var(--bad)"></div><div class="kit-swatch-name">bad</div></div>
+    </div>
+  </div>
+
+  <div class="kit-block">
+    <h2>Tipografia</h2>
+    <div class="bk-title"><span class="bk-title-emoji">📚</span> Título de tela</div>
+    <p class="bk-lead" style="margin-top:-8px">Lead — texto de apoio curto e direto.</p>
+    <div class="bk-label">Label de campo</div>
+    <p class="bk-hint">Hint — dica em <strong>destaque</strong> quando precisar.</p>
+  </div>
+
+  <div class="kit-block">
+    <h2>Botões</h2>
+    <div class="bk-stack">
+      <button type="button" class="bk-btn bk-btn-block">🚀 Primário</button>
+      <div class="kit-demo-row">
+        <button type="button" class="bk-btn bk-btn-secondary">Secundário</button>
+        <button type="button" class="bk-btn bk-btn-sm">Pequeno</button>
+        <button type="button" class="bk-btn bk-btn-ghost">Ghost</button>
+      </div>
+      <div class="kit-demo-row">
+        <button type="button" class="bk-btn bk-btn-danger bk-btn-sm">🗑️ Perigo</button>
+        <button type="button" class="bk-btn bk-btn-icon" aria-label="Ícone">⭐</button>
+        <button type="button" class="bk-btn" disabled>Desabilitado</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="kit-block">
+    <h2>Campos</h2>
+    <div class="bk-field">
+      <label class="bk-label" for="demo-name">🏷️ Nome</label>
+      <input class="bk-input" id="demo-name" type="text" placeholder="Ex: Sofia…">
+      <p class="bk-hint">Máximo 30 caracteres.</p>
+    </div>
+    <div class="bk-field">
+      <label class="bk-label" for="demo-about">🎭 Jeito</label>
+      <textarea class="bk-textarea" id="demo-about" placeholder="Animada, adora café…"></textarea>
+    </div>
+  </div>
+
+  <div class="kit-block">
+    <h2>Chips e badges</h2>
+    <div class="bk-chip-row" style="margin-bottom:14px">
+      <button type="button" class="bk-chip is-active">🔥 Ativo</button>
+      <button type="button" class="bk-chip">📚 Lições</button>
+      <button type="button" class="bk-chip">💬 Chat</button>
+      <button type="button" class="bk-chip">🎯 A1</button>
+    </div>
+    <div class="kit-demo-row">
+      <span class="bk-badge">Novo</span>
+      <span class="bk-badge bk-badge-ok">✓ Feito</span>
+      <span class="bk-badge bk-badge-warn">Em breve</span>
+    </div>
+  </div>
+
+  <div class="kit-block">
+    <h2>Card e lista</h2>
+    <div class="bk-card" style="margin-bottom:12px">
+      <div class="bk-section-title">📦 Card padrão</div>
+      <p class="bk-hint" style="margin:0">Conteúdo interno com padding e sombra clay.</p>
+    </div>
+    <button type="button" class="bk-list-row">
+      <span class="bk-list-row-icon">🤖</span>
+      <span class="bk-list-row-body">
+        <span class="bk-list-row-title">Max <span class="bk-badge" style="margin-left:6px">♀️</span></span>
+        <span class="bk-list-row-sub">Animado, adora piadas e viagens</span>
+      </span>
+      <span class="bk-list-row-meta">💬</span>
+    </button>
+    <button type="button" class="bk-list-row">
+      <span class="bk-list-row-icon">📚</span>
+      <span class="bk-list-row-body">
+        <span class="bk-list-row-title">Lições</span>
+        <span class="bk-list-row-sub">Estude passo a passo</span>
+      </span>
+      <span class="bk-list-row-meta">›</span>
+    </button>
+  </div>
+
+  <div class="kit-block">
+    <h2>Stats e progresso</h2>
+    <div class="bk-stats" style="margin-bottom:14px">
+      <div class="bk-stat"><div class="bk-stat-num">12</div><div class="bk-stat-label">lições</div></div>
+      <div class="bk-stat"><div class="bk-stat-num">86%</div><div class="bk-stat-label">acertos</div></div>
+      <div class="bk-stat"><div class="bk-stat-num">A2</div><div class="bk-stat-label">fase</div></div>
+    </div>
+    <div class="bk-progress" aria-label="Progresso"><span style="width:62%"></span></div>
+  </div>
+
+  <div class="kit-block">
+    <h2>Alertas</h2>
+    <div class="bk-stack">
+      <div class="bk-alert bk-alert-ok">✓ Perfil salvo com sucesso.</div>
+      <div class="bk-alert bk-alert-error">⚠ Não foi possível conectar. Tente de novo.</div>
+    </div>
+  </div>
+
+  <div class="kit-block">
+    <h2>Empty state</h2>
+    <div class="bk-empty">
+      <div class="bk-empty-emoji" aria-hidden="true">🤖 🐱 🦸 🦄</div>
+      <h3 class="bk-empty-title">Nenhum parceiro ainda</h3>
+      <p class="bk-empty-sub">Toque em <strong>Novo parceiro</strong> e comece a conversar!</p>
+      <button type="button" class="bk-btn">➕ Criar</button>
+    </div>
+  </div>
+
+  <div class="kit-block">
+    <h2>Switch</h2>
+    <div class="bk-row-between bk-card">
+      <div>
+        <div class="bk-list-row-title">Aparência</div>
+        <div class="bk-list-row-sub" id="kit-theme-label">Modo escuro</div>
+      </div>
+      <button type="button" class="bk-switch" id="kit-theme-2" role="switch" aria-checked="false">
+        <span class="bk-switch-knob" id="kit-theme-knob-2">🌙</span>
+      </button>
+    </div>
+  </div>
+
+  <p class="bk-hint" style="text-align:center;margin-top:8px">
+    <a href="./index.html" style="color:var(--terracotta);font-weight:700;text-decoration:none">← Voltar ao app</a>
+  </p>
+</div>
+<script>
+(function () {
+  function apply(t) {
+    t = t === 'light' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+    try { localStorage.setItem('bobcat_theme', t); } catch (e) {}
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', t === 'light' ? '#33473B' : '#0a0a0b');
+    document.querySelectorAll('.bk-switch').forEach(function (btn) {
+      btn.setAttribute('aria-checked', t === 'light' ? 'true' : 'false');
+    });
+    document.querySelectorAll('.bk-switch-knob').forEach(function (k) {
+      k.textContent = t === 'light' ? '☀️' : '🌙';
+    });
+    var label = document.getElementById('kit-theme-label');
+    if (label) label.textContent = t === 'light' ? 'Modo claro' : 'Modo escuro';
+  }
+  function toggle() {
+    var cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    apply(cur === 'light' ? 'dark' : 'light');
+  }
+  apply(document.documentElement.getAttribute('data-theme') || 'dark');
+  document.getElementById('kit-theme').addEventListener('click', toggle);
+  document.getElementById('kit-theme-2').addEventListener('click', toggle);
+  document.querySelectorAll('.bk-chip').forEach(function (chip) {
+    chip.addEventListener('click', function () {
+      chip.classList.toggle('is-active');
+      chip.setAttribute('aria-pressed', chip.classList.contains('is-active') ? 'true' : 'false');
+    });
+  });
+})();
+</script>
+</body>
+</html>

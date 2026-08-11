@@ -2700,13 +2700,13 @@ async function aiChatOpenPersona(id) {
 async function renderAiChatPersonaList() {
   const list = document.getElementById('ai-chat-persona-list');
   if (!list) return;
-  list.innerHTML = '<div class="ai-empty-state"><div class="ai-empty-emojis">⏳</div><div class="ai-empty-sub">Carregando…</div></div>';
+  list.innerHTML = '<div class="bk-empty"><div class="bk-empty-emoji">⏳</div><p class="bk-empty-sub">Carregando…</p></div>';
   const personas = await getAiChatPersonas();
   if (personas.length === 0) {
-    list.innerHTML = `<div class="ai-empty-state">
-      <div class="ai-empty-emojis" aria-hidden="true">🤖 🐱 🦸 🦄</div>
-      <div class="ai-empty-title">Nenhum parceiro ainda</div>
-      <div class="ai-empty-sub">Toque em <strong>Novo parceiro</strong> e comece a conversar! 🎉</div>
+    list.innerHTML = `<div class="bk-empty">
+      <div class="bk-empty-emoji" aria-hidden="true">🤖 🐱 🦸 🦄</div>
+      <div class="bk-empty-title">Nenhum parceiro ainda</div>
+      <p class="bk-empty-sub">Toque em <strong>Novo parceiro</strong> e comece a conversar! 🎉</p>
     </div>`;
     return;
   }
