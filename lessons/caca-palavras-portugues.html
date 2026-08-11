@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Caça-Palavras — Português</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --orange:#ff5b3d;--orange-dark:#e13a26;--orange-light:#ff7a5c;
+    --cream:#1c1614;--cream-2:#221a17;--cream-3:#0a0a0b;
+    --ink:#f7f1ec;--ink-soft:rgba(247,241,236,0.72);
+    --ok:#3dd68c;--ok-bg:rgba(61,214,140,0.15);
+    --border:rgba(247,241,236,0.12);--gold:#ffb347;
+    --shadow:0 4px 20px rgba(0,0,0,0.4);
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:"Inter",sans-serif;color:var(--ink);background:var(--cream-3);
+    min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;
+    padding-bottom:40px;
+  }
+  h1,h2,h3,.serif{font-family:"Poppins",sans-serif;letter-spacing:-.01em}
+
+  /* HUD */
+  .hud{position:sticky;top:0;z-index:100;background:rgba(10,10,11,.92);backdrop-filter:blur(12px);
+    padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;
+    gap:12px;justify-content:space-between;flex-wrap:wrap}
+  .hud-title{display:flex;align-items:center;gap:10px;font-weight:800;font-size:14px}
+  .hud-title .icon{font-size:22px}
+  .hud-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .pill{display:inline-flex;align-items:center;gap:5px;background:var(--cream);border:1px solid var(--border);
+    border-radius:99px;padding:5px 12px;font-size:12.5px;font-weight:700;color:var(--orange-light)}
+  .pill.time{color:var(--gold)}
+  .pill.xp{color:var(--ok)}
+
+  .wrap{max-width:920px;margin:0 auto;padding:22px 16px 0}
+
+  /* Topic selector */
+  .topics{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+  .topic-btn{background:var(--cream);border:1.5px solid var(--border);color:var(--ink-soft);
+    padding:9px 16px;border-radius:11px;font-size:13px;font-weight:700;cursor:pointer;
+    transition:all .15s;display:flex;align-items:center;gap:7px}
+  .topic-btn:hover{border-color:var(--orange);color:var(--ink)}
+  .topic-btn.active{background:var(--orange);border-color:var(--orange);color:#fff}
+
+  .board-area{display:grid;grid-template-columns:1fr;gap:22px}
+  @media(min-width:760px){.board-area{grid-template-columns:minmax(0,1fr) 220px}}
+
+  /* Grid */
+  .board-card{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);
+    padding:16px;box-shadow:var(--shadow);display:flex;justify-content:center}
+  #grid{display:grid;user-select:none;touch-action:none;gap:2px}
+  .cell{display:flex;align-items:center;justify-content:center;font-weight:700;
+    font-family:"Poppins",sans-serif;border-radius:5px;background:var(--cream-2);
+    color:var(--ink);cursor:pointer;transition:background .1s,color .1s;position:relative}
+  .cell.selecting{background:var(--orange-light);color:#1c1614}
+  .cell.found{background:var(--ok-bg);color:var(--ok)}
+  .cell.found-alt{background:rgba(255,179,71,0.18);color:var(--gold)}
+
+  /* Word list panel */
+  .panel{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px;box-shadow:var(--shadow);height:fit-content}
+  .panel h3{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin-bottom:12px}
+  #wordlist{list-style:none;display:flex;flex-direction:column;gap:8px}
+  #wordlist li{font-size:13.5px;font-weight:600;color:var(--ink-soft);padding:6px 10px;
+    border-radius:8px;background:var(--cream-2);transition:all .15s}
+  #wordlist li.done{color:var(--ok);text-decoration:line-through;background:var(--ok-bg)}
+
+  .win-banner{display:none;text-align:center;margin-top:20px;padding:22px;border-radius:var(--radius);
+    background:linear-gradient(135deg,var(--orange),var(--orange-dark));box-shadow:0 8px 24px rgba(225,58,38,.35)}
+  .win-banner.show{display:block}
+  .win-banner h2{font-size:22px;margin-bottom:6px}
+  .win-banner p{font-size:13.5px;color:rgba(255,255,255,.9);margin-bottom:14px}
+  .btn{background:#fff;color:var(--orange-dark);border:none;padding:11px 22px;border-radius:10px;
+    font-size:14px;font-weight:800;cursor:pointer}
+  .btn:active{transform:scale(.97)}
+
+  .hint{text-align:center;font-size:12.5px;color:var(--ink-soft);margin-top:14px}
+</style>
+</head>
+<body>
+
+<div class="hud">
+  <div class="hud-title"><span class="icon">🔎</span> Caça-Palavras — Português</div>
+  <div class="hud-right">
+    <span class="pill time">⏱️ <span id="timer">0:00</span></span>
+    <span class="pill">🎯 <span id="foundCount">0</span>/<span id="totalCount">0</span></span>
+    <span class="pill xp">⭐ <span id="xp">0</span> XP</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="topics" id="topics"></div>
+
+  <div class="board-area">
+    <div class="board-card"><div id="grid"></div></div>
+    <div class="panel">
+      <h3>Encontre as palavras</h3>
+      <ul id="wordlist"></ul>
+    </div>
+  </div>
+
+  <div class="win-banner" id="winBanner">
+    <h2>🎉 Você encontrou todas!</h2>
+    <p id="winMsg"></p>
+    <button class="btn" id="nextTopicBtn">Próximo tema →</button>
+  </div>
+
+  <p class="hint">Toque numa letra e arraste até a última letra da palavra (funciona na horizontal, vertical e diagonal, em qualquer direção).</p>
+</div>
+
+<script>
+/* ─── Bancos de palavras — ligados às próprias trilhas do app (pb-*.html e pt-*.html) ─── */
+const TOPICS = [
+  {
+    id: 'classes',
+    icon: '🔤',
+    label: 'Classes Gramaticais',
+    words: ['SUBSTANTIVO','ADJETIVO','VERBO','ADVERBIO','PRONOME','PREPOSICAO','CONJUNCAO','INTERJEICAO','NUMERAL','ARTIGO']
+  },
+  {
+    id: 'areas',
+    icon: '📚',
+    label: 'Áreas da Gramática',
+    words: ['ORTOGRAFIA','ACENTUACAO','CRASE','CONCORDANCIA','REGENCIA','SINTAXE','MORFOLOGIA','PONTUACAO','COLOCACAO','INTERPRETACAO']
+  },
+  {
+    id: 'pontuacao',
+    icon: '❓',
+    label: 'Sinais de Pontuação',
+    words: ['VIRGULA','PONTO','TRAVESSAO','ASPAS','PARENTESES','RETICENCIAS','HIFEN','DOISPONTOS','INTERROGACAO','EXCLAMACAO']
+  }
+];
+
+const DIRS = [
+  {dr:0,dc:1},{dr:0,dc:-1},{dr:1,dc:0},{dr:-1,dc:0},
+  {dr:1,dc:1},{dr:1,dc:-1},{dr:-1,dc:1},{dr:-1,dc:-1}
+];
+const FILLER = 'ABCDEFGHIJLMNOPQRSTUVXZ';
+
+let state = { size:0, cells:[], words:[], found:new Set(), topicIndex:0, xp:0, startTime:null, timerId:null };
+
+function stripAccents(s){
+  return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase();
+}
+
+function buildTopicButtons(){
+  const wrap = document.getElementById('topics');
+  wrap.innerHTML = '';
+  TOPICS.forEach((t, i) => {
+    const b = document.createElement('button');
+    b.className = 'topic-btn' + (i === state.topicIndex ? ' active' : '');
+    b.innerHTML = `<span>${t.icon}</span> ${t.label}`;
+    b.onclick = () => loadTopic(i);
+    wrap.appendChild(b);
+  });
+}
+
+function makeGrid(size){
+  return Array.from({length:size}, () => Array(size).fill(null));
+}
+
+function tryPlaceWord(grid, size, word){
+  const attempts = 200;
+  for (let a = 0; a < attempts; a++){
+    const dir = DIRS[Math.floor(Math.random()*DIRS.length)];
+    const maxR = dir.dr === 1 ? size - word.length : dir.dr === -1 ? size - 1 : size - 1;
+    const startR = Math.floor(Math.random()*size);
+    const startC = Math.floor(Math.random()*size);
+    let r = startR, c = startC, ok = true;
+    const coords = [];
+    for (let i = 0; i < word.length; i++){
+      if (r < 0 || r >= size || c < 0 || c >= size){ ok = false; break; }
+      const existing = grid[r][c];
+      if (existing !== null && existing !== word[i]){ ok = false; break; }
+      coords.push([r,c]);
+      r += dir.dr; c += dir.dc;
+    }
+    if (ok){
+      coords.forEach(([rr,cc], i) => { grid[rr][cc] = word[i]; });
+      return coords;
+    }
+  }
+  return null;
+}
+
+function loadTopic(index){
+  state.topicIndex = index;
+  const topic = TOPICS[index];
+  const words = topic.words.map(stripAccents);
+  const size = Math.max(12, Math.min(15, Math.max(...words.map(w=>w.length)) + 2));
+  let grid, placements, tries = 0;
+
+  do {
+    grid = makeGrid(size);
+    placements = {};
+    let allPlaced = true;
+    // longest words first = easier to fit
+    [...words].sort((a,b)=>b.length-a.length).forEach(w => {
+      const coords = tryPlaceWord(grid, size, w);
+      if (coords) placements[w] = coords; else allPlaced = false;
+    });
+    tries++;
+    if (allPlaced || tries > 6) break;
+  } while (true);
+
+  for (let r = 0; r < size; r++){
+    for (let c = 0; c < size; c++){
+      if (grid[r][c] === null){
+        grid[r][c] = FILLER[Math.floor(Math.random()*FILLER.length)];
+      }
+    }
+  }
+
+  state.size = size;
+  state.cells = grid;
+  state.placements = placements;
+  state.words = Object.keys(placements);
+  state.found = new Set();
+
+  buildTopicButtons();
+  renderGrid();
+  renderWordList();
+  document.getElementById('winBanner').classList.remove('show');
+  document.getElementById('totalCount').textContent = state.words.length;
+  document.getElementById('foundCount').textContent = '0';
+  resetTimer();
+}
+
+function renderGrid(){
+  const el = document.getElementById('grid');
+  el.style.gridTemplateColumns = `repeat(${state.size}, minmax(20px, 32px))`;
+  el.style.gridTemplateRows = `repeat(${state.size}, minmax(20px, 32px))`;
+  el.innerHTML = '';
+  for (let r = 0; r < state.size; r++){
+    for (let c = 0; c < state.size; c++){
+      const d = document.createElement('div');
+      d.className = 'cell';
+      d.textContent = state.cells[r][c];
+      d.dataset.r = r; d.dataset.c = c;
+      el.appendChild(d);
+    }
+  }
+  attachSelection(el);
+}
+
+function renderWordList(){
+  const ul = document.getElementById('wordlist');
+  ul.innerHTML = '';
+  state.words.forEach(w => {
+    const li = document.createElement('li');
+    li.textContent = w;
+    li.dataset.word = w;
+    ul.appendChild(li);
+  });
+}
+
+/* ─── Seleção (mouse + touch) ─── */
+function attachSelection(gridEl){
+  let selecting = false, path = [];
+
+  function cellAt(x, y){
+    const el = document.elementFromPoint(x, y);
+    return el && el.classList.contains('cell') ? el : null;
+  }
+
+  function clearSelectingClass(){
+    gridEl.querySelectorAll('.cell.selecting').forEach(c => c.classList.remove('selecting'));
+  }
+
+  function pathBetween(startCell, endCell){
+    const r0 = +startCell.dataset.r, c0 = +startCell.dataset.c;
+    const r1 = +endCell.dataset.r, c1 = +endCell.dataset.c;
+    const dr = Math.sign(r1 - r0), dc = Math.sign(c1 - c0);
+    const steps = Math.max(Math.abs(r1-r0), Math.abs(c1-c0));
+    if (dr !== 0 && dc !== 0 && Math.abs(r1-r0) !== Math.abs(c1-c0)) return null;
+    const cells = [];
+    for (let i = 0; i <= steps; i++){
+      const r = r0 + dr*i, c = c0 + dc*i;
+      const cell = gridEl.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`);
+      if (!cell) return null;
+      cells.push(cell);
+    }
+    return cells;
+  }
+
+  let startCell = null;
+
+  function begin(x, y){
+    const cell = cellAt(x, y);
+    if (!cell) return;
+    startCell = cell;
+    selecting = true;
+    path = [cell];
+    clearSelectingClass();
+    cell.classList.add('selecting');
+  }
+
+  function move(x, y){
+    if (!selecting || !startCell) return;
+    const cell = cellAt(x, y);
+    if (!cell) return;
+    const p = pathBetween(startCell, cell);
+    if (!p) return;
+    clearSelectingClass();
+    p.forEach(c => c.classList.add('selecting'));
+    path = p;
+  }
+
+  function end(){
+    if (!selecting) return;
+    selecting = false;
+    checkSelection(path);
+    clearSelectingClass();
+    startCell = null;
+  }
+
+  gridEl.addEventListener('mousedown', e => begin(e.clientX, e.clientY));
+  gridEl.addEventListener('mousemove', e => move(e.clientX, e.clientY));
+  window.addEventListener('mouseup', end);
+
+  gridEl.addEventListener('touchstart', e => { const t = e.touches[0]; begin(t.clientX, t.clientY); }, {passive:true});
+  gridEl.addEventListener('touchmove', e => { const t = e.touches[0]; move(t.clientX, t.clientY); e.preventDefault(); }, {passive:false});
+  gridEl.addEventListener('touchend', end);
+}
+
+function checkSelection(path){
+  if (path.length < 2) return;
+  const forward = path.map(c => c.textContent).join('');
+  const backward = [...path].reverse().map(c => c.textContent).join('');
+  const match = state.words.find(w => (w === forward || w === backward) && !state.found.has(w));
+  if (!match) return;
+
+  state.found.add(match);
+  const altStyle = state.found.size % 2 === 0;
+  path.forEach(c => c.classList.add(altStyle ? 'found-alt' : 'found'));
+  const li = document.querySelector(`#wordlist li[data-word="${match}"]`);
+  if (li) li.classList.add('done');
+
+  state.xp += 10;
+  document.getElementById('xp').textContent = state.xp;
+  document.getElementById('foundCount').textContent = state.found.size;
+
+  if (state.found.size === state.words.length){
+    finishTopic();
+  }
+}
+
+function finishTopic(){
+  stopTimer();
+  state.xp += 20;
+  document.getElementById('xp').textContent = state.xp;
+  const secs = Math.floor((Date.now() - state.startTime) / 1000);
+  document.getElementById('winMsg').textContent =
+    `${state.words.length} palavras encontradas em ${formatTime(secs)}. +20 XP de bônus!`;
+  document.getElementById('winBanner').classList.add('show');
+}
+
+document.getElementById('nextTopicBtn').onclick = () => {
+  loadTopic((state.topicIndex + 1) % TOPICS.length);
+};
+
+/* ─── Timer ─── */
+function formatTime(s){
+  const m = Math.floor(s/60), r = s%60;
+  return `${m}:${r.toString().padStart(2,'0')}`;
+}
+function resetTimer(){
+  stopTimer();
+  state.startTime = Date.now();
+  document.getElementById('timer').textContent = '0:00';
+  state.timerId = setInterval(() => {
+    const secs = Math.floor((Date.now() - state.startTime) / 1000);
+    document.getElementById('timer').textContent = formatTime(secs);
+  }, 1000);
+}
+function stopTimer(){
+  if (state.timerId) clearInterval(state.timerId);
+}
+
+loadTopic(0);
+</script>
+</body>
+</html>
