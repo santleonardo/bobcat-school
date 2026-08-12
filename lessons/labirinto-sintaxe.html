@@ -29,6 +29,10 @@
     gap:10px;justify-content:space-between;flex-wrap:wrap}
   .hud-title{display:flex;align-items:center;gap:9px;font-weight:800;font-size:14px}
   .hud-title .icon{font-size:20px}
+  .hud-back{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;
+    border-radius:10px;background:var(--cream);border:1px solid var(--border);color:var(--ink);
+    font-size:17px;text-decoration:none;flex-shrink:0;transition:background .15s}
+  .hud-back:active{background:var(--cream-2)}
   .hud-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .pill{display:inline-flex;align-items:center;gap:5px;background:var(--cream);border:1px solid var(--border);
     border-radius:99px;padding:5px 12px;font-size:12.5px;font-weight:700;color:var(--orange-light)}
@@ -112,7 +116,7 @@
 <body>
 
 <div class="hud">
-  <div class="hud-title">🐾 Labirinto da Oração</div>
+  <div class="hud-title"><a class="hud-back" href="../index.html" title="Voltar ao app" aria-label="Voltar ao app">←</a> 🐾 Labirinto da Oração</div>
   <div class="hud-right">
     <span class="pill topic" id="topicPill">Tema: —</span>
     <span class="pill">🧩 <span id="foundCount">0</span>/<span id="totalCount">0</span></span>
