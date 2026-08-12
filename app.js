@@ -227,6 +227,14 @@ const EXTRAS = [
     icon: '📦',
     description: 'Empurre as caixinhas de palavras até os lugares certos para montar a frase',
     url: 'lessons/empurra-palavras.html'
+  },
+  {
+    id: 'cobrinha-ortografia',
+    group: 'Jogos',
+    name: 'Cobrinha da Ortografia',
+    icon: '🐍',
+    description: 'A palavra aparece escrita errada — guie a cobrinha até comer a letra do erro antes que ela se choque',
+    url: 'lessons/cobrinha-ortografia.html'
   }
 
 ];
