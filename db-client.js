@@ -341,8 +341,12 @@ async function saveProfile(profile) {
 
 async function getProgress() {
   await initDataLayer();
-  if (useSupabase) {
-    if (!currentUserId) return {};
+  // useSupabase só é usado de fato quando também há uma sessão ativa
+  // (currentUserId). Sem isso, cairíamos silenciosamente em "sem dado
+  // nenhum" mesmo tendo progresso salvo localmente antes — por isso o
+  // fallback para localStorage cobre TANTO "Supabase não configurado"
+  // quanto "Supabase configurado mas sem sessão detectada nesta página".
+  if (useSupabase && currentUserId) {
     const { data, error } = await supabaseClient
       .from('progress').select('*').eq('user_id', currentUserId);
     if (error) { console.error(error); return {}; }
@@ -368,8 +372,12 @@ async function saveLessonProgressData(lessonId, correct, total, answers) {
   const completed = pct >= PASSING_PCT;
   const safeAnswers = Array.isArray(answers) ? answers : [];
 
-  if (useSupabase) {
-    if (!currentUserId) return { completed, pct };
+  // Mesma lógica do getProgress(): só usa a nuvem se realmente há uma
+  // sessão logada nesta página. Caso contrário, salva no localStorage em
+  // vez de descartar o progresso silenciosamente (isso evita a sensação de
+  // "terminei a lição e zerou tudo" quando a sessão não foi detectada a
+  // tempo nesta página).
+  if (useSupabase && currentUserId) {
     const row = {
       user_id: currentUserId,
       lesson_id: lessonId,
@@ -380,13 +388,25 @@ async function saveLessonProgressData(lessonId, correct, total, answers) {
       last_attempt: new Date().toISOString()
     };
     const { error } = await supabaseClient.from('progress').upsert(row, { onConflict: 'user_id,lesson_id' });
-    if (error) console.error(error);
+    if (error) {
+      console.error(error);
+      // Se a gravação na nuvem falhar (rede, RLS, etc.), ainda assim
+      // guarda localmente para não perder a tentativa do aluno.
+      const progress = await getLocalProgressOnly();
+      progress[lessonId] = { completed, correct, total, answers: safeAnswers, lastAttempt: new Date().toISOString() };
+      localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+    }
     return { completed, pct };
   }
-  const progress = await getProgress();
+  const progress = await getLocalProgressOnly();
   progress[lessonId] = { completed, correct, total, answers: safeAnswers, lastAttempt: new Date().toISOString() };
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
   return { completed, pct };
+}
+
+function getLocalProgressOnly() {
+  const raw = localStorage.getItem(PROGRESS_KEY);
+  return raw ? JSON.parse(raw) : {};
 }
 
 // ---------- Captura automática das respostas (para o professor revisar) ----------
@@ -567,11 +587,9 @@ async function handleLessonFinish(lessonId, correct, total, kind) {
 async function resetAllProgress() {
   await initDataLayer();
   await resetGamification();
-  if (useSupabase) {
-    if (!currentUserId) return;
+  if (useSupabase && currentUserId) {
     const { error } = await supabaseClient.from('progress').delete().eq('user_id', currentUserId);
     if (error) console.error(error);
-    return;
   }
   localStorage.setItem(PROGRESS_KEY, JSON.stringify({}));
 }
