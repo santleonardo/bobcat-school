@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Labirinto da Oração — Português (versão melhorada)</title>
+<title>Labirinto da Oração — Português (Prim + melhorias)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="game-sound.js"></script>
@@ -520,40 +520,61 @@ function pickNextRoundIndex(){
   return order.shift();
 }
 
-/* ─── Geração do labirinto (recursive backtracker) ─── */
+/* ─── Geração do labirinto (Algoritmo de Prim) ───
+   Produz labirintos com mais ramificações e textura diferente
+   do recursive backtracker. Ideal para fuga dos fantasmas. */
 function buildGrid(){
   const g = [];
-  for (let i = 0; i < ROWS*COLS; i++) g.push({N:true,S:true,E:true,W:true,visited:false});
-  const idx = (r,c) => r*COLS+c;
+  for (let i = 0; i < ROWS * COLS; i++) {
+    g.push({ N: true, S: true, E: true, W: true, inMaze: false });
+  }
+  const idx = (r, c) => r * COLS + c;
   const DIRS = [
-    {k:'N', dr:-1, dc:0, opp:'S'},
-    {k:'S', dr:1, dc:0, opp:'N'},
-    {k:'E', dr:0, dc:1, opp:'W'},
-    {k:'W', dr:0, dc:-1, opp:'E'}
+    { k: 'N', dr: -1, dc: 0, opp: 'S' },
+    { k: 'S', dr:  1, dc: 0, opp: 'N' },
+    { k: 'E', dr:  0, dc: 1, opp: 'W' },
+    { k: 'W', dr:  0, dc:-1, opp: 'E' }
   ];
-  const stack = [0];
-  g[0].visited = true;
-  while (stack.length){
-    const cur = stack[stack.length-1];
-    const cr = Math.floor(cur/COLS), cc = cur%COLS;
-    const options = [];
+
+  // Começa pela célula (0,0) — entrada do jogador
+  const start = 0;
+  g[start].inMaze = true;
+
+  // Fronteira: lista de { cell, dir, neighbor }
+  const frontier = [];
+  function addFrontiers(cellIdx) {
+    const r = Math.floor(cellIdx / COLS);
+    const c = cellIdx % COLS;
     DIRS.forEach(d => {
-      const nr = cr+d.dr, nc = cc+d.dc;
-      if (nr>=0 && nr<ROWS && nc>=0 && nc<COLS){
-        const ni = idx(nr,nc);
-        if (!g[ni].visited) options.push({dir:d, ni});
+      const nr = r + d.dr, nc = c + d.dc;
+      if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) return;
+      const ni = idx(nr, nc);
+      if (!g[ni].inMaze) {
+        frontier.push({ cell: cellIdx, dir: d, neighbor: ni });
       }
     });
-    if (options.length){
-      const pick = options[Math.floor(Math.random()*options.length)];
-      g[cur][pick.dir.k] = false;
-      g[pick.ni][pick.dir.opp] = false;
-      g[pick.ni].visited = true;
-      stack.push(pick.ni);
-    } else {
-      stack.pop();
-    }
   }
+  addFrontiers(start);
+
+  while (frontier.length > 0) {
+    // Escolhe parede aleatória da fronteira (Prim randomizado)
+    const pickIdx = Math.floor(Math.random() * frontier.length);
+    const { cell, dir, neighbor } = frontier[pickIdx];
+    // Remove da fronteira (swap + pop — O(1))
+    frontier[pickIdx] = frontier[frontier.length - 1];
+    frontier.pop();
+
+    if (g[neighbor].inMaze) continue; // já faz parte do labirinto
+
+    // Abre a parede entre cell e neighbor
+    g[cell][dir.k] = false;
+    g[neighbor][dir.opp] = false;
+    g[neighbor].inMaze = true;
+
+    // Adiciona as novas paredes fronteira do neighbor
+    addFrontiers(neighbor);
+  }
+
   return g;
 }
 
@@ -569,7 +590,7 @@ function findDeadEnds(g){
 
 /* ─── Rotas de escape: abre alguns atalhos extras no labirinto perfeito
    para que o jogador tenha mais de um caminho e possa fugir dos fantasmas ─── */
-const ESCAPE_ROUTES = 9;
+const ESCAPE_ROUTES = 14; // mais atalhos (antes era 9 e quase não criavam loops úteis)
 function addEscapeRoutes(g, count){
   const idx = (r,c) => r*COLS+c;
   const DIRS = [
@@ -578,20 +599,36 @@ function addEscapeRoutes(g, count){
     {k:'E', dr:0, dc:1, opp:'W'},
     {k:'W', dr:0, dc:-1, opp:'E'}
   ];
-  let added = 0, attempts = 0;
-  while (added < count && attempts < count * 30){
-    attempts++;
-    const r = Math.floor(Math.random()*ROWS);
-    const c = Math.floor(Math.random()*COLS);
-    const i = idx(r,c);
-    const d = DIRS[Math.floor(Math.random()*DIRS.length)];
-    const nr = r+d.dr, nc = c+d.dc;
-    if (nr<0 || nr>=ROWS || nc<0 || nc>=COLS) continue;
-    const ni = idx(nr,nc);
-    if (!g[i][d.k]) continue; // já é passagem aberta
+
+  // Coleta todas as paredes internas ainda fechadas (mais confiável que tentativas aleatórias)
+  const candidates = [];
+  for (let r = 0; r < ROWS; r++){
+    for (let c = 0; c < COLS; c++){
+      const i = idx(r, c);
+      DIRS.forEach(d => {
+        const nr = r + d.dr, nc = c + d.dc;
+        if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) return;
+        // Conta cada parede só uma vez (N e W)
+        if (d.k === 'S' || d.k === 'E') return;
+        if (g[i][d.k]) {
+          candidates.push({ i, d, ni: idx(nr, nc) });
+        }
+      });
+    }
+  }
+
+  // Embaralha candidatos
+  for (let i = candidates.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+  }
+
+  // Abre até 'count' paredes
+  const toOpen = Math.min(count, candidates.length);
+  for (let k = 0; k < toOpen; k++){
+    const { i, d, ni } = candidates[k];
     g[i][d.k] = false;
     g[ni][d.opp] = false;
-    added++;
   }
 }
 
@@ -635,6 +672,8 @@ function loadRound(){
   document.getElementById('overBanner').classList.remove('show');
   document.querySelector('.maze-card').classList.remove('hit');
 
+  // Precisamos de becos para as peças + corações, mas também de loops para fuga.
+  // Se após adicionar atalhos sobrarem poucos becos, tentamos de novo (até 40 vezes).
   const minDeadEndsNeeded = currentRound.parts.length + HEART_COUNT;
   let rawDeadEnds, guard = 0;
   do {
@@ -642,7 +681,7 @@ function loadRound(){
     addEscapeRoutes(grid, ESCAPE_ROUTES);
     rawDeadEnds = findDeadEnds(grid);
     guard++;
-  } while (rawDeadEnds.length < minDeadEndsNeeded && guard < 30);
+  } while (rawDeadEnds.length < minDeadEndsNeeded && guard < 40);
   const deadEnds = shuffle(rawDeadEnds);
   const letters = shuffle(LETTERS.slice(0, currentRound.parts.length));
 
