@@ -21,6 +21,14 @@ const TESTS = [
 // aqui não há bloqueio nem pré-requisito: todo aluno pode acessar direto.
 const EXTRAS = [
   {
+    id: 'manual-portugues-basico',
+    group: 'Manual Básico — Classes Gramaticais',
+    name: 'Capa — Manual Básico',
+    icon: '📗',
+    description: 'Visão geral das 10 classes gramaticais, com revisão final antes de começar',
+    url: 'lessons/manual-portugues-basico.html'
+  },
+  {
     id: 'pb-substantivo',
     group: 'Manual Básico — Classes Gramaticais',
     name: 'Básico 1 — Substantivo',
@@ -99,6 +107,14 @@ const EXTRAS = [
     icon: '❗',
     description: 'Alegria, dor, surpresa, pedido',
     url: 'lessons/pb-interjeicao.html'
+  },
+  {
+    id: 'manual-portugues',
+    group: 'Manual Prático — Língua Portuguesa',
+    name: 'Capa — Manual Prático',
+    icon: '📘',
+    description: 'Visão geral da língua portuguesa, com revisão final antes de começar',
+    url: 'lessons/manual-portugues.html'
   },
   {
     id: 'pt-morfologia',
