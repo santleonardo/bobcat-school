@@ -291,6 +291,13 @@ const PAIRS = [
   ['XHUVA','CHUVA'], ['XHAVE','CHAVE'], ['XHEIO','CHEIO'], ['FIXHA','FICHA'], ['BIXHO','BICHO'],
   ['XHAPEU','CHAPEU'], ['XHEGAR','CHEGAR'], ['XHORAR','CHORAR'], ['XHUTAR','CHUTAR'], ['XHIQUE','CHIQUE'],
   ['MANXHA','MANCHA'], ['GUARDA-XHUVA','GUARDA-CHUVA'],
+  // E/I (vogal átona no início/meio que soa como "i")
+  ['ISCOLA','ESCOLA'], ['ISTRELA','ESTRELA'], ['IMBAIXO','EMBAIXO'], ['ISPELHO','ESPELHO'],
+  ['PIQUENO','PEQUENO'], ['VISTIDO','VESTIDO'], ['ILEFANTE','ELEFANTE'], ['INVELOPE','ENVELOPE'],
+  // O/U (vogal átona no meio da palavra que soa como "u")
+  ['BUNITO','BONITO'], ['CUMIDA','COMIDA'], ['BUNECA','BONECA'], ['CULEGA','COLEGA'],
+  ['DURMIR','DORMIR'], ['BUTECO','BOTECO'], ['SURRISO','SORRISO'], ['MUMENTO','MOMENTO'],
+  ['CURTINA','CORTINA'], ['FUGUEIRA','FOGUEIRA'],
   // S/Z (mesmo som entre vogais ou no final)
   ['CAZA','CASA'], ['CAPAS','CAPAZ'], ['FELIS','FELIZ'], ['RAPAS','RAPAZ'], ['NARIS','NARIZ'],
   ['ARROS','ARROZ'], ['BELESA','BELEZA'], ['CRUSAR','CRUZAR'], ['BUSINA','BUZINA'], ['COSINHA','COZINHA'],
@@ -308,6 +315,20 @@ const PAIRS = [
   ['VOLTAGEN','VOLTAGEM'], ['FERRAGEN','FERRAGEM'], ['VANTAGEN','VANTAGEM'], ['LINGUAGEN','LINGUAGEM']
 ];
 const ALPHABET = 'ABCDEFGHIJLMNOPQRSTUVXZ';
+const DECOY_COUNT = 7; // mais iscas no tabuleiro = mais difícil de achar a letra certa
+/* Letras que se confundem na leitura/escrita — usadas como iscas extras
+   pra deixar o tabuleiro cheio de opções plausíveis, não só letras aleatórias */
+const CONFUSABLES = {
+  S:['Z','C','X'], Z:['S','C','X'], C:['S','Z','Q'],
+  G:['J'], J:['G'],
+  M:['N'], N:['M'],
+  L:['U','R'], U:['O','L','V'], O:['U'],
+  X:['C','S'],
+  B:['D','P'], D:['B','P'], P:['B','D'],
+  V:['U','F'], F:['V'],
+  R:['L'],
+  I:['E'], E:['I']
+};
 
 function shuffle(arr){
   const a = arr.slice();
@@ -432,22 +453,32 @@ function spawnTiles(){
   const decoyChars = [];
   // arapuca: a letra "certa" também aparece como isca
   if (correctChar !== state.badChar){ decoyChars.push(correctChar); usedChars.add(correctChar); }
-  while (decoyChars.length < 4){
+  // mais iscas "parecidas" (letras que se confundem na hora de ler/escrever),
+  // pra obrigar o jogador a realmente checar a palavra em vez de adivinhar
+  const group = CONFUSABLES[state.badChar] || [];
+  for (const ch of shuffle(group)){
+    if (decoyChars.length >= DECOY_COUNT) break;
+    if (usedChars.has(ch)) continue;
+    usedChars.add(ch);
+    decoyChars.push(ch);
+  }
+  // completa com letras aleatórias até o total definido
+  while (decoyChars.length < DECOY_COUNT){
     const ch = ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
     if (usedChars.has(ch)) continue;
     usedChars.add(ch);
     decoyChars.push(ch);
   }
-  const targetPos = randomFreeCell(3);
+  const targetPos = randomFreeCell(4);
   if (targetPos) state.tiles.push({...targetPos, char: state.badChar, target: true});
   decoyChars.forEach(ch => {
-    const pos = randomFreeCell(2);
+    const pos = randomFreeCell(3);
     if (pos) state.tiles.push({...pos, char: ch, target: false});
   });
 }
 function respawnOneDecoy(oldTile){
   state.tiles = state.tiles.filter(t => t !== oldTile);
-  const pos = randomFreeCell(2);
+  const pos = randomFreeCell(3);
   if (pos) state.tiles.push({...pos, char: oldTile.char, target: false});
 }
 
