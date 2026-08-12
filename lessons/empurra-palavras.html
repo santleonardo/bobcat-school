@@ -99,17 +99,16 @@
   .dpad button:active{transform:translateY(3px);border-bottom-width:1px;box-shadow:0 1px 4px rgba(225,58,38,.4)}
   .dpad .up{grid-column:2;grid-row:1}
   .dpad .left{grid-column:1;grid-row:2}
-  .dpad .down{grid-column:2;grid-row:2}
+  .dpad .center{grid-column:2;grid-row:2;font-size:20px}
   .dpad .right{grid-column:3;grid-row:2}
-  .dpad .hint{grid-column:2;grid-row:3;font-size:17px;background:linear-gradient(180deg,#ffe27a,var(--gold));
-    border-bottom-color:#c98a1a;box-shadow:0 3px 10px rgba(255,210,63,.4)}
+  .dpad .down{grid-column:2;grid-row:3}
 
   .field-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
   .shuffle-btn{background:var(--cream-2);border:1.5px solid var(--border);color:var(--ink-soft);
     padding:8px 16px;border-radius:11px;font-size:12.5px;font-weight:700;cursor:pointer;
     display:flex;align-items:center;gap:6px;transition:all .15s}
   .shuffle-btn:active{border-color:var(--orange);color:var(--ink);transform:scale(.95)}
-  .mode-btn.active{background:linear-gradient(135deg,var(--purple),var(--pink));border-color:var(--purple);color:#fff;
+  .mode-btn.active{background:linear-gradient(135deg,var(--purple),var(--pink));border-color:var(--purple-dark);
     box-shadow:0 3px 10px rgba(139,92,246,.4)}
 
   .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);opacity:0;
@@ -173,7 +172,7 @@
       <li><b>Objetivo:</b> empurrar as caixinhas certas da frase até a faixa dourada, na ordem correta.</li>
       <li><b>Como se mover:</b> use o D-pad na tela, as setas do teclado, ou arraste o dedo no campo.</li>
       <li><b>Empurrar:</b> encoste numa caixinha e continue andando na mesma direção para empurrá-la à sua frente.</li>
-      <li><b>Puxar:</b> toque em "Modo: Empurrar" (ou tecle <b>P</b>) para trocar para o modo <b>Puxar</b> e arrastar de volta uma caixinha que ficou atrás de você.</li>
+      <li><b>Puxar:</b> toque no ícone <b>central do D-pad</b> (ou tecle <b>P</b>) para trocar para o modo <b>Puxar</b> e arrastar de volta uma caixinha que ficou atrás de você.</li>
       <li><b>Cuidado:</b> algumas palavras no campo estão escritas <b>errado</b> — só as certas, na ordem certa, sobem até a faixa dourada.</li>
     </ol>
   </div>
@@ -188,12 +187,11 @@
     <div class="dpad">
       <button class="up" data-dir="N">▲</button>
       <button class="left" data-dir="W">◀</button>
-      <button class="down" data-dir="S">▼</button>
+      <button class="center mode-btn" id="modeBtn" aria-pressed="false" title="Alternar modo: empurrar/puxar">👉</button>
       <button class="right" data-dir="E">▶</button>
-      <button class="hint" id="hintBtn">💡</button>
+      <button class="down" data-dir="S">▼</button>
     </div>
     <div class="field-actions">
-      <button class="shuffle-btn mode-btn" id="modeBtn" aria-pressed="false">👉 Modo: Empurrar</button>
       <button class="shuffle-btn" id="shuffleBtn">🔀 Reorganizar campo</button>
     </div>
   </div>
@@ -598,20 +596,6 @@ function finishRound(){
   document.getElementById('winBanner').classList.add('show');
 }
 
-/* ─── Dica ─── */
-function showHint(){
-  const required = currentRound.words[nextIndex];
-  const found = tiles.find(t => !t.isDecoy && t.value === required);
-  if (!found){
-    showToast('💡 Essa palavra já foi entregue por outra caixinha igual — procure a próxima!', 'good');
-    return;
-  }
-  GameSound.play('hint');
-  found.el.classList.add('pulse');
-  showToast('💡 Procure a caixinha: "' + required + '"', 'good');
-  setTimeout(() => found.el && found.el.classList.remove('pulse'), 900);
-}
-
 /* ─── Reorganizar (evita ficar preso, não muda a rodada) ─── */
 function shuffleField(){
   GameSound.play('click');
@@ -644,7 +628,8 @@ function setPullMode(on){
   pullModeOn = on;
   const btn = document.getElementById('modeBtn');
   btn.classList.toggle('active', pullModeOn);
-  btn.textContent = pullModeOn ? '🫳 Modo: Puxar' : '👉 Modo: Empurrar';
+  btn.textContent = pullModeOn ? '🫳' : '👉';
+  btn.title = pullModeOn ? 'Modo: Puxar (toque para trocar)' : 'Modo: Empurrar (toque para trocar)';
   btn.setAttribute('aria-pressed', pullModeOn ? 'true' : 'false');
 }
 
@@ -660,7 +645,6 @@ function handleMove(dir){
 document.querySelectorAll('.dpad button[data-dir]').forEach(btn => {
   btn.addEventListener('click', () => handleMove(btn.dataset.dir));
 });
-document.getElementById('hintBtn').addEventListener('click', showHint);
 document.getElementById('nextBtn').addEventListener('click', loadRound);
 document.getElementById('shuffleBtn').addEventListener('click', shuffleField);
 document.getElementById('modeBtn').addEventListener('click', toggleMode);
