@@ -82,6 +82,18 @@
   .btn:active{transform:scale(.97)}
 
   .hint{text-align:center;font-size:12.5px;color:var(--ink-soft);margin-top:14px}
+
+  /* Como jogar (topo) */
+  .howto{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);
+    padding:16px 18px;margin-bottom:20px;box-shadow:var(--shadow)}
+  .howto-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+  .howto-head .ic{font-size:18px}
+  .howto-head h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--gold);flex:1}
+  .howto-close{background:none;border:none;color:var(--ink-soft);font-size:17px;cursor:pointer;padding:2px 6px;line-height:1}
+  .howto-close:hover{color:var(--ink)}
+  .howto ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px}
+  .howto li{font-size:13.5px;color:var(--ink-soft);line-height:1.55}
+  .howto li b{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -92,11 +104,25 @@
     <span class="pill time">⏱️ <span id="timer">0:00</span></span>
     <span class="pill">🎯 <span id="foundCount">0</span>/<span id="totalCount">0</span></span>
     <span class="pill xp">⭐ <span id="xp">0</span> XP</span>
+    <button class="pill" id="howtoReopenBtn" style="display:none" title="Mostrar como jogar">❓ Como jogar</button>
     <button class="pill sound-toggle" data-sound-toggle title="Desativar sons">🔊</button>
   </div>
 </div>
 
 <div class="wrap">
+  <div class="howto" id="howtoCard">
+    <div class="howto-head">
+      <span class="ic">💡</span>
+      <h3>Como jogar</h3>
+      <button class="howto-close" id="howtoClose" aria-label="Esconder instruções">✕</button>
+    </div>
+    <ol>
+      <li><b>Objetivo:</b> encontre todas as palavras da lista escondidas na grade antes de trocar de tema.</li>
+      <li><b>Como selecionar:</b> toque numa letra e arraste até a última letra da palavra — funciona na horizontal, vertical e diagonal, em qualquer direção (inclusive de trás pra frente).</li>
+      <li>A lista ao lado risca automaticamente cada palavra assim que você a encontra.</li>
+    </ol>
+  </div>
+
   <div class="topics" id="topics"></div>
 
   <div class="board-area">
@@ -113,8 +139,30 @@
     <button class="btn" id="nextTopicBtn">Próximo tema →</button>
   </div>
 
-  <p class="hint">Toque numa letra e arraste até a última letra da palavra (funciona na horizontal, vertical e diagonal, em qualquer direção).</p>
+  <p class="hint">Toque em "❓ Como jogar" a qualquer momento para ver as instruções de novo.</p>
 </div>
+
+<script>
+(function () {
+  var KEY = 'bobcat_howto_dismissed_caca_palavras';
+  var card = document.getElementById('howtoCard');
+  var closeBtn = document.getElementById('howtoClose');
+  var reopenBtn = document.getElementById('howtoReopenBtn');
+  function hide() { card.style.display = 'none'; reopenBtn.style.display = 'inline-flex'; }
+  function show() { card.style.display = 'block'; reopenBtn.style.display = 'none'; }
+  var dismissed = false;
+  try { dismissed = localStorage.getItem(KEY) === '1'; } catch (e) {}
+  if (dismissed) hide(); else show();
+  closeBtn.addEventListener('click', function () {
+    hide();
+    try { localStorage.setItem(KEY, '1'); } catch (e) {}
+  });
+  reopenBtn.addEventListener('click', function () {
+    show();
+    try { localStorage.removeItem(KEY); } catch (e) {}
+  });
+})();
+</script>
 
 <script>
 /* ─── Bancos de palavras — ligados às próprias trilhas do app (pb-*.html e pt-*.html) ─── */
