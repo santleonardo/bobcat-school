@@ -769,6 +769,8 @@ body.on-auth-screen.on-landing-screen .topbar { display: none; }
 .auth-alert.error::before { content: "⚠ "; }
 .auth-alert.success { background: var(--pine-tint); color: var(--ok); border: 1px solid rgba(61, 214, 140, 0.35); }
 .auth-alert.success::before { content: "✓ "; }
+.auth-alert.info { background: var(--terracotta-tonal); color: var(--orange); border: 1px solid rgba(255, 91, 61, 0.35); }
+.auth-alert.info::before { content: "🔒 "; }
 
 .auth-card .btn {
   background: linear-gradient(135deg, var(--terracotta), var(--terracotta-deep));
@@ -2304,6 +2306,11 @@ html[data-theme="light"] .auth-alert.success {
   background: var(--pine-tint);
   color: #2C5D3C;
   border: 1px solid #CFE0C9;
+}
+html[data-theme="light"] .auth-alert.info {
+  background: #FBEAE7;
+  color: var(--orange-dark);
+  border: 1px solid #F0C7BC;
 }
 html[data-theme="light"] .lesson-card .badge.done {
   background: #DBF0E1;

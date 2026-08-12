@@ -366,6 +366,17 @@ async function getProgress() {
   return raw ? JSON.parse(raw) : {};
 }
 
+// savedTo indica onde o progresso realmente ficou gravado, para que quem
+// chamou (handleLessonFinish) possa avisar bem visivelmente o aluno sempre
+// que NÃO tiver ido para a nuvem:
+//  'cloud'          → gravou no Supabase normalmente.
+//  'local-no-login' → Supabase configurado, mas sem sessão detectada nesta
+//                      página (aluno "deslogado" aqui) — salvou só neste
+//                      aparelho/navegador.
+//  'local-error'    → tinha sessão, mas a gravação na nuvem falhou (rede,
+//                      RLS etc.) — salvou só neste aparelho como reserva.
+//  'local-no-cloud' → Supabase não está configurado no app (modo 100% local
+//                      por design, não é uma falha).
 async function saveLessonProgressData(lessonId, correct, total, answers) {
   await initDataLayer();
   const pct = total > 0 ? (correct / total) * 100 : 0;
@@ -374,9 +385,8 @@ async function saveLessonProgressData(lessonId, correct, total, answers) {
 
   // Mesma lógica do getProgress(): só usa a nuvem se realmente há uma
   // sessão logada nesta página. Caso contrário, salva no localStorage em
-  // vez de descartar o progresso silenciosamente (isso evita a sensação de
-  // "terminei a lição e zerou tudo" quando a sessão não foi detectada a
-  // tempo nesta página).
+  // vez de descartar o progresso silenciosamente (isso evita perder a
+  // tentativa do aluno) — mas quem chamou precisa avisar isso na tela.
   if (useSupabase && currentUserId) {
     const row = {
       user_id: currentUserId,
@@ -395,13 +405,14 @@ async function saveLessonProgressData(lessonId, correct, total, answers) {
       const progress = await getLocalProgressOnly();
       progress[lessonId] = { completed, correct, total, answers: safeAnswers, lastAttempt: new Date().toISOString() };
       localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+      return { completed, pct, savedTo: 'local-error' };
     }
-    return { completed, pct };
+    return { completed, pct, savedTo: 'cloud' };
   }
   const progress = await getLocalProgressOnly();
   progress[lessonId] = { completed, correct, total, answers: safeAnswers, lastAttempt: new Date().toISOString() };
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
-  return { completed, pct };
+  return { completed, pct, savedTo: useSupabase ? 'local-no-login' : 'local-no-cloud' };
 }
 
 function getLocalProgressOnly() {
@@ -517,6 +528,47 @@ function collectLessonAnswers() {
   return items;
 }
 
+// Mostra (ou esconde) um aviso BEM visível quando o progresso não foi
+// gravado na nuvem — sempre que cai no fallback local, o aluno precisa ver
+// isso na hora, não só um iconezinho discreto (☁️/💾) fácil de não notar.
+// Cria o elemento dinamicamente, então funciona em qualquer página de lição
+// sem precisar editar o HTML de cada uma.
+function showSaveLocationWarning(savedTo) {
+  let banner = document.getElementById('bobcat-save-warning');
+  if (savedTo === 'cloud') {
+    if (banner) banner.style.display = 'none';
+    return;
+  }
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'bobcat-save-warning';
+    banner.style.cssText = 'margin:12px 0;padding:13px 16px;border-radius:10px;font-size:14px;font-weight:600;line-height:1.45;';
+    const msg = document.getElementById('finishMsg') || document.getElementById('finishMessage');
+    if (msg && msg.parentNode) {
+      msg.parentNode.insertBefore(banner, msg);
+    } else {
+      document.body.appendChild(banner);
+    }
+  }
+  banner.style.display = 'block';
+  if (savedTo === 'local-no-login') {
+    banner.style.background = '#fdece8';
+    banner.style.border = '1.5px solid #f2b8ab';
+    banner.style.color = '#a3321e';
+    banner.textContent = '⚠️ Você não está conectado à sua conta nesta página — este progresso foi salvo SÓ NESTE APARELHO, não na nuvem. Faça login de novo (e refaça a lição) para não perder essa nota em outro dispositivo.';
+  } else if (savedTo === 'local-error') {
+    banner.style.background = '#fdece8';
+    banner.style.border = '1.5px solid #f2b8ab';
+    banner.style.color = '#a3321e';
+    banner.textContent = '⚠️ Não consegui salvar na nuvem agora (falha de conexão com o servidor). Guardei este progresso só neste aparelho como reserva — quando a internet voltar, refaça a lição para sincronizar de vez.';
+  } else if (savedTo === 'local-no-cloud') {
+    banner.style.background = '#fdf1ea';
+    banner.style.border = '1.5px solid #f2d3ba';
+    banner.style.color = '#a35a1e';
+    banner.textContent = '💾 Este app está rodando em modo local (sem conta na nuvem configurada) — o progresso fica salvo só neste aparelho/navegador.';
+  }
+}
+
 // Fluxo compartilhado de "finalizar lição", usado por todas as páginas de lição.
 // kind: 'correct' (exercícios com gabarito, ex: "Você acertou X de Y") ou
 //       'filled' (lições de prática sem correção automática, ex: "Você preencheu X de Y").
@@ -536,8 +588,9 @@ async function handleLessonFinish(lessonId, correct, total, kind) {
   const prev = allProgress[lessonId] || null;
 
   const answers = typeof collectLessonAnswers === 'function' ? collectLessonAnswers() : [];
-  const { completed, pct } = await saveLessonProgressData(lessonId, correct, total, answers);
+  const { completed, pct, savedTo } = await saveLessonProgressData(lessonId, correct, total, answers);
   const roundedPct = Math.round(pct);
+  showSaveLocationWarning(savedTo);
 
   // XP de sessão do HUD da lição (se disponível)
   let sessionXP = 0;
@@ -573,7 +626,10 @@ async function handleLessonFinish(lessonId, correct, total, kind) {
     if (typeof confetti === 'function') {
       try { confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } }); } catch (e) {}
     }
-    setTimeout(function () { window.location.href = '../index.html'; }, 2800);
+    // Se o progresso não foi para a nuvem, dá mais tempo antes de voltar
+    // ao app para o aluno realmente ler o aviso acima.
+    const redirectDelay = (savedTo === 'cloud') ? 2800 : 6000;
+    setTimeout(function () { window.location.href = '../index.html'; }, redirectDelay);
   } else {
     msg.style.color = '#C0392B';
     msg.textContent = '📌 Você ' + verb + ' ' + correct + ' de ' + total + ' ' + noun +
@@ -1200,6 +1256,39 @@ function escapeHtmlLite(str) {
   div.textContent = str == null ? '' : String(str);
   return div.innerHTML;
 }
+
+// ---------- Exigir login para acessar lições ----------
+// Com Supabase configurado, o aluno PRECISA estar logado para abrir uma
+// página de lição — sem isso, dava pra estudar "anônimo" com o progresso
+// preso só naquele aparelho (e sujeito a sumir se o navegador limpar
+// dados). Esconde a página imediatamente (evita mostrar a lição por um
+// instante antes de redirecionar) e só revela o conteúdo depois de
+// confirmar a sessão.
+(function () {
+  if (/\/lessons\//.test(window.location.pathname)) {
+    document.documentElement.style.visibility = 'hidden';
+  }
+})();
+
+async function guardLessonRequiresLogin() {
+  await initDataLayer();
+  if (!/\/lessons\//.test(window.location.pathname)) return;
+
+  if (!useSupabase || currentUserId) {
+    // Sem Supabase configurado (app 100% local) ou já logado: libera a tela.
+    document.documentElement.style.visibility = '';
+    return;
+  }
+
+  // Não logado: guarda qual lição o aluno tentou abrir para reabri-la
+  // automaticamente depois do login, e manda para a tela de login.
+  try {
+    const target = window.location.pathname.split('/').pop() + window.location.search;
+    sessionStorage.setItem('bobcat_pending_lesson', target);
+  } catch (e) { /* ignore */ }
+  window.location.replace('../index.html?needLogin=1');
+}
+guardLessonRequiresLogin();
 
 // ---------- Auto-inicialização ----------
 // Dispara a conexão com o Supabase assim que este arquivo carrega, em vez de

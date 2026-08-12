@@ -637,6 +637,9 @@ function setAuthMode(mode) {
   document.getElementById('btn-forgot-password').classList.toggle('hidden', mode !== 'login');
   document.getElementById('auth-error').classList.remove('show');
   document.getElementById('auth-success').classList.remove('show');
+  // Nota: o aviso "info" (ex.: "faça login para acessar as lições") não é
+  // limpo aqui de propósito — ele deve continuar visível mesmo se o aluno
+  // trocar entre as abas "Entrar" / "Criar conta".
 }
 
 function togglePasswordVisibility(inputId, btnId) {
@@ -658,6 +661,21 @@ function showAuthError(text) {
 function showAuthSuccess(text) {
   const el = document.getElementById('auth-success');
   document.getElementById('auth-error').classList.remove('show');
+  el.textContent = text;
+  el.classList.toggle('show', !!text);
+}
+
+// Aviso neutro (não é erro nem sucesso) — usado quando o aluno é mandado
+// pra cá porque tentou abrir uma lição sem estar logado.
+function showAuthInfo(text) {
+  let el = document.getElementById('auth-info');
+  if (!el) {
+    el = document.createElement('p');
+    el.id = 'auth-info';
+    el.className = 'auth-alert info';
+    const errorEl = document.getElementById('auth-error');
+    errorEl.parentNode.insertBefore(el, errorEl);
+  }
   el.textContent = text;
   el.classList.toggle('show', !!text);
 }
@@ -747,10 +765,23 @@ async function afterAuthSuccess() {
   const confirmField = document.getElementById('auth-password-confirm');
   if (confirmField) confirmField.value = '';
 
+  // Se o aluno tinha tentado abrir uma lição direto (sem estar logado),
+  // volta pra ela agora que já entrou — em vez de deixá-lo no menu.
+  let pendingLesson = null;
+  try { pendingLesson = sessionStorage.getItem('bobcat_pending_lesson'); } catch (e) {}
+
   const profile = await getProfile();
   if (profile) {
+    if (pendingLesson) {
+      try { sessionStorage.removeItem('bobcat_pending_lesson'); } catch (e) {}
+      window.location.href = 'lessons/' + pendingLesson;
+      return;
+    }
     await enterApp();
   } else {
+    // Perfil novo (primeiro login/cadastro): completa o cadastro primeiro.
+    // A lição pendente continua guardada e será retomada depois que o
+    // perfil for salvo (ver setupProfileScreen).
     showScreen('profile-setup');
   }
 }
@@ -788,6 +819,14 @@ function setupProfileScreen() {
     await saveProfile({ name, avatar: selectedAvatarSetup, level, createdAt: new Date().toISOString() });
     btn.disabled = false;
     btn.textContent = 'Começar a estudar';
+
+    let pendingLesson = null;
+    try { pendingLesson = sessionStorage.getItem('bobcat_pending_lesson'); } catch (e) {}
+    if (pendingLesson) {
+      try { sessionStorage.removeItem('bobcat_pending_lesson'); } catch (e) {}
+      window.location.href = 'lessons/' + pendingLesson;
+      return;
+    }
     await enterApp();
   });
 }
@@ -1242,10 +1281,11 @@ async function renderTests() {
 
 // ---------- Tela Extra (matérias bônus, sem requisito de acesso) ----------
 
-function renderExtras() {
+async function renderExtras() {
   const list = document.getElementById('extra-list');
   if (!list) return;
   list.innerHTML = '';
+  const progress = await getProgress();
 
   const GROUP_META = {
     'Manual Básico — Classes Gramaticais': {
@@ -1311,6 +1351,11 @@ function renderExtras() {
     list.appendChild(header);
 
     items.forEach(extra => {
+      const p = progress[extra.id];
+      const done = !!(p && p.completed);
+      const pct = p && p.total > 0 ? Math.round((p.correct / p.total) * 100) : 0;
+      const badge = done ? `✓ ${pct}%` : (p ? `${pct}%` : 'Aberto');
+
       const card = document.createElement('div');
       card.className = 'lesson-card';
       card.innerHTML = `
@@ -1319,7 +1364,7 @@ function renderExtras() {
           <div class="name">${extra.name}</div>
           <div class="level">${extra.description}</div>
         </div>
-        <div class="badge">Aberto</div>
+        <div class="badge ${done ? 'done' : ''}">${badge}</div>
         <div class="chevron">›</div>
       `;
       card.addEventListener('click', () => { window.location.href = extra.url; });
@@ -1336,6 +1381,10 @@ function renderExtras() {
     const items = groups[groupName];
     if (!items || items.length === 0) return;
     const meta = GROUP_META[groupName] || { icon: '📎', short: groupName, blurb: '' };
+    const doneCount = items.filter(it => progress[it.id] && progress[it.id].completed).length;
+    const countLabel = doneCount > 0
+      ? `${doneCount}/${items.length} concluídas`
+      : `${items.length} lições`;
 
     const box = document.createElement('button');
     box.type = 'button';
@@ -1343,9 +1392,9 @@ function renderExtras() {
     box.innerHTML = `
       <div class="extra-folder-card-top">
         <span class="extra-folder-card-icon">${meta.icon}</span>
-        <span class="extra-folder-card-count">${items.length} lições</span>
+        <span class="extra-folder-card-count">${countLabel}</span>
       </div>
-      <div class="extra-folder-card-title">${meta.short}</div>
+      <div class="extra-folder-card-title">${meta.short}${doneCount === items.length ? ' ✓' : ''}</div>
       <div class="extra-folder-card-blurb">${meta.blurb}</div>
       <div class="extra-folder-card-cta">Abrir manual ›</div>
     `;
@@ -1696,9 +1745,23 @@ async function boot() {
   setupThemeToggle();
   showLoadingState(false);
 
+  // Se o aluno foi mandado pra cá porque tentou abrir uma lição sem estar
+  // logado (ver guardLessonRequiresLogin em db-client.js), pula a landing
+  // page e vai direto pro login, com um aviso explicando o motivo.
+  const cameFromLessonGuard = new URLSearchParams(window.location.search).get('needLogin') === '1';
+  if (cameFromLessonGuard) {
+    history.replaceState(null, '', window.location.pathname);
+  }
+
   // Landing first for visitors without session; returning students go straight in.
   if (isUsingCloud() && !isLoggedIn()) {
-    showScreen('landing');
+    if (cameFromLessonGuard) {
+      setAuthMode('login');
+      showScreen('auth');
+      showAuthInfo('É preciso estar logado para fazer as lições. Entre na sua conta (ou crie uma) para continuar.');
+    } else {
+      showScreen('landing');
+    }
   } else {
     const profile = await getProfile();
     if (profile) {
