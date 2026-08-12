@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Labirinto da Oração — Português</title>
+<title>Labirinto da Oração — Português (versão melhorada)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="game-sound.js"></script>
@@ -20,10 +20,9 @@
     --radius:18px;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  html,body{height:100%;overflow:hidden;overscroll-behavior:none}
-  body{font-family:"Inter",sans-serif;color:var(--ink);height:100vh;height:100dvh;
-    line-height:1.5;-webkit-font-smoothing:antialiased;
-    display:flex;flex-direction:column;
+  html,body{height:100%}
+  body{font-family:"Inter",sans-serif;color:var(--ink);min-height:100vh;
+    line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:36px;
     background:
       radial-gradient(circle at 10% 6%, rgba(139,92,246,.38), transparent 42%),
       radial-gradient(circle at 90% 12%, rgba(45,217,185,.28), transparent 45%),
@@ -32,9 +31,9 @@
     background-attachment:fixed}
   h1,h2,h3,.serif{font-family:"Fredoka","Poppins",sans-serif;letter-spacing:-.01em}
 
-  .hud{flex:0 0 auto;z-index:100;background:rgba(12,7,32,.88);backdrop-filter:blur(12px);
-    padding:8px 14px;border-bottom:1px solid var(--border);box-shadow:0 2px 0 rgba(139,92,246,.3);display:flex;align-items:center;
-    gap:8px;justify-content:space-between;flex-wrap:wrap}
+  .hud{position:sticky;top:0;z-index:100;background:rgba(12,7,32,.88);backdrop-filter:blur(12px);
+    padding:12px 16px;border-bottom:1px solid var(--border);box-shadow:0 2px 0 rgba(139,92,246,.3);display:flex;align-items:center;
+    gap:10px;justify-content:space-between;flex-wrap:wrap}
   .hud-title{display:flex;align-items:center;gap:9px;font-weight:800;font-size:14.5px;font-family:"Fredoka",sans-serif}
   .hud-title .icon{font-size:20px;display:inline-block;animation:wiggle 3s ease-in-out infinite}
   @keyframes wiggle{0%,100%{transform:rotate(0)}50%{transform:rotate(-10deg)}}
@@ -72,27 +71,26 @@
   .maze-card.hit{animation:hitFlash .5s ease}
   @keyframes ghostBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
 
-  .wrap{max-width:760px;width:100%;margin:0 auto;padding:8px 12px;flex:1 1 auto;min-height:0;
-    display:flex;flex-direction:column;overflow-y:auto}
+  .wrap{max-width:760px;margin:0 auto;padding:18px 14px 0}
 
   /* Sentence being built */
-  .sentence-bar{display:flex;flex-wrap:wrap;gap:5px;background:linear-gradient(160deg,var(--cream),var(--cream-2));
-    border:1px solid var(--border);border-radius:14px;padding:9px 11px;margin-bottom:8px;
-    box-shadow:var(--shadow);min-height:38px;align-items:center;flex:0 0 auto}
-  .slot{padding:5px 10px;border-radius:9px;font-size:12px;font-weight:700;background:var(--cream-2);
+  .sentence-bar{display:flex;flex-wrap:wrap;gap:6px;background:linear-gradient(160deg,var(--cream),var(--cream-2));
+    border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px;
+    box-shadow:var(--shadow);min-height:52px;align-items:center}
+  .slot{padding:7px 12px;border-radius:10px;font-size:13px;font-weight:700;background:var(--cream-2);
     color:rgba(247,241,236,0.35);border:1.5px dashed var(--border);transition:all .2s}
   .slot.filled{border:1.5px solid transparent;color:#0a0a0b;box-shadow:0 3px 10px rgba(0,0,0,.3);
     animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
-  .slot .lbl{display:block;font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;
+  .slot .lbl{display:block;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;
     opacity:.75;margin-bottom:1px}
 
   /* Maze */
   .maze-card{position:relative;background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
-    border-radius:16px;padding:10px;box-shadow:var(--shadow);display:flex;flex-direction:column;
-    align-items:center;justify-content:center;gap:10px;flex:1 1 auto;min-height:0}
-  #mazeCanvas{border-radius:12px;touch-action:none;box-shadow:0 0 0 1px rgba(255,255,255,.05) inset;flex:0 0 auto}
+    border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;
+    align-items:center;gap:14px}
+  #mazeCanvas{border-radius:12px;touch-action:none;box-shadow:0 0 0 1px rgba(255,255,255,.05) inset}
 
-  .dpad{flex:0 0 auto;display:grid;grid-template-columns:44px 44px 44px;grid-template-rows:44px 44px 44px;gap:5px}
+  .dpad{display:grid;grid-template-columns:52px 52px 52px;grid-template-rows:52px 52px 52px;gap:7px}
   .dpad button{background:linear-gradient(180deg,var(--orange-light),var(--orange));
     border:none;border-bottom:4px solid var(--orange-dark);border-radius:14px;color:#fff;
     font-size:19px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;
@@ -105,16 +103,18 @@
   .dpad .hint{grid-column:2;grid-row:3;font-size:17px;background:linear-gradient(180deg,#ffe27a,var(--gold));
     border-bottom-color:#c98a1a;box-shadow:0 3px 10px rgba(255,210,63,.4)}
 
-  .pieces-panel{flex:0 0 auto;background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
-    border-radius:12px;padding:7px 10px;margin-bottom:8px;box-shadow:var(--shadow)}
-  .pieces-panel h3{font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin-bottom:5px}
-  .piece-list{display:flex;flex-direction:row;flex-wrap:wrap;gap:5px}
-  .piece-row{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--ink-soft);
-    background:var(--cream-2);border-radius:8px;padding:4px 8px;transition:all .2s;line-height:1.2}
+  .pieces-panel{background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
+    border-radius:var(--radius);padding:14px 16px;margin-top:14px;box-shadow:var(--shadow)}
+  .pieces-panel h3{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin-bottom:10px}
+  .piece-list{display:flex;flex-direction:column;gap:7px}
+  .piece-row{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:var(--ink-soft);
+    background:var(--cream-2);border-radius:10px;padding:8px 10px;transition:all .2s}
   .piece-row.done{color:var(--ok);background:var(--ok-bg)}
-  .piece-letter{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;
-    border-radius:6px;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;font-weight:800;
-    font-size:9.5px;flex-shrink:0}
+  .piece-row.next-needed{background:rgba(255,210,63,0.22);border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,210,63,0.45);animation:pulse-hint 0.7s ease-in-out 2}
+  @keyframes pulse-hint{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
+  .piece-letter{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;
+    border-radius:8px;background:linear-gradient(135deg,var(--purple),var(--pink));color:#fff;font-weight:800;
+    font-size:12px;flex-shrink:0}
   .piece-row.done .piece-letter{background:var(--ok)}
 
   .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);opacity:0;
@@ -127,7 +127,7 @@
 
   @keyframes popIn{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
   @keyframes rainbow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-  .win-banner{flex:0 0 auto;display:none;text-align:center;margin-top:10px;padding:18px 18px;border-radius:var(--radius);
+  .win-banner{display:none;text-align:center;margin-top:16px;padding:24px 20px;border-radius:var(--radius);
     background:linear-gradient(120deg,var(--pink),var(--purple),var(--blue),var(--teal),var(--gold),var(--orange));
     background-size:300% 300%;box-shadow:0 12px 34px rgba(139,92,246,.45)}
   .win-banner.show{display:block;animation:popIn .4s cubic-bezier(.34,1.56,.64,1),rainbow 7s ease infinite .4s}
@@ -142,18 +142,18 @@
   .btn:hover{transform:translateY(-2px) scale(1.03)}
   .btn:active{transform:scale(.93)}
 
-  .hint-text{flex:0 0 auto;text-align:center;font-size:10.5px;color:var(--ink-soft);margin-top:6px;line-height:1.35}
+  .hint-text{text-align:center;font-size:12px;color:var(--ink-soft);margin-top:12px}
 
   /* Como jogar (topo) */
-  .howto{flex:0 0 auto;background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
-    border-radius:14px;padding:10px 13px;margin-bottom:8px;box-shadow:var(--shadow)}
-  .howto-head{display:flex;align-items:center;gap:7px;margin-bottom:6px}
-  .howto-head .ic{font-size:15px}
-  .howto-head h3{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--gold);flex:1;font-family:"Inter",sans-serif;font-weight:800}
-  .howto-close{background:none;border:none;color:var(--ink-soft);font-size:16px;cursor:pointer;padding:2px 6px;line-height:1}
+  .howto{background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
+    border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;box-shadow:var(--shadow)}
+  .howto-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+  .howto-head .ic{font-size:18px}
+  .howto-head h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--gold);flex:1;font-family:"Inter",sans-serif;font-weight:800}
+  .howto-close{background:none;border:none;color:var(--ink-soft);font-size:17px;cursor:pointer;padding:2px 6px;line-height:1}
   .howto-close:hover{color:var(--ink)}
-  .howto ol{margin:0;padding-left:17px;display:flex;flex-direction:column;gap:4px}
-  .howto li{font-size:11.5px;color:var(--ink-soft);line-height:1.4}
+  .howto ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px}
+  .howto li{font-size:13.5px;color:var(--ink-soft);line-height:1.55}
   .howto li b{color:var(--ink)}
 </style>
 </head>
@@ -188,11 +188,6 @@
     </ol>
   </div>
 
-  <div class="pieces-panel">
-    <h3>Peças espalhadas pelo labirinto</h3>
-    <div class="piece-list" id="pieceList"></div>
-  </div>
-
   <div class="sentence-bar" id="sentenceBar"></div>
 
   <div class="maze-card">
@@ -208,6 +203,11 @@
       <h3>⏸️ Jogo pausado</h3>
       <button class="btn" id="resumeBtn">▶️ Continuar</button>
     </div>
+  </div>
+
+  <div class="pieces-panel">
+    <h3>Peças espalhadas pelo labirinto</h3>
+    <div class="piece-list" id="pieceList"></div>
   </div>
 
   <div class="win-banner" id="winBanner">
@@ -235,16 +235,11 @@
   var card = document.getElementById('howtoCard');
   var closeBtn = document.getElementById('howtoClose');
   var reopenBtn = document.getElementById('howtoReopenBtn');
-  function relayout() {
-    if (typeof resizeCanvas === 'function') { resizeCanvas(); }
-    if (typeof draw === 'function') { draw(); }
-  }
-  function hide() { card.style.display = 'none'; reopenBtn.style.display = 'inline-flex'; relayout(); }
-  function show() { card.style.display = 'block'; reopenBtn.style.display = 'none'; relayout(); }
+  function hide() { card.style.display = 'none'; reopenBtn.style.display = 'inline-flex'; }
+  function show() { card.style.display = 'block'; reopenBtn.style.display = 'none'; }
   var dismissed = false;
   try { dismissed = localStorage.getItem(KEY) === '1'; } catch (e) {}
-  if (dismissed) { card.style.display = 'none'; reopenBtn.style.display = 'inline-flex'; }
-  else { card.style.display = 'block'; reopenBtn.style.display = 'none'; }
+  if (dismissed) hide(); else show();
   closeBtn.addEventListener('click', function () {
     hide();
     try { localStorage.setItem(KEY, '1'); } catch (e) {}
@@ -499,15 +494,17 @@ let currentRound = null;
 /* ─── Vidas & fantasmas (antagonistas) ─── */
 const START_LIVES = 3, MAX_LIVES = 5;
 const GHOST_COUNT = 2, HEART_COUNT = 2;
-const CHASE_PROB = 0.55; // chance do fantasma perseguir vs. andar à toa
+const CHASE_PROB = 0.48; // ligeiramente menos agressivo (era 0.55)
 let lives = START_LIVES;
 let ghosts = [];
 let ghostTimer = null;
-let ghostInterval = 650;
+let ghostInterval = 720; // começa um pouco mais lento (era 650)
 let roundsCleared = 0;
 let invulnerable = false;
 let gameOver = false;
 let paused = false;
+let cachedPlayerDist = null; // cache de BFS para performance
+let lastPlayerIdx = -1;
 
 function shuffle(arr){
   const a = [...arr];
@@ -686,8 +683,19 @@ function loadRound(){
   draw();
 
   clearInterval(ghostTimer);
-  ghostInterval = Math.max(420, 650 - roundsCleared*12);
-  ghostTimer = setInterval(moveGhosts, ghostInterval);
+  // Progressão mais suave de dificuldade + começa mais lento
+  ghostInterval = Math.max(480, 720 - roundsCleared * 18);
+  // Pequeno "safe start" de 1.2s antes dos fantasmas começarem a se mover
+  invulnerable = true;
+  setTimeout(() => {
+    invulnerable = false;
+    if (!gameOver && !paused) {
+      ghostTimer = setInterval(moveGhosts, ghostInterval);
+    }
+  }, 1200);
+  cachedPlayerDist = null;
+  lastPlayerIdx = -1;
+  draw();
 }
 
 function buildSentenceBar(){
@@ -719,22 +727,8 @@ function buildPieceList(letters){
 
 /* ─── Canvas ─── */
 function resizeCanvas(){
-  const mazeCard = document.querySelector('.maze-card');
-  const dpad = document.querySelector('.dpad');
-
-  // largura disponível (dentro do card, descontando padding)
-  const cardPaddingX = 20; // ~10px de cada lado
-  const availW = Math.min((mazeCard ? mazeCard.clientWidth : window.innerWidth) - cardPaddingX, window.innerWidth - 40, 620);
-
-  // altura disponível: o que sobra no card depois do D-pad e do gap
-  const cardPaddingY = 20;
-  const dpadH = dpad ? dpad.offsetHeight : 150;
-  const gapH = 10;
-  const cardAvailH = mazeCard ? (mazeCard.clientHeight - cardPaddingY - dpadH - gapH) : 320;
-  const availH = Math.max(140, cardAvailH);
-
-  cellSize = Math.max(16, Math.min(38, Math.floor(Math.min(availW / COLS, availH / ROWS))));
-
+  const maxW = Math.min(window.innerWidth - 44, 620);
+  cellSize = Math.max(22, Math.min(38, Math.floor(maxW / COLS)));
   const canvas = document.getElementById('mazeCanvas');
   const dpr = window.devicePixelRatio || 1;
   canvas.style.width = (COLS*cellSize) + 'px';
@@ -856,6 +850,9 @@ function move(dir){
   if (dir === 'S') player.r++;
   if (dir === 'E') player.c++;
   if (dir === 'W') player.c--;
+  // Invalida o cache de distância do jogador (performance)
+  lastPlayerIdx = -1;
+  cachedPlayerDist = null;
   GameSound.play('move');
   draw();
   checkPickup();
@@ -865,9 +862,15 @@ function move(dir){
 
 /* ─── Fantasmas: movimento (Pac-Man-like) ─── */
 function moveGhosts(){
-  if (gameOver) return;
+  if (gameOver || paused) return;
   const playerIdx = player.r*COLS+player.c;
-  const playerDist = bfsDistances(playerIdx);
+
+  // Cache do BFS: só recalcula quando o jogador mudou de célula
+  if (playerIdx !== lastPlayerIdx || !cachedPlayerDist) {
+    cachedPlayerDist = bfsDistances(playerIdx);
+    lastPlayerIdx = playerIdx;
+  }
+  const playerDist = cachedPlayerDist;
 
   ghosts.forEach(g => {
     const neighbors = cellNeighbors(g.idx);
@@ -904,7 +907,7 @@ function loseLife(){
   lives--;
   updateLivesUI();
   GameSound.play('wrong');
-  showToast('👻 Um fantasma te pegou! Voltando ao início...', 'bad');
+  showToast('👻 Fantasma! -1 vida. Você tem 1,4s de proteção.', 'bad');
   const card = document.querySelector('.maze-card');
   card.classList.remove('hit'); void card.offsetWidth; card.classList.add('hit');
 
@@ -914,6 +917,8 @@ function loseLife(){
   }
   invulnerable = true;
   player = {r:0,c:0};
+  lastPlayerIdx = -1;
+  cachedPlayerDist = null;
   draw();
   setTimeout(() => { invulnerable = false; draw(); }, 1400);
 }
@@ -989,7 +994,17 @@ function checkPickup(){
     }
   } else {
     GameSound.play('wrong');
-    showToast('⏳ Ainda não é essa! Ache a peça que vem antes primeiro.', 'bad');
+    // Feedback mais claro: mostra qual letra o jogador deve procurar agora
+    const nextLetter = Object.values(deadEndMap).find(d => d.partIndex === nextIndex && !d.collected);
+    const letterHint = nextLetter ? nextLetter.letter : '?';
+    showToast('⏳ Ordem errada! Procure a peça ' + letterHint + ' primeiro.', 'bad');
+    // Destaca visualmente a peça correta na lista
+    document.querySelectorAll('.piece-row').forEach(r => r.classList.remove('next-needed'));
+    const nextRow = document.getElementById('piece-' + letterHint);
+    if (nextRow) {
+      nextRow.classList.add('next-needed');
+      setTimeout(() => nextRow.classList.remove('next-needed'), 2200);
+    }
   }
 }
 
