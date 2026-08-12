@@ -103,8 +103,62 @@
     color:var(--ink-soft);font-size:12px;position:relative}
   .cell.tile{background:linear-gradient(135deg,var(--gold),#ffb347);color:#0a0a0b;
     animation:popIn .25s cubic-bezier(.34,1.56,.64,1)}
-  .cell.snake-head{background:linear-gradient(135deg,var(--teal),#22b39a);border-radius:9px}
-  .cell.snake-body{background:linear-gradient(135deg,var(--purple),var(--purple-dark))}
+  /* ── Cobrinha ilustrada ── */
+  .cell.snake-head, .cell.snake-body{padding:0}
+  .cell.snake-head{
+    background:radial-gradient(circle at 35% 30%, #4be3c7, var(--teal) 55%, #1f9d86 100%);
+    border-radius:50% 50% 42% 42%/55% 55% 45% 45%;
+    box-shadow:0 0 0 1.5px rgba(10,10,15,.35) inset, 0 2px 6px rgba(0,0,0,.35);
+    z-index:3;transform:scale(1.14);transition:transform .08s linear;
+  }
+  .cell.snake-body{
+    border-radius:38%;
+    box-shadow:0 1px 4px rgba(0,0,0,.3);
+    transform:scale(1.05);
+    z-index:2;transition:transform .08s linear;
+  }
+  .cell.snake-body.seg-a{background:linear-gradient(135deg,var(--purple),var(--purple-dark))}
+  .cell.snake-body.seg-b{background:linear-gradient(135deg,#7c4fe0,#5b21b6)}
+  .cell.snake-body::after{
+    content:'';position:absolute;inset:22%;border-radius:50%;
+    background:rgba(255,255,255,.16);pointer-events:none;
+  }
+  .cell.snake-tail{
+    border-radius:50%;transform:scale(.62);
+    box-shadow:0 1px 4px rgba(0,0,0,.3);
+  }
+
+  /* olhos (um único elemento + box-shadow desenha o segundo) */
+  .cell.snake-head::before{
+    content:'';position:absolute;width:15%;height:15%;min-width:2.5px;min-height:2.5px;
+    background:#0a0a0b;border-radius:50%;
+    box-shadow:0 0 0 1.5px #fff, var(--eye-dx) var(--eye-dy) 0 1.5px #0a0a0b, var(--eye-dx) var(--eye-dy) 0 3px #fff;
+  }
+  .cell.snake-head[data-dir="right"]::before{left:60%;top:26%;--eye-dx:0px;--eye-dy:44%}
+  .cell.snake-head[data-dir="left"]::before {left:26%;top:26%;--eye-dx:0px;--eye-dy:44%}
+  .cell.snake-head[data-dir="up"]::before   {left:26%;top:26%;--eye-dx:44%;--eye-dy:0px}
+  .cell.snake-head[data-dir="down"]::before {left:26%;top:58%;--eye-dx:44%;--eye-dy:0px}
+
+  /* língua (desenhada já "virada" pra cada direção — sem rotate, pra não brigar com a animação) */
+  .cell.snake-head::after{content:'';position:absolute;background:var(--pink);pointer-events:none}
+  .cell.snake-head[data-dir="right"]::after{
+    width:46%;height:9%;left:96%;top:44%;transform-origin:0% 50%;animation:tongueX 1.1s ease-in-out infinite;
+    clip-path:polygon(0 50%,70% 0,70% 35%,100% 35%,100% 65%,70% 65%,70% 100%);
+  }
+  .cell.snake-head[data-dir="left"]::after{
+    width:46%;height:9%;left:-42%;top:44%;transform-origin:100% 50%;animation:tongueX 1.1s ease-in-out infinite;
+    clip-path:polygon(100% 50%,30% 0,30% 35%,0 35%,0 65%,30% 65%,30% 100%);
+  }
+  .cell.snake-head[data-dir="up"]::after{
+    width:9%;height:46%;left:44%;top:-42%;transform-origin:50% 100%;animation:tongueY 1.1s ease-in-out infinite;
+    clip-path:polygon(50% 100%,0 30%,35% 30%,35% 0,65% 0,65% 30%,100% 30%);
+  }
+  .cell.snake-head[data-dir="down"]::after{
+    width:9%;height:46%;left:44%;top:96%;transform-origin:50% 0%;animation:tongueY 1.1s ease-in-out infinite;
+    clip-path:polygon(50% 0,0 70%,35% 70%,35% 100%,65% 100%,65% 70%,100% 70%);
+  }
+  @keyframes tongueX{0%,60%,100%{opacity:0;transform:scaleX(.4)}75%{opacity:1;transform:scaleX(1)}}
+  @keyframes tongueY{0%,60%,100%{opacity:0;transform:scaleY(.4)}75%{opacity:1;transform:scaleY(1)}}
   @keyframes popIn{0%{transform:scale(.5)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
 
   /* D-pad */
@@ -490,9 +544,17 @@ function render(){
     cell.textContent = t.char;
     state.dirty.add(t.r + ',' + t.c);
   });
+  const dirName = state.dir.x === 1 ? 'right' : state.dir.x === -1 ? 'left' : state.dir.y === 1 ? 'down' : 'up';
   state.snake.forEach((s, i) => {
     const cell = state.cells[s.r][s.c];
-    cell.className = 'cell ' + (i === 0 ? 'snake-head' : 'snake-body');
+    if (i === 0){
+      cell.className = 'cell snake-head';
+      cell.setAttribute('data-dir', dirName);
+    } else if (i === state.snake.length - 1){
+      cell.className = 'cell snake-body snake-tail';
+    } else {
+      cell.className = 'cell snake-body ' + (i % 2 === 0 ? 'seg-a' : 'seg-b');
+    }
     cell.textContent = '';
     state.dirty.add(s.r + ',' + s.c);
   });
