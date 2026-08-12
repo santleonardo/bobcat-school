@@ -48,6 +48,7 @@ function defaultGameState() {
 }
 
 async function getGamification() {
+  await initDataLayer();
   try {
     const raw = localStorage.getItem(gameStorageKey());
     if (!raw) return defaultGameState();
@@ -59,6 +60,7 @@ async function getGamification() {
 }
 
 async function saveGamification(state) {
+  await initDataLayer();
   try {
     localStorage.setItem(gameStorageKey(), JSON.stringify(state));
   } catch (e) { /* quota */ }
@@ -213,25 +215,36 @@ function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-async function initDataLayer() {
-  const cfg = window.SUPABASE_CONFIG;
-  const configured = cfg && cfg.url && cfg.anonKey && !cfg.url.includes('SEU-PROJETO');
+// initDataLayer() é idempotente: não importa quantas vezes (ou de quantos
+// arquivos diferentes) for chamada, a conexão com o Supabase só é aberta
+// uma vez, e todo mundo que chamar espera pela mesma Promise. Isso garante
+// que currentUserId/useSupabase estejam prontos antes de qualquer leitura
+// ou gravação de progresso, mesmo em páginas de lição que não chamam essa
+// função explicitamente (veja a auto-inicialização no fim deste arquivo).
+let _dataLayerReadyPromise = null;
+function initDataLayer() {
+  if (_dataLayerReadyPromise) return _dataLayerReadyPromise;
+  _dataLayerReadyPromise = (async () => {
+    const cfg = window.SUPABASE_CONFIG;
+    const configured = cfg && cfg.url && cfg.anonKey && !cfg.url.includes('SEU-PROJETO');
 
-  if (configured && window.supabase) {
-    try {
-      supabaseClient = window.supabase.createClient(cfg.url, cfg.anonKey);
-      const { data: { session } } = await supabaseClient.auth.getSession();
-      currentUserId = session ? session.user.id : null;
-      useSupabase = true;
-      console.log('Conectado ao Supabase.', currentUserId ? 'Sessão ativa.' : 'Nenhuma sessão — login necessário.');
-    } catch (e) {
-      console.warn('Não foi possível conectar ao Supabase — usando armazenamento local.', e);
+    if (configured && window.supabase) {
+      try {
+        supabaseClient = window.supabase.createClient(cfg.url, cfg.anonKey);
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        currentUserId = session ? session.user.id : null;
+        useSupabase = true;
+        console.log('Conectado ao Supabase.', currentUserId ? 'Sessão ativa.' : 'Nenhuma sessão — login necessário.');
+      } catch (e) {
+        console.warn('Não foi possível conectar ao Supabase — usando armazenamento local.', e);
+        useSupabase = false;
+      }
+    } else {
       useSupabase = false;
     }
-  } else {
-    useSupabase = false;
-  }
-  dataLayerReady = true;
+    dataLayerReady = true;
+  })();
+  return _dataLayerReadyPromise;
 }
 
 // ---------- Login / Cadastro / Logout ----------
@@ -327,6 +340,7 @@ async function saveProfile(profile) {
 // ---------- Progresso das lições ----------
 
 async function getProgress() {
+  await initDataLayer();
   if (useSupabase) {
     if (!currentUserId) return {};
     const { data, error } = await supabaseClient
@@ -349,6 +363,7 @@ async function getProgress() {
 }
 
 async function saveLessonProgressData(lessonId, correct, total, answers) {
+  await initDataLayer();
   const pct = total > 0 ? (correct / total) * 100 : 0;
   const completed = pct >= PASSING_PCT;
   const safeAnswers = Array.isArray(answers) ? answers : [];
@@ -550,6 +565,7 @@ async function handleLessonFinish(lessonId, correct, total, kind) {
 }
 
 async function resetAllProgress() {
+  await initDataLayer();
   await resetGamification();
   if (useSupabase) {
     if (!currentUserId) return;
@@ -1166,3 +1182,14 @@ function escapeHtmlLite(str) {
   div.textContent = str == null ? '' : String(str);
   return div.innerHTML;
 }
+
+// ---------- Auto-inicialização ----------
+// Dispara a conexão com o Supabase assim que este arquivo carrega, em vez de
+// depender de cada página de lição chamar initDataLayer() manualmente. Sem
+// isso, páginas de lição que não chamavam initDataLayer() explicitamente
+// ficavam presas no modo "local" (useSupabase = false) mesmo com o aluno
+// logado numa conta na nuvem: o progresso era salvo só no localStorage do
+// navegador, e ao voltar para o app principal (que lê do Supabase) a lição
+// parecia ter "sumido"/zerado. initDataLayer() é idempotente, então isso é
+// seguro mesmo em páginas (como app.js) que também a chamam explicitamente.
+initDataLayer();
