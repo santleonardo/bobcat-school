@@ -91,15 +91,15 @@
     transition:left .14s ease,top .14s ease;z-index:3;pointer-events:none;
     filter:drop-shadow(0 0 8px rgba(255,210,63,.7))}
 
-  .dpad{display:grid;grid-template-columns:46px 46px 46px;grid-template-rows:46px 46px 46px;gap:6px}
+  .dpad{display:grid;grid-template-columns:38px 38px 38px;grid-template-rows:38px 38px 38px;gap:5px}
   .dpad button{background:linear-gradient(180deg,var(--orange-light),var(--orange));border:none;
-    border-bottom:4px solid var(--orange-dark);border-radius:14px;color:#fff;font-size:19px;font-weight:800;
+    border-bottom:3px solid var(--orange-dark);border-radius:11px;color:#fff;font-size:15px;font-weight:800;
     cursor:pointer;display:flex;align-items:center;justify-content:center;
-    box-shadow:0 3px 10px rgba(225,58,38,.4);transition:transform .1s,border-bottom-width .1s,box-shadow .1s}
-  .dpad button:active{transform:translateY(3px);border-bottom-width:1px;box-shadow:0 1px 4px rgba(225,58,38,.4)}
+    box-shadow:0 2px 8px rgba(225,58,38,.4);transition:transform .1s,border-bottom-width .1s,box-shadow .1s}
+  .dpad button:active{transform:translateY(2px);border-bottom-width:1px;box-shadow:0 1px 3px rgba(225,58,38,.4)}
   .dpad .up{grid-column:2;grid-row:1}
   .dpad .left{grid-column:1;grid-row:2}
-  .dpad .center{grid-column:2;grid-row:2;font-size:20px}
+  .dpad .center{grid-column:2;grid-row:2;font-size:16px}
   .dpad .right{grid-column:3;grid-row:2}
   .dpad .down{grid-column:2;grid-row:3}
 
@@ -254,7 +254,47 @@ const ROUNDS = [
   { topic:'Viagem', words:['Nós','visitamos','uma','praia','linda','no','litoral.'],
     decoys:['vizitamos','lindaa','litoal.'] },
   { topic:'Amizade', words:['Meus','amigos','chegaram','atrasados','para','a','festa.'],
-    decoys:['amigus','chegaran','atrazados'] }
+    decoys:['amigus','chegaran','atrazados'] },
+  { topic:'Esportes', words:['Os','jogadores','treinam','forte','antes','do','campeonato.'],
+    decoys:['jogadorez','treinan','campeonatoo.'] },
+  { topic:'Música', words:['A','banda','tocou','uma','música','animada','no','show.'],
+    decoys:['bandaa','tocuo','muzica'] },
+  { topic:'Compras', words:['Ela','comprou','frutas','frescas','no','mercado','hoje.'],
+    decoys:['conprou','fruitas','mercadoo.'] },
+  { topic:'Clima', words:['O','céu','ficou','nublado','antes','da','tempestade','forte.'],
+    decoys:['seu','nubladoo','tempestaide'] },
+  { topic:'Aniversário', words:['Todos','cantaram','parabéns','para','o','aniversariante','feliz.'],
+    decoys:['cantaran','parabens','anivesariante'] },
+  { topic:'Internet', words:['Ele','baixou','um','aplicativo','novo','para','o','celular.'],
+    decoys:['baichou','aplicattivo','celullar.'] },
+  { topic:'Cozinha', words:['A','receita','pede','duas','xícaras','de','farinha','branca.'],
+    decoys:['reseita','ksicaras','farinhaa'] },
+  { topic:'Meio Ambiente', words:['Precisamos','reciclar','o','lixo','para','proteger','o','planeta.'],
+    decoys:['recicrar','licho','planetaa.'] },
+  { topic:'Segurança', words:['O','guarda','observou','a','rua','durante','toda','a','noite.'],
+    decoys:['goarda','obserevou','noitte.'] },
+  { topic:'Transporte', words:['O','trem','chegou','atrasado','por','causa','da','chuva','forte.'],
+    decoys:['tren','chegouu','xuva'] },
+  { topic:'Educação', words:['Os','alunos','estudaram','muito','para','a','prova','final.'],
+    decoys:['alunus','estudaran','provaa'] },
+  { topic:'Arte', words:['O','pintor','misturou','cores','vivas','na','sua','tela','nova.'],
+    decoys:['pintoor','misturouu','corres'] },
+  { topic:'Animais', words:['O','cachorro','correu','atrás','da','bola','no','quintal.'],
+    decoys:['cachoro','correuu','kintal.'] },
+  { topic:'Emoções', words:['Ela','ficou','muito','feliz','ao','ver','o','presente','surpresa.'],
+    decoys:['fico','felis','surpreza.'] },
+  { topic:'Dinheiro', words:['Ele','economizou','dinheiro','para','comprar','uma','bicicleta','nova.'],
+    decoys:['ecomomizou','dinheirro','bicicreta'] },
+  { topic:'Férias', words:['Nossa','família','viajou','para','a','praia','durante','as','férias.'],
+    decoys:['familea','viajouu','feriaz.'] },
+  { topic:'Vizinhança', words:['Os','vizinhos','organizaram','uma','festa','junina','no','quarteirão.'],
+    decoys:['vizinhus','organizaran','kuarteirao.'] },
+  { topic:'Hobby', words:['Ela','aprendeu','a','tocar','violão','nas','aulas','de','música.'],
+    decoys:['aprendeo','violao','muzica.'] },
+  { topic:'Notícias', words:['O','jornal','publicou','uma','reportagem','sobre','a','nova','escola.'],
+    decoys:['jornnal','publicuo','escolla.'] },
+  { topic:'Tempo Livre', words:['No','fim','de','semana','nós','jogamos','futebol','no','parque.'],
+    decoys:['semanaa','jogamus','parkue.'] }
 ];
 
 const COLS = 6, ROWS = 6; // ROWS-1 linhas de chão + a linha 0 (faixa de chegada)
