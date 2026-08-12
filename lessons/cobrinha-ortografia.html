@@ -272,14 +272,40 @@
 
 <script>
 /* ─── Banco de palavras: erros comuns de ortografia em português ─── */
+/* Organizado em blocos que ficam progressivamente mais desafiadores
+   (palavras mais curtas e comuns primeiro, mais longas e sutis depois). */
 const PAIRS = [
-  ['BRASIU','BRASIL'], ['ANIMAU','ANIMAL'], ['PAPEU','PAPEL'], ['FAROU','FAROL'],
-  ['CANAU','CANAL'], ['JORNAU','JORNAL'], ['HOSPITAU','HOSPITAL'], ['NATURAU','NATURAL'],
-  ['GUARDA-XHUVA','GUARDA-CHUVA'], ['XHUVA','CHUVA'], ['XHAPEU','CHAPEU'],
-  ['CAZA','CASA'], ['BELESA','BELEZA'], ['JENTE','GENTE'], ['JIRAFA','GIRAFA'],
-  ['VIAGEN','VIAGEM'], ['PASSAJEM','PASSAGEM'], ['COSINHA','COZINHA'], ['EMPREZA','EMPRESA'],
-  ['ANALIZAR','ANALISAR'], ['PESQUIZA','PESQUISA'], ['MENINU','MENINO'], ['GATU','GATO'],
-  ['CACHORRU','CACHORRO']
+  // U/O final (pronúncia coloquial do "o" átono)
+  ['OVU','OVO'], ['GATU','GATO'], ['SAPU','SAPO'], ['RATU','RATO'], ['PATU','PATO'],
+  ['DEDU','DEDO'], ['BOLU','BOLO'], ['CARRU','CARRO'], ['LIVRU','LIVRO'], ['PRATU','PRATO'],
+  ['QUADRU','QUADRO'], ['MACACU','MACACO'], ['CAVALU','CAVALO'], ['MENINU','MENINO'], ['CACHORRU','CACHORRO'],
+  // L final (pronúncia coloquial do "l" como "u")
+  ['PAPEU','PAPEL'], ['FAROU','FAROL'], ['CANAU','CANAL'], ['SINAU','SINAL'], ['MORAU','MORAL'],
+  ['LOCAU','LOCAL'], ['TOTAU','TOTAL'], ['GERAU','GERAL'], ['LEGAU','LEGAL'], ['IGUAU','IGUAL'],
+  ['ATUAU','ATUAL'], ['VITAU','VITAL'], ['BRASIU','BRASIL'], ['ANIMAU','ANIMAL'], ['JORNAU','JORNAL'],
+  ['NATURAU','NATURAL'], ['HOSPITAU','HOSPITAL'],
+  // G/J (sons parecidos antes de E e I)
+  ['JENTE','GENTE'], ['JESSO','GESSO'], ['JESTO','GESTO'], ['JIRAFA','GIRAFA'], ['AJENDA','AGENDA'],
+  ['JELEIA','GELEIA'], ['JENTIL','GENTIL'], ['JIGANTE','GIGANTE'], ['PASSAJEM','PASSAGEM'], ['JIGANTESCO','GIGANTESCO'],
+  // X/CH (mesmo som "x")
+  ['XHUVA','CHUVA'], ['XHAVE','CHAVE'], ['XHEIO','CHEIO'], ['FIXHA','FICHA'], ['BIXHO','BICHO'],
+  ['XHAPEU','CHAPEU'], ['XHEGAR','CHEGAR'], ['XHORAR','CHORAR'], ['XHUTAR','CHUTAR'], ['XHIQUE','CHIQUE'],
+  ['MANXHA','MANCHA'], ['GUARDA-XHUVA','GUARDA-CHUVA'],
+  // S/Z (mesmo som entre vogais ou no final)
+  ['CAZA','CASA'], ['CAPAS','CAPAZ'], ['FELIS','FELIZ'], ['RAPAS','RAPAZ'], ['NARIS','NARIZ'],
+  ['ARROS','ARROZ'], ['BELESA','BELEZA'], ['CRUSAR','CRUZAR'], ['BUSINA','BUZINA'], ['COSINHA','COZINHA'],
+  ['EMPREZA','EMPRESA'], ['VISINHO','VIZINHO'], ['ANALIZAR','ANALISAR'], ['PESQUIZA','PESQUISA'],
+  // M antes de P/B (nasal: usa-se M, não N)
+  ['CANPO','CAMPO'], ['TENPO','TEMPO'], ['SANBA','SAMBA'], ['LINPO','LIMPO'], ['ENPATE','EMPATE'],
+  ['ENBORA','EMBORA'], ['TRONBA','TROMBA'], ['TANBOR','TAMBOR'], ['BONBOM','BOMBOM'], ['EXENPLO','EXEMPLO'],
+  ['INPOSTO','IMPOSTO'], ['CONPRAR','COMPRAR'],
+  // NH x LH (sons parecidos, fácil de trocar)
+  ['NILHO','NINHO'], ['GALILHA','GALINHA'], ['CARILHO','CARINHO'], ['TAMALHO','TAMANHO'],
+  ['CAMILHO','CAMINHO'], ['SOZILHO','SOZINHO'],
+  // M final (pronúncia nasal parecida com "n")
+  ['ITEN','ITEM'], ['HOMEN','HOMEM'], ['JOVEN','JOVEM'], ['NUVEN','NUVEM'], ['ORDEN','ORDEM'],
+  ['VIAGEN','VIAGEM'], ['ORIGEN','ORIGEM'], ['IMAGEN','IMAGEM'], ['GARAGEN','GARAGEM'], ['CORAGEN','CORAGEM'],
+  ['VOLTAGEN','VOLTAGEM'], ['FERRAGEN','FERRAGEM'], ['VANTAGEN','VANTAGEM'], ['LINGUAGEN','LINGUAGEM']
 ];
 const ALPHABET = 'ABCDEFGHIJLMNOPQRSTUVXZ';
 
@@ -290,6 +316,16 @@ function shuffle(arr){
     [a[i], a[j]] = [a[j], a[i]];
   }
   return a;
+}
+/* Embaralha dentro de blocos de 10, mantendo a tendência de
+   dificuldade crescente do baralho, mas sem repetir sempre a mesma ordem. */
+function buildOrder(){
+  const CHUNK = 10;
+  const out = [];
+  for (let i = 0; i < PAIRS.length; i += CHUNK){
+    out.push(...shuffle(PAIRS.slice(i, i + CHUNK)));
+  }
+  return out;
 }
 function diffIndex(a, b){
   for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return i;
@@ -351,7 +387,7 @@ function renderWord(morphIdx){
 function loadWord(){
   if (state.orderIdx >= state.order.length){
     // completou o baralho inteiro: bônus e reembaralha
-    state.order = shuffle(PAIRS);
+    state.order = buildOrder();
     state.orderIdx = 0;
     if (state.fixed > 0 && state.fixed % PAIRS.length === 0){
       showWin();
@@ -477,7 +513,7 @@ function correctHit(){
   render();
   setTimeout(() => {
     state.orderIdx += 1;
-    state.speed = Math.max(130, state.speed - 6);
+    state.speed = Math.max(130, state.speed - 1.3);
     loadWord();
     render();
     if (state.running && !state.paused) startTicking();
@@ -650,7 +686,7 @@ document.getElementById('continueBtn').addEventListener('click', () => {
 
 /* ─── Início do jogo ─── */
 function startGame(){
-  state.order = shuffle(PAIRS);
+  state.order = buildOrder();
   state.orderIdx = 0;
   state.lives = 3; state.xp = 0; state.fixed = 0; state.speed = 260;
   state.paused = false; state.running = true;
