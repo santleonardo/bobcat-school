@@ -51,6 +51,21 @@
   .pill.life.pulse{animation:lifePulse .4s ease}
   @keyframes lifePulse{0%{transform:scale(1)}40%{transform:scale(1.3)}100%{transform:scale(1)}}
   .pill.sound-toggle{cursor:pointer;font-family:inherit;font-size:14px;padding:5px 10px}
+  .pause-btn{cursor:pointer;font-family:inherit;background:var(--cream-2);color:var(--ink);
+    border:1px solid var(--border);border-radius:10px;width:30px;height:30px;font-size:14px;
+    display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+  .pause-btn:active{background:var(--purple);transform:scale(.92)}
+
+  .pause-overlay{position:absolute;inset:0;border-radius:12px;display:none;flex-direction:column;
+    align-items:center;justify-content:center;gap:12px;background:rgba(12,7,32,.82);
+    backdrop-filter:blur(3px);z-index:5}
+  .pause-overlay.show{display:flex}
+  .pause-overlay h3{font-size:18px}
+  .pause-overlay .btn{background:linear-gradient(180deg,var(--orange-light),var(--orange));
+    border:none;border-bottom:4px solid var(--orange-dark);border-radius:12px;color:#fff;
+    font-weight:800;font-size:14px;padding:10px 20px;cursor:pointer;font-family:inherit}
+  .pause-overlay .btn:active{transform:translateY(2px);border-bottom-width:2px}
+  #mazeCanvas.paused{filter:blur(2px) brightness(.6)}
 
   @keyframes hitFlash{0%,100%{box-shadow:var(--shadow)}40%{box-shadow:0 0 0 4px rgba(255,91,61,.65), var(--shadow)}}
   .maze-card.hit{animation:hitFlash .5s ease}
@@ -70,7 +85,7 @@
     opacity:.75;margin-bottom:1px}
 
   /* Maze */
-  .maze-card{background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
+  .maze-card{position:relative;background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
     border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;
     align-items:center;gap:14px}
   #mazeCanvas{border-radius:12px;touch-action:none;box-shadow:0 0 0 1px rgba(255,255,255,.05) inset}
@@ -143,7 +158,9 @@
 <body>
 
 <div class="hud">
-  <div class="hud-title"><a class="hud-back" href="../index.html" title="Voltar ao app" aria-label="Voltar ao app">←</a> 🐾 Labirinto da Oração</div>
+  <div class="hud-title"><a class="hud-back" href="../index.html" title="Voltar ao app" aria-label="Voltar ao app">←</a> 🐾 Labirinto da Oração
+    <button class="pause-btn" id="pauseBtn" title="Pausar jogo" aria-label="Pausar jogo">⏸️</button>
+  </div>
   <div class="hud-right">
     <span class="pill topic" id="topicPill">Tema: —</span>
     <span class="pill">🧩 <span id="foundCount">0</span>/<span id="totalCount">0</span></span>
@@ -179,6 +196,10 @@
       <button class="down" data-dir="S">▼</button>
       <button class="right" data-dir="E">▶</button>
       <button class="hint" id="hintBtn">💡</button>
+    </div>
+    <div class="pause-overlay" id="pauseOverlay">
+      <h3>⏸️ Jogo pausado</h3>
+      <button class="btn" id="resumeBtn">▶️ Continuar</button>
     </div>
   </div>
 
@@ -479,6 +500,7 @@ let ghostInterval = 650;
 let roundsCleared = 0;
 let invulnerable = false;
 let gameOver = false;
+let paused = false;
 
 function shuffle(arr){
   const a = [...arr];
@@ -574,6 +596,10 @@ function loadRound(){
   player = {r:0,c:0};
   invulnerable = false;
   gameOver = false;
+  paused = false;
+  pauseOverlay.classList.remove('show');
+  mazeCanvasEl.classList.remove('paused');
+  pauseBtn.textContent = '⏸️';
   document.getElementById('overBanner').classList.remove('show');
   document.querySelector('.maze-card').classList.remove('hit');
 
@@ -766,7 +792,7 @@ function draw(){
 function canMove(cell, dir){ return !cell[dir]; }
 
 function move(dir){
-  if (gameOver) return;
+  if (gameOver || paused) return;
   const idx = player.r*COLS+player.c;
   const cell = grid[idx];
   if (!canMove(cell, dir)) return;
@@ -955,15 +981,45 @@ function showToast(msg, kind){
   toastTimer = setTimeout(() => { t.classList.remove('show'); }, 1800);
 }
 
+/* ─── Pausa ─── */
+const pauseBtn = document.getElementById('pauseBtn');
+const pauseOverlay = document.getElementById('pauseOverlay');
+const mazeCanvasEl = document.getElementById('mazeCanvas');
+
+function setPaused(next){
+  if (gameOver) return;
+  paused = next;
+  if (paused){
+    clearInterval(ghostTimer);
+    pauseBtn.textContent = '▶️';
+    pauseBtn.title = 'Continuar jogo';
+    pauseBtn.setAttribute('aria-label', 'Continuar jogo');
+    pauseOverlay.classList.add('show');
+    mazeCanvasEl.classList.add('paused');
+  } else {
+    pauseBtn.textContent = '⏸️';
+    pauseBtn.title = 'Pausar jogo';
+    pauseBtn.setAttribute('aria-label', 'Pausar jogo');
+    pauseOverlay.classList.remove('show');
+    mazeCanvasEl.classList.remove('paused');
+    clearInterval(ghostTimer);
+    ghostTimer = setInterval(moveGhosts, ghostInterval);
+  }
+}
+
+pauseBtn.addEventListener('click', () => setPaused(!paused));
+document.getElementById('resumeBtn').addEventListener('click', () => setPaused(false));
+
 /* ─── Controles ─── */
 document.querySelectorAll('.dpad button[data-dir]').forEach(btn => {
   btn.addEventListener('click', () => move(btn.dataset.dir));
 });
-document.getElementById('hintBtn').addEventListener('click', showHint);
+document.getElementById('hintBtn').addEventListener('click', () => { if (!paused) showHint(); });
 document.getElementById('nextBtn').addEventListener('click', loadRound);
 document.getElementById('retryBtn').addEventListener('click', restartGame);
 
 window.addEventListener('keydown', e => {
+  if (e.key === ' ' || e.code === 'Space'){ e.preventDefault(); setPaused(!paused); return; }
   const map = { ArrowUp:'N', ArrowDown:'S', ArrowLeft:'W', ArrowRight:'E', w:'N', s:'S', a:'W', d:'E' };
   if (map[e.key]){ e.preventDefault(); move(map[e.key]); }
 });
