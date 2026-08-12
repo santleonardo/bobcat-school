@@ -65,6 +65,8 @@
     border:none;border-bottom:4px solid var(--orange-dark);border-radius:12px;color:#fff;
     font-weight:800;font-size:14px;padding:10px 20px;cursor:pointer;font-family:inherit}
   .pause-overlay .btn:active{transform:translateY(2px);border-bottom-width:2px}
+  .start-overlay .start-hint{font-size:13px;color:var(--ink-soft);text-align:center;line-height:1.45;max-width:240px;margin:0}
+  .start-overlay h3{color:var(--gold)}
   #mazeCanvas.paused{filter:blur(2px) brightness(.6)}
 
   @keyframes hitFlash{0%,100%{box-shadow:var(--shadow)}40%{box-shadow:0 0 0 4px rgba(255,91,61,.65), var(--shadow)}}
@@ -312,6 +314,11 @@
     <div class="pause-overlay" id="pauseOverlay">
       <h3>⏸️ Jogo pausado</h3>
       <button class="btn" id="resumeBtn">▶️ Continuar</button>
+    </div>
+    <div class="pause-overlay start-overlay" id="startOverlay">
+      <h3>📖 Leia a frase</h3>
+      <p class="start-hint">Monte a oração na ordem certa.<br>Quando estiver pronto, toque em Começar.</p>
+      <button class="btn" id="startBtn">▶️ Começar</button>
     </div>
   </div>
 
@@ -608,6 +615,7 @@ let roundsCleared = 0;
 let invulnerable = false;
 let gameOver = false;
 let paused = false;
+let waitingStart = false; // espera o jogador ler a frase e apertar Começar
 let cachedPlayerDist = null; // cache de BFS para performance
 let lastPlayerIdx = -1;
 
@@ -827,18 +835,16 @@ function loadRound(){
   draw();
 
   clearInterval(ghostTimer);
-  // Progressão mais suave de dificuldade + começa mais lento
+  // Progressão mais suave de dificuldade
   ghostInterval = Math.max(480, 720 - roundsCleared * 18);
-  // Pequeno "safe start" de 1.2s antes dos fantasmas começarem a se mover
-  invulnerable = true;
-  setTimeout(() => {
-    invulnerable = false;
-    if (!gameOver && !paused) {
-      ghostTimer = setInterval(moveGhosts, ghostInterval);
-    }
-  }, 1200);
   cachedPlayerDist = null;
   lastPlayerIdx = -1;
+
+  // Espera o jogador ler a frase e apertar "Começar"
+  waitingStart = true;
+  invulnerable = true;
+  document.getElementById('startOverlay').classList.add('show');
+  mazeCanvasEl.classList.add('paused');
   draw();
 }
 
@@ -992,7 +998,7 @@ function draw(){
 function canMove(cell, dir){ return !cell[dir]; }
 
 function move(dir){
-  if (gameOver || paused) return;
+  if (gameOver || paused || waitingStart) return;
   const idx = player.r*COLS+player.c;
   const cell = grid[idx];
   if (!canMove(cell, dir)) return;
@@ -1012,7 +1018,7 @@ function move(dir){
 
 /* ─── Fantasmas: movimento (Pac-Man-like) ─── */
 function moveGhosts(){
-  if (gameOver || paused) return;
+  if (gameOver || paused || waitingStart) return;
   const playerIdx = player.r*COLS+player.c;
 
   // Cache do BFS: só recalcula quando o jogador mudou de célula
@@ -1202,13 +1208,26 @@ function showToast(msg, kind){
   toastTimer = setTimeout(() => { t.classList.remove('show'); }, 1800);
 }
 
-/* ─── Pausa ─── */
+/* ─── Pausa & Começar ─── */
 const pauseBtn = document.getElementById('pauseBtn');
 const pauseOverlay = document.getElementById('pauseOverlay');
+const startOverlay = document.getElementById('startOverlay');
 const mazeCanvasEl = document.getElementById('mazeCanvas');
 
+function beginRound(){
+  if (!waitingStart || gameOver) return;
+  waitingStart = false;
+  invulnerable = false;
+  startOverlay.classList.remove('show');
+  mazeCanvasEl.classList.remove('paused');
+  clearInterval(ghostTimer);
+  ghostTimer = setInterval(moveGhosts, ghostInterval);
+  showToast('Boa sorte! Monte a oração na ordem certa.', 'good');
+  draw();
+}
+
 function setPaused(next){
-  if (gameOver) return;
+  if (gameOver || waitingStart) return; // não pausa enquanto espera o Começar
   paused = next;
   if (paused){
     clearInterval(ghostTimer);
@@ -1230,17 +1249,24 @@ function setPaused(next){
 
 pauseBtn.addEventListener('click', () => setPaused(!paused));
 document.getElementById('resumeBtn').addEventListener('click', () => setPaused(false));
+document.getElementById('startBtn').addEventListener('click', beginRound);
 
 /* ─── Controles ─── */
 document.querySelectorAll('.dpad button[data-dir]').forEach(btn => {
   btn.addEventListener('click', () => move(btn.dataset.dir));
 });
-document.getElementById('hintBtn').addEventListener('click', () => { if (!paused) showHint(); });
+document.getElementById('hintBtn').addEventListener('click', () => { if (!paused && !waitingStart) showHint(); });
 document.getElementById('nextBtn').addEventListener('click', loadRound);
 document.getElementById('retryBtn').addEventListener('click', restartGame);
 
 window.addEventListener('keydown', e => {
-  if (e.key === ' ' || e.code === 'Space'){ e.preventDefault(); setPaused(!paused); return; }
+  if (e.key === ' ' || e.code === 'Space'){
+    e.preventDefault();
+    if (waitingStart) beginRound();
+    else setPaused(!paused);
+    return;
+  }
+  if (e.key === 'Enter' && waitingStart){ e.preventDefault(); beginRound(); return; }
   const map = { ArrowUp:'N', ArrowDown:'S', ArrowLeft:'W', ArrowRight:'E', w:'N', s:'S', a:'W', d:'E' };
   if (map[e.key]){ e.preventDefault(); move(map[e.key]); }
 });
