@@ -312,22 +312,40 @@ const PAIRS = [
   // M final (pronúncia nasal parecida com "n")
   ['ITEN','ITEM'], ['HOMEN','HOMEM'], ['JOVEN','JOVEM'], ['NUVEN','NUVEM'], ['ORDEN','ORDEM'],
   ['VIAGEN','VIAGEM'], ['ORIGEN','ORIGEM'], ['IMAGEN','IMAGEM'], ['GARAGEN','GARAGEM'], ['CORAGEN','CORAGEM'],
-  ['VOLTAGEN','VOLTAGEM'], ['FERRAGEN','FERRAGEM'], ['VANTAGEN','VANTAGEM'], ['LINGUAGEN','LINGUAGEM']
+  ['VOLTAGEN','VOLTAGEM'], ['FERRAGEN','FERRAGEM'], ['VANTAGEN','VANTAGEM'], ['LINGUAGEN','LINGUAGEM'],
+  // Acento agudo esquecido (á, é, í, ó, ú)
+  ['AVO','AVÓ'], ['IMA','IMÃ'], ['CAFE','CAFÉ'], ['TAXI','TÁXI'], ['AGUA','ÁGUA'],
+  ['LAPIS','LÁPIS'], ['SAUDE','SAÚDE'], ['OCULOS','ÓCULOS'], ['ULTIMO','ÚLTIMO'],
+  ['ARVORE','ÁRVORE'], ['MAQUINA','MÁQUINA'],
+  // Acento circunflexo esquecido (â, ê, ô)
+  ['VOCE','VOCÊ'], ['BEBE','BEBÊ'], ['TENIS','TÊNIS'], ['ONIBUS','ÔNIBUS'], ['PESSEGO','PÊSSEGO'],
+  // Til esquecido (ã, õ)
+  ['IRMA','IRMÃ'], ['MAMAE','MAMÃE'], ['ALEMAO','ALEMÃO'], ['CIDADAO','CIDADÃO'],
+  // Cedilha esquecida (ç no lugar do c)
+  ['MOCA','MOÇA'], ['CALCA','CALÇA'], ['FORCA','FORÇA'], ['DANCA','DANÇA'], ['PRECO','PREÇO'],
+  ['ESPACO','ESPAÇO'], ['CABECA','CABEÇA'], ['ALMOCO','ALMOÇO'], ['CRIANCA','CRIANÇA'],
+  ['COMECAR','COMEÇAR'], ['PREGUICA','PREGUIÇA'],
+  // LH (dígrafo real, trocado pelo som parecido de "nh")
+  ['ILHA','INHA'], ['FILHO','FINHO'], ['VELHO','VENHO'], ['PALHA','PANHA'], ['JOELHO','JOENHO'],
+  ['ORELHA','ORENHA'], ['TRABALHO','TRABANHO']
 ];
-const ALPHABET = 'ABCDEFGHIJLMNOPQRSTUVXZ';
+const ALPHABET = 'ABCDEFGHIJLMNOPQRSTUVXZÁÉÍÓÚÂÊÔÃÕÇ';
 const DECOY_COUNT = 7; // mais iscas no tabuleiro = mais difícil de achar a letra certa
 /* Letras que se confundem na leitura/escrita — usadas como iscas extras
    pra deixar o tabuleiro cheio de opções plausíveis, não só letras aleatórias */
 const CONFUSABLES = {
-  S:['Z','C','X'], Z:['S','C','X'], C:['S','Z','Q'],
+  S:['Z','C','X'], Z:['S','C','X'], C:['S','Z','Q','Ç'],
   G:['J'], J:['G'],
-  M:['N'], N:['M'],
-  L:['U','R'], U:['O','L','V'], O:['U'],
+  M:['N'], N:['M','L'],
+  L:['U','R','N'], U:['O','L','V','Ú'], O:['U','Ó','Ô','Õ'],
   X:['C','S'],
   B:['D','P'], D:['B','P'], P:['B','D'],
   V:['U','F'], F:['V'],
   R:['L'],
-  I:['E'], E:['I']
+  I:['E','Í'], E:['I','É','Ê'],
+  A:['Á','Â','Ã'],
+  Á:['A'], É:['E'], Í:['I'], Ó:['O'], Ú:['U'],
+  Â:['A'], Ê:['E'], Ô:['O'], Ã:['A'], Õ:['O'], Ç:['C']
 };
 
 function shuffle(arr){
