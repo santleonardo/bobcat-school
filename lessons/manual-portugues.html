@@ -1589,6 +1589,8 @@
       </div>
 
       <div class="prose">
+        <div id="alreadyDoneBanner" style="display:none;margin-bottom:18px;padding:14px 16px;border-radius:10px;background:#e8f7ee;border:1px solid #bfe6cc;color:#1e6b40;font-size:14.5px;"></div>
+
         <p>Pratique o que foi visto nos capítulos anteriores. Escolha a alternativa correta em cada questão e, ao final, clique em <strong>Finalizar e salvar progresso</strong> para registrar sua <span class="vocab-word" data-word="pontuação">pontuação</span> no app.</p>
 
         <h3><span class="vocab-word" data-word="concordância">Concordância</span></h3>
@@ -1801,6 +1803,38 @@
     const passed = await handleLessonFinish(LESSON_ID, correct, total, 'correct');
     if (!passed) finishing = false;
   }
+
+  // Ao abrir a página, mostra se essa lição já foi concluída antes — assim o
+  // progresso salvo fica visível de novo (não parece que "zerou") mesmo que
+  // o quiz em si sempre comece em branco para permitir refazer.
+  async function showAlreadyCompletedBanner() {
+    try {
+      if (typeof getProgress !== 'function') return;
+      const progress = await getProgress();
+      const prev = progress[LESSON_ID];
+      const banner = document.getElementById('alreadyDoneBanner');
+      if (!prev || !banner) return;
+      const pct = prev.total > 0 ? Math.round((prev.correct / prev.total) * 100) : 0;
+      if (prev.completed) {
+        banner.style.background = '#e8f7ee';
+        banner.style.borderColor = '#bfe6cc';
+        banner.style.color = '#1e6b40';
+        banner.textContent = '✅ Você já concluiu esta lição — última nota: ' + prev.correct + '/' + prev.total + ' (' + pct + '%). Seu progresso está salvo. Pode refazer os exercícios abaixo se quiser tentar de novo.';
+      } else {
+        banner.style.background = '#fdf1ea';
+        banner.style.borderColor = '#f2d3ba';
+        banner.style.color = '#a35a1e';
+        banner.textContent = '📌 Sua última tentativa: ' + prev.correct + '/' + prev.total + ' (' + pct + '%). É preciso pelo menos 85% para concluir — tente novamente abaixo.';
+      }
+      banner.style.display = 'block';
+      const badge = document.getElementById('score-badge');
+      if (badge) {
+        badge.style.display = 'inline-block';
+        badge.textContent = prev.correct + ' / ' + prev.total + ' corretas (última tentativa)';
+      }
+    } catch (e) { /* sem bloquear a lição se der erro */ }
+  }
+  showAlreadyCompletedBanner();
 </script>
 
 </body>
