@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Empurra-Palavras — Português</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="game-sound.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+<style>
+  :root{
+    --orange:#ff5b3d;--orange-dark:#e13a26;--orange-light:#ff7a5c;
+    --purple:#8b5cf6;--purple-dark:#6d28d9;--blue:#4da3ff;--pink:#ff4d94;--teal:#2dd9b9;
+    --cream:#1e1730;--cream-2:#241b3d;--cream-3:#0c0720;
+    --ink:#f7f1ec;--ink-soft:rgba(247,241,236,0.72);
+    --ok:#3dd68c;--ok-bg:rgba(61,214,140,0.18);--bad:#ff5b3d;
+    --border:rgba(255,255,255,0.14);--gold:#ffd23f;
+    --shadow:0 8px 26px rgba(0,0,0,0.45);
+    --radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{font-family:"Inter",sans-serif;color:var(--ink);min-height:100vh;
+    line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:36px;
+    background:
+      radial-gradient(circle at 10% 6%, rgba(139,92,246,.38), transparent 42%),
+      radial-gradient(circle at 90% 12%, rgba(45,217,185,.28), transparent 45%),
+      radial-gradient(circle at 50% 105%, rgba(255,91,61,.28), transparent 55%),
+      var(--cream-3);
+    background-attachment:fixed}
+  h1,h2,h3,.serif{font-family:"Fredoka","Poppins",sans-serif;letter-spacing:-.01em}
+
+  .hud{position:sticky;top:0;z-index:100;background:rgba(12,7,32,.88);backdrop-filter:blur(12px);
+    padding:12px 16px;border-bottom:1px solid var(--border);box-shadow:0 2px 0 rgba(139,92,246,.3);
+    display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap}
+  .hud-title{display:flex;align-items:center;gap:9px;font-weight:800;font-size:14.5px;font-family:"Fredoka",sans-serif}
+  .hud-title .icon{font-size:20px;display:inline-block;animation:wiggle 3s ease-in-out infinite}
+  @keyframes wiggle{0%,100%{transform:rotate(0)}50%{transform:rotate(-10deg)}}
+  .hud-back{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;
+    border-radius:10px;background:var(--cream);border:1px solid var(--border);color:var(--ink);
+    font-size:17px;text-decoration:none;flex-shrink:0;transition:all .15s}
+  .hud-back:active{background:var(--purple);transform:scale(.92)}
+  .hud-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .pill{display:inline-flex;align-items:center;gap:5px;background:var(--cream);border:1px solid var(--border);
+    border-radius:99px;padding:5px 12px;font-size:12.5px;font-weight:700;color:var(--orange-light);
+    box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  .pill.xp{color:var(--ok);border-color:rgba(61,214,140,.4)}
+  .pill.topic{color:var(--gold);border-color:rgba(255,210,63,.4)}
+  .pill.sound-toggle{cursor:pointer;font-family:inherit;font-size:14px;padding:5px 10px}
+
+  .wrap{max-width:640px;margin:0 auto;padding:18px 14px 0}
+
+  /* Sentence being built */
+  .sentence-bar{display:flex;flex-wrap:wrap;gap:6px;background:linear-gradient(160deg,var(--cream),var(--cream-2));
+    border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px;
+    box-shadow:var(--shadow);min-height:44px;align-items:center}
+  .slot{padding:7px 12px;border-radius:10px;font-size:13px;font-weight:700;background:var(--cream-2);
+    color:rgba(247,241,236,0.35);border:1.5px dashed var(--border);transition:all .2s}
+  .slot.filled{border:1.5px solid transparent;color:#0a0a0b;background:linear-gradient(135deg,var(--ok),#26b06c);
+    box-shadow:0 3px 10px rgba(0,0,0,.25);animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+  .slot.next{border-color:var(--gold);color:var(--gold);box-shadow:0 0 0 3px rgba(255,210,63,.25)}
+
+  /* Field */
+  .field-card{background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
+    border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);display:flex;flex-direction:column;
+    align-items:center;gap:12px}
+  .field-goal-label{font-size:11.5px;font-weight:800;color:var(--gold);text-transform:uppercase;
+    letter-spacing:.04em;text-align:center}
+  .field-outer{overflow:hidden;border-radius:12px;box-shadow:0 0 0 1px rgba(255,255,255,.05) inset}
+  #field{position:relative;background:var(--cream-3)}
+  .cell-bg{position:absolute;border:1px solid rgba(255,255,255,0.05)}
+  .cell-bg.floor:nth-child(odd){background:#241b3d}
+  .cell-bg.floor:nth-child(even){background:#1e1730}
+  .cell-bg.goal{background:repeating-linear-gradient(135deg,rgba(255,210,63,0.22),rgba(255,210,63,0.22) 6px,rgba(255,210,63,0.1) 6px,rgba(255,210,63,0.1) 12px);
+    border-bottom:3px solid var(--gold)}
+
+  .tile{position:absolute;display:flex;align-items:center;justify-content:center;text-align:center;
+    background:linear-gradient(160deg,#2e2350,#241b3d);border:1.5px solid var(--border);border-radius:9px;color:var(--ink);
+    font-weight:700;font-size:11.5px;padding:2px 4px;overflow:hidden;
+    transition:left .14s ease,top .14s ease;box-shadow:0 3px 8px rgba(0,0,0,.4);z-index:2}
+  .tile.shake{animation:shake .32s}
+  @keyframes shake{
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-4px)}
+    75%{transform:translateX(4px)}
+  }
+  .tile.pulse{border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,210,63,0.4)}
+
+  .player{position:absolute;display:flex;align-items:center;justify-content:center;
+    transition:left .14s ease,top .14s ease;z-index:3;pointer-events:none;
+    filter:drop-shadow(0 0 8px rgba(255,210,63,.7))}
+
+  .dpad{display:grid;grid-template-columns:38px 38px 38px;grid-template-rows:38px 38px 38px;gap:5px}
+  .dpad button{background:linear-gradient(180deg,var(--orange-light),var(--orange));border:none;
+    border-bottom:3px solid var(--orange-dark);border-radius:11px;color:#fff;font-size:15px;font-weight:800;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 2px 8px rgba(225,58,38,.4);transition:transform .1s,border-bottom-width .1s,box-shadow .1s}
+  .dpad button:active{transform:translateY(2px);border-bottom-width:1px;box-shadow:0 1px 3px rgba(225,58,38,.4)}
+  .dpad .up{grid-column:2;grid-row:1}
+  .dpad .left{grid-column:1;grid-row:2}
+  .dpad .center{grid-column:2;grid-row:2;font-size:16px}
+  .dpad .right{grid-column:3;grid-row:2}
+  .dpad .down{grid-column:2;grid-row:3}
+
+  .field-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+  .shuffle-btn{background:var(--cream-2);border:1.5px solid var(--border);color:var(--ink-soft);
+    padding:8px 16px;border-radius:11px;font-size:12.5px;font-weight:700;cursor:pointer;
+    display:flex;align-items:center;gap:6px;transition:all .15s}
+  .shuffle-btn:active{border-color:var(--orange);color:var(--ink);transform:scale(.95)}
+  .mode-btn.active{background:linear-gradient(135deg,var(--purple),var(--pink));border-color:var(--purple-dark);
+    box-shadow:0 3px 10px rgba(139,92,246,.4)}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);opacity:0;
+    background:var(--cream-2);border:1px solid var(--border);color:var(--ink);padding:11px 18px;
+    border-radius:11px;font-size:13px;font-weight:700;box-shadow:var(--shadow);transition:all .25s;
+    z-index:200;max-width:88vw;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.bad{color:var(--orange-light)}
+  .toast.good{color:var(--ok)}
+
+  @keyframes popIn{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+  @keyframes rainbow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .win-banner{display:none;text-align:center;margin-top:16px;padding:24px 20px;border-radius:var(--radius);
+    background:linear-gradient(120deg,var(--pink),var(--purple),var(--blue),var(--teal),var(--gold),var(--orange));
+    background-size:300% 300%;box-shadow:0 12px 34px rgba(139,92,246,.45)}
+  .win-banner.show{display:block;animation:popIn .4s cubic-bezier(.34,1.56,.64,1),rainbow 7s ease infinite .4s}
+  .win-banner h2{font-size:22px;margin-bottom:10px;text-shadow:0 2px 8px rgba(0,0,0,.3)}
+  .win-sentence{font-size:15px;line-height:1.9;margin-bottom:16px;font-weight:700}
+  .btn{background:#fff;color:var(--orange-dark);border:none;padding:12px 24px;border-radius:12px;
+    font-size:14.5px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);
+    transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
+  .btn:hover{transform:translateY(-2px) scale(1.03)}
+  .btn:active{transform:scale(.93)}
+
+  .hint-text{text-align:center;font-size:12px;color:var(--ink-soft);margin-top:12px}
+
+  /* Como jogar (topo) */
+  .howto{background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
+    border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;box-shadow:var(--shadow)}
+  .howto-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+  .howto-head .ic{font-size:18px}
+  .howto-head h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--gold);flex:1;font-family:"Inter",sans-serif;font-weight:800}
+  .howto-close{background:none;border:none;color:var(--ink-soft);font-size:17px;cursor:pointer;padding:2px 6px;line-height:1}
+  .howto-close:hover{color:var(--ink)}
+  .howto ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:7px}
+  .howto li{font-size:13.5px;color:var(--ink-soft);line-height:1.55}
+  .howto li b{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<div class="hud">
+  <div class="hud-title"><a class="hud-back" href="../index.html" title="Voltar ao app" aria-label="Voltar ao app">←</a> 📦 Empurra-Palavras</div>
+  <div class="hud-right">
+    <span class="pill topic" id="topicPill">Tema: —</span>
+    <span class="pill">🧩 <span id="foundCount">0</span>/<span id="totalCount">0</span></span>
+    <span class="pill xp">⭐ <span id="xp">0</span> XP</span>
+    <button class="pill" id="howtoReopenBtn" style="display:none" title="Mostrar como jogar">❓ Como jogar</button>
+    <button class="pill sound-toggle" data-sound-toggle title="Desativar sons">🔊</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="howto" id="howtoCard">
+    <div class="howto-head">
+      <span class="ic">💡</span>
+      <h3>Como jogar</h3>
+      <button class="howto-close" id="howtoClose" aria-label="Esconder instruções">✕</button>
+    </div>
+    <ol>
+      <li><b>Objetivo:</b> empurrar as caixinhas certas da frase até a faixa dourada, na ordem correta.</li>
+      <li><b>Como se mover:</b> use o D-pad na tela, as setas do teclado, ou arraste o dedo no campo.</li>
+      <li><b>Empurrar:</b> encoste numa caixinha e continue andando na mesma direção para empurrá-la à sua frente.</li>
+      <li><b>Puxar:</b> toque no ícone <b>central do D-pad</b> (ou tecle <b>P</b>) para trocar para o modo <b>Puxar</b> e arrastar de volta uma caixinha que ficou atrás de você.</li>
+      <li><b>Cuidado:</b> algumas palavras no campo estão escritas <b>errado</b> — só as certas, na ordem certa, sobem até a faixa dourada.</li>
+    </ol>
+  </div>
+
+  <div class="sentence-bar" id="sentenceBar"></div>
+
+  <div class="field-card">
+    <div class="field-goal-label">🏁 Empurre a próxima palavra da frase pra cima, até a faixa dourada</div>
+    <div class="field-outer">
+      <div id="field"></div>
+    </div>
+    <div class="dpad">
+      <button class="up" data-dir="N">▲</button>
+      <button class="left" data-dir="W">◀</button>
+      <button class="center mode-btn" id="modeBtn" aria-pressed="false" title="Alternar modo: empurrar/puxar">👉</button>
+      <button class="right" data-dir="E">▶</button>
+      <button class="down" data-dir="S">▼</button>
+    </div>
+    <div class="field-actions">
+      <button class="shuffle-btn" id="shuffleBtn">🔀 Reorganizar campo</button>
+    </div>
+  </div>
+
+  <div class="win-banner" id="winBanner">
+    <h2>🎉 Frase organizada!</h2>
+    <p class="win-sentence" id="winSentence"></p>
+    <button class="btn" id="nextBtn">Próxima frase →</button>
+  </div>
+
+  <p class="hint-text">Toque em "❓ Como jogar" a qualquer momento para ver as instruções de novo.</p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  var KEY = 'bobcat_howto_dismissed_empurra_palavras';
+  var card = document.getElementById('howtoCard');
+  var closeBtn = document.getElementById('howtoClose');
+  var reopenBtn = document.getElementById('howtoReopenBtn');
+  function hide() { card.style.display = 'none'; reopenBtn.style.display = 'inline-flex'; }
+  function show() { card.style.display = 'block'; reopenBtn.style.display = 'none'; }
+  var dismissed = false;
+  try { dismissed = localStorage.getItem(KEY) === '1'; } catch (e) {}
+  if (dismissed) hide(); else show();
+  closeBtn.addEventListener('click', function () {
+    hide();
+    try { localStorage.setItem(KEY, '1'); } catch (e) {}
+  });
+  reopenBtn.addEventListener('click', function () {
+    show();
+    try { localStorage.removeItem(KEY); } catch (e) {}
+  });
+})();
+</script>
+
+<script>
+/* ─── Banco de frases — cada rodada, um tema diferente ───
+   words: a frase correta, já dividida em tokens (pontuação grudada na
+   última palavra). decoys: palavras "armadilha" com erro de grafia
+   (nunca completam nenhum espaço, custam tempo se empurradas à toa). */
+const ROUNDS = [
+  { topic:'Rotina', words:['Eu','acordo','cedo','todos','os','dias.'],
+    decoys:['açordo','sedo','diaz.'] },
+  { topic:'Escola', words:['A','professora','explica','a','lição','com','calma.'],
+    decoys:['esplica','liçao','calmma.'] },
+  { topic:'Família', words:['Minha','avó','cozinha','um','bolo','delicioso.'],
+    decoys:['avoo','cosinha','bollo'] },
+  { topic:'Cidade', words:['O','ônibus','passa','na','esquina','às','sete','horas.'],
+    decoys:['onibus','esquiina','orras.'] },
+  { topic:'Natureza', words:['As','árvores','perdem','as','folhas','no','outono.'],
+    decoys:['arvores','folhaas','otono.'] },
+  { topic:'Trabalho', words:['O','gerente','enviou','o','relatório','para','a','equipe.'],
+    decoys:['jerente','relattorio','equippe.'] },
+  { topic:'Saúde', words:['O','médico','recomendou','bastante','água','todos','os','dias.'],
+    decoys:['medico','recomendo','aguaa'] },
+  { topic:'Tecnologia', words:['Meu','celular','novo','tem','uma','câmera','excelente.'],
+    decoys:['celullar','camera','excellente.'] },
+  { topic:'Viagem', words:['Nós','visitamos','uma','praia','linda','no','litoral.'],
+    decoys:['vizitamos','lindaa','litoal.'] },
+  { topic:'Amizade', words:['Meus','amigos','chegaram','atrasados','para','a','festa.'],
+    decoys:['amigus','chegaran','atrazados'] }
+];
+
+const COLS = 6, ROWS = 6; // ROWS-1 linhas de chão + a linha 0 (faixa de chegada)
+
+let order = [];
+let currentRound = null;
+let tiles = [];           // {id, row, col, value, isDecoy, el}
+let player = { row: 1, col: 0, el: null };
+let nextIndex = 0;
+let xp = 0;
+let cellW = 70, cellH = 44;
+let tileIdSeq = 0;
+
+function shuffle(arr){
+  const a = [...arr];
+  for (let i = a.length-1; i>0; i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function pickNextRoundIndex(){
+  if (order.length === 0){ order = shuffle(ROUNDS.map((_,i)=>i)); }
+  return order.shift();
+}
+
+/* ─── Layout do campo ─── */
+function computeCellSize(){
+  const outer = document.querySelector('.field-outer');
+  const maxW = Math.min(window.innerWidth - 44, 520);
+  let cw = Math.floor(maxW / COLS);
+  cw = Math.max(56, Math.min(92, cw));
+  const ch = Math.round(cw * 0.6);
+  return { cw, ch };
+}
+
+function pxLeft(col){ return col * cellW; }
+function pxTop(row){ return row * cellH; }
+
+function drawBackground(){
+  const field = document.getElementById('field');
+  field.innerHTML = '';
+  field.style.width = (COLS*cellW) + 'px';
+  field.style.height = (ROWS*cellH) + 'px';
+  for (let r = 0; r < ROWS; r++){
+    for (let c = 0; c < COLS; c++){
+      const bg = document.createElement('div');
+      bg.className = 'cell-bg ' + (r === 0 ? 'goal' : 'floor');
+      bg.style.left = pxLeft(c) + 'px';
+      bg.style.top = pxTop(r) + 'px';
+      bg.style.width = cellW + 'px';
+      bg.style.height = cellH + 'px';
+      field.appendChild(bg);
+    }
+  }
+}
+
+/* ─── Nova rodada ───
+   A última linha (ROWS-1) é reservada só para o bonequinho andar: se uma
+   caixinha nascesse ou fosse empurrada até lá, o jogador nunca teria como
+   ficar "por baixo" dela pra empurrar de volta pra cima (essa casa não
+   existe), e a caixinha ficaria presa pra sempre. Por isso as caixinhas só
+   nascem nas linhas 1..ROWS-2, deixando a última linha sempre livre como
+   corredor de acesso. */
+function freeFloorCells(){
+  const cells = [];
+  for (let r = 1; r < ROWS - 1; r++){
+    for (let c = 0; c < COLS; c++){
+      cells.push({ r, c });
+    }
+  }
+  return shuffle(cells);
+}
+
+function playerFloorCells(){
+  const cells = [];
+  for (let c = 0; c < COLS; c++){
+    cells.push({ r: ROWS - 1, c });
+  }
+  return shuffle(cells);
+}
+
+function loadRound(){
+  currentRound = ROUNDS[pickNextRoundIndex()];
+  nextIndex = 0;
+
+  const cs = computeCellSize();
+  cellW = cs.cw; cellH = cs.ch;
+  drawBackground();
+
+  placeTilesAndPlayer();
+  buildSentenceBar();
+
+  document.getElementById('topicPill').textContent = 'Tema: ' + currentRound.topic;
+  document.getElementById('totalCount').textContent = currentRound.words.length;
+  document.getElementById('foundCount').textContent = '0';
+  document.getElementById('winBanner').classList.remove('show');
+
+  renderAll();
+}
+
+function placeTilesAndPlayer(){
+  const field = document.getElementById('field');
+  // remove tiles/player antigos do DOM
+  tiles.forEach(t => t.el && t.el.remove());
+  if (player.el) player.el.remove();
+
+  const values = [
+    ...currentRound.words.map(w => ({ value: w, isDecoy: false })),
+    ...currentRound.decoys.map(w => ({ value: w, isDecoy: true }))
+  ];
+  const cells = freeFloorCells();
+
+  // jogador começa na última linha (corredor reservado, sem caixinhas)
+  const playerCell = playerFloorCells()[0];
+  player.row = playerCell.r; player.col = playerCell.c;
+
+  tiles = values.map((v, i) => {
+    const cell = cells[i];
+    return { id: 'tile' + (tileIdSeq++), row: cell.r, col: cell.c, value: v.value, isDecoy: v.isDecoy, el: null };
+  });
+
+  const playerEl = document.createElement('div');
+  playerEl.className = 'player';
+  playerEl.textContent = '🐱';
+  field.appendChild(playerEl);
+  player.el = playerEl;
+
+  const TILE_PALETTE = ['#8b5cf6','#4da3ff','#ff4d94','#2dd9b9','#ffd23f','#ff8a5c'];
+  tiles.forEach(t => {
+    const el = document.createElement('div');
+    el.className = 'tile';
+    el.textContent = t.value;
+    const accent = TILE_PALETTE[Math.floor(Math.random() * TILE_PALETTE.length)];
+    el.style.borderColor = accent;
+    el.style.boxShadow = '0 3px 8px rgba(0,0,0,.4), inset 0 0 0 1px ' + accent + '33';
+    field.appendChild(el);
+    t.el = el;
+  });
+}
+
+function buildSentenceBar(){
+  const bar = document.getElementById('sentenceBar');
+  bar.innerHTML = '';
+  currentRound.words.forEach((w, i) => {
+    const slot = document.createElement('div');
+    slot.className = 'slot';
+    slot.id = 'slot-' + i;
+    slot.textContent = '?';
+    bar.appendChild(slot);
+  });
+  updateNextSlotHighlight();
+}
+
+function updateNextSlotHighlight(){
+  currentRound.words.forEach((w, i) => {
+    const slot = document.getElementById('slot-' + i);
+    if (!slot) return;
+    slot.classList.toggle('next', i === nextIndex && i < currentRound.words.length);
+  });
+}
+
+/* ─── Render ─── */
+function renderAll(){
+  const fontSize = Math.max(9.5, Math.min(12, cellW / 7.6));
+  tiles.forEach(t => {
+    if (!t.el) return;
+    t.el.style.left = pxLeft(t.col) + 'px';
+    t.el.style.top = pxTop(t.row) + 'px';
+    t.el.style.width = (cellW - 6) + 'px';
+    t.el.style.height = (cellH - 6) + 'px';
+    t.el.style.margin = '3px';
+    t.el.style.fontSize = fontSize + 'px';
+  });
+  player.el.style.left = pxLeft(player.col) + 'px';
+  player.el.style.top = pxTop(player.row) + 'px';
+  player.el.style.width = cellW + 'px';
+  player.el.style.height = cellH + 'px';
+  player.el.style.fontSize = Math.round(cellH * 0.62) + 'px';
+}
+
+/* ─── Movimento / empurrar caixinhas ─── */
+const VECT = { N:{dr:-1,dc:0}, S:{dr:1,dc:0}, E:{dr:0,dc:1}, W:{dr:0,dc:-1} };
+
+function tileAt(r,c){ return tiles.find(t => t.row === r && t.col === c); }
+
+function move(dir){
+  const v = VECT[dir];
+  const nr = player.row + v.dr, nc = player.col + v.dc;
+  if (nc < 0 || nc >= COLS || nr < 0 || nr >= ROWS) return;
+  if (nr === 0){
+    // linha 0 é só alcançável empurrando uma caixinha até lá — o jogador
+    // nunca anda direto pra dentro da faixa de chegada.
+    return;
+  }
+
+  const targetTile = tileAt(nr, nc);
+  if (!targetTile){
+    player.row = nr; player.col = nc;
+    GameSound.play('move');
+    renderAll();
+    return;
+  }
+
+  // Tem uma caixinha no caminho — tenta empurrar mais uma casa na mesma direção.
+  const fr = nr + v.dr, fc = nc + v.dc;
+  if (fc < 0 || fc >= COLS || fr < 0 || fr >= ROWS){
+    GameSound.play('wrong');
+    shakeTile(targetTile);
+    showToast('🚧 Não dá pra empurrar pra fora do campo.', 'bad');
+    return;
+  }
+  if (tileAt(fr, fc)){
+    GameSound.play('wrong');
+    shakeTile(targetTile);
+    showToast('🚧 Tem outra caixinha no caminho.', 'bad');
+    return;
+  }
+  if (fr === ROWS - 1){
+    // A última linha é o corredor do jogador — se a caixinha entrasse ali,
+    // não teria mais como empurrá-la de volta pra cima.
+    GameSound.play('wrong');
+    shakeTile(targetTile);
+    showToast('🚧 Essa fileira de baixo é só passagem — não dá pra empurrar a caixinha pra lá.', 'bad');
+    return;
+  }
+
+  if (fr === 0){
+    tryDeliver(targetTile, nr, nc);
+    return;
+  }
+
+  targetTile.row = fr; targetTile.col = fc;
+  player.row = nr; player.col = nc;
+  GameSound.play('push');
+  renderAll();
+}
+
+function shakeTile(tile){
+  if (!tile.el) return;
+  tile.el.classList.remove('shake');
+  void tile.el.offsetWidth; // reinicia a animação
+  tile.el.classList.add('shake');
+  setTimeout(() => tile.el && tile.el.classList.remove('shake'), 320);
+}
+
+/* Puxar: o jogador anda pra frente e, se houver uma caixinha bem atrás dele
+   (do lado oposto do movimento), ela é arrastada junto pra casa que o
+   jogador acabou de deixar — útil quando não dá pra chegar do outro lado
+   pra empurrar. */
+function pull(dir){
+  const v = VECT[dir];
+  const nr = player.row + v.dr, nc = player.col + v.dc;
+  if (nc < 0 || nc >= COLS || nr < 0 || nr >= ROWS) return;
+  if (nr === 0){
+    // o jogador nunca anda direto pra dentro da faixa de chegada.
+    return;
+  }
+  if (tileAt(nr, nc)){
+    GameSound.play('wrong');
+    showToast('🚧 Tem uma caixinha na frente — troque pro modo "Empurrar" pra mover essa daí.', 'bad');
+    return;
+  }
+
+  const br = player.row - v.dr, bc = player.col - v.dc; // casa atrás do jogador
+  const behindTile = tileAt(br, bc);
+
+  if (!behindTile){
+    // nada pra puxar — o jogador só anda.
+    player.row = nr; player.col = nc;
+    GameSound.play('move');
+    renderAll();
+    return;
+  }
+
+  const boxNewRow = player.row, boxNewCol = player.col; // caixinha ocupa a casa que o jogador deixou
+  if (boxNewRow === ROWS - 1){
+    // mesma regra do empurrar: a última linha é só corredor, sem caixinha.
+    GameSound.play('wrong');
+    shakeTile(behindTile);
+    showToast('🚧 Essa fileira de baixo é só passagem — não dá pra puxar a caixinha pra lá.', 'bad');
+    return;
+  }
+
+  behindTile.row = boxNewRow; behindTile.col = boxNewCol;
+  player.row = nr; player.col = nc;
+  GameSound.play('push');
+  renderAll();
+}
+
+function tryDeliver(tile, playerLandRow, playerLandCol){
+  if (tile.isDecoy){
+    GameSound.play('wrong');
+    shakeTile(tile);
+    showToast('❌ "' + tile.value + '" está com a grafia errada — essa nem é uma palavra de verdade!', 'bad');
+    return;
+  }
+  const required = currentRound.words[nextIndex];
+  if (tile.value !== required){
+    GameSound.play('wrong');
+    shakeTile(tile);
+    showToast('⏳ Essa palavra vem depois na frase — ache a que vem antes primeiro.', 'bad');
+    return;
+  }
+
+  // Entrega válida!
+  GameSound.play('correct');
+  tiles = tiles.filter(t => t.id !== tile.id);
+  tile.el.remove();
+
+  const slot = document.getElementById('slot-' + nextIndex);
+  slot.classList.add('filled');
+  slot.classList.remove('next');
+  slot.textContent = tile.value;
+
+  xp += 10;
+  document.getElementById('xp').textContent = xp;
+  nextIndex++;
+  document.getElementById('foundCount').textContent = nextIndex;
+  updateNextSlotHighlight();
+
+  player.row = playerLandRow; player.col = playerLandCol;
+  showToast('✅ "' + tile.value + '" no lugar certo!', 'good');
+  renderAll();
+
+  if (nextIndex === currentRound.words.length){
+    setTimeout(finishRound, 350);
+  }
+}
+
+function finishRound(){
+  xp += 25;
+  document.getElementById('xp').textContent = xp;
+  GameSound.play('win');
+  if (typeof confetti === 'function') confetti({ particleCount: 130, spread: 75, origin: { y: 0.6 } });
+
+  document.getElementById('winSentence').textContent = currentRound.words.join(' ');
+  document.getElementById('winBanner').classList.add('show');
+}
+
+/* ─── Reorganizar (evita ficar preso, não muda a rodada) ─── */
+function shuffleField(){
+  GameSound.play('click');
+  placeTilesAndPlayer();
+  // reaplica o que já foi entregue: remove do campo qualquer valor já
+  // entregue e mantém o placar/slots como estavam.
+  for (let i = 0; i < nextIndex; i++){
+    const delivered = currentRound.words[i];
+    const t = tiles.find(x => !x.isDecoy && x.value === delivered);
+    if (t){ tiles = tiles.filter(x => x.id !== t.id); t.el.remove(); }
+  }
+  renderAll();
+  showToast('🔀 Campo reorganizado!', 'good');
+}
+
+/* ─── Toast ─── */
+let toastTimer = null;
+function showToast(msg, kind){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (kind||'');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.classList.remove('show'); }, 1900);
+}
+
+/* ─── Controles ─── */
+let pullModeOn = false;
+
+function setPullMode(on){
+  pullModeOn = on;
+  const btn = document.getElementById('modeBtn');
+  btn.classList.toggle('active', pullModeOn);
+  btn.textContent = pullModeOn ? '🫳' : '👉';
+  btn.title = pullModeOn ? 'Modo: Puxar (toque para trocar)' : 'Modo: Empurrar (toque para trocar)';
+  btn.setAttribute('aria-pressed', pullModeOn ? 'true' : 'false');
+}
+
+function toggleMode(){
+  GameSound.play('click');
+  setPullMode(!pullModeOn);
+}
+
+function handleMove(dir){
+  if (pullModeOn) pull(dir); else move(dir);
+}
+
+document.querySelectorAll('.dpad button[data-dir]').forEach(btn => {
+  btn.addEventListener('click', () => handleMove(btn.dataset.dir));
+});
+document.getElementById('nextBtn').addEventListener('click', loadRound);
+document.getElementById('shuffleBtn').addEventListener('click', shuffleField);
+document.getElementById('modeBtn').addEventListener('click', toggleMode);
+
+window.addEventListener('keydown', e => {
+  const map = { ArrowUp:'N', ArrowDown:'S', ArrowLeft:'W', ArrowRight:'E', w:'N', s:'S', a:'W', d:'E' };
+  if (map[e.key]){ e.preventDefault(); handleMove(map[e.key]); return; }
+  if (e.key === 'p' || e.key === 'P'){ e.preventDefault(); toggleMode(); }
+});
+
+// swipe support
+let touchStart = null;
+const fieldOuter = document.querySelector('.field-outer');
+fieldOuter.addEventListener('touchstart', e => {
+  const t = e.touches[0]; touchStart = { x:t.clientX, y:t.clientY };
+}, { passive:true });
+fieldOuter.addEventListener('touchend', e => {
+  if (!touchStart) return;
+  const t = e.changedTouches[0];
+  const dx = t.clientX - touchStart.x, dy = t.clientY - touchStart.y;
+  if (Math.max(Math.abs(dx),Math.abs(dy)) < 22) { touchStart = null; return; }
+  if (Math.abs(dx) > Math.abs(dy)) handleMove(dx > 0 ? 'E' : 'W');
+  else handleMove(dy > 0 ? 'S' : 'N');
+  touchStart = null;
+});
+
+window.addEventListener('resize', () => {
+  const cs = computeCellSize();
+  cellW = cs.cw; cellH = cs.ch;
+  drawBackground();
+  // Recoloca elementos de tile/player que sobreviveram ao innerHTML=='' do drawBackground
+  const field = document.getElementById('field');
+  tiles.forEach(t => field.appendChild(t.el));
+  field.appendChild(player.el);
+  renderAll();
+});
+
+loadRound();
+</script>
+</body>
+</html>
