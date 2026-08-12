@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Cobrinha da Ortografia — Português</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="game-sound.js"></script>
+<style>
+  :root{
+    --orange:#ff5b3d;--orange-dark:#e13a26;--orange-light:#ff7a5c;
+    --purple:#8b5cf6;--purple-dark:#6d28d9;--blue:#4da3ff;--pink:#ff4d94;--teal:#2dd9b9;
+    --cream:#1e1730;--cream-2:#241b3d;--cream-3:#0c0720;
+    --ink:#f7f1ec;--ink-soft:rgba(247,241,236,0.72);
+    --ok:#3dd68c;--ok-bg:rgba(61,214,140,0.18);
+    --bad:#ff5b7a;
+    --border:rgba(255,255,255,0.14);--gold:#ffd23f;
+    --shadow:0 8px 26px rgba(0,0,0,0.45);
+    --radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:"Inter",sans-serif;color:var(--ink);min-height:100vh;
+    line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:40px;
+    background:
+      radial-gradient(circle at 10% 6%, rgba(139,92,246,.38), transparent 42%),
+      radial-gradient(circle at 90% 12%, rgba(45,217,185,.28), transparent 45%),
+      radial-gradient(circle at 50% 105%, rgba(255,91,61,.28), transparent 55%),
+      var(--cream-3);
+    background-attachment:fixed;
+  }
+  h1,h2,h3,.serif{font-family:"Fredoka","Poppins",sans-serif;letter-spacing:-.01em}
+
+  /* HUD */
+  .hud{position:sticky;top:0;z-index:100;background:rgba(12,7,32,.88);backdrop-filter:blur(12px);
+    padding:12px 16px;border-bottom:1px solid var(--border);box-shadow:0 2px 0 rgba(139,92,246,.3);
+    display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}
+  .hud-title{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15px;font-family:"Fredoka",sans-serif}
+  .hud-title .icon{font-size:22px;display:inline-block;animation:wiggle 3s ease-in-out infinite}
+  @keyframes wiggle{0%,100%{transform:rotate(0)}50%{transform:rotate(-10deg)}}
+  .hud-back{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;
+    border-radius:10px;background:var(--cream);border:1px solid var(--border);color:var(--ink);
+    font-size:17px;text-decoration:none;flex-shrink:0;transition:all .15s}
+  .hud-back:active{background:var(--purple);transform:scale(.92)}
+  .hud-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .pill{display:inline-flex;align-items:center;gap:5px;background:var(--cream);border:1px solid var(--border);
+    border-radius:99px;padding:5px 12px;font-size:13px;font-weight:700;color:var(--orange-light);
+    box-shadow:0 2px 8px rgba(0,0,0,.25);cursor:pointer;font-family:inherit}
+  .pill.static{cursor:default}
+  .pill.xp{color:var(--ok);border-color:rgba(61,214,140,.4)}
+  .pill.lives{color:var(--bad);border-color:rgba(255,91,122,.4);letter-spacing:1px}
+  .pill.sound-toggle{cursor:pointer;font-family:inherit;font-size:14px;padding:5px 10px}
+
+  .wrap{max-width:640px;margin:0 auto;padding:16px 16px 0}
+
+  /* Como jogar */
+  .howto{background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
+    border-radius:var(--radius);padding:12px 16px;margin-bottom:14px;box-shadow:var(--shadow)}
+  .howto-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .howto-head .ic{font-size:16px}
+  .howto-head h3{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--gold);flex:1;font-family:"Inter",sans-serif;font-weight:800}
+  .howto-close{background:none;border:none;color:var(--ink-soft);font-size:17px;cursor:pointer;padding:2px 6px;line-height:1}
+  .howto-close:hover{color:var(--ink)}
+  .howto ol{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+  .howto li{font-size:12px;color:var(--ink-soft);line-height:1.45}
+  .howto li b{color:var(--ink)}
+
+  /* Word card */
+  .word-card{background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
+    border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:14px;text-align:center}
+  .word-card h3{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);margin-bottom:10px;font-weight:700}
+  .letters{display:flex;justify-content:center;flex-wrap:wrap;gap:4px}
+  .letter{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:34px;
+    padding:0 3px;border-radius:8px;background:var(--cream-2);border:1.5px solid var(--border);
+    font-family:"Poppins",sans-serif;font-weight:800;font-size:17px;color:var(--ink);transition:transform .18s}
+  .letter.dash{background:none;border:none;color:var(--ink-soft);min-width:10px}
+  .letter.morph{animation:morph .5s ease}
+  @keyframes morph{
+    0%{transform:scale(1) rotateX(0)}
+    35%{transform:scale(1.25) rotateX(90deg);background:var(--ok);color:#0a0a0b;border-color:var(--ok)}
+    60%{transform:scale(1.25) rotateX(0);background:var(--ok);color:#0a0a0b;border-color:var(--ok)}
+    100%{transform:scale(1);background:var(--cream-2);color:var(--ink);border-color:var(--border)}
+  }
+  .word-card.shake{animation:shake .4s}
+  @keyframes shake{
+    0%,100%{transform:translateX(0)}
+    20%{transform:translateX(-8px)}
+    40%{transform:translateX(7px)}
+    60%{transform:translateX(-5px)}
+    80%{transform:translateX(4px)}
+  }
+
+  /* Board */
+  .board-card{background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
+    border-radius:var(--radius);padding:12px;box-shadow:var(--shadow);display:flex;justify-content:center;width:100%;
+    transition:box-shadow .2s}
+  .board-card.hurt{box-shadow:0 0 0 3px var(--bad), var(--shadow)}
+  #board{display:grid;user-select:none;touch-action:none;gap:2px}
+  .cell{display:flex;align-items:center;justify-content:center;font-weight:800;
+    font-family:"Poppins",sans-serif;border-radius:5px;background:var(--cream-2);
+    color:var(--ink-soft);font-size:12px;position:relative}
+  .cell.tile{background:linear-gradient(135deg,var(--gold),#ffb347);color:#0a0a0b;
+    animation:popIn .25s cubic-bezier(.34,1.56,.64,1)}
+  /* ── Cobrinha ilustrada ── */
+  .cell.snake-head, .cell.snake-body{padding:0}
+  .cell.snake-head{
+    background:radial-gradient(circle at 35% 30%, #4be3c7, var(--teal) 55%, #1f9d86 100%);
+    border-radius:50% 50% 42% 42%/55% 55% 45% 45%;
+    box-shadow:0 0 0 1.5px rgba(10,10,15,.35) inset, 0 2px 6px rgba(0,0,0,.35);
+    z-index:3;transform:scale(1.3);transition:transform .08s linear;
+    font-size:15px;line-height:1;
+  }
+  .cell.snake-head .emoji{display:inline-block;transition:transform .08s linear}
+  .cell.snake-head[data-dir="right"] .emoji{transform:rotate(0deg)}
+  .cell.snake-head[data-dir="down"]  .emoji{transform:rotate(90deg)}
+  .cell.snake-head[data-dir="left"]  .emoji{transform:rotate(180deg) scaleY(-1)}
+  .cell.snake-head[data-dir="up"]    .emoji{transform:rotate(-90deg)}
+  .cell.snake-body{
+    border-radius:38%;
+    box-shadow:0 1px 4px rgba(0,0,0,.3);
+    transform:scale(1.05);
+    z-index:2;transition:transform .08s linear;
+  }
+  .cell.snake-body.seg-a{background:linear-gradient(135deg,var(--purple),var(--purple-dark))}
+  .cell.snake-body.seg-b{background:linear-gradient(135deg,#7c4fe0,#5b21b6)}
+  .cell.snake-body::after{
+    content:'';position:absolute;inset:22%;border-radius:50%;
+    background:rgba(255,255,255,.16);pointer-events:none;
+  }
+  .cell.snake-tail{
+    border-radius:50%;transform:scale(.62);
+    box-shadow:0 1px 4px rgba(0,0,0,.3);
+  }
+  @keyframes popIn{0%{transform:scale(.5)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+
+  /* D-pad */
+  .dpad-area{display:flex;justify-content:center;align-items:center;gap:26px;margin-top:16px}
+  .dpad{display:grid;grid-template-columns:repeat(3,44px);grid-template-rows:repeat(3,44px);gap:4px}
+  .dbtn{display:flex;align-items:center;justify-content:center;background:var(--cream-2);
+    border:1px solid var(--border);border-radius:10px;color:var(--ink);font-size:18px;
+    box-shadow:0 3px 10px rgba(0,0,0,.3);cursor:pointer}
+  .dbtn:active{background:var(--purple);transform:scale(.92)}
+  .dbtn.empty{visibility:hidden}
+  .side-btns{display:flex;flex-direction:column;gap:10px}
+  .side-btns .btn-round{width:46px;height:46px;border-radius:14px;background:var(--cream-2);
+    border:1px solid var(--border);color:var(--ink);font-size:19px;box-shadow:0 3px 10px rgba(0,0,0,.3);cursor:pointer}
+  .side-btns .btn-round:active{background:var(--purple);transform:scale(.92)}
+
+  .hint{text-align:center;font-size:12.5px;color:var(--ink-soft);margin-top:14px}
+
+  /* Overlays */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(8,4,20,.82);backdrop-filter:blur(4px);
+    z-index:200;align-items:center;justify-content:center;padding:20px}
+  .overlay.show{display:flex}
+  .overlay-card{max-width:340px;width:100%;text-align:center;padding:26px 22px;border-radius:var(--radius);
+    background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);box-shadow:var(--shadow)}
+  .overlay-card.win{background:linear-gradient(120deg,var(--pink),var(--purple),var(--blue),var(--teal),var(--gold),var(--orange));
+    background-size:300% 300%;animation:rainbow 7s ease infinite}
+  @keyframes rainbow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .overlay-card h2{font-size:22px;margin-bottom:8px}
+  .overlay-card p{font-size:13.5px;color:rgba(255,255,255,.9);margin-bottom:16px;line-height:1.5}
+  .btn{background:#fff;color:var(--orange-dark);border:none;padding:12px 24px;border-radius:12px;
+    font-size:14.5px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);
+    transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
+  .btn:active{transform:scale(.93)}
+</style>
+</head>
+<body>
+
+<div class="hud">
+  <div class="hud-title"><a class="hud-back" href="../index.html" title="Voltar ao app" aria-label="Voltar ao app">←</a> 🐍 Cobrinha da Ortografia</div>
+  <div class="hud-right">
+    <span class="pill lives static">❤️<span id="lives">3</span></span>
+    <span class="pill static">✅ <span id="fixedCount">0</span></span>
+    <span class="pill xp static">⭐ <span id="xp">0</span> XP</span>
+    <button class="pill" id="pauseBtn" title="Pausar">⏸️</button>
+    <button class="pill" id="howtoReopenBtn" style="display:none" title="Mostrar como jogar">❓</button>
+    <button class="pill sound-toggle" data-sound-toggle title="Desativar sons">🔊</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="howto" id="howtoCard">
+    <div class="howto-head">
+      <span class="ic">💡</span>
+      <h3>Como jogar</h3>
+      <button class="howto-close" id="howtoClose" aria-label="Esconder instruções">✕</button>
+    </div>
+    <ol>
+      <li><b>Objetivo:</b> toda rodada mostra uma palavra escrita <b>errada</b>. Descubra qual letra está causando o erro.</li>
+      <li>Guie a cobrinha (setas do teclado, arraste o dedo no tabuleiro ou use o ⊕ abaixo dele) até essa letra espalhada no tabuleiro e <b>coma ela</b> — ela some da palavra e a grafia certa aparece na hora!</li>
+      <li>As outras letras são <b>armadilhas</b>: comer uma delas, ou a cobrinha bater no próprio corpo, custa uma vida ❤️.</li>
+      <li>3 vidas no total. Cada acerto deixa a cobrinha maior e mais rápida. Sem pressa: pense antes de sair andando!</li>
+    </ol>
+  </div>
+
+  <div class="word-card" id="wordCard">
+    <h3>Essa palavra está errada. Coma a letra do erro:</h3>
+    <div class="letters" id="letters"></div>
+  </div>
+
+  <div class="board-card" id="boardCard"><div id="board"></div></div>
+
+  <div class="dpad-area">
+    <div class="dpad">
+      <div class="dbtn empty"></div>
+      <button class="dbtn" data-dir="up" aria-label="Cima">▲</button>
+      <div class="dbtn empty"></div>
+      <button class="dbtn" data-dir="left" aria-label="Esquerda">◀</button>
+      <div class="dbtn empty"></div>
+      <button class="dbtn" data-dir="right" aria-label="Direita">▶</button>
+      <div class="dbtn empty"></div>
+      <button class="dbtn" data-dir="down" aria-label="Baixo">▼</button>
+      <div class="dbtn empty"></div>
+    </div>
+    <div class="side-btns">
+      <button class="btn-round" id="hintBtn" title="Dica: pisca a letra certa">💡</button>
+    </div>
+  </div>
+
+  <p class="hint">Dica: também dá pra arrastar o dedo no tabuleiro pra virar a cobrinha.</p>
+</div>
+
+<div class="overlay" id="pauseOverlay">
+  <div class="overlay-card">
+    <h2>⏸️ Pausado</h2>
+    <p>Toque em continuar quando estiver pronto.</p>
+    <button class="btn" id="resumeBtn">Continuar</button>
+  </div>
+</div>
+
+<div class="overlay" id="gameOverOverlay">
+  <div class="overlay-card">
+    <h2>💥 Fim de jogo</h2>
+    <p id="gameOverMsg"></p>
+    <button class="btn" id="restartBtn">Jogar de novo</button>
+  </div>
+</div>
+
+<div class="overlay" id="winOverlay">
+  <div class="overlay-card win">
+    <h2>🎉 Você corrigiu todas!</h2>
+    <p id="winMsg"></p>
+    <button class="btn" id="continueBtn">Continuar jogando →</button>
+  </div>
+</div>
+
+<script>
+/* ─── Como jogar: mostrar/esconder ─── */
+(function () {
+  var KEY = 'bobcat_howto_dismissed_cobrinha_ortografia';
+  var card = document.getElementById('howtoCard');
+  var closeBtn = document.getElementById('howtoClose');
+  var reopenBtn = document.getElementById('howtoReopenBtn');
+  function hide() { card.style.display = 'none'; reopenBtn.style.display = 'inline-flex'; }
+  function show() { card.style.display = 'block'; reopenBtn.style.display = 'none'; }
+  var dismissed = false;
+  try { dismissed = localStorage.getItem(KEY) === '1'; } catch (e) {}
+  if (dismissed) hide(); else show();
+  closeBtn.addEventListener('click', function () {
+    hide();
+    try { localStorage.setItem(KEY, '1'); } catch (e) {}
+  });
+  reopenBtn.addEventListener('click', function () {
+    show();
+    try { localStorage.removeItem(KEY); } catch (e) {}
+  });
+})();
+</script>
+
+<script>
+/* ─── Banco de palavras: erros comuns de ortografia em português ─── */
+/* Organizado em blocos que ficam progressivamente mais desafiadores
+   (palavras mais curtas e comuns primeiro, mais longas e sutis depois). */
+const PAIRS = [
+  // U/O final (pronúncia coloquial do "o" átono)
+  ['OVU','OVO','cat1'], ['GATU','GATO','cat1'], ['SAPU','SAPO','cat1'], ['RATU','RATO','cat1'], ['PATU','PATO','cat1'],
+  ['DEDU','DEDO','cat1'], ['BOLU','BOLO','cat1'], ['CARRU','CARRO','cat1'], ['LIVRU','LIVRO','cat1'], ['PRATU','PRATO','cat1'],
+  ['QUADRU','QUADRO','cat1'], ['MACACU','MACACO','cat1'], ['CAVALU','CAVALO','cat1'], ['MENINU','MENINO','cat1'], ['CACHORRU','CACHORRO','cat1'],
+  // L final (pronúncia coloquial do "l" como "u")
+  ['PAPEU','PAPEL','cat2'], ['FAROU','FAROL','cat2'], ['CANAU','CANAL','cat2'], ['SINAU','SINAL','cat2'], ['MORAU','MORAL','cat2'],
+  ['LOCAU','LOCAL','cat2'], ['TOTAU','TOTAL','cat2'], ['GERAU','GERAL','cat2'], ['LEGAU','LEGAL','cat2'], ['IGUAU','IGUAL','cat2'],
+  ['ATUAU','ATUAL','cat2'], ['VITAU','VITAL','cat2'], ['BRASIU','BRASIL','cat2'], ['ANIMAU','ANIMAL','cat2'], ['JORNAU','JORNAL','cat2'],
+  ['NATURAU','NATURAL','cat2'], ['HOSPITAU','HOSPITAL','cat2'],
+  // G/J (sons parecidos antes de E e I)
+  ['JENTE','GENTE','cat3'], ['JESSO','GESSO','cat3'], ['JESTO','GESTO','cat3'], ['JIRAFA','GIRAFA','cat3'], ['AJENDA','AGENDA','cat3'],
+  ['JELEIA','GELEIA','cat3'], ['JENTIL','GENTIL','cat3'], ['JIGANTE','GIGANTE','cat3'], ['PASSAJEM','PASSAGEM','cat3'], ['JIGANTESCO','GIGANTESCO','cat3'],
+  // X/CH (mesmo som "x")
+  ['XHUVA','CHUVA','cat4'], ['XHAVE','CHAVE','cat4'], ['XHEIO','CHEIO','cat4'], ['FIXHA','FICHA','cat4'], ['BIXHO','BICHO','cat4'],
+  ['XHAPEU','CHAPEU','cat4'], ['XHEGAR','CHEGAR','cat4'], ['XHORAR','CHORAR','cat4'], ['XHUTAR','CHUTAR','cat4'], ['XHIQUE','CHIQUE','cat4'],
+  ['MANXHA','MANCHA','cat4'], ['GUARDA-XHUVA','GUARDA-CHUVA','cat4'],
+  // E/I (vogal átona no início/meio que soa como "i")
+  ['ISCOLA','ESCOLA','cat5'], ['ISTRELA','ESTRELA','cat5'], ['IMBAIXO','EMBAIXO','cat5'], ['ISPELHO','ESPELHO','cat5'], ['PIQUENO','PEQUENO','cat5'],
+  ['VISTIDO','VESTIDO','cat5'], ['ILEFANTE','ELEFANTE','cat5'], ['INVELOPE','ENVELOPE','cat5'],
+  // O/U (vogal átona no meio da palavra que soa como "u")
+  ['BUNITO','BONITO','cat6'], ['CUMIDA','COMIDA','cat6'], ['BUNECA','BONECA','cat6'], ['CULEGA','COLEGA','cat6'], ['DURMIR','DORMIR','cat6'],
+  ['BUTECO','BOTECO','cat6'], ['SURRISO','SORRISO','cat6'], ['MUMENTO','MOMENTO','cat6'], ['CURTINA','CORTINA','cat6'], ['FUGUEIRA','FOGUEIRA','cat6'],
+  // S/Z (mesmo som entre vogais ou no final)
+  ['CAZA','CASA','cat7'], ['CAPAS','CAPAZ','cat7'], ['FELIS','FELIZ','cat7'], ['RAPAS','RAPAZ','cat7'], ['NARIS','NARIZ','cat7'],
+  ['ARROS','ARROZ','cat7'], ['BELESA','BELEZA','cat7'], ['CRUSAR','CRUZAR','cat7'], ['BUSINA','BUZINA','cat7'], ['COSINHA','COZINHA','cat7'],
+  ['EMPREZA','EMPRESA','cat7'], ['VISINHO','VIZINHO','cat7'], ['ANALIZAR','ANALISAR','cat7'], ['PESQUIZA','PESQUISA','cat7'],
+  // M antes de P/B (nasal: usa-se M, não N)
+  ['CANPO','CAMPO','cat8'], ['TENPO','TEMPO','cat8'], ['SANBA','SAMBA','cat8'], ['LINPO','LIMPO','cat8'], ['ENPATE','EMPATE','cat8'],
+  ['ENBORA','EMBORA','cat8'], ['TRONBA','TROMBA','cat8'], ['TANBOR','TAMBOR','cat8'], ['BONBOM','BOMBOM','cat8'], ['EXENPLO','EXEMPLO','cat8'],
+  ['INPOSTO','IMPOSTO','cat8'], ['CONPRAR','COMPRAR','cat8'],
+  // NH x LH (sons parecidos, fácil de trocar)
+  ['NILHO','NINHO','cat9'], ['GALILHA','GALINHA','cat9'], ['CARILHO','CARINHO','cat9'], ['TAMALHO','TAMANHO','cat9'], ['CAMILHO','CAMINHO','cat9'],
+  ['SOZILHO','SOZINHO','cat9'],
+  // M final (pronúncia nasal parecida com "n")
+  ['ITEN','ITEM','cat10'], ['HOMEN','HOMEM','cat10'], ['JOVEN','JOVEM','cat10'], ['NUVEN','NUVEM','cat10'], ['ORDEN','ORDEM','cat10'],
+  ['VIAGEN','VIAGEM','cat10'], ['ORIGEN','ORIGEM','cat10'], ['IMAGEN','IMAGEM','cat10'], ['GARAGEN','GARAGEM','cat10'], ['CORAGEN','CORAGEM','cat10'],
+  ['VOLTAGEN','VOLTAGEM','cat10'], ['FERRAGEN','FERRAGEM','cat10'], ['VANTAGEN','VANTAGEM','cat10'], ['LINGUAGEN','LINGUAGEM','cat10'],
+  // Acento agudo esquecido (á, é, í, ó, ú)
+  ['AVO','AVÓ','cat11'], ['IMA','IMÃ','cat11'], ['CAFE','CAFÉ','cat11'], ['TAXI','TÁXI','cat11'], ['AGUA','ÁGUA','cat11'],
+  ['LAPIS','LÁPIS','cat11'], ['SAUDE','SAÚDE','cat11'], ['OCULOS','ÓCULOS','cat11'], ['ULTIMO','ÚLTIMO','cat11'], ['ARVORE','ÁRVORE','cat11'],
+  ['MAQUINA','MÁQUINA','cat11'],
+  // Acento circunflexo esquecido (â, ê, ô)
+  ['VOCE','VOCÊ','cat12'], ['BEBE','BEBÊ','cat12'], ['TENIS','TÊNIS','cat12'], ['ONIBUS','ÔNIBUS','cat12'], ['PESSEGO','PÊSSEGO','cat12'],
+  // Til esquecido (ã, õ)
+  ['IRMA','IRMÃ','cat13'], ['MAMAE','MAMÃE','cat13'], ['ALEMAO','ALEMÃO','cat13'], ['CIDADAO','CIDADÃO','cat13'],
+  // Cedilha esquecida (ç no lugar do c)
+  ['MOCA','MOÇA','cat14'], ['CALCA','CALÇA','cat14'], ['FORCA','FORÇA','cat14'], ['DANCA','DANÇA','cat14'], ['PRECO','PREÇO','cat14'],
+  ['ESPACO','ESPAÇO','cat14'], ['CABECA','CABEÇA','cat14'], ['ALMOCO','ALMOÇO','cat14'], ['CRIANCA','CRIANÇA','cat14'], ['COMECAR','COMEÇAR','cat14'],
+  ['PREGUICA','PREGUIÇA','cat14'],
+  // LH (dígrafo real, trocado pelo som parecido de "nh")
+  ['ILHA','INHA','cat15'], ['FILHO','FINHO','cat15'], ['VELHO','VENHO','cat15'], ['PALHA','PANHA','cat15'], ['JOELHO','JOENHO','cat15'],
+  ['ORELHA','ORENHA','cat15'], ['TRABALHO','TRABANHO','cat15']
+];
+const ALPHABET = 'ABCDEFGHIJLMNOPQRSTUVXZÁÉÍÓÚÂÊÔÃÕÇ';
+const DECOY_COUNT = 7; // mais iscas no tabuleiro = mais difícil de achar a letra certa
+/* Letras que se confundem na leitura/escrita — usadas como iscas extras
+   pra deixar o tabuleiro cheio de opções plausíveis, não só letras aleatórias */
+const CONFUSABLES = {
+  S:['Z','C','X'], Z:['S','C','X'], C:['S','Z','Q','Ç'],
+  G:['J'], J:['G'],
+  M:['N'], N:['M','L'],
+  L:['U','R','N'], U:['O','L','V','Ú'], O:['U','Ó','Ô','Õ'],
+  X:['C','S'],
+  B:['D','P'], D:['B','P'], P:['B','D'],
+  V:['U','F'], F:['V'],
+  R:['L'],
+  I:['E','Í'], E:['I','É','Ê'],
+  A:['Á','Â','Ã'],
+  Á:['A'], É:['E'], Í:['I'], Ó:['O'], Ú:['U'],
+  Â:['A'], Ê:['E'], Ô:['O'], Ã:['A'], Õ:['O'], Ç:['C']
+};
+
+function shuffle(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+/* Embaralha o baralho inteiro (máxima aleatoriedade) e depois faz uma
+   passada de correção pra garantir que o mesmo tipo de erro (3º item de
+   cada par, ex.: "cat2" = L final) não apareça várias vezes seguidas —
+   é isso que antes deixava o jogo emendando PATU, RATU, BRASIU etc.
+   um atrás do outro, já que eles ficavam no mesmo bloco fixo de 10. */
+function buildOrder(){
+  const NO_REPEAT_WINDOW = 3; // não repete a mesma categoria nas últimas 3 cartas
+  const deck = shuffle(PAIRS);
+  for (let i = 1; i < deck.length; i++){
+    const recentCats = deck.slice(Math.max(0, i - NO_REPEAT_WINDOW), i).map(p => p[2]);
+    if (!recentCats.includes(deck[i][2])) continue;
+    // acha, mais à frente no baralho, uma carta de categoria diferente das recentes
+    let swapIdx = -1;
+    for (let j = i + 1; j < deck.length; j++){
+      if (!recentCats.includes(deck[j][2])){ swapIdx = j; break; }
+    }
+    if (swapIdx !== -1){
+      [deck[i], deck[swapIdx]] = [deck[swapIdx], deck[i]];
+    }
+  }
+  return deck;
+}
+function diffIndex(a, b){
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return i;
+  return -1;
+}
+
+/* ─── Estado do jogo ─── */
+const SIZE = 15;
+const state = {
+  order: [], orderIdx: 0,
+  wrongWord: '', correctWord: '', badIdx: -1, badChar: '',
+  snake: [], dir: {x:1,y:0}, nextDir: {x:1,y:0}, grow: false,
+  tiles: [], // {r,c,char,target:bool}
+  lives: 3, xp: 0, fixed: 0,
+  speed: 260, tickId: null, running: false, paused: false, invuln: false,
+  cells: null, dirty: new Set()
+};
+
+/* ─── Construção do tabuleiro ─── */
+const boardEl = document.getElementById('board');
+function buildBoard(){
+  boardEl.style.gridTemplateColumns = `repeat(${SIZE}, minmax(16px, 26px))`;
+  boardEl.style.gridTemplateRows = `repeat(${SIZE}, minmax(16px, 26px))`;
+  boardEl.innerHTML = '';
+  state.cells = [];
+  for (let r = 0; r < SIZE; r++){
+    const row = [];
+    for (let c = 0; c < SIZE; c++){
+      const d = document.createElement('div');
+      d.className = 'cell';
+      boardEl.appendChild(d);
+      row.push(d);
+    }
+    state.cells.push(row);
+  }
+}
+buildBoard();
+
+/* ─── Palavra atual ─── */
+const lettersEl = document.getElementById('letters');
+function renderWord(morphIdx){
+  lettersEl.innerHTML = '';
+  const src = state.wrongWord;
+  for (let i = 0; i < src.length; i++){
+    const ch = src[i];
+    const span = document.createElement('span');
+    if (ch === '-'){
+      span.className = 'letter dash';
+      span.textContent = '–';
+    } else {
+      span.className = 'letter';
+      span.textContent = ch;
+      if (i === morphIdx) span.dataset.morph = '1';
+    }
+    lettersEl.appendChild(span);
+  }
+}
+
+function loadWord(){
+  if (state.orderIdx >= state.order.length){
+    // completou o baralho inteiro: bônus e reembaralha
+    state.order = buildOrder();
+    state.orderIdx = 0;
+    if (state.fixed > 0 && state.fixed % PAIRS.length === 0){
+      showWin();
+      return;
+    }
+  }
+  const [wrong, correct] = state.order[state.orderIdx];
+  state.wrongWord = wrong;
+  state.correctWord = correct;
+  state.badIdx = diffIndex(wrong, correct);
+  state.badChar = wrong[state.badIdx];
+  renderWord(-1);
+  spawnTiles();
+}
+
+/* ─── Letras no tabuleiro ─── */
+function isFree(r, c){
+  if (state.snake.some(s => s.r === r && s.c === c)) return false;
+  if (state.tiles.some(t => t.r === r && t.c === c)) return false;
+  return true;
+}
+function randomFreeCell(minDistFromHead){
+  const head = state.snake[0];
+  let tries = 0;
+  while (tries < 300){
+    tries++;
+    const r = Math.floor(Math.random() * SIZE);
+    const c = Math.floor(Math.random() * SIZE);
+    if (!isFree(r, c)) continue;
+    if (minDistFromHead && head){
+      const dist = Math.abs(r - head.r) + Math.abs(c - head.c);
+      if (dist < minDistFromHead) continue;
+    }
+    return {r, c};
+  }
+  return null;
+}
+function spawnTiles(){
+  state.tiles = [];
+  const correctChar = state.correctWord[state.badIdx];
+  const usedChars = new Set([state.badChar]);
+  const decoyChars = [];
+  // arapuca: a letra "certa" também aparece como isca
+  if (correctChar !== state.badChar){ decoyChars.push(correctChar); usedChars.add(correctChar); }
+  // mais iscas "parecidas" (letras que se confundem na hora de ler/escrever),
+  // pra obrigar o jogador a realmente checar a palavra em vez de adivinhar
+  const group = CONFUSABLES[state.badChar] || [];
+  for (const ch of shuffle(group)){
+    if (decoyChars.length >= DECOY_COUNT) break;
+    if (usedChars.has(ch)) continue;
+    usedChars.add(ch);
+    decoyChars.push(ch);
+  }
+  // completa com letras aleatórias até o total definido
+  while (decoyChars.length < DECOY_COUNT){
+    const ch = ALPHABET[Math.floor(Math.random() * ALPHABET.length)];
+    if (usedChars.has(ch)) continue;
+    usedChars.add(ch);
+    decoyChars.push(ch);
+  }
+  const targetPos = randomFreeCell(4);
+  if (targetPos) state.tiles.push({...targetPos, char: state.badChar, target: true});
+  decoyChars.forEach(ch => {
+    const pos = randomFreeCell(3);
+    if (pos) state.tiles.push({...pos, char: ch, target: false});
+  });
+}
+function respawnOneDecoy(oldTile){
+  state.tiles = state.tiles.filter(t => t !== oldTile);
+  const pos = randomFreeCell(3);
+  if (pos) state.tiles.push({...pos, char: oldTile.char, target: false});
+}
+
+/* ─── HUD ─── */
+function updateHud(){
+  document.getElementById('lives').textContent = '×' + state.lives;
+  document.getElementById('xp').textContent = state.xp;
+  document.getElementById('fixedCount').textContent = state.fixed;
+}
+
+/* ─── Cobrinha: início ─── */
+function initSnake(){
+  const mid = Math.floor(SIZE / 2);
+  state.snake = [{r:mid,c:mid},{r:mid,c:mid-1},{r:mid,c:mid-2}];
+  state.dir = {x:1,y:0};
+  state.nextDir = {x:1,y:0};
+  state.grow = false;
+}
+
+/* ─── Loop principal ─── */
+function tick(){
+  if (state.paused || !state.running) return;
+  state.dir = state.nextDir;
+  const head = state.snake[0];
+  let nr = (head.r + state.dir.y + SIZE) % SIZE;
+  let nc = (head.c + state.dir.x + SIZE) % SIZE;
+
+  const bodyToCheck = state.grow ? state.snake : state.snake.slice(0, -1);
+  const hitSelf = bodyToCheck.some(s => s.r === nr && s.c === nc);
+  if (hitSelf){
+    loseLife('self');
+    return;
+  }
+
+  const tileHit = state.tiles.find(t => t.r === nr && t.c === nc);
+  state.snake.unshift({r:nr, c:nc});
+  if (state.grow){ state.grow = false; } else { state.snake.pop(); }
+
+  if (tileHit){
+    if (tileHit.target){
+      correctHit();
+    } else {
+      respawnOneDecoy(tileHit);
+      loseLife('tile');
+    }
+  }
+  render();
+}
+
+function correctHit(){
+  GameSound.play('correct');
+  state.xp += 10;
+  state.fixed += 1;
+  state.grow = true;
+  updateHud();
+  renderWord(state.badIdx);
+  const morphed = lettersEl.querySelector('[data-morph]');
+  if (morphed) morphed.classList.add('morph');
+  setTimeout(() => { if (morphed) morphed.textContent = state.correctWord[state.badIdx]; }, 175);
+
+  clearInterval(state.tickId);
+  state.tiles = [];
+  render();
+  setTimeout(() => {
+    state.orderIdx += 1;
+    state.speed = Math.max(130, state.speed - 1.3);
+    loadWord();
+    render();
+    if (state.running && !state.paused) startTicking();
+  }, 650);
+}
+
+function loseLife(){
+  GameSound.play('wrong');
+  state.lives -= 1;
+  updateHud();
+  const card = document.getElementById('boardCard');
+  const wc = document.getElementById('wordCard');
+  card.classList.add('hurt');
+  wc.classList.add('shake');
+  setTimeout(() => { card.classList.remove('hurt'); wc.classList.remove('shake'); }, 400);
+
+  if (state.lives <= 0){
+    gameOver();
+    return;
+  }
+  initSnake();
+  render();
+}
+
+/* ─── Render ─── */
+function render(){
+  state.dirty.forEach(key => {
+    const [r, c] = key.split(',').map(Number);
+    const cell = state.cells[r][c];
+    cell.className = 'cell';
+    cell.textContent = '';
+  });
+  state.dirty.clear();
+
+  state.tiles.forEach(t => {
+    const cell = state.cells[t.r][t.c];
+    cell.className = 'cell tile';
+    cell.textContent = t.char;
+    state.dirty.add(t.r + ',' + t.c);
+  });
+  const dirName = state.dir.x === 1 ? 'right' : state.dir.x === -1 ? 'left' : state.dir.y === 1 ? 'down' : 'up';
+  state.snake.forEach((s, i) => {
+    const cell = state.cells[s.r][s.c];
+    if (i === 0){
+      cell.className = 'cell snake-head';
+      cell.setAttribute('data-dir', dirName);
+      cell.innerHTML = '<span class="emoji">🐸</span>';
+      state.dirty.add(s.r + ',' + s.c);
+      return;
+    } else if (i === state.snake.length - 1){
+      cell.className = 'cell snake-body snake-tail';
+    } else {
+      cell.className = 'cell snake-body ' + (i % 2 === 0 ? 'seg-a' : 'seg-b');
+    }
+    cell.textContent = '';
+    state.dirty.add(s.r + ',' + s.c);
+  });
+}
+
+/* ─── Controle de intervalo ─── */
+function startTicking(){
+  clearInterval(state.tickId);
+  state.tickId = setInterval(tick, state.speed);
+}
+function stopTicking(){
+  clearInterval(state.tickId);
+}
+
+/* ─── Direção ─── */
+function setDir(x, y){
+  if (state.dir.x === -x && state.dir.y === -y) return; // não deixa virar 180°
+  state.nextDir = {x, y};
+}
+window.addEventListener('keydown', e => {
+  const map = {
+    ArrowUp:[0,-1], ArrowDown:[0,1], ArrowLeft:[-1,0], ArrowRight:[1,0],
+    w:[0,-1], s:[0,1], a:[-1,0], d:[1,0], W:[0,-1], S:[0,1], A:[-1,0], D:[1,0]
+  };
+  if (map[e.key]){
+    e.preventDefault();
+    setDir(map[e.key][0], map[e.key][1]);
+  } else if (e.key === ' '){
+    e.preventDefault();
+    togglePause();
+  }
+});
+document.querySelectorAll('.dbtn[data-dir]').forEach(btn => {
+  const map = {up:[0,-1], down:[0,1], left:[-1,0], right:[1,0]};
+  btn.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    const d = map[btn.dataset.dir];
+    setDir(d[0], d[1]);
+  });
+});
+/* Arraste no tabuleiro */
+(function(){
+  let sx = 0, sy = 0, active = false;
+  boardEl.addEventListener('touchstart', e => {
+    const t = e.touches[0]; sx = t.clientX; sy = t.clientY; active = true;
+  }, {passive:true});
+  boardEl.addEventListener('touchend', e => {
+    if (!active) return;
+    active = false;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - sx, dy = t.clientY - sy;
+    if (Math.abs(dx) < 18 && Math.abs(dy) < 18) return;
+    if (Math.abs(dx) > Math.abs(dy)) setDir(dx > 0 ? 1 : -1, 0);
+    else setDir(0, dy > 0 ? 1 : -1);
+  });
+})();
+
+/* ─── Dica ─── */
+document.getElementById('hintBtn').addEventListener('click', () => {
+  GameSound.play('hint');
+  const target = state.tiles.find(t => t.target);
+  if (!target) return;
+  const cell = state.cells[target.r][target.c];
+  let n = 0;
+  const blink = setInterval(() => {
+    cell.style.outline = (n % 2 === 0) ? '3px solid var(--gold)' : 'none';
+    n++;
+    if (n > 5){ clearInterval(blink); cell.style.outline = 'none'; }
+  }, 180);
+});
+
+/* ─── Pausa ─── */
+function togglePause(){
+  if (!state.running) return;
+  state.paused = !state.paused;
+  document.getElementById('pauseOverlay').classList.toggle('show', state.paused);
+  if (state.paused) stopTicking(); else startTicking();
+}
+document.getElementById('pauseBtn').addEventListener('click', togglePause);
+document.getElementById('resumeBtn').addEventListener('click', togglePause);
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && state.running && !state.paused) togglePause();
+});
+
+/* ─── Fim de jogo / vitória de baralho ─── */
+function gameOver(){
+  state.running = false;
+  stopTicking();
+  GameSound.play('wrong');
+  document.getElementById('gameOverMsg').textContent =
+    `Você corrigiu ${state.fixed} palavra(s) e ganhou ${state.xp} XP. Bora tentar de novo?`;
+  document.getElementById('gameOverOverlay').classList.add('show');
+}
+function showWin(){
+  state.running = false;
+  stopTicking();
+  GameSound.play('win');
+  state.xp += 30;
+  updateHud();
+  document.getElementById('winMsg').textContent =
+    `Você corrigiu todas as ${PAIRS.length} palavras do baralho! +30 XP de bônus. As palavras vão reaparecer embaralhadas, ainda mais rápido.`;
+  document.getElementById('winOverlay').classList.add('show');
+}
+document.getElementById('restartBtn').addEventListener('click', () => {
+  document.getElementById('gameOverOverlay').classList.remove('show');
+  startGame();
+});
+document.getElementById('continueBtn').addEventListener('click', () => {
+  document.getElementById('winOverlay').classList.remove('show');
+  state.running = true;
+  initSnake();
+  loadWord();
+  render();
+  startTicking();
+});
+
+/* ─── Início do jogo ─── */
+function startGame(){
+  state.order = buildOrder();
+  state.orderIdx = 0;
+  state.lives = 3; state.xp = 0; state.fixed = 0; state.speed = 260;
+  state.paused = false; state.running = true;
+  updateHud();
+  initSnake();
+  loadWord();
+  render();
+  startTicking();
+}
+startGame();
+</script>
+</body>
+</html>
