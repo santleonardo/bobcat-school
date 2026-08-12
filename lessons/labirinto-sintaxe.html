@@ -323,13 +323,13 @@
   </div>
 
   <div class="win-banner" id="overBanner" style="background:linear-gradient(120deg,#3a0a12,#5c1220,#7a1a1a);background-size:300% 300%">
-    <h2>💀 Os fantasmas te pegaram!</h2>
+    <h2>💀 O cachorro e o rato te pegaram!</h2>
     <p class="win-sentence">Você perdeu todas as vidas. Que tal tentar de novo?</p>
     <p class="win-sentence">⭐ XP final: <span id="overXp">0</span></p>
     <button class="btn" id="retryBtn">🔄 Jogar novamente</button>
   </div>
 
-  <p class="hint-text">Toque em "❓ Como jogar" a qualquer momento para ver as instruções de novo. Fuja dos fantasmas 👻 e pegue os corações ❤️ para ganhar vidas extras!</p>
+  <p class="hint-text">Toque em "❓ Como jogar" a qualquer momento para ver as instruções de novo. Fuja do cachorro 🐕 e do rato 🐀 e pegue os corações ❤️ para ganhar vidas extras!</p>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -812,7 +812,7 @@ function loadRound(){
   const ghostPool = farCells.length ? farCells.slice(0, Math.max(GHOST_COUNT*3, 6)) : shuffle(Object.keys(startDist).map(Number).filter(i=>i!==0));
   const ghostCells = shuffle(ghostPool).slice(0, GHOST_COUNT);
   ghosts = ghostCells.map((idx, i) => ({
-    idx, r: Math.floor(idx/COLS), c: idx%COLS, emoji: ['👻','🎃','👹','🐍'][i % 4]
+    idx, r: Math.floor(idx/COLS), c: idx%COLS, emoji: ['🐕','🐀','🐶','🐭'][i % 4]
   }));
 
   document.getElementById('topicPill').textContent = 'Tema: ' + currentRound.topic;
@@ -1057,7 +1057,7 @@ function loseLife(){
   lives--;
   updateLivesUI();
   GameSound.play('wrong');
-  showToast('👻 Fantasma! -1 vida. Você tem 1,4s de proteção.', 'bad');
+  showToast('🐕 Ou 🐀 te pegou! -1 vida. Você tem 1,4s de proteção.', 'bad');
   const card = document.querySelector('.maze-card');
   card.classList.remove('hit'); void card.offsetWidth; card.classList.add('hit');
 
@@ -1103,7 +1103,7 @@ function checkHeartPickup(){
   info.collected = true;
   if (lives < MAX_LIVES){
     lives++;
-    showToast('❤️ Vida extra! Cuidado com os fantasmas.', 'good');
+    showToast('❤️ Vida extra! Cuidado com o cachorro e o rato.', 'good');
   } else {
     showToast('❤️ Vidas no máximo! +5 XP de bônus.', 'good');
   }
