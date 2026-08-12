@@ -563,6 +563,34 @@ function findDeadEnds(g){
   return ends;
 }
 
+/* ─── Rotas de escape: abre alguns atalhos extras no labirinto perfeito
+   para que o jogador tenha mais de um caminho e possa fugir dos fantasmas ─── */
+const ESCAPE_ROUTES = 9;
+function addEscapeRoutes(g, count){
+  const idx = (r,c) => r*COLS+c;
+  const DIRS = [
+    {k:'N', dr:-1, dc:0, opp:'S'},
+    {k:'S', dr:1, dc:0, opp:'N'},
+    {k:'E', dr:0, dc:1, opp:'W'},
+    {k:'W', dr:0, dc:-1, opp:'E'}
+  ];
+  let added = 0, attempts = 0;
+  while (added < count && attempts < count * 30){
+    attempts++;
+    const r = Math.floor(Math.random()*ROWS);
+    const c = Math.floor(Math.random()*COLS);
+    const i = idx(r,c);
+    const d = DIRS[Math.floor(Math.random()*DIRS.length)];
+    const nr = r+d.dr, nc = c+d.dc;
+    if (nr<0 || nr>=ROWS || nc<0 || nc>=COLS) continue;
+    const ni = idx(nr,nc);
+    if (!g[i][d.k]) continue; // já é passagem aberta
+    g[i][d.k] = false;
+    g[ni][d.opp] = false;
+    added++;
+  }
+}
+
 /* ─── Utilidades de grafo (para fantasmas) ─── */
 function cellNeighbors(idx){
   const r = Math.floor(idx/COLS), c = idx%COLS;
@@ -603,8 +631,15 @@ function loadRound(){
   document.getElementById('overBanner').classList.remove('show');
   document.querySelector('.maze-card').classList.remove('hit');
 
-  grid = buildGrid();
-  const deadEnds = shuffle(findDeadEnds(grid));
+  const minDeadEndsNeeded = currentRound.parts.length + HEART_COUNT;
+  let rawDeadEnds, guard = 0;
+  do {
+    grid = buildGrid();
+    addEscapeRoutes(grid, ESCAPE_ROUTES);
+    rawDeadEnds = findDeadEnds(grid);
+    guard++;
+  } while (rawDeadEnds.length < minDeadEndsNeeded && guard < 30);
+  const deadEnds = shuffle(rawDeadEnds);
   const letters = shuffle(LETTERS.slice(0, currentRound.parts.length));
 
   deadEndMap = {}; // cellIndex -> {letter, partIndex}
