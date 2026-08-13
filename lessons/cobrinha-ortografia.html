@@ -276,58 +276,57 @@
    (palavras mais curtas e comuns primeiro, mais longas e sutis depois). */
 const PAIRS = [
   // U/O final (pronúncia coloquial do "o" átono)
-  ['OVU','OVO'], ['GATU','GATO'], ['SAPU','SAPO'], ['RATU','RATO'], ['PATU','PATO'],
-  ['DEDU','DEDO'], ['BOLU','BOLO'], ['CARRU','CARRO'], ['LIVRU','LIVRO'], ['PRATU','PRATO'],
-  ['QUADRU','QUADRO'], ['MACACU','MACACO'], ['CAVALU','CAVALO'], ['MENINU','MENINO'], ['CACHORRU','CACHORRO'],
+  ['OVU','OVO','cat1'], ['GATU','GATO','cat1'], ['SAPU','SAPO','cat1'], ['RATU','RATO','cat1'], ['PATU','PATO','cat1'],
+  ['DEDU','DEDO','cat1'], ['BOLU','BOLO','cat1'], ['CARRU','CARRO','cat1'], ['LIVRU','LIVRO','cat1'], ['PRATU','PRATO','cat1'],
+  ['QUADRU','QUADRO','cat1'], ['MACACU','MACACO','cat1'], ['CAVALU','CAVALO','cat1'], ['MENINU','MENINO','cat1'], ['CACHORRU','CACHORRO','cat1'],
   // L final (pronúncia coloquial do "l" como "u")
-  ['PAPEU','PAPEL'], ['FAROU','FAROL'], ['CANAU','CANAL'], ['SINAU','SINAL'], ['MORAU','MORAL'],
-  ['LOCAU','LOCAL'], ['TOTAU','TOTAL'], ['GERAU','GERAL'], ['LEGAU','LEGAL'], ['IGUAU','IGUAL'],
-  ['ATUAU','ATUAL'], ['VITAU','VITAL'], ['BRASIU','BRASIL'], ['ANIMAU','ANIMAL'], ['JORNAU','JORNAL'],
-  ['NATURAU','NATURAL'], ['HOSPITAU','HOSPITAL'],
+  ['PAPEU','PAPEL','cat2'], ['FAROU','FAROL','cat2'], ['CANAU','CANAL','cat2'], ['SINAU','SINAL','cat2'], ['MORAU','MORAL','cat2'],
+  ['LOCAU','LOCAL','cat2'], ['TOTAU','TOTAL','cat2'], ['GERAU','GERAL','cat2'], ['LEGAU','LEGAL','cat2'], ['IGUAU','IGUAL','cat2'],
+  ['ATUAU','ATUAL','cat2'], ['VITAU','VITAL','cat2'], ['BRASIU','BRASIL','cat2'], ['ANIMAU','ANIMAL','cat2'], ['JORNAU','JORNAL','cat2'],
+  ['NATURAU','NATURAL','cat2'], ['HOSPITAU','HOSPITAL','cat2'],
   // G/J (sons parecidos antes de E e I)
-  ['JENTE','GENTE'], ['JESSO','GESSO'], ['JESTO','GESTO'], ['JIRAFA','GIRAFA'], ['AJENDA','AGENDA'],
-  ['JELEIA','GELEIA'], ['JENTIL','GENTIL'], ['JIGANTE','GIGANTE'], ['PASSAJEM','PASSAGEM'], ['JIGANTESCO','GIGANTESCO'],
+  ['JENTE','GENTE','cat3'], ['JESSO','GESSO','cat3'], ['JESTO','GESTO','cat3'], ['JIRAFA','GIRAFA','cat3'], ['AJENDA','AGENDA','cat3'],
+  ['JELEIA','GELEIA','cat3'], ['JENTIL','GENTIL','cat3'], ['JIGANTE','GIGANTE','cat3'], ['PASSAJEM','PASSAGEM','cat3'], ['JIGANTESCO','GIGANTESCO','cat3'],
   // X/CH (mesmo som "x")
-  ['XHUVA','CHUVA'], ['XHAVE','CHAVE'], ['XHEIO','CHEIO'], ['FIXHA','FICHA'], ['BIXHO','BICHO'],
-  ['XHAPEU','CHAPEU'], ['XHEGAR','CHEGAR'], ['XHORAR','CHORAR'], ['XHUTAR','CHUTAR'], ['XHIQUE','CHIQUE'],
-  ['MANXHA','MANCHA'], ['GUARDA-XHUVA','GUARDA-CHUVA'],
+  ['XHUVA','CHUVA','cat4'], ['XHAVE','CHAVE','cat4'], ['XHEIO','CHEIO','cat4'], ['FIXHA','FICHA','cat4'], ['BIXHO','BICHO','cat4'],
+  ['XHAPEU','CHAPEU','cat4'], ['XHEGAR','CHEGAR','cat4'], ['XHORAR','CHORAR','cat4'], ['XHUTAR','CHUTAR','cat4'], ['XHIQUE','CHIQUE','cat4'],
+  ['MANXHA','MANCHA','cat4'], ['GUARDA-XHUVA','GUARDA-CHUVA','cat4'],
   // E/I (vogal átona no início/meio que soa como "i")
-  ['ISCOLA','ESCOLA'], ['ISTRELA','ESTRELA'], ['IMBAIXO','EMBAIXO'], ['ISPELHO','ESPELHO'],
-  ['PIQUENO','PEQUENO'], ['VISTIDO','VESTIDO'], ['ILEFANTE','ELEFANTE'], ['INVELOPE','ENVELOPE'],
+  ['ISCOLA','ESCOLA','cat5'], ['ISTRELA','ESTRELA','cat5'], ['IMBAIXO','EMBAIXO','cat5'], ['ISPELHO','ESPELHO','cat5'], ['PIQUENO','PEQUENO','cat5'],
+  ['VISTIDO','VESTIDO','cat5'], ['ILEFANTE','ELEFANTE','cat5'], ['INVELOPE','ENVELOPE','cat5'],
   // O/U (vogal átona no meio da palavra que soa como "u")
-  ['BUNITO','BONITO'], ['CUMIDA','COMIDA'], ['BUNECA','BONECA'], ['CULEGA','COLEGA'],
-  ['DURMIR','DORMIR'], ['BUTECO','BOTECO'], ['SURRISO','SORRISO'], ['MUMENTO','MOMENTO'],
-  ['CURTINA','CORTINA'], ['FUGUEIRA','FOGUEIRA'],
+  ['BUNITO','BONITO','cat6'], ['CUMIDA','COMIDA','cat6'], ['BUNECA','BONECA','cat6'], ['CULEGA','COLEGA','cat6'], ['DURMIR','DORMIR','cat6'],
+  ['BUTECO','BOTECO','cat6'], ['SURRISO','SORRISO','cat6'], ['MUMENTO','MOMENTO','cat6'], ['CURTINA','CORTINA','cat6'], ['FUGUEIRA','FOGUEIRA','cat6'],
   // S/Z (mesmo som entre vogais ou no final)
-  ['CAZA','CASA'], ['CAPAS','CAPAZ'], ['FELIS','FELIZ'], ['RAPAS','RAPAZ'], ['NARIS','NARIZ'],
-  ['ARROS','ARROZ'], ['BELESA','BELEZA'], ['CRUSAR','CRUZAR'], ['BUSINA','BUZINA'], ['COSINHA','COZINHA'],
-  ['EMPREZA','EMPRESA'], ['VISINHO','VIZINHO'], ['ANALIZAR','ANALISAR'], ['PESQUIZA','PESQUISA'],
+  ['CAZA','CASA','cat7'], ['CAPAS','CAPAZ','cat7'], ['FELIS','FELIZ','cat7'], ['RAPAS','RAPAZ','cat7'], ['NARIS','NARIZ','cat7'],
+  ['ARROS','ARROZ','cat7'], ['BELESA','BELEZA','cat7'], ['CRUSAR','CRUZAR','cat7'], ['BUSINA','BUZINA','cat7'], ['COSINHA','COZINHA','cat7'],
+  ['EMPREZA','EMPRESA','cat7'], ['VISINHO','VIZINHO','cat7'], ['ANALIZAR','ANALISAR','cat7'], ['PESQUIZA','PESQUISA','cat7'],
   // M antes de P/B (nasal: usa-se M, não N)
-  ['CANPO','CAMPO'], ['TENPO','TEMPO'], ['SANBA','SAMBA'], ['LINPO','LIMPO'], ['ENPATE','EMPATE'],
-  ['ENBORA','EMBORA'], ['TRONBA','TROMBA'], ['TANBOR','TAMBOR'], ['BONBOM','BOMBOM'], ['EXENPLO','EXEMPLO'],
-  ['INPOSTO','IMPOSTO'], ['CONPRAR','COMPRAR'],
+  ['CANPO','CAMPO','cat8'], ['TENPO','TEMPO','cat8'], ['SANBA','SAMBA','cat8'], ['LINPO','LIMPO','cat8'], ['ENPATE','EMPATE','cat8'],
+  ['ENBORA','EMBORA','cat8'], ['TRONBA','TROMBA','cat8'], ['TANBOR','TAMBOR','cat8'], ['BONBOM','BOMBOM','cat8'], ['EXENPLO','EXEMPLO','cat8'],
+  ['INPOSTO','IMPOSTO','cat8'], ['CONPRAR','COMPRAR','cat8'],
   // NH x LH (sons parecidos, fácil de trocar)
-  ['NILHO','NINHO'], ['GALILHA','GALINHA'], ['CARILHO','CARINHO'], ['TAMALHO','TAMANHO'],
-  ['CAMILHO','CAMINHO'], ['SOZILHO','SOZINHO'],
+  ['NILHO','NINHO','cat9'], ['GALILHA','GALINHA','cat9'], ['CARILHO','CARINHO','cat9'], ['TAMALHO','TAMANHO','cat9'], ['CAMILHO','CAMINHO','cat9'],
+  ['SOZILHO','SOZINHO','cat9'],
   // M final (pronúncia nasal parecida com "n")
-  ['ITEN','ITEM'], ['HOMEN','HOMEM'], ['JOVEN','JOVEM'], ['NUVEN','NUVEM'], ['ORDEN','ORDEM'],
-  ['VIAGEN','VIAGEM'], ['ORIGEN','ORIGEM'], ['IMAGEN','IMAGEM'], ['GARAGEN','GARAGEM'], ['CORAGEN','CORAGEM'],
-  ['VOLTAGEN','VOLTAGEM'], ['FERRAGEN','FERRAGEM'], ['VANTAGEN','VANTAGEM'], ['LINGUAGEN','LINGUAGEM'],
+  ['ITEN','ITEM','cat10'], ['HOMEN','HOMEM','cat10'], ['JOVEN','JOVEM','cat10'], ['NUVEN','NUVEM','cat10'], ['ORDEN','ORDEM','cat10'],
+  ['VIAGEN','VIAGEM','cat10'], ['ORIGEN','ORIGEM','cat10'], ['IMAGEN','IMAGEM','cat10'], ['GARAGEN','GARAGEM','cat10'], ['CORAGEN','CORAGEM','cat10'],
+  ['VOLTAGEN','VOLTAGEM','cat10'], ['FERRAGEN','FERRAGEM','cat10'], ['VANTAGEN','VANTAGEM','cat10'], ['LINGUAGEN','LINGUAGEM','cat10'],
   // Acento agudo esquecido (á, é, í, ó, ú)
-  ['AVO','AVÓ'], ['IMA','IMÃ'], ['CAFE','CAFÉ'], ['TAXI','TÁXI'], ['AGUA','ÁGUA'],
-  ['LAPIS','LÁPIS'], ['SAUDE','SAÚDE'], ['OCULOS','ÓCULOS'], ['ULTIMO','ÚLTIMO'],
-  ['ARVORE','ÁRVORE'], ['MAQUINA','MÁQUINA'],
+  ['AVO','AVÓ','cat11'], ['IMA','IMÃ','cat11'], ['CAFE','CAFÉ','cat11'], ['TAXI','TÁXI','cat11'], ['AGUA','ÁGUA','cat11'],
+  ['LAPIS','LÁPIS','cat11'], ['SAUDE','SAÚDE','cat11'], ['OCULOS','ÓCULOS','cat11'], ['ULTIMO','ÚLTIMO','cat11'], ['ARVORE','ÁRVORE','cat11'],
+  ['MAQUINA','MÁQUINA','cat11'],
   // Acento circunflexo esquecido (â, ê, ô)
-  ['VOCE','VOCÊ'], ['BEBE','BEBÊ'], ['TENIS','TÊNIS'], ['ONIBUS','ÔNIBUS'], ['PESSEGO','PÊSSEGO'],
+  ['VOCE','VOCÊ','cat12'], ['BEBE','BEBÊ','cat12'], ['TENIS','TÊNIS','cat12'], ['ONIBUS','ÔNIBUS','cat12'], ['PESSEGO','PÊSSEGO','cat12'],
   // Til esquecido (ã, õ)
-  ['IRMA','IRMÃ'], ['MAMAE','MAMÃE'], ['ALEMAO','ALEMÃO'], ['CIDADAO','CIDADÃO'],
+  ['IRMA','IRMÃ','cat13'], ['MAMAE','MAMÃE','cat13'], ['ALEMAO','ALEMÃO','cat13'], ['CIDADAO','CIDADÃO','cat13'],
   // Cedilha esquecida (ç no lugar do c)
-  ['MOCA','MOÇA'], ['CALCA','CALÇA'], ['FORCA','FORÇA'], ['DANCA','DANÇA'], ['PRECO','PREÇO'],
-  ['ESPACO','ESPAÇO'], ['CABECA','CABEÇA'], ['ALMOCO','ALMOÇO'], ['CRIANCA','CRIANÇA'],
-  ['COMECAR','COMEÇAR'], ['PREGUICA','PREGUIÇA'],
+  ['MOCA','MOÇA','cat14'], ['CALCA','CALÇA','cat14'], ['FORCA','FORÇA','cat14'], ['DANCA','DANÇA','cat14'], ['PRECO','PREÇO','cat14'],
+  ['ESPACO','ESPAÇO','cat14'], ['CABECA','CABEÇA','cat14'], ['ALMOCO','ALMOÇO','cat14'], ['CRIANCA','CRIANÇA','cat14'], ['COMECAR','COMEÇAR','cat14'],
+  ['PREGUICA','PREGUIÇA','cat14'],
   // LH (dígrafo real, trocado pelo som parecido de "nh")
-  ['ILHA','INHA'], ['FILHO','FINHO'], ['VELHO','VENHO'], ['PALHA','PANHA'], ['JOELHO','JOENHO'],
-  ['ORELHA','ORENHA'], ['TRABALHO','TRABANHO']
+  ['ILHA','INHA','cat15'], ['FILHO','FINHO','cat15'], ['VELHO','VENHO','cat15'], ['PALHA','PANHA','cat15'], ['JOELHO','JOENHO','cat15'],
+  ['ORELHA','ORENHA','cat15'], ['TRABALHO','TRABANHO','cat15']
 ];
 const ALPHABET = 'ABCDEFGHIJLMNOPQRSTUVXZÁÉÍÓÚÂÊÔÃÕÇ';
 const DECOY_COUNT = 7; // mais iscas no tabuleiro = mais difícil de achar a letra certa
@@ -356,15 +355,27 @@ function shuffle(arr){
   }
   return a;
 }
-/* Embaralha dentro de blocos de 10, mantendo a tendência de
-   dificuldade crescente do baralho, mas sem repetir sempre a mesma ordem. */
+/* Embaralha o baralho inteiro (máxima aleatoriedade) e depois faz uma
+   passada de correção pra garantir que o mesmo tipo de erro (3º item de
+   cada par, ex.: "cat2" = L final) não apareça várias vezes seguidas —
+   é isso que antes deixava o jogo emendando PATU, RATU, BRASIU etc.
+   um atrás do outro, já que eles ficavam no mesmo bloco fixo de 10. */
 function buildOrder(){
-  const CHUNK = 10;
-  const out = [];
-  for (let i = 0; i < PAIRS.length; i += CHUNK){
-    out.push(...shuffle(PAIRS.slice(i, i + CHUNK)));
+  const NO_REPEAT_WINDOW = 3; // não repete a mesma categoria nas últimas 3 cartas
+  const deck = shuffle(PAIRS);
+  for (let i = 1; i < deck.length; i++){
+    const recentCats = deck.slice(Math.max(0, i - NO_REPEAT_WINDOW), i).map(p => p[2]);
+    if (!recentCats.includes(deck[i][2])) continue;
+    // acha, mais à frente no baralho, uma carta de categoria diferente das recentes
+    let swapIdx = -1;
+    for (let j = i + 1; j < deck.length; j++){
+      if (!recentCats.includes(deck[j][2])){ swapIdx = j; break; }
+    }
+    if (swapIdx !== -1){
+      [deck[i], deck[swapIdx]] = [deck[swapIdx], deck[i]];
+    }
   }
-  return out;
+  return deck;
 }
 function diffIndex(a, b){
   for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return i;
