@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Concordância — Monta a Frase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="game-sound.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+<style>
+  :root{
+    --orange:#ff5b3d;--orange-dark:#e13a26;--orange-light:#ff7a5c;
+    --purple:#8b5cf6;--purple-dark:#6d28d9;--blue:#4da3ff;--pink:#ff4d94;--teal:#2dd9b9;
+    --cream:#1e1730;--cream-2:#241b3d;--cream-3:#0c0720;
+    --ink:#f7f1ec;--ink-soft:rgba(247,241,236,0.72);
+    --ok:#3dd68c;--ok-bg:rgba(61,214,140,0.18);--bad:#ff5b3d;
+    --border:rgba(255,255,255,0.14);--gold:#ffd23f;
+    --shadow:0 8px 26px rgba(0,0,0,0.45);
+    --radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{font-family:"Inter",sans-serif;color:var(--ink);min-height:100vh;
+    line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:40px;
+    background:
+      radial-gradient(circle at 10% 6%, rgba(139,92,246,.38), transparent 42%),
+      radial-gradient(circle at 90% 12%, rgba(45,217,185,.28), transparent 45%),
+      radial-gradient(circle at 50% 105%, rgba(255,91,61,.28), transparent 55%),
+      var(--cream-3);
+    background-attachment:fixed}
+  h1,h2,h3,.serif{font-family:"Fredoka","Poppins",sans-serif;letter-spacing:-.01em}
+
+  .hud{position:sticky;top:0;z-index:100;background:rgba(12,7,32,.88);backdrop-filter:blur(12px);
+    padding:12px 16px;border-bottom:1px solid var(--border);box-shadow:0 2px 0 rgba(139,92,246,.3);
+    display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap}
+  .hud-title{display:flex;align-items:center;gap:9px;font-weight:800;font-size:14.5px;font-family:"Fredoka",sans-serif}
+  .hud-title .icon{font-size:20px}
+  .hud-back{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
+    border-radius:10px;background:var(--cream);border:1px solid var(--border);color:var(--ink);
+    font-size:16px;text-decoration:none;cursor:pointer}
+  .hud-stats{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .stat{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:5px 11px;
+    font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:5px}
+  .stat.xp{color:var(--gold)}
+  .stat.level{color:var(--teal)}
+  .stat.streak{color:var(--pink)}
+  .btn-icon{width:34px;height:34px;border-radius:10px;background:var(--cream);border:1px solid var(--border);
+    color:var(--ink);font-size:15px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+
+  .wrap{max-width:640px;margin:0 auto;padding:14px 14px 0}
+
+  .intro-card{background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
+    border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);margin-bottom:14px}
+  .intro-card h2{font-size:17px;margin-bottom:6px}
+  .intro-card p{font-size:13px;color:var(--ink-soft);line-height:1.55}
+
+  .wrong-box{background:rgba(255,91,61,.12);border:1.5px solid rgba(255,91,61,.45);
+    border-radius:14px;padding:14px 16px;margin-bottom:14px;text-align:center}
+  .wrong-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;
+    color:var(--orange-light);margin-bottom:6px}
+  .wrong-sentence{font-size:18px;font-weight:700;font-family:"Fredoka",sans-serif;
+    text-decoration:line-through;text-decoration-color:rgba(255,91,61,.7);text-decoration-thickness:2px;
+    color:rgba(247,241,236,.85)}
+
+  .type-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;
+    font-size:11px;font-weight:800;margin-bottom:10px}
+  .type-badge.verbal{background:rgba(77,163,255,.2);color:#7ec0ff;border:1px solid rgba(77,163,255,.4)}
+  .type-badge.nominal{background:rgba(139,92,246,.2);color:#c4b5fd;border:1px solid rgba(139,92,246,.4)}
+  .type-badge.mista{background:rgba(45,217,185,.18);color:#5eead4;border:1px solid rgba(45,217,185,.4)}
+
+  .slots-area{background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
+    border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);margin-bottom:14px;min-height:70px}
+  .slots-label{font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase;
+    letter-spacing:.04em;margin-bottom:10px;text-align:center}
+  .slots{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;min-height:44px}
+  .slot{min-width:72px;min-height:42px;padding:8px 12px;border-radius:12px;font-size:14px;font-weight:700;
+    background:var(--cream-3);color:rgba(247,241,236,.3);border:2px dashed var(--border);
+    display:flex;align-items:center;justify-content:center;transition:all .2s;cursor:pointer;
+    user-select:none}
+  .slot.filled{border:2px solid transparent;color:#0a0a0b;background:linear-gradient(135deg,#ffe27a,var(--gold));
+    box-shadow:0 3px 12px rgba(255,210,63,.35);animation:popIn .28s cubic-bezier(.34,1.56,.64,1)}
+  .slot.hint-pulse{animation:pulse-hint .7s ease-in-out 2;border-color:var(--gold)}
+  @keyframes pulse-hint{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+  @keyframes popIn{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+
+  .pool-area{background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
+    border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);margin-bottom:14px}
+  .pool-label{font-size:11px;font-weight:800;color:var(--teal);text-transform:uppercase;
+    letter-spacing:.04em;margin-bottom:10px;text-align:center}
+  .pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .tile{padding:10px 14px;border-radius:12px;font-size:14px;font-weight:700;
+    background:linear-gradient(160deg,#2e2350,#241b3d);border:1.5px solid var(--border);
+    color:var(--ink);cursor:pointer;user-select:none;transition:transform .12s,box-shadow .12s,opacity .2s;
+    box-shadow:0 3px 10px rgba(0,0,0,.35)}
+  .tile:hover{transform:translateY(-2px);box-shadow:0 5px 14px rgba(139,92,246,.35);border-color:var(--purple)}
+  .tile:active{transform:scale(.95)}
+  .tile.used{opacity:.28;pointer-events:none;transform:scale(.92)}
+  .tile.correct-hint{border-color:var(--ok);box-shadow:0 0 0 2px rgba(61,214,140,.4)}
+
+  .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+  .btn{border:none;padding:12px 22px;border-radius:14px;font-size:14px;font-weight:800;
+    cursor:pointer;font-family:"Fredoka",sans-serif;transition:transform .15s cubic-bezier(.34,1.56,.64,1);
+    box-shadow:0 4px 14px rgba(0,0,0,.3)}
+  .btn:active{transform:scale(.93)}
+  .btn-check{background:linear-gradient(180deg,var(--ok),#2bb875);color:#0a1f14;border-bottom:3px solid #1e8a55}
+  .btn-check:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  .btn-hint{background:linear-gradient(180deg,#ffe27a,var(--gold));color:#3a2a00;border-bottom:3px solid #c98a1a}
+  .btn-clear{background:linear-gradient(180deg,#4a3f6a,#352d52);color:var(--ink);border:1px solid var(--border)}
+  .btn-next{background:linear-gradient(180deg,var(--orange-light),var(--orange));color:#fff;
+    border-bottom:3px solid var(--orange-dark)}
+
+  .feedback{text-align:center;min-height:28px;font-size:14px;font-weight:700;margin-bottom:8px}
+  .feedback.good{color:var(--ok)}
+  .feedback.bad{color:var(--orange-light)}
+
+  .win-banner{display:none;text-align:center;margin-top:8px;padding:22px 18px;border-radius:var(--radius);
+    background:linear-gradient(120deg,var(--pink),var(--purple),var(--blue),var(--teal),var(--gold),var(--orange));
+    background-size:300% 300%;box-shadow:0 12px 34px rgba(139,92,246,.45);margin-bottom:14px}
+  .win-banner.show{display:block;animation:popIn .4s cubic-bezier(.34,1.56,.64,1),rainbow 7s ease infinite .4s}
+  @keyframes rainbow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .win-banner h2{font-size:22px;margin-bottom:8px;text-shadow:0 2px 8px rgba(0,0,0,.3)}
+  .win-sentence{font-size:16px;font-weight:700;margin-bottom:6px;background:rgba(0,0,0,.25);
+    display:inline-block;padding:6px 14px;border-radius:10px}
+  .win-tip{font-size:12.5px;opacity:.9;margin-bottom:14px;max-width:420px;margin-left:auto;margin-right:auto}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);opacity:0;
+    background:var(--cream-2);border:1px solid var(--border);color:var(--ink);padding:11px 18px;
+    border-radius:11px;font-size:13px;font-weight:700;box-shadow:var(--shadow);transition:all .25s;
+    z-index:200;max-width:88vw;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.bad{color:var(--orange-light)}
+  .toast.good{color:var(--ok)}
+
+  .progress-bar{height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-bottom:14px}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--teal));border-radius:99px;
+    transition:width .35s ease}
+
+  .tip-box{background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.3);border-radius:12px;
+    padding:10px 14px;font-size:12.5px;color:var(--ink-soft);margin-bottom:12px;line-height:1.5}
+  .tip-box strong{color:#c4b5fd}
+
+  @media (max-width:420px){
+    .wrong-sentence{font-size:15px}
+    .tile,.slot{font-size:13px;padding:8px 11px}
+    .slot{min-width:60px}
+  }
+</style>
+</head>
+<body>
+
+<div class="hud">
+  <div style="display:flex;align-items:center;gap:8px">
+    <a class="hud-back" href="../index.html" title="Voltar">←</a>
+    <div class="hud-title"><span class="icon">✏️</span> Concordância</div>
+  </div>
+  <div class="hud-stats">
+    <div class="stat level">Nível <span id="levelNum">1</span></div>
+    <div class="stat xp">⭐ <span id="xpNum">0</span></div>
+    <div class="stat streak">🔥 <span id="streakNum">0</span></div>
+    <button class="btn-icon" data-sound-toggle title="Som">🔊</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <div class="intro-card" id="introCard">
+    <h2>Monta a frase certa!</h2>
+    <p>Você vê uma frase <strong>sem concordância</strong>. Escolha as palavras corretas no banco e monte a versão certa (verbal e/ou nominal). Toque nas peças para colocar e toque no espaço para remover.</p>
+  </div>
+
+  <div id="gameArea" style="display:none">
+    <div style="text-align:center;margin-bottom:8px">
+      <span class="type-badge" id="typeBadge">Verbal</span>
+    </div>
+
+    <div class="wrong-box">
+      <div class="wrong-label">❌ Frase incorreta</div>
+      <div class="wrong-sentence" id="wrongSentence"></div>
+    </div>
+
+    <div class="tip-box" id="tipBox" style="display:none"></div>
+
+    <div class="slots-area">
+      <div class="slots-label">✅ Monte a frase correta</div>
+      <div class="slots" id="slots"></div>
+    </div>
+
+    <div class="pool-area">
+      <div class="pool-label">🧩 Banco de palavras</div>
+      <div class="pool" id="pool"></div>
+    </div>
+
+    <div class="feedback" id="feedback"></div>
+
+    <div class="actions" id="actions">
+      <button class="btn btn-clear" id="btnClear">Limpar</button>
+      <button class="btn btn-hint" id="btnHint">Dica</button>
+      <button class="btn btn-check" id="btnCheck" disabled>Verificar</button>
+    </div>
+
+    <div class="win-banner" id="winBanner">
+      <h2>🎉 Acertou!</h2>
+      <div class="win-sentence" id="winSentence"></div>
+      <div class="win-tip" id="winTip"></div>
+      <button class="btn btn-next" id="btnNext">Próxima frase →</button>
+    </div>
+  </div>
+
+  <div id="endScreen" style="display:none;text-align:center;padding:30px 16px">
+    <div style="font-size:48px;margin-bottom:12px">🏆</div>
+    <h2 style="font-size:24px;margin-bottom:8px">Parabéns!</h2>
+    <p style="color:var(--ink-soft);margin-bottom:16px">Você completou todas as frases de concordância.</p>
+    <div class="stat xp" style="display:inline-flex;margin-bottom:18px;font-size:16px">⭐ <span id="finalXp">0</span> XP</div>
+    <br>
+    <button class="btn btn-next" id="btnRestart">Jogar de novo</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   BANCO DE FRASES — Concordância Verbal e Nominal
+   wrong: frase errada mostrada
+   correct: tokens da frase correta (na ordem)
+   options: todas as opções (corretas + distratoras)
+   type: 'verbal' | 'nominal' | 'mista'
+   tip: explicação curta após acertar
+   ═══════════════════════════════════════════════════════════ */
+const ROUNDS = [
+  {
+    wrong: "Eles foi a praia.",
+    correct: ["Eles", "foram", "à", "praia."],
+    options: ["Ele", "Eles", "foi", "foram", "a", "à", "para", "praia", "praia."],
+    type: "verbal",
+    tip: "Sujeito plural (Eles) exige verbo no plural: foram. 'Ir a' + lugar feminino com artigo → à (crase)."
+  },
+  {
+    wrong: "As menina é inteligentes.",
+    correct: ["As", "meninas", "são", "inteligentes."],
+    options: ["A", "As", "menina", "meninas", "é", "são", "inteligente", "inteligentes", "inteligentes."],
+    type: "mista",
+    tip: "Artigo, substantivo e adjetivo no plural; verbo ser concorda com o sujeito plural (são)."
+  },
+  {
+    wrong: "Nós gosta de chocolate.",
+    correct: ["Nós", "gostamos", "de", "chocolate."],
+    options: ["Eu", "Nós", "gosta", "gostamos", "gostam", "de", "do", "chocolate", "chocolate."],
+    type: "verbal",
+    tip: "Sujeito 'Nós' (1ª pessoa do plural) → verbo no presente: gostamos."
+  },
+  {
+    wrong: "O livro e a caneta está na mesa.",
+    correct: ["O", "livro", "e", "a", "caneta", "estão", "na", "mesa."],
+    options: ["O", "Os", "livro", "livros", "e", "a", "as", "caneta", "canetas", "está", "estão", "na", "mesa", "mesa."],
+    type: "verbal",
+    tip: "Sujeito composto (livro e caneta) → verbo no plural: estão."
+  },
+  {
+    wrong: "Minha amiga comprou duas blusa azul.",
+    correct: ["Minha", "amiga", "comprou", "duas", "blusas", "azuis."],
+    options: ["Minha", "Minhas", "amiga", "amigas", "comprou", "compraram", "duas", "dois", "blusa", "blusas", "azul", "azuis", "azuis."],
+    type: "nominal",
+    tip: "Numeral + substantivo + adjetivo: tudo no plural (duas blusas azuis)."
+  },
+  {
+    wrong: "Tu vai na escola amanhã?",
+    correct: ["Tu", "vais", "à", "escola", "amanhã?"],
+    options: ["Tu", "Você", "vai", "vais", "vão", "a", "à", "na", "escola", "amanhã", "amanhã?"],
+    type: "verbal",
+    tip: "Com o pronome 'Tu' o verbo vai para a 2ª pessoa: vais. 'Ir a' + artigo feminino → à."
+  },
+  {
+    wrong: "Aqueles menino são altos.",
+    correct: ["Aqueles", "meninos", "são", "altos."],
+    options: ["Aquele", "Aqueles", "Aquela", "menino", "meninos", "é", "são", "alto", "altos", "altos."],
+    type: "mista",
+    tip: "Pronome demonstrativo, substantivo e adjetivo no masculino plural; verbo ser no plural."
+  },
+  {
+    wrong: "A gente vamos ao cinema.",
+    correct: ["A", "gente", "vai", "ao", "cinema."],
+    options: ["A", "As", "gente", "gentes", "vai", "vamos", "vão", "ao", "aos", "cinema", "cinema."],
+    type: "verbal",
+    tip: "'A gente' é singular (equivale a 'nós', mas a concordância é na 3ª pessoa do singular): vai."
+  },
+  {
+    wrong: "Os aluno estudioso passou no teste.",
+    correct: ["Os", "alunos", "estudiosos", "passaram", "no", "teste."],
+    options: ["O", "Os", "aluno", "alunos", "estudioso", "estudiosos", "passou", "passaram", "no", "nos", "teste", "teste."],
+    type: "mista",
+    tip: "Artigo, substantivo e adjetivo no plural; verbo no plural (passaram)."
+  },
+  {
+    wrong: "Ela e eu foi ao parque.",
+    correct: ["Ela", "e", "eu", "fomos", "ao", "parque."],
+    options: ["Ela", "Eu", "e", "foi", "fomos", "foram", "ao", "a", "parque", "parque."],
+    type: "verbal",
+    tip: "Sujeito composto com 'eu' → 1ª pessoa do plural: fomos."
+  },
+  {
+    wrong: "Havia muitos problemas sérios no projeto.",
+    correct: ["Havia", "muitos", "problemas", "sérios", "no", "projeto."],
+    options: ["Havia", "Haviam", "muito", "muitos", "problema", "problemas", "sério", "sérios", "no", "projeto", "projeto."],
+    type: "mista",
+    tip: "O verbo 'haver' no sentido de existir é impessoal (fica no singular). Adjetivo e substantivo no plural."
+  },
+  {
+    wrong: "Fazem dois anos que ele saiu.",
+    correct: ["Faz", "dois", "anos", "que", "ele", "saiu."],
+    options: ["Faz", "Fazem", "dois", "duas", "ano", "anos", "que", "ele", "eles", "saiu", "saíram", "saiu."],
+    type: "verbal",
+    tip: "'Fazer' indicando tempo decorrido é impessoal → fica no singular: Faz dois anos."
+  },
+  {
+    wrong: "Meus irmão mais velho mora longe.",
+    correct: ["Meu", "irmão", "mais", "velho", "mora", "longe."],
+    options: ["Meu", "Meus", "irmão", "irmãos", "mais", "velho", "velhos", "mora", "moram", "longe", "longe."],
+    type: "mista",
+    tip: "Um só irmão → singular em tudo: Meu irmão mais velho mora."
+  },
+  {
+    wrong: "As notícia eram boas.",
+    correct: ["As", "notícias", "eram", "boas."],
+    options: ["A", "As", "notícia", "notícias", "era", "eram", "boa", "boas", "boas."],
+    type: "mista",
+    tip: "Artigo, substantivo e adjetivo no feminino plural; verbo no plural."
+  },
+  {
+    wrong: "Vocês precisa estudar mais.",
+    correct: ["Vocês", "precisam", "estudar", "mais."],
+    options: ["Você", "Vocês", "precisa", "precisam", "preciso", "estudar", "estuda", "mais", "mais."],
+    type: "verbal",
+    tip: "'Vocês' pede 3ª pessoa do plural: precisam."
+  },
+  {
+    wrong: "Um dos alunos chegaram atrasado.",
+    correct: ["Um", "dos", "alunos", "chegou", "atrasado."],
+    options: ["Um", "Uns", "dos", "das", "aluno", "alunos", "chegou", "chegaram", "atrasado", "atrasados", "atrasado."],
+    type: "verbal",
+    tip: "O núcleo do sujeito é 'Um' (singular) → verbo no singular: chegou. (Atrasado concorda com 'um aluno'.)"
+  },
+  {
+    wrong: "Ela comprou um calça preta e um sapato branca.",
+    correct: ["Ela", "comprou", "uma", "calça", "preta", "e", "um", "sapato", "branco."],
+    options: ["Ela", "comprou", "um", "uma", "calça", "preta", "pretas", "e", "um", "uma", "sapato", "branco", "branca", "branco."],
+    type: "nominal",
+    tip: "Calça é feminina (uma calça preta); sapato é masculino (um sapato branco)."
+  },
+  {
+    wrong: "Os dados do relatório está incorreto.",
+    correct: ["Os", "dados", "do", "relatório", "estão", "incorretos."],
+    options: ["O", "Os", "dado", "dados", "do", "da", "relatório", "está", "estão", "incorreto", "incorretos", "incorretos."],
+    type: "mista",
+    tip: "Núcleo do sujeito = 'dados' (plural) → verbo e predicativo no plural."
+  },
+  {
+    wrong: "Quem fez os exercícios foram os alunos.",
+    correct: ["Quem", "fez", "os", "exercícios", "foram", "os", "alunos."],
+    options: ["Quem", "fez", "fizeram", "os", "exercícios", "foi", "foram", "o", "os", "aluno", "alunos", "alunos."],
+    type: "verbal",
+    tip: "Em frases com 'quem' + predicativo plural, o verbo ser costuma ir para o plural concordando com o predicativo (foram os alunos)."
+  },
+  {
+    wrong: "Mais de um aluno faltaram à prova.",
+    correct: ["Mais", "de", "um", "aluno", "faltou", "à", "prova."],
+    options: ["Mais", "de", "um", "aluno", "alunos", "faltou", "faltaram", "a", "à", "prova", "prova."],
+    type: "verbal",
+    tip: "A expressão 'mais de um' leva o verbo para o singular: faltou."
+  },
+  {
+    wrong: "As criança brincava no parque.",
+    correct: ["As", "crianças", "brincavam", "no", "parque."],
+    options: ["A", "As", "criança", "crianças", "brincava", "brincavam", "no", "nos", "parque", "parque."],
+    type: "mista",
+    tip: "Artigo e substantivo no plural → verbo no plural: brincavam."
+  },
+  {
+    wrong: "Ele tinha comprado duas casa novas.",
+    correct: ["Ele", "tinha", "comprado", "duas", "casas", "novas."],
+    options: ["Ele", "tinha", "tinham", "comprado", "comprados", "duas", "dois", "casa", "casas", "nova", "novas", "novas."],
+    type: "nominal",
+    tip: "Numeral + substantivo + adjetivo no feminino plural: duas casas novas. O particípio com ter/haver fica invariável."
+  },
+  {
+    wrong: "Nós foi no shopping ontem.",
+    correct: ["Nós", "fomos", "ao", "shopping", "ontem."],
+    options: ["Nós", "Eu", "foi", "fomos", "foram", "no", "ao", "a", "shopping", "ontem", "ontem."],
+    type: "verbal",
+    tip: "'Nós' → fomos. Prefira 'ir a' (ao shopping) em vez de 'ir em'."
+  },
+  {
+    wrong: "Segue anexo os documentos solicitados.",
+    correct: ["Seguem", "anexos", "os", "documentos", "solicitados."],
+    options: ["Segue", "Seguem", "anexo", "anexos", "o", "os", "documento", "documentos", "solicitado", "solicitados", "solicitados."],
+    type: "mista",
+    tip: "O sujeito é 'os documentos' (plural) → verbo e adjetivo no plural: Seguem anexos..."
+  },
+  {
+    wrong: "A maioria dos alunos gosta de futebol.",
+    correct: ["A", "maioria", "dos", "alunos", "gosta", "de", "futebol."],
+    options: ["A", "As", "maioria", "maiorias", "dos", "das", "aluno", "alunos", "gosta", "gostam", "de", "futebol", "futebol."],
+    type: "verbal",
+    tip: "Com 'a maioria de' o verbo pode ficar no singular (concordando com 'maioria') ou no plural (com 'alunos'). A forma clássica é singular: gosta."
+  }
+];
+
+const TYPE_LABEL = {
+  verbal: { text: "🔵 Concordância Verbal", cls: "verbal" },
+  nominal: { text: "🟣 Concordância Nominal", cls: "nominal" },
+  mista: { text: "🟢 Verbal + Nominal", cls: "mista" }
+};
+
+let order = [];
+let current = null;
+let currentIndex = 0;
+let placed = [];          // array of { word, fromIndex } or null
+let usedOptions = new Set();
+let xp = 0;
+let streak = 0;
+let hintsUsed = 0;
+let roundSolved = false;
+
+function shuffle(arr){
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function toast(msg, kind){
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.className = "toast show" + (kind ? " " + kind : "");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+function updateHUD(){
+  document.getElementById("levelNum").textContent = currentIndex + 1;
+  document.getElementById("xpNum").textContent = xp;
+  document.getElementById("streakNum").textContent = streak;
+  const pct = Math.round((currentIndex / ROUNDS.length) * 100);
+  document.getElementById("progressFill").style.width = pct + "%";
+}
+
+function startGame(){
+  order = shuffle(ROUNDS.map((_, i) => i));
+  currentIndex = 0;
+  xp = 0;
+  streak = 0;
+  document.getElementById("introCard").style.display = "none";
+  document.getElementById("endScreen").style.display = "none";
+  document.getElementById("gameArea").style.display = "block";
+  loadRound();
+}
+
+function loadRound(){
+  if (currentIndex >= order.length){
+    showEnd();
+    return;
+  }
+  current = ROUNDS[order[currentIndex]];
+  roundSolved = false;
+  hintsUsed = 0;
+  placed = new Array(current.correct.length).fill(null);
+  usedOptions = new Set();
+
+  document.getElementById("wrongSentence").textContent = current.wrong;
+  const badge = document.getElementById("typeBadge");
+  const t = TYPE_LABEL[current.type];
+  badge.textContent = t.text;
+  badge.className = "type-badge " + t.cls;
+
+  document.getElementById("tipBox").style.display = "none";
+  document.getElementById("feedback").textContent = "";
+  document.getElementById("feedback").className = "feedback";
+  document.getElementById("winBanner").classList.remove("show");
+  document.getElementById("actions").style.display = "flex";
+  document.getElementById("btnCheck").disabled = true;
+
+  renderSlots();
+  renderPool();
+  updateHUD();
+}
+
+function renderSlots(){
+  const box = document.getElementById("slots");
+  box.innerHTML = "";
+  current.correct.forEach((_, i) => {
+    const s = document.createElement("div");
+    s.className = "slot" + (placed[i] ? " filled" : "");
+    s.textContent = placed[i] ? placed[i].word : "___";
+    s.dataset.idx = i;
+    s.addEventListener("click", () => removeFromSlot(i));
+    box.appendChild(s);
+  });
+  const full = placed.every(p => p !== null);
+  document.getElementById("btnCheck").disabled = !full || roundSolved;
+}
+
+function renderPool(){
+  const pool = document.getElementById("pool");
+  pool.innerHTML = "";
+  // Unique options, shuffled, but keep multiplicity if same word appears twice needed
+  const opts = shuffle([...current.options]);
+  opts.forEach((word, i) => {
+    const t = document.createElement("button");
+    t.className = "tile" + (usedOptions.has(i) ? " used" : "");
+    t.textContent = word;
+    t.dataset.optIdx = i;
+    t.dataset.word = word;
+    t.addEventListener("click", () => placeWord(word, i));
+    pool.appendChild(t);
+  });
+}
+
+function placeWord(word, optIdx){
+  if (roundSolved || usedOptions.has(optIdx)) return;
+  const empty = placed.findIndex(p => p === null);
+  if (empty === -1){
+    toast("Todos os espaços estão preenchidos. Remova alguma palavra.", "bad");
+    return;
+  }
+  placed[empty] = { word, fromIndex: optIdx };
+  usedOptions.add(optIdx);
+  GameSound.play("click");
+  renderSlots();
+  // mark tile used
+  const tiles = document.querySelectorAll(".tile");
+  tiles.forEach(t => {
+    if (+t.dataset.optIdx === optIdx) t.classList.add("used");
+  });
+}
+
+function removeFromSlot(i){
+  if (roundSolved || !placed[i]) return;
+  const { fromIndex } = placed[i];
+  usedOptions.delete(fromIndex);
+  placed[i] = null;
+  GameSound.play("move");
+  renderSlots();
+  renderPool(); // re-render to unlock tile
+}
+
+function clearAll(){
+  if (roundSolved) return;
+  placed = new Array(current.correct.length).fill(null);
+  usedOptions = new Set();
+  GameSound.play("click");
+  renderSlots();
+  renderPool();
+  document.getElementById("feedback").textContent = "";
+}
+
+function checkAnswer(){
+  if (roundSolved) return;
+  const built = placed.map(p => p.word);
+  const ok = built.length === current.correct.length &&
+             built.every((w, i) => w === current.correct[i]);
+
+  if (ok){
+    roundSolved = true;
+    const bonus = Math.max(5, 15 - hintsUsed * 4);
+    const streakBonus = streak >= 2 ? 5 : 0;
+    xp += bonus + streakBonus;
+    streak++;
+    GameSound.play("correct");
+    confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 }, colors: ["#ffd23f","#8b5cf6","#2dd9b9","#ff4d94"] });
+
+    document.getElementById("feedback").textContent = "";
+    document.getElementById("actions").style.display = "none";
+    document.getElementById("winSentence").textContent = current.correct.join(" ");
+    document.getElementById("winTip").textContent = current.tip;
+    document.getElementById("winBanner").classList.add("show");
+    updateHUD();
+  } else {
+    streak = 0;
+    GameSound.play("wrong");
+    document.getElementById("feedback").textContent = "Ainda não está correto. Revise a concordância!";
+    document.getElementById("feedback").className = "feedback bad";
+    // shake slots
+    document.querySelectorAll(".slot.filled").forEach(s => {
+      s.style.animation = "none";
+      s.offsetHeight;
+      s.style.animation = "popIn .3s";
+    });
+    updateHUD();
+  }
+}
+
+function giveHint(){
+  if (roundSolved) return;
+  // Find first wrong or empty slot and reveal the correct word
+  let target = -1;
+  for (let i = 0; i < current.correct.length; i++){
+    if (!placed[i] || placed[i].word !== current.correct[i]){
+      target = i;
+      break;
+    }
+  }
+  if (target === -1){
+    toast("Já está tudo certo!", "good");
+    return;
+  }
+  // Remove whatever is there
+  if (placed[target]){
+    usedOptions.delete(placed[target].fromIndex);
+    placed[target] = null;
+  }
+  // Find an available option that matches the correct word
+  const need = current.correct[target];
+  const poolTiles = [...document.querySelectorAll(".tile")];
+  let foundIdx = -1;
+  for (const t of poolTiles){
+    if (!t.classList.contains("used") && t.dataset.word === need){
+      foundIdx = +t.dataset.optIdx;
+      break;
+    }
+  }
+  // If the correct word was already used in a wrong place, free it
+  if (foundIdx === -1){
+    for (let i = 0; i < placed.length; i++){
+      if (placed[i] && placed[i].word === need){
+        usedOptions.delete(placed[i].fromIndex);
+        foundIdx = placed[i].fromIndex;
+        placed[i] = null;
+        break;
+      }
+    }
+  }
+  if (foundIdx !== -1){
+    placed[target] = { word: need, fromIndex: foundIdx };
+    usedOptions.add(foundIdx);
+  } else {
+    // fallback: force place without tracking
+    placed[target] = { word: need, fromIndex: -1 };
+  }
+  hintsUsed++;
+  GameSound.play("hint");
+  toast("Dica aplicada no espaço " + (target + 1), "good");
+  renderSlots();
+  renderPool();
+  // highlight
+  const slots = document.querySelectorAll(".slot");
+  if (slots[target]) slots[target].classList.add("hint-pulse");
+}
+
+function nextRound(){
+  currentIndex++;
+  loadRound();
+}
+
+function showEnd(){
+  document.getElementById("gameArea").style.display = "none";
+  document.getElementById("endScreen").style.display = "block";
+  document.getElementById("finalXp").textContent = xp;
+  document.getElementById("progressFill").style.width = "100%";
+  GameSound.play("win");
+  confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+}
+
+// Events
+document.getElementById("btnClear").addEventListener("click", clearAll);
+document.getElementById("btnHint").addEventListener("click", giveHint);
+document.getElementById("btnCheck").addEventListener("click", checkAnswer);
+document.getElementById("btnNext").addEventListener("click", nextRound);
+document.getElementById("btnRestart").addEventListener("click", startGame);
+
+// Auto-start after short intro (or click anywhere on intro)
+document.getElementById("introCard").addEventListener("click", startGame);
+// Also allow immediate start
+setTimeout(() => {
+  if (document.getElementById("gameArea").style.display === "none"){
+    // keep intro until user taps
+  }
+}, 100);
+
+// Keyboard support
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && !document.getElementById("btnCheck").disabled) checkAnswer();
+});
+</script>
+</body>
+</html>
