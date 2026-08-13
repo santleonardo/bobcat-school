@@ -235,6 +235,14 @@ const EXTRAS = [
     icon: '🐍',
     description: 'A palavra aparece escrita errada — guie a cobrinha até comer a letra do erro antes que ela se choque',
     url: 'lessons/cobrinha-ortografia.html'
+  },
+  {
+    id: 'concordancia-monta-frase',
+    group: 'Jogos',
+    name: 'Concordância — Monta a Frase',
+    icon: '✏️',
+    description: 'Receba uma frase sem concordância e monte a versão correta escolhendo as palavras certas no banco',
+    url: 'lessons/concordancia-monta-frase.html'
   }
 
 ];
