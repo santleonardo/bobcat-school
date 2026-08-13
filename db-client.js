@@ -420,6 +420,119 @@ function getLocalProgressOnly() {
   return raw ? JSON.parse(raw) : {};
 }
 
+// ---------- Progresso de jogos (ex.: Interpretação — Harmonia) ----------
+// Reutiliza a tabela `progress` com lesson_id = "game:<id>".
+// O estado do jogo vai em `answers` como JSON. Fallback: localStorage.
+
+const GAME_PROGRESS_PREFIX = 'game:';
+const GAME_LOCAL_KEY = 'bobcat_game_progress';
+
+function gameLessonId(gameId) {
+  return GAME_PROGRESS_PREFIX + String(gameId || '').replace(/^game:/, '');
+}
+
+function getLocalGameProgressAll() {
+  try {
+    const raw = localStorage.getItem(GAME_LOCAL_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function setLocalGameProgress(gameId, data) {
+  const all = getLocalGameProgressAll();
+  all[gameId] = Object.assign({}, data || {}, { updatedAt: new Date().toISOString() });
+  localStorage.setItem(GAME_LOCAL_KEY, JSON.stringify(all));
+}
+
+/** Lê o save de um jogo (Supabase se logado, senão local + migração legada). */
+async function getGameProgress(gameId, legacyLocalKey) {
+  await initDataLayer();
+  const id = String(gameId || '').trim();
+  if (!id) return {};
+
+  if (useSupabase && currentUserId) {
+    try {
+      const lessonId = gameLessonId(id);
+      const { data, error } = await supabaseClient
+        .from('progress')
+        .select('*')
+        .eq('user_id', currentUserId)
+        .eq('lesson_id', lessonId)
+        .maybeSingle();
+      if (error) console.error('getGameProgress', error);
+      else if (data) {
+        let payload = data.answers;
+        if (Array.isArray(payload) && payload.length && payload[0] && payload[0]._game) {
+          payload = payload[0].data;
+        }
+        if (payload && typeof payload === 'object' && !Array.isArray(payload)) {
+          setLocalGameProgress(id, payload);
+          return payload;
+        }
+      }
+    } catch (e) {
+      console.error('getGameProgress cloud', e);
+    }
+  }
+
+  const local = getLocalGameProgressAll()[id];
+  if (local && typeof local === 'object') return local;
+
+  if (legacyLocalKey) {
+    try {
+      const raw = localStorage.getItem(legacyLocalKey);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          setLocalGameProgress(id, parsed);
+          return parsed;
+        }
+      }
+    } catch (e) { /* ignore */ }
+  }
+  return {};
+}
+
+/**
+ * Grava o save de um jogo.
+ * @returns {{ savedTo: string }}
+ */
+async function saveGameProgress(gameId, data) {
+  await initDataLayer();
+  const id = String(gameId || '').trim();
+  const payload = Object.assign({}, data || {}, { updatedAt: new Date().toISOString() });
+  if (!id) return { savedTo: 'local-no-cloud' };
+
+  setLocalGameProgress(id, payload);
+
+  if (useSupabase && currentUserId) {
+    const cleared = payload.cleared || {};
+    const clearedN = Object.keys(cleared).filter(function (k) { return cleared[k]; }).length;
+    const totalScenarios = typeof payload.totalScenarios === 'number' ? payload.totalScenarios : 5;
+    const row = {
+      user_id: currentUserId,
+      lesson_id: gameLessonId(id),
+      completed: clearedN >= totalScenarios,
+      correct: clearedN,
+      total: totalScenarios,
+      answers: [{ _game: true, data: payload }],
+      last_attempt: new Date().toISOString()
+    };
+    const { error } = await supabaseClient
+      .from('progress')
+      .upsert(row, { onConflict: 'user_id,lesson_id' });
+    if (error) {
+      console.error('saveGameProgress', error);
+      return { savedTo: 'local-error' };
+    }
+    return { savedTo: 'cloud' };
+  }
+
+  return { savedTo: useSupabase ? 'local-no-login' : 'local-no-cloud' };
+}
+
 // ---------- Captura automática das respostas (para o professor revisar) ----------
 // Lê o gabarito direto do que já existe no HTML de cada lição — não precisa
 // editar lição por lição. Cobre os dois padrões usados nas lições:
