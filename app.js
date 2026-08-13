@@ -243,6 +243,14 @@ const EXTRAS = [
     icon: '✏️',
     description: 'Receba uma frase sem concordância e monte a versão correta escolhendo as palavras certas no banco',
     url: 'lessons/concordancia-monta-frase.html'
+  },
+  {
+    id: 'interpretacao-harmonia',
+    group: 'Jogos',
+    name: 'Interpretação — Harmonia',
+    icon: '🗣️',
+    description: 'Converse em entrevistas, coletivas e na rua: interprete o implícito, mantenha a harmonia e desvende um mistério',
+    url: 'lessons/interpretacao-harmonia.html'
   }
 
 ];
@@ -1317,7 +1325,7 @@ async function renderExtras() {
     'Jogos': {
       icon: '🎮',
       short: 'Jogos',
-      blurb: 'Caça-palavras, labirinto e outros jogos para praticar gramática de um jeito leve.'
+      blurb: 'Caça-palavras, labirinto, concordância, interpretação e outros jogos para praticar de um jeito leve.'
     },
     'Outros': {
       icon: '📎',
