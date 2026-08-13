@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Interpretação — Harmonia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="game-sound.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+<style>
+  :root{
+    --orange:#ff5b3d;--orange-dark:#e13a26;--orange-light:#ff7a5c;
+    --purple:#8b5cf6;--purple-dark:#6d28d9;--blue:#4da3ff;--pink:#ff4d94;--teal:#2dd9b9;
+    --cream:#1e1730;--cream-2:#241b3d;--cream-3:#0c0720;
+    --ink:#f7f1ec;--ink-soft:rgba(247,241,236,0.72);
+    --ok:#3dd68c;--ok-bg:rgba(61,214,140,0.18);--bad:#ff5b3d;
+    --border:rgba(255,255,255,0.14);--gold:#ffd23f;
+    --shadow:0 8px 26px rgba(0,0,0,0.45);
+    --radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{font-family:"Inter",sans-serif;color:var(--ink);min-height:100vh;
+    line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:40px;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(139,92,246,.36), transparent 42%),
+      radial-gradient(circle at 88% 14%, rgba(45,217,185,.22), transparent 45%),
+      radial-gradient(circle at 50% 100%, rgba(255,91,61,.22), transparent 55%),
+      var(--cream-3);
+    background-attachment:fixed}
+  h1,h2,h3,.serif{font-family:"Fredoka","Poppins",sans-serif;letter-spacing:-.01em}
+
+  .hud{position:sticky;top:0;z-index:100;background:rgba(12,7,32,.9);backdrop-filter:blur(12px);
+    padding:12px 16px;border-bottom:1px solid var(--border);box-shadow:0 2px 0 rgba(139,92,246,.3);
+    display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap}
+  .hud-title{display:flex;align-items:center;gap:9px;font-weight:800;font-size:14.5px;font-family:"Fredoka",sans-serif}
+  .hud-back{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
+    border-radius:10px;background:var(--cream);border:1px solid var(--border);color:var(--ink);
+    font-size:16px;text-decoration:none;cursor:pointer}
+  .hud-stats{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .stat{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:5px 11px;
+    font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:5px}
+  .stat.xp{color:var(--gold)}
+  .stat.harm{color:var(--teal)}
+  .stat.done{color:var(--pink)}
+  .stat.timer{color:var(--orange-light);min-width:52px;justify-content:center}
+  .stat.timer.urgent{background:rgba(255,91,61,.25);border-color:rgba(255,91,61,.5);animation:timerPulse .5s ease infinite}
+  @keyframes timerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+  .btn-icon{width:34px;height:34px;border-radius:10px;background:var(--cream);border:1px solid var(--border);
+    color:var(--ink);font-size:15px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+
+  .timer-bar{height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-bottom:12px}
+  .timer-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--teal),var(--gold));
+    transition:width 0.2s linear}
+  .timer-fill.urgent{background:linear-gradient(90deg,var(--orange),var(--bad))}
+
+  .wrap{max-width:640px;margin:0 auto;padding:14px 14px 0}
+
+  .screen{display:none}
+  .screen.show{display:block;animation:fadeUp .35s ease}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  .card{background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
+    border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+
+  .intro h2{font-size:22px;margin-bottom:8px}
+  .intro p{font-size:13.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:10px}
+
+  .scenario-grid{display:flex;flex-direction:column;gap:12px;margin:16px 0}
+  .scenario-card{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:16px;
+    background:rgba(255,255,255,.04);border:1.5px solid var(--border);cursor:pointer;
+    transition:transform .12s,border-color .15s,box-shadow .15s;text-align:left;color:inherit;font:inherit;width:100%}
+  .scenario-card:hover{border-color:var(--purple);box-shadow:0 0 0 2px rgba(139,92,246,.25);transform:translateY(-2px)}
+  .scenario-card:active{transform:scale(.98)}
+  .scenario-card.cleared{border-color:rgba(61,214,140,.45);background:rgba(61,214,140,.08)}
+  .sc-top{display:flex;align-items:center;gap:12px}
+  .sc-emoji{font-size:32px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;
+    border-radius:14px;background:rgba(139,92,246,.2)}
+  .sc-info{flex:1}
+  .sc-info strong{display:block;font-size:15px;font-family:"Fredoka",sans-serif;margin-bottom:2px}
+  .sc-info span{font-size:12px;color:var(--ink-soft);line-height:1.4}
+  .sc-goal{font-size:12.5px;padding:8px 11px;border-radius:10px;background:rgba(255,210,63,.1);
+    border:1px solid rgba(255,210,63,.3);color:var(--gold);line-height:1.4}
+  .sc-status{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+  .sc-status.ok{color:var(--ok)}
+  .sc-status.wait{color:var(--ink-soft)}
+
+  .mystery-teaser{font-size:12.5px;color:var(--ink-soft);background:rgba(139,92,246,.12);
+    border:1px solid rgba(139,92,246,.3);border-radius:12px;padding:12px 14px;margin-bottom:8px;line-height:1.5}
+  .mystery-teaser strong{color:#c4b5fd}
+
+  .btn{border:none;padding:13px 24px;border-radius:14px;font-size:14.5px;font-weight:800;
+    cursor:pointer;font-family:"Fredoka",sans-serif;transition:transform .15s cubic-bezier(.34,1.56,.64,1);
+    box-shadow:0 4px 14px rgba(0,0,0,.3)}
+  .btn:active{transform:scale(.93)}
+  .btn-primary{background:linear-gradient(180deg,var(--orange-light),var(--orange));color:#fff;
+    border-bottom:3px solid var(--orange-dark)}
+  .btn-ghost{background:linear-gradient(180deg,#4a3f6a,#352d52);color:var(--ink);border:1px solid var(--border)}
+
+  .phase-header{text-align:center;margin-bottom:14px}
+  .phase-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:99px;
+    font-size:11px;font-weight:800;background:rgba(139,92,246,.2);color:#c4b5fd;border:1px solid rgba(139,92,246,.4);
+    margin-bottom:8px}
+  .phase-title{font-size:18px;margin-bottom:4px}
+  .phase-sub{font-size:12.5px;color:var(--ink-soft)}
+  .phase-goal{font-size:12.5px;color:var(--gold);margin-top:6px;font-weight:600}
+
+  .char-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+  .avatar{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,var(--purple),var(--pink));
+    display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;
+    box-shadow:0 4px 16px rgba(139,92,246,.35)}
+  .bubble{flex:1;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:16px 16px 16px 4px;
+    padding:12px 14px;font-size:14px;line-height:1.55}
+  .bubble .who{font-size:11px;font-weight:800;color:var(--gold);margin-bottom:4px;text-transform:uppercase;letter-spacing:.04em}
+
+  .context-box{font-size:12px;color:var(--ink-soft);background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);
+    border-radius:12px;padding:10px 12px;margin-bottom:14px;line-height:1.5}
+  .context-box strong{color:#7ec0ff}
+
+  .q-label{font-size:11px;font-weight:800;color:var(--teal);text-transform:uppercase;letter-spacing:.04em;
+    margin-bottom:8px;text-align:center}
+  .question{font-size:15px;font-weight:700;text-align:center;margin-bottom:14px;line-height:1.45}
+
+  .options{display:flex;flex-direction:column;gap:9px;margin-bottom:12px}
+  .opt{padding:13px 14px;border-radius:14px;background:linear-gradient(160deg,#2e2350,#241b3d);
+    border:1.5px solid var(--border);color:var(--ink);font-size:13.5px;font-weight:600;text-align:left;
+    cursor:pointer;transition:transform .12s,border-color .15s,box-shadow .15s;line-height:1.45}
+  .opt:hover{border-color:var(--purple);box-shadow:0 0 0 2px rgba(139,92,246,.25)}
+  .opt:active{transform:scale(.98)}
+  .opt.selected{border-color:var(--gold);box-shadow:0 0 0 2px rgba(255,210,63,.3)}
+  .opt.correct{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
+  .opt.wrong{border-color:var(--bad);background:rgba(255,91,61,.12);color:var(--orange-light)}
+  .opt:disabled{cursor:default;opacity:.85}
+
+  .feedback-card{display:none;border-radius:14px;padding:14px;margin-bottom:12px;font-size:13.5px;line-height:1.55}
+  .feedback-card.show{display:block;animation:fadeUp .3s ease}
+  .feedback-card.good{background:var(--ok-bg);border:1px solid rgba(61,214,140,.4);color:var(--ok)}
+  .feedback-card.bad{background:rgba(255,91,61,.12);border:1px solid rgba(255,91,61,.4);color:var(--orange-light)}
+  .feedback-card .fb-title{font-weight:800;font-size:14px;margin-bottom:4px}
+  .feedback-card .fb-explain{color:var(--ink-soft);font-size:12.5px;margin-top:6px}
+
+  .harm-meter{margin-bottom:14px}
+  .harm-label{display:flex;justify-content:space-between;font-size:11px;font-weight:800;margin-bottom:5px}
+  .harm-label span:last-child{color:var(--teal)}
+  .harm-track{height:10px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+  .harm-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--pink),var(--teal));
+    transition:width .45s ease;box-shadow:0 0 12px rgba(45,217,185,.4)}
+
+  .actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:8px}
+  .q-counter{text-align:center;font-size:12px;color:var(--ink-soft);margin-bottom:10px;font-weight:600}
+
+  .result-card{text-align:center;padding:22px 18px}
+  .result-card .big{font-size:48px;margin-bottom:10px}
+  .result-card h2{font-size:20px;margin-bottom:8px}
+  .result-card p{font-size:13.5px;color:var(--ink-soft);line-height:1.55;margin-bottom:10px}
+  .result-goal{font-size:14px;font-weight:700;padding:12px 14px;border-radius:12px;margin:14px 0;line-height:1.5}
+  .result-goal.win{background:var(--ok-bg);border:1px solid rgba(61,214,140,.4);color:var(--ok)}
+  .result-goal.lose{background:rgba(255,91,61,.12);border:1px solid rgba(255,91,61,.4);color:var(--orange-light)}
+  .secret-text{font-size:13.5px;line-height:1.6;background:rgba(255,210,63,.1);border:1px solid rgba(255,210,63,.35);
+    border-radius:12px;padding:14px;margin:14px 0;color:var(--gold);text-align:left}
+
+  .mystery-box{background:linear-gradient(135deg,rgba(255,210,63,.15),rgba(139,92,246,.15));
+    border:1px solid rgba(255,210,63,.4);border-radius:14px;padding:16px;margin:16px 0;text-align:left}
+  .mystery-box h3{font-size:14px;color:var(--gold);margin-bottom:8px}
+  .mystery-box p{font-size:13.5px;line-height:1.6;color:var(--ink)}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);opacity:0;
+    background:var(--cream-2);border:1px solid var(--border);color:var(--ink);padding:11px 18px;
+    border-radius:11px;font-size:13px;font-weight:700;box-shadow:var(--shadow);transition:all .25s;
+    z-index:200;max-width:88vw;text-align:center;pointer-events:none}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.bad{color:var(--orange-light)}
+  .toast.good{color:var(--ok)}
+
+  .actions{position:relative;z-index:5;padding-bottom:12px}
+  #btnNextQ{min-height:52px;min-width:160px;padding:16px 28px;font-size:16px;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;z-index:6;
+    cursor:pointer;width:100%;max-width:320px}
+
+  @media (max-width:480px){
+    body{padding-bottom:64px}
+    .card{padding-bottom:20px}
+  }
+</style>
+</head>
+<body>
+
+<div class="hud">
+  <div style="display:flex;align-items:center;gap:8px">
+    <a class="hud-back" href="../index.html" title="Voltar" id="hudBack">←</a>
+    <div class="hud-title"><span>🗣️</span> Interpretação</div>
+  </div>
+  <div class="hud-stats">
+    <div class="stat done">✓ <span id="doneNum">0</span>/5</div>
+    <div class="stat timer" id="timerStat" style="display:none">⏱ <span id="timerNum">30</span>s</div>
+    <div class="stat harm">🤝 <span id="harmNum">—</span></div>
+    <div class="stat xp">⭐ <span id="xpNum">0</span></div>
+    <button class="btn-icon" data-sound-toggle title="Som">🔊</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="screen show" id="screenMenu">
+    <div class="card intro">
+      <h2>Harmonia nas entrelinhas</h2>
+      <p>Escolha um <strong>cenário</strong>. Em cada um, alguém fala — e você precisa interpretar o que realmente quer dizer: intenção, tom e implícito.</p>
+      <p>Acerte a leitura e a harmonia sobe. Erre e o <strong>objetivo daquele desafio</strong> fica ameaçado. Cada pergunta tem <strong>contagem regressiva</strong> — sob pressão, a interpretação precipitada custa caro.</p>
+
+      <div class="mystery-teaser">
+        <strong>🔐 Segredo opcional:</strong> conclua os cinco cenários com harmonia e junte os fragmentos de um mistério escondido entre as falas.
+      </div>
+
+      <div class="scenario-grid" id="scenarioGrid"></div>
+    </div>
+  </div>
+
+  <div class="screen" id="screenPlay">
+    <div class="phase-header">
+      <div class="phase-badge" id="phaseBadge">💼</div>
+      <div class="phase-title" id="phaseTitle">—</div>
+      <div class="phase-sub" id="phaseSub">—</div>
+      <div class="phase-goal" id="phaseGoal">—</div>
+    </div>
+
+    <div class="harm-meter">
+      <div class="harm-label"><span>Harmonia com o personagem</span><span id="harmLabel">0%</span></div>
+      <div class="harm-track"><div class="harm-fill" id="harmFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="timer-bar"><div class="timer-fill" id="timerFill" style="width:100%"></div></div>
+    <div class="q-counter" id="qCounter">Pergunta 1 de 7</div>
+
+    <div class="card">
+      <div class="context-box" id="contextBox"><strong>Contexto:</strong> …</div>
+      <div class="char-row">
+        <div class="avatar" id="avatar">👤</div>
+        <div class="bubble">
+          <div class="who" id="whoName">—</div>
+          <div class="speech" id="speech">…</div>
+        </div>
+      </div>
+      <div class="q-label">O que essa fala realmente transmite?</div>
+      <div class="question" id="question">…</div>
+      <div class="options" id="options"></div>
+      <div class="feedback-card" id="feedback"></div>
+      <div class="actions" id="playActions" style="display:none">
+        <button class="btn btn-primary" id="btnNextQ">Continuar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen" id="screenResult">
+    <div class="card result-card" id="resultCard"></div>
+  </div>
+
+  <div class="screen" id="screenMystery">
+    <div class="card result-card">
+      <div class="big">🏆</div>
+      <h2>Mistério revelado</h2>
+      <p>Você leu nas entrelinhas nos cinco cenários. Os fragmentos se juntam:</p>
+      <div id="fragments" style="text-align:left;margin:12px 0"></div>
+      <div class="mystery-box">
+        <h3>🔐 O segredo completo</h3>
+        <p id="fullMystery"></p>
+      </div>
+      <p style="margin-bottom:16px">XP total: <strong id="finalXp" style="color:var(--gold)">0</strong></p>
+      <button class="btn btn-primary" id="btnBackMenuFinal">Voltar aos cenários</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SCENARIOS = [
+  {
+    id: "emprego",
+    emoji: "💼",
+    title: "Entrevista de emprego",
+    sub: "Recrutadora — Empresa Nova Horizonte",
+    avatar: "👩‍💼",
+    who: "Recrutadora Marina",
+    goal: "Conseguir a vaga",
+    minCorrect: 5,
+    winTitle: "Você foi contratado!",
+    winText: "Marina captou que você entende intenção, tom e implícito. A vaga é sua — bem-vindo à Nova Horizonte.",
+    loseTitle: "Você não foi contratado",
+    loseText: "A recrutadora sentiu que você não leu o que ela realmente perguntava. A vaga foi para quem captou o tom por trás das falas.",
+    secretTitle: "Fragmento 1",
+    secretText: "«Na sala de espera da Nova Horizonte, um envelope lacrado com o código NH-07 ficou esquecido sob a poltrona azul.»",
+    questions: [
+      {
+        context: "Primeiros minutos da entrevista. Marina olha seu currículo e sorri de forma breve.",
+        speech: "Interessante percurso… vejo que você mudou de área mais de uma vez. Isso costuma gerar perguntas por aqui.",
+        ask: "Qual é a intenção real dessa fala?",
+        options: [
+          "Elogiar abertamente a versatilidade do candidato",
+          "Sinalizar uma preocupação e abrir espaço para você justificar as mudanças",
+          "Informar que a empresa não aceita mudanças de área",
+          "Pedir que você mude de assunto imediatamente"
+        ],
+        correct: 1,
+        explain: "O tom é cauteloso: 'costuma gerar perguntas' funciona como convite implícito para você se explicar, não como elogio puro nem como rejeição.",
+        consequence: "Marina anota algo negativo: 'candidato evitou justificar as mudanças de área'."
+      },
+      {
+        context: "Ela descreve a vaga e faz uma pausa longa, olhando para você.",
+        speech: "O time é enxuto. Quem entra aqui precisa se virar com pouca supervisão — e às vezes com prazos que apertam de verdade.",
+        ask: "O que Marina está comunicando de forma implícita?",
+        options: [
+          "Que a empresa tem muitos gestores disponíveis",
+          "Que a vaga exige autonomia e resistência à pressão",
+          "Que os prazos são sempre folgados",
+          "Que o time vai ser ampliado em breve"
+        ],
+        correct: 1,
+        explain: "'Pouco supervisão' + 'prazos que apertam' = expectativa de autonomia e resiliência.",
+        consequence: "Você responde como se fosse um ambiente tranquilo. Marina marca dúvida sobre seu perfil."
+      },
+      {
+        context: "Você menciona um projeto antigo. Marina cruza os braços levemente.",
+        speech: "Hmm. E nesse projeto… quem tomava as decisões finais quando havia conflito de prioridades?",
+        ask: "O foco real da pergunta é:",
+        options: [
+          "Descobrir o nome do seu antigo chefe",
+          "Avaliar se você assume responsabilidade ou transfere a culpa",
+          "Testar se você lembra datas exatas",
+          "Criticar o projeto antigo em si"
+        ],
+        correct: 1,
+        explain: "Perguntas sobre conflito e decisão medem ownership e maturidade, não curiosidade biográfica.",
+        consequence: "Sua resposta soa evasiva. Marina reduz a nota de 'liderança situacional'."
+      },
+      {
+        context: "Perto do fim, ela muda o tom para mais leve.",
+        speech: "Olha, a gente valoriza quem pergunta também. Fique à vontade se quiser saber algo que não está no anúncio.",
+        ask: "A leitura mais adequada é:",
+        options: [
+          "É só educação formal; perguntas do candidato não importam",
+          "Ela prefere que você não faça perguntas",
+          "Há abertura genuína — e quem não pergunta pode parecer desinteressado",
+          "O anúncio já cobre tudo o que importa"
+        ],
+        correct: 2,
+        explain: "O convite explícito + 'valoriza quem pergunta' indica que o silêncio pode ser lido como falta de engajamento.",
+        consequence: "Você agradece e não pergunta nada. Marina anota: 'baixo interesse aparente'."
+      },
+      {
+        context: "Você pergunta sobre home office. A resposta vem assim:",
+        speech: "No momento priorizamos o escritório. Claro que, com o tempo e conforme a entrega, conversamos caso a caso.",
+        ask: "Qual interpretação é a mais fiel?",
+        options: [
+          "Home office está garantido a partir do segundo mês",
+          "A política atual é presencial; flexibilidade é possível, mas não prometida",
+          "A empresa detesta qualquer trabalho remoto",
+          "Você deve insistir agora para garantir o remoto"
+        ],
+        correct: 1,
+        explain: "'No momento priorizamos' + 'caso a caso' = regra atual presencial com margem futura, sem compromisso.",
+        consequence: "Você trata como promessa de remoto. Depois surge um mal-entendido constrangedor."
+      },
+      {
+        context: "Marina resume o próximo passo.",
+        speech: "Vamos alinhar com o time e retorno em até cinco dias úteis. Se não ouvir nada até lá… pode me cobrar, viu?",
+        ask: "O subentendido mais preciso é:",
+        options: [
+          "Ela não pretende responder",
+          "O prazo é real e ela autoriza follow-up se passar de cinco dias",
+          "Você deve ligar todos os dias",
+          "A vaga já foi preenchida"
+        ],
+        correct: 1,
+        explain: "Dar prazo + autorizar cobrança é sinal de processo organizado e de abertura a follow-up educado.",
+        consequence: "Você some sem follow-up e perde a chance quando o e-mail dela cai em spam."
+      },
+      {
+        context: "Ao se despedir, Marina aperta sua mão e diz:",
+        speech: "Foi uma conversa boa. Independente do resultado, acho que você tem pontos fortes claros.",
+        ask: "Essa fala deve ser lida como:",
+        options: [
+          "Promessa quase certa de contratação",
+          "Cortesia profissional — positiva, mas não decisiva",
+          "Sinal de que você foi eliminado",
+          "Pedido para você recusar outras propostas"
+        ],
+        correct: 1,
+        explain: "Elogio de despedida é frequente e educado; não substitui a decisão formal do processo.",
+        consequence: "Você cancela outras entrevistas achando que a vaga é certa. Fica sem nada."
+      }
+    ]
+  },
+  {
+    id: "imprensa",
+    emoji: "📰",
+    title: "Coletiva de imprensa",
+    sub: "Você é a pessoa entrevistada — projeto comunitário",
+    avatar: "🎤",
+    who: "Jornalista Ricardo",
+    goal: "Esclarecer a história com a verdade e os fatos",
+    minCorrect: 5,
+    winTitle: "A verdade prevaleceu",
+    winText: "Sua leitura das perguntas evitou armadilhas e saltos indevidos. A cobertura saiu equilibrada — os fatos ficaram claros.",
+    loseTitle: "Você foi mal interpretado",
+    loseText: "Uma leitura torta virou manchete. Surgiu uma acusação injusta de que você 'admitiu falhas graves' — e o estrago de imagem foi difícil de reverter.",
+    secretTitle: "Fragmento 2",
+    secretText: "«O envelope NH-07 continha apenas um endereço: Rua das Acácias, 42 — e a frase: “quem lê o implícito encontra a porta”.»",
+    questions: [
+      {
+        context: "Coletiva sobre um projeto social que você coordena. Um atraso de verba veio a público.",
+        speech: "O senhor confirma que houve atraso nos repasses e que famílias ficaram desassistidas por três semanas?",
+        ask: "A armadilha interpretativa dessa pergunta é:",
+        options: [
+          "Ela só pede um sim ou não neutro, sem carga",
+          "Ela amarra dois fatos e empurra uma narrativa de culpa se você só disser 'sim'",
+          "Ela elogia o projeto de forma indireta",
+          "Ela não tem relação com o tema da coletiva"
+        ],
+        correct: 1,
+        explain: "Perguntas compostas podem fazer um 'sim' parecer admissão ampla de negligência.",
+        consequence: "Você responde só 'sim'. No dia seguinte: 'Coordenador admite que famílias ficaram desassistidas'."
+      },
+      {
+        context: "Outro jornalista retoma o tema com tom mais suave.",
+        speech: "Entendo a complexidade. Na prática, o que o senhor diria às famílias que esperaram?",
+        ask: "O que essa pergunta busca, no fundo?",
+        options: [
+          "Um detalhe técnico de planilha",
+          "Uma postura humana e responsável, não só justificativa burocrática",
+          "Que você critique o governo abertamente",
+          "Que você se recuse a falar com a imprensa"
+        ],
+        correct: 1,
+        explain: "'O que diria às famílias' desloca do jargão institucional para a dimensão ética e empática.",
+        consequence: "Você responde só com números. A plateia e as manchetes destacam frieza."
+      },
+      {
+        context: "Surge uma pergunta sobre um parceiro privado do projeto.",
+        speech: "Há quem diga que a parceria com a empresa X condicionou decisões. O senhor nega qualquer influência indevida?",
+        ask: "A forma da pergunta sugere que:",
+        options: [
+          "A inocência já está presumida",
+          "A negação seca pode parecer defensiva; convém negar e evidenciar critérios transparentes",
+          "Você deve acusar a empresa X imediatamente",
+          "O melhor é silenciar e encerrar a coletiva"
+        ],
+        correct: 1,
+        explain: "'Há quem diga' introduz suspeita. Negar sem mostrar processo transparente alimenta a dúvida.",
+        consequence: "Um 'nego categoricamente' sem contexto vira: 'coordenador se esquiva de explicar parceria'."
+      },
+      {
+        context: "Ricardo muda o ângulo.",
+        speech: "Se pudesse voltar seis meses, o que faria de diferente na comunicação com a comunidade?",
+        ask: "Essa pergunta é principalmente:",
+        options: [
+          "Uma armadilha para extrair uma confissão de incompetência",
+          "Um espaço para demonstrar aprendizado e autocrítica produtiva",
+          "Um pedido para cancelar o projeto",
+          "Uma pergunta fora de pauta que deve ser ignorada"
+        ],
+        correct: 1,
+        explain: "Perguntas de 'o que faria diferente' testam maturidade sem exigir autodestruição.",
+        consequence: "Você diz que não mudaria nada. Parece inflexível e pouco transparente."
+      },
+      {
+        context: "Uma frase sua anterior é citada de forma recortada.",
+        speech: "Ontem o senhor disse que 'o atraso era previsível'. Isso significa que a equipe soube e não avisou as famílias?",
+        ask: "A melhor leitura do lance do jornalista é:",
+        options: [
+          "Ele só repete sua frase com fidelidade total",
+          "Ele amplia o sentido da frase e empurra uma conclusão que você não afirmou",
+          "Ele está elogiando a capacidade de previsão da equipe",
+          "A citação impede qualquer esclarecimento"
+        ],
+        correct: 1,
+        explain: "Recorte + inferência forçada: 'previsível' não significa 'omitimos de propósito'.",
+        consequence: "Você não desfaz o salto interpretativo. A acusação de omissão gruda."
+      },
+      {
+        context: "Pergunta final de Ricardo, em tom de fechamento.",
+        speech: "Em uma frase, qual é o compromisso concreto daqui para frente?",
+        ask: "O que 'compromisso concreto' exige na resposta?",
+        options: [
+          "Um slogan genérico de otimismo",
+          "Uma ação verificável (prazo, canal, medida), não só intenção vaga",
+          "Criticar os jornalistas presentes",
+          "Prometer resultados impossíveis para agradar"
+        ],
+        correct: 1,
+        explain: "'Concreto' pede algo checável. Frases só emotivas soam vazias em coletiva.",
+        consequence: "Sua frase vaga vira meme: 'compromisso de comprometer-se'."
+      },
+      {
+        context: "Ao desligar o microfone, Ricardo comenta baixo:",
+        speech: "Valeu pelo tempo. Material bom — dá para montar uma matéria equilibrada se o restante confirmar.",
+        ask: "O subentendido é:",
+        options: [
+          "A matéria já está pronta e será destrutiva",
+          "Há abertura para uma cobertura justa, condicionada a consistência das informações",
+          "Ele prometeu uma matéria elogiosa garantida",
+          "Você não precisa se preocupar com mais nada"
+        ],
+        correct: 1,
+        explain: "'Se o restante confirmar' mostra que o enquadramento ainda depende de checagem.",
+        consequence: "Você relaxa e não envia os documentos combinados. A matéria sai incompleta e dura."
+      }
+    ]
+  },
+  {
+    id: "rua",
+    emoji: "🗺️",
+    title: "Informação na rua",
+    sub: "Visitante perdido — centro da cidade",
+    avatar: "🧳",
+    who: "Visitante Leo",
+    goal: "Ajudar Leo a chegar ao destino",
+    minCorrect: 5,
+    winTitle: "Leo chegou ao destino",
+    winText: "Sua leitura das dúvidas dele evitou caminhos errados. Leo chega no horário — e agradece por não ter sido tratado como 'distraído'.",
+    loseTitle: "Leo se perdeu de vez",
+    loseText: "Sua leitura da dúvida dele falhou. Leo seguiu na direção errada, perdeu o compromisso e ficou horas andando.",
+    secretTitle: "Fragmento 3",
+    secretText: "«Na Rua das Acácias, 42, a porta dos fundos só abre para quem pergunta o que a placa não diz.»",
+    questions: [
+      {
+        context: "Leo para você na calçada, celular na mão, mapa confuso na tela.",
+        speech: "Com licença… o ponto da linha 42 ainda fica naquela praça, ou mudou com a obra?",
+        ask: "O núcleo da dúvida dele é:",
+        options: [
+          "Se a linha 42 existe",
+          "Se o ponto manteve o local apesar da obra",
+          "Se você trabalha na prefeitura",
+          "Se a praça está fechada para sempre"
+        ],
+        correct: 1,
+        explain: "Ele já assume a linha; a incerteza é sobre a localização do ponto após a obra.",
+        consequence: "Você explica a história da linha e não diz onde está o ponto. Leo segue perdido."
+      },
+      {
+        context: "Você aponta um caminho. Leo franze a testa.",
+        speech: "Ah… então é para o lado do mercado? Porque me disseram que era para o lado da igreja, mas acho que misturei tudo.",
+        ask: "O que Leo está fazendo nessa fala?",
+        options: [
+          "Confirmando com certeza absoluta o caminho",
+          "Expondo uma informação prévia conflitante e pedindo mediação",
+          "Recusando qualquer ajuda",
+          "Afirmando que o mercado fechou"
+        ],
+        correct: 1,
+        explain: "Ele traz duas orientações conflitantes e sinaliza confusão — quer que você resolva o conflito.",
+        consequence: "Você só confirma 'mercado' sem desfazer a outra dica. Leo hesita e erra o caminho."
+      },
+      {
+        context: "Ele mostra o celular com um endereço digitado de forma incompleta.",
+        speech: "Está escrito 'Rua das Acá… 42'. Não sei se é Acácias ou Acadêmicos. O autocorretor brigou comigo.",
+        ask: "A prioridade para ajudar bem é:",
+        options: [
+          "Escolher um nome aleatório para ele não se atrasar",
+          "Checar qual das duas ruas faz sentido com o destino/contexto que ele já deu",
+          "Dizer que as duas ruas levam ao mesmo lugar",
+          "Ignorar o número 42"
+        ],
+        correct: 1,
+        explain: "Ambiguidade nominal exige cruzar com o restante do contexto, não chute.",
+        consequence: "Você manda para Rua dos Acadêmicos. Leo chega a um prédio errado e perde a hora."
+      },
+      {
+        context: "Leo parece aliviado, depois hesitante de novo.",
+        speech: "Perfeito… só mais uma coisa: tem como ir andando em uns quinze minutos, ou vocês daqui acham longe?",
+        ask: "Além da distância, o que a pergunta revela?",
+        options: [
+          "Que ele quer uma avaliação local de tempo a pé, não só metros no mapa",
+          "Que ele recusa ir de ônibus em qualquer hipótese",
+          "Que quinze minutos é o tempo oficial da prefeitura",
+          "Que ele está testando se você mora na cidade"
+        ],
+        correct: 0,
+        explain: "'Vocês daqui' pede a percepção de quem conhece o ritmo real da caminhada.",
+        consequence: "Você fala só a distância em metros. Leo se atrasa e culpa a informação 'seca'."
+      },
+      {
+        context: "Uma sirene passa longe. Leo olha o relógio.",
+        speech: "Se eu perder esse horário, o lugar nem atende depois. Não tem uma dica de quem conhece atalho de verdade?",
+        ask: "O pedido implícito mais forte é:",
+        options: [
+          "Uma história longa sobre o bairro",
+          "Um caminho alternativo confiável, com ênfase em pontualidade",
+          "Que você o acompanhe até o destino obrigatoriamente",
+          "Que você ligue para o local por ele"
+        ],
+        correct: 1,
+        explain: "O foco é não perder o horário + 'atalho de verdade' = rota prática e segura.",
+        consequence: "Você sugere um passeio 'mais bonito'. Leo chega tarde e encontra portão fechado."
+      },
+      {
+        context: "Você explica o atalho. Leo repete para confirmar.",
+        speech: "Então: reto até o semáforo, esquerda na padaria, depois a rua com os muros altos. É isso? Se eu errar a padaria, me perco de novo.",
+        ask: "Qual é a função comunicativa dessa fala?",
+        options: [
+          "Encerrar a conversa de forma educada",
+          "Validação — ele quer confirmação explícita do roteiro e do ponto crítico",
+          "Discordar do seu caminho",
+          "Pedir que você desenhe um mapa artístico"
+        ],
+        correct: 1,
+        explain: "Repetir o percurso + apontar o risco é pedido de confirmação, não só educação.",
+        consequence: "Você só acena sem confirmar. Leo erra a esquina da padaria e se perde."
+      },
+      {
+        context: "Antes de seguir, Leo sorri cansado.",
+        speech: "Você não tem ideia de quantas orientações contraditórias eu já recebi hoje. Obrigado por não achar que eu estava 'só distraído'.",
+        ask: "O que essa despedida revela sobre a experiência dele?",
+        options: [
+          "Que ele rejeita qualquer ajuda futura",
+          "Que se sentiu respeitado — a confusão era do contexto, não falta de inteligência",
+          "Que ele quer reclamar formalmente da prefeitura com você",
+          "Que as orientações anteriores estavam todas corretas"
+        ],
+        correct: 1,
+        explain: "Ele valoriza não ter sido tratado como incapaz; reconhece complexidade externa.",
+        consequence: "Você responde com um comentário condescendente. Leo vai embora constrangido."
+      }
+    ]
+  },
+  {
+    id: "cliente",
+    emoji: "📞",
+    title: "Cliente insatisfeito",
+    sub: "Atendimento — reclamação pelo chat",
+    avatar: "😤",
+    who: "Cliente Bruna",
+    goal: "Resolver a reclamação sem perder a cliente",
+    minCorrect: 5,
+    winTitle: "Cliente retida",
+    winText: "Você leu o tom e o pedido real por trás da reclamação. Bruna sente-se ouvida, aceita a solução e permanece cliente.",
+    loseTitle: "Cliente perdida",
+    loseText: "A leitura precipitada transformou irritação em ruptura. Bruna cancela o serviço e publica uma avaliação dura — o estrago é maior que o valor da fatura.",
+    secretTitle: "Fragmento 4",
+    secretText: "«No histórico interno da Nova Horizonte, o código NH-07 também aparecia em fichas de candidatos que 'escutavam o não dito' no atendimento ao público.»",
+    questions: [
+      {
+        context: "Chat de suporte. Bruna escreve em letras maiúsculas no começo, depois diminui o tom.",
+        speech: "Paguei em dia e mesmo assim o acesso caiu. Já é a segunda vez este mês. Quero uma solução, não um texto pronto.",
+        ask: "O núcleo do que ela pede é:",
+        options: [
+          "Apenas um reembolso imediato e nada mais",
+          "Reconhecimento do problema recorrente e uma solução concreta, não resposta genérica",
+          "Que você admita que a empresa é fraudulenta",
+          "Que o chat seja encerrado o mais rápido possível"
+        ],
+        correct: 1,
+        explain: "'Segunda vez' + 'não um texto pronto' = ela quer validação da recorrência e ação específica.",
+        consequence: "Você cola um script genérico. Bruna explode e pede cancelamento na hora."
+      },
+      {
+        context: "Você propõe reativar o acesso. A resposta dela vem assim:",
+        speech: "Ok… mas e a garantia de que não acontece de novo? Porque 'vamos verificar' eu já ouvi.",
+        ask: "O subentendido é:",
+        options: [
+          "Ela rejeita qualquer reativação",
+          "Ela desconfia de promessas vagas e quer compromisso verificável",
+          "Ela está satisfeita e só desabafando",
+          "Ela quer falar com o presidente da empresa"
+        ],
+        correct: 1,
+        explain: "A crítica a 'vamos verificar' pede prazo, medida ou compensação clara — não mais generalidade.",
+        consequence: "Você repete 'vamos verificar'. A confiança cai e o cancelamento volta à mesa."
+      },
+      {
+        context: "Bruna muda o foco para o valor pago.",
+        speech: "Não estou pedindo favores. Paguei por um serviço que não tive. Isso é o mínimo.",
+        ask: "Qual leitura evita escalar o conflito?",
+        options: [
+          "Tratar como chantagem emocional",
+          "Reconhecer o direito dela e separar justiça da discussão pessoal",
+          "Ignorar a frase e mudar de assunto",
+          "Oferecer desconto em produto que ela não pediu"
+        ],
+        correct: 1,
+        explain: "Ela enquadra a demanda como justiça contratual. Contestá-la como 'drama' agrava; validar o direito abre espaço técnico.",
+        consequence: "Você minimiza o prejuízo. Bruna se sente desrespeitada e grava o chat."
+      },
+      {
+        context: "Após você explicar uma causa técnica, há uma pausa longa no chat.",
+        speech: "Certo. Então o erro foi de vocês. O que vocês vão fazer a respeito — além de 'desculpa'?",
+        ask: "A pergunta exige principalmente:",
+        options: [
+          "Mais uma desculpa elaborada",
+          "Ação reparadora (crédito, prazo, prioridade) alinhada à falha admitida",
+          "Que você negue a falha de novo",
+          "Encerrar o atendimento por tempo esgotado"
+        ],
+        correct: 1,
+        explain: "'Além de desculpa' desloca do simbólico para o reparo concreto.",
+        consequence: "Só desculpas. Bruna responde: 'Não resolve' e cancela."
+      },
+      {
+        context: "Você oferece um crédito na próxima fatura. Bruna responde:",
+        speech: "Pode ser… desde que o acesso volte hoje e alguém me avise se for cair de novo. Consegue isso?",
+        ask: "O acordo implícito que ela propõe é:",
+        options: [
+          "Só o crédito, sem outras condições",
+          "Pacote: crédito + restabelecimento imediato + comunicação proativa em nova falha",
+          "Troca do plano por um mais caro",
+          "Que você minta sobre o monitoramento"
+        ],
+        correct: 1,
+        explain: "'Desde que' lista condições. Aceitar pela metade quebra o acordo social da negociação.",
+        consequence: "Você confirma só o crédito. O acesso demora e ela cancela no dia seguinte."
+      },
+      {
+        context: "Quase no fim, o tom dela amansa.",
+        speech: "Olha, eu até gosto do serviço quando funciona. Por isso ainda estou aqui brigando em vez de só sair.",
+        ask: "Essa fala indica:",
+        options: [
+          "Ameaça velada de processo",
+          "Apego residual à marca — há espaço real para retenção se a solução for séria",
+          "Que ela já decidiu cancelar de qualquer forma",
+          "Elogio que encerra o caso sem ação"
+        ],
+        correct: 1,
+        explain: "'Por isso ainda estou aqui' sinaliza investimento emocional; é abertura, não encerramento.",
+        consequence: "Você trata como despedida. Perde a chance de consolidar a retenção."
+      },
+      {
+        context: "Antes de sair do chat, Bruna escreve:",
+        speech: "Se resolver, eu até tiro a reclamação pública. Se não, deixo lá. Justo, né?",
+        ask: "A leitura mais precisa é:",
+        options: [
+          "Chantagem ilegal que deve ser ignorada",
+          "Condicional clara: solução → ela retira o post; ausência de solução → mantém a crítica pública",
+          "Promessa de que já retirou a reclamação",
+          "Pedido para você também postar nas redes"
+        ],
+        correct: 1,
+        explain: "É uma barganha explícita e legível. Demonizar a frase impede negociar o desfecho prático.",
+        consequence: "Você acusa chantagem. A reclamação pública ganha uma atualização pior."
+      }
+    ]
+  },
+  {
+    id: "chefe",
+    emoji: "📱",
+    title: "Mensagem do chefe",
+    sub: "WhatsApp — sexta, 19h42",
+    avatar: "👔",
+    who: "Chefe André",
+    goal: "Interpretar o pedido e proteger a equipe sem gerar conflito",
+    minCorrect: 5,
+    winTitle: "Pedido bem lido",
+    winText: "Você captou o que era urgente, o que era opcional e o que era só desabafo. A equipe não foi acionada em vão e André confia mais no seu critério.",
+    loseTitle: "Mal-entendido com o chefe",
+    loseText: "A leitura errada gerou alarme desnecessário ou omissão grave. André fica irritado e a equipe paga o preço do fim de semana perdido — ou do prazo estourado.",
+    secretTitle: "Fragmento 5",
+    secretText: "«André, gestor na Nova Horizonte, guardava um cartão com a frase: “Antes de acionar o time, leia o que eu não escrevi.” O verso trazia o mesmo código NH-07.»",
+    questions: [
+      {
+        context: "Sexta à noite. Você já saiu do expediente. Chega mensagem de André.",
+        speech: "Conseguiu ver o relatório que a Ana mandou? Se puder dar uma olhada quando der…",
+        ask: "O tom mais fiel dessa mensagem é:",
+        options: [
+          "Ordem explícita para abrir o notebook agora",
+          "Pedido de baixa urgência — 'quando der' suaviza a cobrança imediata",
+          "Bronca disfarçada porque você não entregou nada",
+          "Convite para ligar para a Ana imediatamente"
+        ],
+        correct: 1,
+        explain: "'Quando der' e a forma interrogativa suavizam; não é o mesmo que 'preciso agora'.",
+        consequence: "Você aciona a equipe inteira na sexta à noite. André acha exagero e a equipe se revoltam."
+      },
+      {
+        context: "Dois minutos depois, outra mensagem:",
+        speech: "Na verdade o cliente perguntou se tem previsão. Não precisa resolver tudo agora, só me diga se está encaminhado.",
+        ask: "O pedido real enxuto é:",
+        options: [
+          "Entregar o relatório completo ainda hoje",
+          "Confirmar status/encaminhamento para ele responder ao cliente",
+          "Ignorar o cliente até segunda",
+          "Marcar reunião com o cliente no sábado"
+        ],
+        correct: 1,
+        explain: "Ele reduz o escopo: não 'resolver tudo', e sim informar se está encaminhado.",
+        consequence: "Você promete relatório final no domingo. Cria expectativa que não precisava."
+      },
+      {
+        context: "Você responde que está encaminhado. André escreve:",
+        speech: "Perfeito. A Ana às vezes trava nesses fechamentos… se notar algo estranho, me avisa antes de virar bola de neve.",
+        ask: "O subtexto sobre a Ana é:",
+        options: [
+          "Ordem para denunciar a Ana formalmente",
+          "Alerta discreto para monitoramento preventivo, sem espetáculo",
+          "Pedido para substituir a Ana no fim de semana",
+          "Elogio inequívoco ao trabalho da Ana"
+        ],
+        correct: 1,
+        explain: "'Me avisa antes de virar bola de neve' = vigilância leve e preventiva, não processo disciplinar.",
+        consequence: "Você confronta a Ana no grupo. O clima azeda e André se incomoda com o ruído."
+      },
+      {
+        context: "Uma mensagem de voz (transcrita no app) chega em seguida:",
+        speech: "Ah, e esquece aquele print que eu mandei ontem — era versão velha. Usa só o arquivo da pasta Compartilhada.",
+        ask: "A instrução operacional correta é:",
+        options: [
+          "Continuar com o print de ontem",
+          "Descartar o print antigo e trabalhar só com o arquivo da pasta Compartilhada",
+          "Misturar as duas versões para 'garantir'",
+          "Apagar a pasta Compartilhada"
+        ],
+        correct: 1,
+        explain: "Correção explícita de fonte de verdade: o print ontem está invalidado.",
+        consequence: "Você usa o print antigo na resposta ao cliente. Há inconsistência e constrangimento."
+      },
+      {
+        context: "André muda de assunto de forma abrupta.",
+        speech: "Sabe que eu quase não tiro o fim de semana? Enfim. Bom descanso aí — se não aparecer nada grave.",
+        ask: "A leitura equilibrada é:",
+        options: [
+          "Ele exige que você fique online o fim de semana inteiro",
+          "Desabafo + desejo de descanso, com ressalva só para emergência real",
+          "Ironia: na prática você não pode descansar",
+          "Pedido para você ligar para ele a cada hora"
+        ],
+        correct: 1,
+        explain: "'Bom descanso' + 'se não aparecer nada grave' autoriza pausa, com porta só para gravidade.",
+        consequence: "Você fica respondendo mensagens triviais o sábado todo. André nem pediu isso."
+      },
+      {
+        context: "Domingo 11h. Nova mensagem:",
+        speech: "O cliente agradeceu a previsão. Pode desconsiderar qualquer follow-up meu de sexta. Valeu.",
+        ask: "O efeito pragmático dessa mensagem é:",
+        options: [
+          "Reabrir todas as tarefas de sexta",
+          "Encerrar o fio de cobrança — nada pendente daquele pedido",
+          "Pedir relatório novo até segunda 8h",
+          "Criticar o trabalho feito"
+        ],
+        correct: 1,
+        explain: "'Desconsiderar qualquer follow-up' cancela a cadeia de ação anterior.",
+        consequence: "Você ainda manda cobrança para a Ana. Gera trabalho inútil e ruído."
+      },
+      {
+        context: "Última mensagem da thread:",
+        speech: "Ah, e na segunda a gente conversa sobre o ritmo da equipe. Nada sério — só organizar. Pode ir tranquilo.",
+        ask: "Como interpretar o 'nada sério'?",
+        options: [
+          "Demissão iminente disfarçada",
+          "Reunião de alinhamento sem tom punitivo anunciado — ainda assim vale preparar fatos, sem pânico",
+          "Cancelamento de qualquer conversa na segunda",
+          "Ordem para esconder problemas da equipe"
+        ],
+        correct: 1,
+        explain: "'Nada sério — só organizar' reduz alarme, mas 'conversar sobre o ritmo' ainda é pauta real de gestão.",
+        consequence: "Você entra em pânico e espalha boato de demissão. Na segunda o clima está destruído."
+      }
+    ]
+  }
+];
+
+const FULL_MYSTERY = "O envelope NH-07 e a porta da Rua das Acácias, 42, eram um teste de leitura. A Nova Horizonte não contratava só currículos: observava quem, nas conversas do dia a dia — entrevista, imprensa, rua, atendimento e mensagens de chefia — captava o que não estava escrito. Quem reuniu os cinco fragmentos e chegou à porta dos fundos descobriu o aviso gravado por dentro: «A harmonia começa quando o implícito deixa de ser ruído.»";
+
+const SAVE_KEY = "bobcat-interpretacao-harmonia";
+
+let current = null;
+let qIndex = 0;
+let correctCount = 0;
+let xp = 0;
+let answered = false;
+let cleared = {};
+let secrets = {};
+let timerId = null;
+let timeLeft = 0;
+const TIME_PER_Q = 30; // segundos por pergunta
+
+function $(id){ return document.getElementById(id); }
+
+function stopTimer(){
+  if (timerId){ clearInterval(timerId); timerId = null; }
+  const st = $("timerStat");
+  if (st){ st.style.display = "none"; st.classList.remove("urgent"); }
+}
+
+function startTimer(){
+  stopTimer();
+  timeLeft = TIME_PER_Q;
+  const st = $("timerStat");
+  const fill = $("timerFill");
+  st.style.display = "flex";
+  st.classList.remove("urgent");
+  $("timerNum").textContent = timeLeft;
+  if (fill){
+    fill.style.width = "100%";
+    fill.classList.remove("urgent");
+  }
+  timerId = setInterval(() => {
+    timeLeft--;
+    $("timerNum").textContent = Math.max(0, timeLeft);
+    if (fill){
+      fill.style.width = Math.max(0, (timeLeft / TIME_PER_Q) * 100) + "%";
+      if (timeLeft <= 8) fill.classList.add("urgent");
+    }
+    if (timeLeft <= 8) st.classList.add("urgent");
+    if (timeLeft <= 0){
+      stopTimer();
+      if (!answered) onTimeUp();
+    }
+  }, 1000);
+}
+
+function onTimeUp(){
+  if (answered || !current) return;
+  answered = true;
+  const q = current.questions[qIndex];
+  document.querySelectorAll(".opt").forEach((el, idx) => {
+    el.disabled = true;
+    if (idx === q.correct) el.classList.add("correct");
+  });
+  GameSound.play("wrong");
+  const fb = $("feedback");
+  fb.className = "feedback-card show bad";
+  fb.innerHTML = "<div class=\"fb-title\">⏱ Tempo esgotado</div>" +
+    "<div>" + q.explain + "</div>" +
+    "<div class=\"fb-explain\"><strong>Sob pressão:</strong> a pressa virou leitura precipitada. " + q.consequence + "</div>";
+  toast("Tempo esgotado!", "bad");
+  $("playActions").style.display = "flex";
+  requestAnimationFrame(() => {
+    const btn = $("btnNextQ");
+    if (btn) btn.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  });
+  updateHUD();
+}
+
+function loadSave(){
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (raw){
+      const data = JSON.parse(raw);
+      cleared = data.cleared || {};
+      secrets = data.secrets || {};
+      xp = data.xp || 0;
+    }
+  } catch(e){}
+}
+
+function save(){
+  localStorage.setItem(SAVE_KEY, JSON.stringify({ cleared, secrets, xp }));
+}
+
+function toast(msg, kind){
+  const el = $("toast");
+  el.textContent = msg;
+  el.className = "toast show" + (kind ? " " + kind : "");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove("show"), 2400);
+}
+
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("show"));
+  $(id).classList.add("show");
+}
+
+function clearedCount(){
+  return SCENARIOS.filter(s => cleared[s.id]).length;
+}
+
+function updateHUD(){
+  $("doneNum").textContent = clearedCount();
+  $("xpNum").textContent = xp;
+  if (current){
+    const harm = Math.round((correctCount / current.questions.length) * 100);
+    $("harmNum").textContent = harm + "%";
+  } else {
+    $("harmNum").textContent = "—";
+  }
+}
+
+function renderMenu(){
+  const grid = $("scenarioGrid");
+  grid.innerHTML = "";
+  SCENARIOS.forEach(s => {
+    const done = !!cleared[s.id];
+    const btn = document.createElement("button");
+    btn.className = "scenario-card" + (done ? " cleared" : "");
+    btn.innerHTML =
+      "<div class=\"sc-top\">" +
+        "<div class=\"sc-emoji\">" + s.emoji + "</div>" +
+        "<div class=\"sc-info\">" +
+          "<strong>" + s.title + "</strong>" +
+          "<span>" + s.sub + "</span>" +
+        "</div>" +
+        "<div class=\"sc-status " + (done ? "ok" : "wait") + "\">" + (done ? "✓ Feito" : "Jogar") + "</div>" +
+      "</div>" +
+      "<div class=\"sc-goal\"><strong>Objetivo:</strong> " + s.goal + "</div>";
+    btn.addEventListener("click", () => startScenario(s.id));
+    grid.appendChild(btn);
+  });
+
+  if (clearedCount() >= 5){
+    const mysteryBtn = document.createElement("button");
+    mysteryBtn.className = "scenario-card";
+    mysteryBtn.style.borderColor = "rgba(255,210,63,.5)";
+    mysteryBtn.innerHTML =
+      "<div class=\"sc-top\">" +
+        "<div class=\"sc-emoji\">🔐</div>" +
+        "<div class=\"sc-info\">" +
+          "<strong>Mistério completo</strong>" +
+          "<span>Você desbloqueou os cinco fragmentos</span>" +
+        "</div>" +
+      "</div>";
+    mysteryBtn.addEventListener("click", showMystery);
+    grid.appendChild(mysteryBtn);
+  }
+
+  updateHUD();
+  showScreen("screenMenu");
+}
+
+function startScenario(id){
+  current = SCENARIOS.find(s => s.id === id);
+  if (!current) return;
+  qIndex = 0;
+  correctCount = 0;
+  answered = false;
+  showScreen("screenPlay");
+  loadQuestion();
+}
+
+function loadQuestion(){
+  answered = false;
+  const q = current.questions[qIndex];
+
+  $("phaseBadge").textContent = current.emoji + " " + current.title;
+  $("phaseTitle").textContent = current.title;
+  $("phaseSub").textContent = current.sub;
+  $("phaseGoal").textContent = "Objetivo: " + current.goal;
+  $("avatar").textContent = current.avatar;
+  $("whoName").textContent = current.who;
+  $("speech").textContent = q.speech;
+  $("contextBox").innerHTML = "<strong>Contexto:</strong> " + q.context;
+  $("question").textContent = q.ask;
+  $("qCounter").textContent = "Pergunta " + (qIndex + 1) + " de " + current.questions.length;
+
+  const harm = Math.round((correctCount / current.questions.length) * 100);
+  $("harmFill").style.width = harm + "%";
+  $("harmLabel").textContent = harm + "%";
+
+  const box = $("options");
+  box.innerHTML = "";
+  q.options.forEach((text, i) => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.textContent = text;
+    b.addEventListener("click", () => selectOption(i));
+    box.appendChild(b);
+  });
+
+  $("feedback").className = "feedback-card";
+  $("feedback").innerHTML = "";
+  $("playActions").style.display = "none";
+  updateHUD();
+  startTimer();
+}
+
+function selectOption(i){
+  if (answered) return;
+  answered = true;
+  stopTimer();
+
+  const q = current.questions[qIndex];
+  const opts = document.querySelectorAll(".opt");
+  opts.forEach((el, idx) => {
+    el.disabled = true;
+    if (idx === q.correct) el.classList.add("correct");
+    if (idx === i && i !== q.correct) el.classList.add("wrong");
+    if (idx === i) el.classList.add("selected");
+  });
+
+  const fb = $("feedback");
+  if (i === q.correct){
+    correctCount++;
+    xp += 12;
+    GameSound.play("correct");
+    fb.className = "feedback-card show good";
+    fb.innerHTML = "<div class=\"fb-title\">✓ Leitura em harmonia</div>" +
+      "<div>" + q.explain + "</div>" +
+      "<div class=\"fb-explain\">Você se aproxima do objetivo: <strong>" + current.goal + "</strong>.</div>";
+    toast("Harmonia +", "good");
+  } else {
+    GameSound.play("wrong");
+    fb.className = "feedback-card show bad";
+    fb.innerHTML = "<div class=\"fb-title\">✗ Leitura desalinhada</div>" +
+      "<div>" + q.explain + "</div>" +
+      "<div class=\"fb-explain\"><strong>Consequência:</strong> " + q.consequence + "</div>";
+    toast("Harmonia abalada", "bad");
+  }
+
+  const harm = Math.round((correctCount / current.questions.length) * 100);
+  $("harmFill").style.width = harm + "%";
+  $("harmLabel").textContent = harm + "%";
+  $("harmNum").textContent = harm + "%";
+  $("xpNum").textContent = xp;
+  $("playActions").style.display = "flex";
+  // Garante que o botão Continuar fique visível e tocável no celular
+  requestAnimationFrame(() => {
+    const btn = $("btnNextQ");
+    if (btn) btn.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  });
+  save();
+}
+
+function nextStep(){
+  if (!current) return;
+  // Evita double-tap acidental
+  if (nextStep._lock) return;
+  nextStep._lock = true;
+  setTimeout(() => { nextStep._lock = false; }, 400);
+
+  qIndex++;
+  if (qIndex >= current.questions.length){
+    endScenario();
+  } else {
+    loadQuestion();
+  }
+}
+
+function endScenario(){
+  stopTimer();
+  const passed = correctCount >= current.minCorrect;
+  const card = $("resultCard");
+
+  if (passed){
+    cleared[current.id] = true;
+    secrets[current.id] = { title: current.secretTitle, text: current.secretText };
+    xp += 30;
+    save();
+    GameSound.play("win");
+    confetti({ particleCount: 80, spread: 55, origin: { y: 0.7 }, colors: ["#ffd23f","#8b5cf6","#2dd9b9"] });
+
+    card.innerHTML =
+      "<div class=\"big\">🎉</div>" +
+      "<h2>" + current.winTitle + "</h2>" +
+      "<div class=\"result-goal win\">Objetivo cumprido: " + current.goal + "</div>" +
+      "<p>" + current.winText + "</p>" +
+      "<p>Harmonia: <strong style=\"color:var(--teal)\">" + correctCount + "/" + current.questions.length + "</strong></p>" +
+      "<div class=\"secret-text\"><strong>" + current.secretTitle + " desbloqueado</strong><br>" + current.secretText + "</div>" +
+      "<div class=\"actions\">" +
+        "<button class=\"btn btn-ghost\" id=\"btnRetry\">Jogar de novo</button>" +
+        "<button class=\"btn btn-primary\" id=\"btnMenu\">Outros cenários</button>" +
+      "</div>";
+  } else {
+    GameSound.play("wrong");
+    card.innerHTML =
+      "<div class=\"big\">💔</div>" +
+      "<h2>" + current.loseTitle + "</h2>" +
+      "<div class=\"result-goal lose\">Objetivo não alcançado: " + current.goal + "</div>" +
+      "<p>" + current.loseText + "</p>" +
+      "<p>Harmonia: " + correctCount + "/" + current.questions.length +
+      " (era preciso pelo menos " + current.minCorrect + ").</p>" +
+      "<div class=\"actions\">" +
+        "<button class=\"btn btn-primary\" id=\"btnRetry\">Tentar de novo</button>" +
+        "<button class=\"btn btn-ghost\" id=\"btnMenu\">Outros cenários</button>" +
+      "</div>";
+  }
+
+  showScreen("screenResult");
+  updateHUD();
+
+  $("btnRetry").addEventListener("click", () => startScenario(current.id));
+  $("btnMenu").addEventListener("click", () => {
+    const wasPass = passed;
+    current = null;
+    renderMenu();
+    if (clearedCount() >= 5 && wasPass){
+      setTimeout(() => {
+        if (confirm("Você concluiu os cinco cenários! Deseja revelar o mistério completo?")){
+          showMystery();
+        }
+      }, 300);
+    }
+  });
+}
+
+function showMystery(){
+  const box = $("fragments");
+  box.innerHTML = "";
+  SCENARIOS.forEach(s => {
+    if (secrets[s.id]){
+      const d = document.createElement("div");
+      d.className = "secret-text";
+      d.style.marginBottom = "8px";
+      d.innerHTML = "<strong>" + secrets[s.id].title + "</strong> — " + s.title + "<br>" + secrets[s.id].text;
+      box.appendChild(d);
+    }
+  });
+  $("fullMystery").textContent = FULL_MYSTERY;
+  $("finalXp").textContent = xp;
+  showScreen("screenMystery");
+  GameSound.play("win");
+  confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+}
+
+$("hudBack").addEventListener("click", (e) => {
+  if ($("screenPlay").classList.contains("show") || $("screenResult").classList.contains("show") || $("screenMystery").classList.contains("show")){
+    e.preventDefault();
+    stopTimer();
+    current = null;
+    renderMenu();
+  }
+});
+
+(function bindNextBtn(){
+  const btn = $("btnNextQ");
+  if (!btn) return;
+  // click + pointerup cobrem desktop e a maioria dos celulares
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    nextStep();
+  });
+  btn.addEventListener("pointerup", (e) => {
+    if (e.pointerType === "touch" || e.pointerType === "pen"){
+      e.preventDefault();
+      nextStep();
+    }
+  }, { passive: false });
+})();
+
+$("btnBackMenuFinal").addEventListener("click", () => {
+  stopTimer();
+  current = null;
+  renderMenu();
+});
+
+loadSave();
+renderMenu();
+</script>
+</body>
+</html>
