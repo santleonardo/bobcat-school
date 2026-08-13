@@ -880,17 +880,116 @@ const FULL_MYSTERY = "O envelope NH-07 e a porta da Rua das Acácias, 42, eram u
 const SAVE_KEY = "bobcat-interpretacao-harmonia";
 
 let current = null;
+let runtimeQuestions = [];
 let qIndex = 0;
 let correctCount = 0;
 let xp = 0;
 let answered = false;
 let cleared = {};
 let secrets = {};
+let playCounts = {};
+let usedVariants = {};
 let timerId = null;
 let timeLeft = 0;
-const TIME_PER_Q = 30; // segundos por pergunta
+const TIME_PER_Q = 30;
 
 function $(id){ return document.getElementById(id); }
+
+const SPEECH_OPENERS = ["", "Olha… ", "Então… ", "Bom, ", "Assim… ", "Pois é. ", "Certo. "];
+const CONTEXT_TWISTS = [
+  (c) => c,
+  (c) => c.replace(/\.$/, "") + ", e o clima está tenso.",
+  (c) => c.replace(/\.$/, "") + " — há pouca margem para erro.",
+  (c) => "Neste momento, " + c.charAt(0).toLowerCase() + c.slice(1),
+  (c) => c.replace(/\.$/, "") + ". Vale prestar atenção no tom."
+];
+
+function mulberry32(a){
+  return function(){
+    let t = a += 0x6D2B79F5;
+    t = Math.imul(t ^ t >>> 15, t | 1);
+    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function shuffleWithRand(arr, rand){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(rand() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function localVaryQuestion(q, scenarioId, qIdx, playCount){
+  const seed = ((playCounts[scenarioId] || 1) * 97 + qIdx * 13 + playCount * 31) >>> 0;
+  const rand = mulberry32(seed);
+  const poolSpeech = [q.speech].concat(q.speechAlt || []);
+  const poolCtx = [q.context].concat(q.contextAlt || []);
+  const key = scenarioId + ":" + qIdx;
+  const last = usedVariants[key] | 0;
+  let sIdx = Math.floor(rand() * poolSpeech.length);
+  if (poolSpeech.length > 1 && sIdx === last) sIdx = (sIdx + 1) % poolSpeech.length;
+  usedVariants[key] = sIdx;
+  let speech = poolSpeech[sIdx];
+  let context = poolCtx[Math.min(sIdx, poolCtx.length - 1)];
+  if (playCount >= 2){
+    const op = SPEECH_OPENERS[Math.floor(rand() * SPEECH_OPENERS.length)];
+    if (op && speech.length > 3){
+      speech = op + speech.charAt(0).toLowerCase() + speech.slice(1);
+    }
+    context = CONTEXT_TWISTS[Math.floor(rand() * CONTEXT_TWISTS.length)](context);
+  }
+  const indexed = q.options.map((text, i) => ({ text, i }));
+  const shuffled = shuffleWithRand(indexed, rand);
+  const correct = shuffled.findIndex(o => o.i === q.correct);
+  return {
+    context, speech, ask: q.ask,
+    options: shuffled.map(o => o.text),
+    correct: correct < 0 ? q.correct : correct,
+    explain: q.explain, consequence: q.consequence
+  };
+}
+
+async function fetchAiVariants(scenario, playCount){
+  const items = scenario.questions.map(q => ({ speech: q.speech, context: q.context }));
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 12000);
+  try {
+    const resp = await fetch("/api/npc-variant", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        scenarioTitle: scenario.title,
+        who: scenario.who,
+        goal: scenario.goal,
+        playCount,
+        items
+      }),
+      signal: ctrl.signal
+    });
+    clearTimeout(t);
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    if (!data || !Array.isArray(data.items) || data.items.length !== scenario.questions.length) return null;
+    return data.items;
+  } catch (e) {
+    clearTimeout(t);
+    return null;
+  }
+}
+
+function buildRuntimeQuestions(scenario, aiItems, playCount){
+  return scenario.questions.map((q, idx) => {
+    const base = localVaryQuestion(q, scenario.id, idx, playCount);
+    if (aiItems && aiItems[idx]){
+      if (aiItems[idx].speech) base.speech = aiItems[idx].speech;
+      if (aiItems[idx].context) base.context = aiItems[idx].context;
+    }
+    return base;
+  });
+}
 
 function stopTimer(){
   if (timerId){ clearInterval(timerId); timerId = null; }
@@ -928,7 +1027,7 @@ function startTimer(){
 function onTimeUp(){
   if (answered || !current) return;
   answered = true;
-  const q = current.questions[qIndex];
+  const q = (runtimeQuestions[qIndex] || current.questions[qIndex]);
   document.querySelectorAll(".opt").forEach((el, idx) => {
     el.disabled = true;
     if (idx === q.correct) el.classList.add("correct");
@@ -952,12 +1051,14 @@ function loadSave(){
       cleared = data.cleared || {};
       secrets = data.secrets || {};
       xp = data.xp || 0;
+      playCounts = data.playCounts || {};
+      usedVariants = data.usedVariants || {};
     }
   } catch(e){}
 }
 
 function save(){
-  localStorage.setItem(SAVE_KEY, JSON.stringify({ cleared, secrets, xp }));
+  localStorage.setItem(SAVE_KEY, JSON.stringify({ cleared, secrets, xp, playCounts, usedVariants }));
 }
 
 function toast(msg, kind){
@@ -981,7 +1082,7 @@ function updateHUD(){
   $("doneNum").textContent = clearedCount();
   $("xpNum").textContent = xp;
   if (current){
-    const harm = Math.round((correctCount / current.questions.length) * 100);
+    const harm = Math.round((correctCount / (runtimeQuestions.length || current.questions.length)) * 100);
     $("harmNum").textContent = harm + "%";
   } else {
     $("harmNum").textContent = "—";
@@ -1029,19 +1130,46 @@ function renderMenu(){
   showScreen("screenMenu");
 }
 
-function startScenario(id){
+async function startScenario(id){
   current = SCENARIOS.find(s => s.id === id);
   if (!current) return;
   qIndex = 0;
   correctCount = 0;
   answered = false;
+  playCounts[id] = (playCounts[id] || 0) + 1;
+  const pc = playCounts[id];
+  save();
+
   showScreen("screenPlay");
+  $("phaseBadge").textContent = current.emoji + " " + current.title;
+  $("phaseTitle").textContent = current.title;
+  $("phaseSub").textContent = current.sub;
+  $("phaseGoal").textContent = "Objetivo: " + current.goal;
+  $("avatar").textContent = current.avatar;
+  $("whoName").textContent = current.who;
+  $("speech").textContent = "…";
+  $("contextBox").innerHTML = "<strong>Preparando:</strong> gerando falas novas para esta partida…";
+  $("question").textContent = pc === 1 ? "Primeira vez neste cenário." : ("Partida nº " + pc + " — as falas mudam a cada jogo.");
+  $("options").innerHTML = '<div style="text-align:center;padding:18px;color:var(--ink-soft);font-size:13px">Aguarde um instante…</div>';
+  $("feedback").className = "feedback-card";
+  $("feedback").innerHTML = "";
+  $("playActions").style.display = "none";
+  $("qCounter").textContent = "Preparando diálogo…";
+  stopTimer();
+
+  let aiItems = null;
+  // Sempre tenta IA; se falhar, usa variação local (na 1ª também embaralha opções)
+  aiItems = await fetchAiVariants(current, pc);
+  runtimeQuestions = buildRuntimeQuestions(current, aiItems, pc);
+  if (aiItems) toast("Falas novas geradas pela IA", "good");
+  else if (pc >= 2) toast("Falas variadas (modo offline)", "good");
   loadQuestion();
 }
 
 function loadQuestion(){
   answered = false;
-  const q = current.questions[qIndex];
+  const q = (runtimeQuestions[qIndex] || current.questions[qIndex]);
+  const qTotal = runtimeQuestions.length || current.questions.length;
 
   $("phaseBadge").textContent = current.emoji + " " + current.title;
   $("phaseTitle").textContent = current.title;
@@ -1052,9 +1180,9 @@ function loadQuestion(){
   $("speech").textContent = q.speech;
   $("contextBox").innerHTML = "<strong>Contexto:</strong> " + q.context;
   $("question").textContent = q.ask;
-  $("qCounter").textContent = "Pergunta " + (qIndex + 1) + " de " + current.questions.length;
+  $("qCounter").textContent = "Pergunta " + (qIndex + 1) + " de " + qTotal;
 
-  const harm = Math.round((correctCount / current.questions.length) * 100);
+  const harm = Math.round((correctCount / qTotal) * 100);
   $("harmFill").style.width = harm + "%";
   $("harmLabel").textContent = harm + "%";
 
@@ -1080,7 +1208,7 @@ function selectOption(i){
   answered = true;
   stopTimer();
 
-  const q = current.questions[qIndex];
+  const q = (runtimeQuestions[qIndex] || current.questions[qIndex]);
   const opts = document.querySelectorAll(".opt");
   opts.forEach((el, idx) => {
     el.disabled = true;
@@ -1108,7 +1236,7 @@ function selectOption(i){
     toast("Harmonia abalada", "bad");
   }
 
-  const harm = Math.round((correctCount / current.questions.length) * 100);
+  const harm = Math.round((correctCount / (runtimeQuestions.length || current.questions.length)) * 100);
   $("harmFill").style.width = harm + "%";
   $("harmLabel").textContent = harm + "%";
   $("harmNum").textContent = harm + "%";
@@ -1125,7 +1253,7 @@ function nextStep(){
 
   qIndex++;
   answered = false;
-  if (qIndex >= current.questions.length){
+  if (qIndex >= (runtimeQuestions.length || current.questions.length)){
     endScenario();
   } else {
     loadQuestion();
@@ -1151,7 +1279,7 @@ function endScenario(){
       "<h2>" + current.winTitle + "</h2>" +
       "<div class=\"result-goal win\">Objetivo cumprido: " + current.goal + "</div>" +
       "<p>" + current.winText + "</p>" +
-      "<p>Harmonia: <strong style=\"color:var(--teal)\">" + correctCount + "/" + current.questions.length + "</strong></p>" +
+      "<p>Harmonia: <strong style=\"color:var(--teal)\">" + correctCount + "/" + (runtimeQuestions.length || current.questions.length) + "</strong></p>" +
       "<div class=\"secret-text\"><strong>" + current.secretTitle + " desbloqueado</strong><br>" + current.secretText + "</div>" +
       "<div class=\"actions\">" +
         "<button class=\"btn btn-ghost\" id=\"btnRetry\">Jogar de novo</button>" +
@@ -1164,7 +1292,7 @@ function endScenario(){
       "<h2>" + current.loseTitle + "</h2>" +
       "<div class=\"result-goal lose\">Objetivo não alcançado: " + current.goal + "</div>" +
       "<p>" + current.loseText + "</p>" +
-      "<p>Harmonia: " + correctCount + "/" + current.questions.length +
+      "<p>Harmonia: " + correctCount + "/" + (runtimeQuestions.length || current.questions.length) +
       " (era preciso pelo menos " + current.minCorrect + ").</p>" +
       "<div class=\"actions\">" +
         "<button class=\"btn btn-primary\" id=\"btnRetry\">Tentar de novo</button>" +
