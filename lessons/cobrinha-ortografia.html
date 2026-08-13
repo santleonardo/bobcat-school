@@ -390,7 +390,7 @@ const state = {
   snake: [], dir: {x:1,y:0}, nextDir: {x:1,y:0}, grow: false,
   tiles: [], // {r,c,char,target:bool}
   lives: 3, xp: 0, fixed: 0,
-  speed: 260, tickId: null, running: false, paused: false, invuln: false,
+  speed: 260, tickId: null, running: false, paused: false, invuln: false, invulnTimer: null,
   cells: null, dirty: new Set()
 };
 
@@ -451,6 +451,13 @@ function loadWord(){
   state.badChar = wrong[state.badIdx];
   renderWord(-1);
   spawnTiles();
+
+  // Janela de segurança: logo no início do jogo ou assim que uma palavra
+  // é concluída, dá um respiro pro jogador antes das letras erradas
+  // poderem tirar vida (evita perder vida "de cara" mal a rodada começa).
+  state.invuln = true;
+  clearTimeout(state.invulnTimer);
+  state.invulnTimer = setTimeout(() => { state.invuln = false; }, state.speed * 3);
 }
 
 /* ─── Letras no tabuleiro ─── */
@@ -551,7 +558,9 @@ function tick(){
       correctHit();
     } else {
       respawnOneDecoy(tileHit);
-      loseLife('tile');
+      if (!state.invuln){
+        loseLife('tile');
+      }
     }
   }
   render();
@@ -716,6 +725,7 @@ document.addEventListener('visibilitychange', () => {
 function gameOver(){
   state.running = false;
   stopTicking();
+  clearTimeout(state.invulnTimer);
   GameSound.play('wrong');
   document.getElementById('gameOverMsg').textContent =
     `Você corrigiu ${state.fixed} palavra(s) e ganhou ${state.xp} XP. Bora tentar de novo?`;
