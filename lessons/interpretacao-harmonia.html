@@ -8,6 +8,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="game-sound.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
 <style>
   :root{
     --orange:#ff5b3d;--orange-dark:#e13a26;--orange-light:#ff7a5c;
@@ -74,6 +77,8 @@
   .scenario-card:hover{border-color:var(--purple);box-shadow:0 0 0 2px rgba(139,92,246,.25);transform:translateY(-2px)}
   .scenario-card:active{transform:scale(.98)}
   .scenario-card.cleared{border-color:rgba(61,214,140,.45);background:rgba(61,214,140,.08)}
+  .scenario-card.locked{opacity:.55;cursor:not-allowed;border-style:dashed;background:rgba(255,255,255,.02)}
+  .scenario-card.locked:hover{transform:none;box-shadow:none;border-color:var(--border)}
   .sc-top{display:flex;align-items:center;gap:12px}
   .sc-emoji{font-size:32px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;
     border-radius:14px;background:rgba(139,92,246,.2)}
@@ -281,6 +286,7 @@
       <div class="mystery-box">
         <h3>🔐 O segredo completo</h3>
         <p id="fullMystery"></p>
+        <p id="epilogueMystery" style="margin-top:10px;display:none"></p>
       </div>
       <p style="margin-bottom:16px">XP total: <strong id="finalXp" style="color:var(--gold)">0</strong></p>
       <button class="btn btn-primary" id="btnBackMenuFinal">Voltar aos cenários</button>
@@ -410,6 +416,125 @@ const SCENARIOS = [
     ]
   },
   {
+    id: "emprego2",
+    emoji: "🤝",
+    title: "Negociação da proposta",
+    sub: "Ligação com o gestor André — Nova Horizonte",
+    avatar: "👔",
+    who: "Gestor André",
+    goal: "Fechar um bom acordo sem parecer arrogante nem se vender barato",
+    minCorrect: 5,
+    winTitle: "Proposta fechada com equilíbrio",
+    winText: "Você leu os sinais certos: soube quando pressionar e quando ceder. André fecha a proposta satisfeito, e você entra com um acordo justo.",
+    loseTitle: "Acordo capenga",
+    loseText: "Leituras erradas fizeram você perder pontos de negociação ou soar difícil demais. O acordo saiu torto para os dois lados.",
+    secretTitle: "Fragmento 1b",
+    secretText: "«Sob o papel timbrado da proposta, uma anotação a lápis: “quem negocia bem também escuta o que não vira cláusula.” Assinado apenas com as letras NH.»",
+    requires: "emprego",
+    requiresScore: 0.9,
+    unlockHint: "Acerte todas as perguntas (ou 90%+) da Entrevista de emprego para desbloquear",
+    questions: [
+      {
+        context: "André liga dois dias depois da entrevista. Tom animado, mas comedido.",
+        speech: "Gostamos muito de você. Queria alinhar a proposta antes de formalizar — tem uns pontos que podemos conversar.",
+        ask: "O tom geral da ligação sinaliza que:",
+        options: [
+          "A proposta é fixa e não há espaço para conversa",
+          "Há abertura real para negociar alguns pontos, não é só formalidade",
+          "Ele está desistindo da contratação",
+          "Você deve aceitar tudo sem perguntar nada"
+        ],
+        correct: 1,
+        explain: "'Podemos conversar' antes de formalizar indica negociação real, não script de fechamento.",
+        consequence: "Você aceita tudo sem perguntar. Perde a chance de ajustar pontos que pesariam depois."
+      },
+      {
+        context: "Ele fala do salário.",
+        speech: "O valor que a gente tem no orçamento é esse. Não é a última palavra, mas também não é elástico.",
+        ask: "A leitura mais fiel é:",
+        options: [
+          "O valor é 100% fixo e não pode mudar em nada",
+          "Há alguma margem, mas pequena e não facilmente expansível",
+          "Ele está pedindo que você diminua sua pretensão",
+          "O orçamento vai dobrar se você insistir"
+        ],
+        correct: 1,
+        explain: "'Não é a última palavra' abre pequena margem; 'não é elástico' avisa que não será grande.",
+        consequence: "Você trata como fixo e não pede nada. Fica dinheiro na mesa que poderia ter negociado com moderação."
+      },
+      {
+        context: "Você menciona outra proposta em mãos, com cautela.",
+        speech: "Entendo. Isso ajuda a gente a enxergar o mercado. Deixa eu ver o que consigo mexer até amanhã.",
+        ask: "O que essa resposta sugere?",
+        options: [
+          "Ele ficou ofendido e vai retirar a proposta",
+          "A informação foi útil e ele vai tentar melhorar algo, sem garantia",
+          "Ele vai igualar a outra proposta certamente",
+          "Ele pede para você desistir da outra oferta imediatamente"
+        ],
+        correct: 1,
+        explain: "'Ajuda a enxergar' + 'vou ver o que consigo mexer' é sinal de esforço real, sem promessa fechada.",
+        consequence: "Você cobra confirmação imediata e soa impaciente. O clima esfria."
+      },
+      {
+        context: "Sobre o cargo.",
+        speech: "No papel você entra como analista pleno, mas na prática vai lidar com bastante coisa de sênior no início.",
+        ask: "O que isso realmente descreve?",
+        options: [
+          "Um erro de digitação no contrato",
+          "Um descompasso entre título formal e escopo real de trabalho",
+          "Uma promoção automática garantida em 3 meses",
+          "Que o cargo pleno não existe na empresa"
+        ],
+        correct: 1,
+        explain: "Título e responsabilidades reais nem sempre coincidem no início — vale perguntar sobre prazo de reconhecimento formal.",
+        consequence: "Você não pergunta nada sobre isso. Meses depois se sente sobrecarregado sem reconhecimento formal."
+      },
+      {
+        context: "Você pergunta sobre plano de carreira.",
+        speech: "Não é uma trilha engessada, mas quem entrega bem costuma subir rápido por aqui. Depende muito da pessoa.",
+        ask: "A leitura mais precisa é:",
+        options: [
+          "Promoção garantida em data marcada",
+          "Sem trilha formal fixa; a evolução depende de desempenho, sem prazo garantido",
+          "Ninguém nunca é promovido na empresa",
+          "A pergunta foi mal recebida"
+        ],
+        correct: 1,
+        explain: "'Não é engessada' + 'depende da pessoa' = mérito sem cronograma fixo, nem promessa formal.",
+        consequence: "Você entende como promessa de prazo. Fica frustrado quando a promoção não vem no tempo que imaginou."
+      },
+      {
+        context: "Sobre benefícios extras.",
+        speech: "Vale-refeição e plano de saúde são padrão. O resto — auxílio-home office, por exemplo — a gente avalia caso a caso, sinceramente.",
+        ask: "O que 'caso a caso' comunica aqui?",
+        options: [
+          "Que esses benefícios são garantidos para todos",
+          "Que são exceções possíveis, não direito automático",
+          "Que a empresa nunca oferece esse tipo de benefício",
+          "Que só executivos recebem qualquer benefício"
+        ],
+        correct: 1,
+        explain: "Diferenciar 'padrão' de 'caso a caso' evita cobrar depois algo que nunca foi prometido como regra.",
+        consequence: "Você assume o auxílio como certo e planeja o orçamento em cima disso. Depois descobre que não veio."
+      },
+      {
+        context: "Fechando a ligação.",
+        speech: "Fechado, então? Te mando o contrato ainda hoje — qualquer ponto estranho, me chama antes de assinar, tá?",
+        ask: "O convite final significa, sobretudo:",
+        options: [
+          "Que você não pode mais tirar dúvidas depois do contrato pronto",
+          "Abertura genuína para esclarecer pontos antes da assinatura formal",
+          "Que o contrato já está errado de propósito",
+          "Que a assinatura é só uma formalidade sem valor"
+        ],
+        correct: 1,
+        explain: "Ele antecipa e autoriza dúvidas antes da assinatura — sinal de processo transparente.",
+        consequence: "Você assina sem ler direito e sem perguntar. Um ponto que incomodava passa despercebido."
+      }
+    ]
+  },
+  {
     id: "imprensa",
     emoji: "📰",
     title: "Coletiva de imprensa",
@@ -522,6 +647,123 @@ const SCENARIOS = [
         correct: 1,
         explain: "'Se o restante confirmar' mostra que o enquadramento ainda depende de checagem.",
         consequence: "Você relaxa e não envia os documentos combinados. A matéria sai incompleta e dura."
+      }
+    ]
+  },
+  {
+    id: "imprensa2",
+    emoji: "🧩",
+    title: "Nova denúncia, história confusa",
+    sub: "Coletiva extra — versão desencontrada dos fatos",
+    avatar: "🎙️",
+    who: "Jornalista Ricardo",
+    goal: "Esclarecer uma história nova e mais confusa sem alimentar boatos",
+    minCorrect: 5,
+    winTitle: "A confusão foi desfeita",
+    winText: "Você separou fato de boato e reconstruiu a linha do tempo real. A história ficou clara — e injusta com ninguém.",
+    loseTitle: "A confusão virou boato maior",
+    loseText: "Leituras apressadas juntaram pontos que não se conectavam. A história saiu do controle e ganhou versões piores nas redes.",
+    secretTitle: "Fragmento 2b",
+    secretText: "«Um segundo bilhete, colado no verso do primeiro: “quando a história muda de forma, procure quem ganhou com a mudança.”»",
+    requires: "imprensa",
+    questions: [
+      {
+        context: "Ricardo chega com uma denúncia anônima envolvendo o mesmo projeto, mas os detalhes não batem com o que já foi dito antes.",
+        speech: "Chegou uma denúncia dizendo que os prazos foram forjados. Isso bate com o que o senhor já explicou aqui semana passada?",
+        ask: "O primeiro passo interpretativo correto é:",
+        options: [
+          "Negar tudo imediatamente para encerrar o assunto",
+          "Comparar a nova versão com os fatos já registrados antes de reagir",
+          "Confirmar a denúncia sem checar, para parecer transparente",
+          "Ignorar a pergunta e mudar de tema"
+        ],
+        correct: 1,
+        explain: "Antes de reagir, é preciso checar coerência entre a nova denúncia e o que já foi documentado.",
+        consequence: "Você reage por impulso e contradiz uma fala anterior sua. Vira manchete de contradição."
+      },
+      {
+        context: "Uma segunda fonte, não identificada, contesta parte da primeira denúncia.",
+        speech: "Uma fonte interna diz o oposto da denúncia anônima. Como o senhor concilia as duas versões?",
+        ask: "O pedido real do jornalista é:",
+        options: [
+          "Que você escolha uma versão para acusar publicamente a outra",
+          "Que você explique com base em evidências, não em qual fonte parece mais confiável",
+          "Que você processe as duas fontes",
+          "Que você se recuse a comentar qualquer fonte anônima"
+        ],
+        correct: 1,
+        explain: "Duas versões anônimas conflitantes pedem evidência concreta, não escolha de 'quem parece mais sincero'.",
+        consequence: "Você valida uma fonte sem provas. Se ela cair, sua credibilidade cai junto."
+      },
+      {
+        context: "Um print de conversa, possivelmente editado, circula nas redes.",
+        speech: "Esse print está circulando. O senhor confirma que essa conversa aconteceu assim, palavra por palavra?",
+        ask: "A leitura mais cautelosa é:",
+        options: [
+          "Confirmar tudo sem verificar a origem do print",
+          "Reconhecer o que pode confirmar e sinalizar dúvida sobre o que pode ter sido editado",
+          "Negar que qualquer conversa tenha existido",
+          "Acusar quem vazou sem provas"
+        ],
+        correct: 1,
+        explain: "Prints podem ser recortados; confirmar seletivamente sem verificação amplia o risco de validar uma edição.",
+        consequence: "Você confirma tudo. Depois se descobre que o print tinha um trecho cortado — e a culpa recai sobre você."
+      },
+      {
+        context: "Ricardo aponta uma aparente contradição na sua própria fala de meses atrás.",
+        speech: "Em março o senhor disse uma coisa, agora diz outra. Isso é mudança de posição ou mentira anterior?",
+        ask: "A resposta mais honesta e estratégica reconhece que:",
+        options: [
+          "Contexto e informação nova podem justificar atualização de posição sem que isso seja mentira",
+          "Qualquer mudança de fala é sempre mentira",
+          "É melhor negar que disse algo em março",
+          "O jornalista não tem direito de comparar falas antigas"
+        ],
+        correct: 0,
+        explain: "Distinguir 'atualizar posição com novos fatos' de 'mentir' é central para não ser tratado como inconsistente por má-fé.",
+        consequence: "Você trata a pergunta como ataque e some do assunto. A imprensa lê isso como fuga."
+      },
+      {
+        context: "Surge um documento com data que parece não bater com a linha do tempo contada até agora.",
+        speech: "Esse documento está datado de uma semana antes do que o senhor descreveu. Como isso se encaixa?",
+        ask: "O procedimento correto diante de uma possível inconsistência de data é:",
+        options: [
+          "Ignorar a data e manter a versão anterior sem checar",
+          "Verificar a data com calma antes de confirmar ou refutar publicamente",
+          "Acusar o documento de ser falso sem checagem",
+          "Admitir imediatamente que mentiu sobre tudo"
+        ],
+        correct: 1,
+        explain: "Datas divergentes pedem verificação — confirmar ou negar sem checar arrisca um erro público.",
+        consequence: "Você nega de cara. O documento se confirma verdadeiro depois, e a negação vira novo escândalo."
+      },
+      {
+        context: "Alguém nas redes conecta essa denúncia a um caso antigo e não relacionado.",
+        speech: "Tem gente ligando isso a outro escândalo de anos atrás, de outra organização. O senhor comenta?",
+        ask: "A leitura correta dessa conexão é:",
+        options: [
+          "Aceitar a ligação como verdadeira só porque está circulando",
+          "Reconhecer que são casos distintos sem provas de ligação real, e dizer isso com clareza",
+          "Fingir que não viu a pergunta",
+          "Confirmar a ligação para parecer transparente"
+        ],
+        correct: 1,
+        explain: "Boatos conectam casos por semelhança superficial; separar fatos de associação especulativa evita alimentar desinformação.",
+        consequence: "Você não desfaz a ligação falsa. A história cresce misturando dois casos sem relação real."
+      },
+      {
+        context: "No fechamento, Ricardo resume o que entendeu.",
+        speech: "Então, resumindo: a denúncia tinha um erro de data, uma fonte contestada e nenhuma prova do vazamento do print. Certo?",
+        ask: "A resposta ideal a esse resumo é:",
+        options: [
+          "Confirmar o resumo se ele realmente reflete o que foi esclarecido, com precisão",
+          "Concordar com tudo só para encerrar logo a conversa",
+          "Discordar de tudo por princípio",
+          "Pedir para ele não publicar nada"
+        ],
+        correct: 0,
+        explain: "Se o resumo é preciso, confirmá-lo fecha a apuração com clareza; concordar sem checar ou negar por reflexo são erros simétricos.",
+        consequence: "Você concorda sem checar um detalhe errado no resumo dele. O erro vira parte da matéria publicada."
       }
     ]
   },
@@ -642,6 +884,123 @@ const SCENARIOS = [
     ]
   },
   {
+    id: "rua2",
+    emoji: "🧭",
+    title: "Outra pessoa, outro pedido",
+    sub: "Nova visitante perdida — bairro diferente",
+    avatar: "🎒",
+    who: "Visitante Sofia",
+    goal: "Ajudar Sofia com pedidos que mudam no meio do caminho",
+    minCorrect: 5,
+    winTitle: "Sofia chegou tranquila",
+    winText: "Você acompanhou as mudanças de pedido dela sem se perder no meio do caminho. Sofia chega segura e agradece a paciência.",
+    loseTitle: "Sofia ficou ainda mais perdida",
+    loseText: "As trocas de pedido pegaram você de surpresa e as respostas ficaram descoladas do que ela realmente precisava.",
+    secretTitle: "Fragmento 3b",
+    secretText: "«Perto da porta dos fundos, uma segunda placa, quase apagada: “quem muda de pergunta no meio do caminho também está pensando alto — escute a mudança.”»",
+    requires: "rua",
+    questions: [
+      {
+        context: "Sofia se aproxima com duas malas e o celular sem sinal.",
+        speech: "Oi… meu celular não pega aqui. Você sabe me dizer se esse ônibus para perto da rodoviária?",
+        ask: "O núcleo da pergunta dela é:",
+        options: [
+          "Se o ônibus existe",
+          "Se essa linha específica passa perto do destino dela",
+          "Se ela pode usar o celular ali",
+          "Se a rodoviária está fechada"
+        ],
+        correct: 1,
+        explain: "Ela já assume que o ônibus existe; quer saber se ele serve ao destino dela.",
+        consequence: "Você fala sobre o celular e não responde a rota. Ela sobe no ônibus errado."
+      },
+      {
+        context: "No meio da explicação, ela muda de ideia.",
+        speech: "Na verdade, esquece a rodoviária — mudei de plano, preciso é ir para perto do hospital agora. Isso muda tudo, né?",
+        ask: "O que essa mudança de pedido exige de você?",
+        options: [
+          "Ignorar a mudança e continuar explicando o caminho antigo",
+          "Recalcular a orientação com base no novo destino, não no anterior",
+          "Repetir tudo sobre a rodoviária mesmo assim",
+          "Dizer que já é tarde demais para mudar de plano"
+        ],
+        correct: 1,
+        explain: "Pedido novo cancela o anterior; seguir explicando o caminho velho ignora a atualização dela.",
+        consequence: "Você termina de explicar o caminho da rodoviária. Ela vai para o lugar errado."
+      },
+      {
+        context: "Ela mostra preocupação com tempo.",
+        speech: "É que alguém está me esperando lá e o horário de visita tem hora certa. Não pode atrasar.",
+        ask: "O que isso acrescenta ao pedido dela?",
+        options: [
+          "Que o caminho mais bonito é preferível",
+          "Que a prioridade agora é rapidez confiável, não o trajeto mais interessante",
+          "Que ela quer conhecer pontos turísticos no caminho",
+          "Que o horário não importa de verdade"
+        ],
+        correct: 1,
+        explain: "'Hora certa' e 'não pode atrasar' priorizam velocidade e confiabilidade sobre qualquer passeio.",
+        consequence: "Você sugere um caminho mais longo, porém bonito. Ela perde o horário de visita."
+      },
+      {
+        context: "No trajeto, ela hesita numa esquina.",
+        speech: "Essa aqui ou a próxima? As duas parecem ir pro mesmo lugar no mapa, mas juro que não tenho certeza.",
+        ask: "A melhor forma de ajudar aqui é:",
+        options: [
+          "Escolher qualquer uma para não perder tempo",
+          "Indicar com clareza qual esquina é a certa e por quê, desfazendo a dúvida real",
+          "Dizer que as duas são idênticas sem checar",
+          "Perguntar por que ela não decorou o caminho"
+        ],
+        correct: 1,
+        explain: "Ambiguidade real pede resposta clara e justificada, não uma escolha aleatória disfarçada de ajuda.",
+        consequence: "Você diz 'tanto faz'. Ela pega a errada e dá uma volta enorme."
+      },
+      {
+        context: "Ela recebe uma ligação e volta preocupada.",
+        speech: "Falaram que talvez eu precise entrar pela outra ala do hospital, não pela principal. Isso muda o caminho daqui?",
+        ask: "O que essa nova informação pede de você?",
+        options: [
+          "Ignorar a ligação e manter a orientação original sem ajuste",
+          "Ajustar a orientação considerando a entrada alternativa mencionada",
+          "Dizer que hospitais só têm uma entrada",
+          "Recomendar que ela desista de ir"
+        ],
+        correct: 1,
+        explain: "Informação nova e específica (entrada alternativa) deve ser incorporada à orientação, não descartada.",
+        consequence: "Você mantém a rota para a entrada principal. Ela chega no lugar errado do prédio."
+      },
+      {
+        context: "Perto do destino, ela agradece mas parece insegura.",
+        speech: "Acho que entendi, mas... e se eu me confundir de novo no meio do caminho? Tem algum ponto de referência bem claro?",
+        ask: "O pedido implícito aqui é:",
+        options: [
+          "Que você a acompanhe até a porta do hospital",
+          "Um ponto de referência simples que funcione como âncora se ela se perder de novo",
+          "Que ela desista da visita",
+          "Que você ligue para o hospital por ela"
+        ],
+        correct: 1,
+        explain: "Ela não pede companhia constante, mas uma âncora prática contra nova confusão.",
+        consequence: "Você só repete o caminho inteiro de novo, sem dar um ponto de referência simples. Ela se perde de novo na metade."
+      },
+      {
+        context: "Na despedida, Sofia sorri aliviada.",
+        speech: "Valeu por não ficar irritado com eu mudando de ideia toda hora. Hoje foi um dia daqueles.",
+        ask: "O que essa fala revela sobre a experiência dela?",
+        options: [
+          "Que ela nunca mais vai pedir informação a ninguém",
+          "Que se sentiu acolhida apesar da confusão, e isso importou tanto quanto o caminho certo",
+          "Que ela achou você desatento",
+          "Que o caminho estava errado o tempo todo"
+        ],
+        correct: 1,
+        explain: "Ela valoriza paciência diante das mudanças — parte da 'harmonia' é lidar bem com pedidos que mudam.",
+        consequence: "Você comenta que ela deveria ter se organizado melhor. Sofia vai embora sem graça."
+      }
+    ]
+  },
+  {
     id: "cliente",
     emoji: "📞",
     title: "Cliente insatisfeito",
@@ -754,6 +1113,123 @@ const SCENARIOS = [
         correct: 1,
         explain: "É uma barganha explícita e legível. Demonizar a frase impede negociar o desfecho prático.",
         consequence: "Você acusa chantagem. A reclamação pública ganha uma atualização pior."
+      }
+    ]
+  },
+  {
+    id: "cliente2",
+    emoji: "📨",
+    title: "Mais clientes insatisfeitos",
+    sub: "Fila de atendimento — vários chats ao mesmo tempo",
+    avatar: "🗂️",
+    who: "Vários clientes",
+    goal: "Atender bem várias reclamações diferentes sem misturar os casos",
+    minCorrect: 5,
+    winTitle: "Fila resolvida com equilíbrio",
+    winText: "Você leu cada cliente sem misturar tom, pedido e contexto. Ninguém foi tratado como 'mais um número' — e a fila fechou sem novos cancelamentos.",
+    loseTitle: "A fila virou bola de neve",
+    loseText: "Respostas genéricas ou trocadas entre clientes pioraram tudo. Mais de uma reclamação escalou para cancelamento.",
+    secretTitle: "Fragmento 4b",
+    secretText: "«Nas fichas de atendimento com código NH-07, uma marca se repetia: candidatos que tratavam cada reclamação como única — nunca como cópia da anterior.»",
+    requires: "cliente",
+    questions: [
+      {
+        context: "Chat 1. Um cliente novo, tom seco, sem contexto anterior.",
+        speech: "Cancelamento. Só isso. Nem quero explicar de novo, já fiz isso três vezes com outros atendentes.",
+        ask: "A prioridade de leitura aqui é:",
+        options: [
+          "Pedir para ele reexplicar tudo de novo, do zero",
+          "Reconhecer o desgaste de repetir a história e buscar o histórico antes de perguntar de novo",
+          "Cancelar na hora sem entender o motivo",
+          "Ignorar o cansaço dele e seguir um roteiro padrão"
+        ],
+        correct: 1,
+        explain: "'Já fiz isso três vezes' é sinal de desgaste; repetir a pergunta piora, buscar o histórico é a leitura certa.",
+        consequence: "Você pede para ele contar tudo de novo. Ele cancela na hora, irritado."
+      },
+      {
+        context: "Chat 2, ao mesmo tempo. Cliente educado mas com problema técnico específico.",
+        speech: "Não é urgente, mas o relatório mensal está vindo com números trocados há dois meses. Alguém pode olhar com calma?",
+        ask: "O tom dela pede, sobretudo:",
+        options: [
+          "Resposta apressada e genérica, já que ela disse 'não é urgente'",
+          "Atenção técnica de fato, mesmo sem urgência — 'com calma' não significa 'sem importância'",
+          "Que você a ignore por enquanto",
+          "Que você feche o chat até ela cobrar de novo"
+        ],
+        correct: 1,
+        explain: "'Não é urgente' regula o ritmo, não a importância; ela quer que o problema seja realmente resolvido.",
+        consequence: "Você trata como baixa prioridade e esquece o caso. Dois meses depois ela reclama publicamente."
+      },
+      {
+        context: "Chat 3. Cliente confunde sua resposta com a de outro atendimento.",
+        speech: "Você mesmo não disse ontem que já tinha sido resolvido? Agora tá dizendo outra coisa.",
+        ask: "A leitura correta dessa confusão é:",
+        options: [
+          "Assumir a culpa por algo que talvez não tenha sido você",
+          "Esclarecer com calma que pode ter havido um mal-entendido entre atendimentos, sem acusar o cliente",
+          "Dizer que o cliente está mentindo",
+          "Ignorar a menção ao dia anterior"
+        ],
+        correct: 1,
+        explain: "Múltiplos atendentes podem gerar informações desencontradas; esclarecer sem acusar ninguém evita conflito.",
+        consequence: "Você nega tudo com firmeza. O cliente se sente chamado de mentiroso e escala a reclamação."
+      },
+      {
+        context: "Chat 1 volta com nova mensagem, ainda tenso.",
+        speech: "E aí, vai resolver ou vou ter que ligar pro Procon mesmo?",
+        ask: "A ameaça de Procon deve ser lida principalmente como:",
+        options: [
+          "Um blefe que pode ser ignorado e provocado",
+          "Sinal de urgência real que pede solução concreta, mais do que discussão sobre a ameaça em si",
+          "Motivo para encerrar o chat sem responder",
+          "Motivo para acusá-lo de má-fé"
+        ],
+        correct: 1,
+        explain: "Discutir a ameaça em si distrai do que resolve: uma solução real reduz a chance de ele realmente acionar o órgão.",
+        consequence: "Você discute se ele 'pode mesmo' acionar o Procon. Ele grava a conversa e aciona mesmo."
+      },
+      {
+        context: "Chat 2 responde à sua atualização sobre o relatório.",
+        speech: "Perfeito, mas isso vai valer só pro mês que vem ou vocês corrigem os dois meses anteriores também?",
+        ask: "O que ela realmente quer saber?",
+        options: [
+          "Apenas elogiar a correção futura",
+          "O escopo exato da correção — se cobre também o passado, não só o futuro",
+          "Se o serviço vai ser cancelado",
+          "Se você trabalha aos fins de semana"
+        ],
+        correct: 1,
+        explain: "Ela pede escopo temporal claro: futuro apenas ou retroativo também.",
+        consequence: "Você só confirma 'vai melhorar'. Ela descobre depois que os meses antigos não foram corrigidos e se irrita."
+      },
+      {
+        context: "Chat 3, já mais calmo, propõe um meio-termo.",
+        speech: "Tudo bem, eu aceito que foi um mal-entendido. Mas quero isso registrado, para não acontecer de novo comigo.",
+        ask: "O pedido dele agora é, principalmente:",
+        options: [
+          "Só um pedido de desculpas verbal",
+          "Registro formal do ocorrido como garantia contra repetição",
+          "Que você delete o histórico do chat",
+          "Que ele receba um desconto imediato"
+        ],
+        correct: 1,
+        explain: "'Quero isso registrado' é pedido de garantia formal, não apenas desculpa falada.",
+        consequence: "Você só pede desculpas verbalmente, sem registrar nada. O mesmo mal-entendido se repete no mês seguinte."
+      },
+      {
+        context: "Ao fechar os três chats no mesmo turno, você revisa as respostas.",
+        speech: "(Nota interna do supervisor) — Cuidado para não copiar e colar a mesma resposta em reclamações diferentes; cada uma tinha uma causa distinta.",
+        ask: "Essa nota resume que erro deve ser evitado?",
+        options: [
+          "Responder rápido demais",
+          "Tratar reclamações diferentes como se fossem o mesmo caso, com respostas padronizadas",
+          "Ser educado demais com os clientes",
+          "Perguntar demais sobre o histórico"
+        ],
+        correct: 1,
+        explain: "Cada reclamação tinha causa e pedido distintos; a leitura correta exige diferenciar, não padronizar.",
+        consequence: "Você já tinha copiado uma resposta de um chat para outro. Um cliente percebeu e reclamou da resposta 'genérica'."
       }
     ]
   },
@@ -872,10 +1348,131 @@ const SCENARIOS = [
         consequence: "Você entra em pânico e espalha boato de demissão. Na segunda o clima está destruído."
       }
     ]
+  },
+  {
+    id: "chefe2",
+    emoji: "🗂️",
+    title: "Novas mensagens, novas demandas",
+    sub: "WhatsApp — segunda-feira, o mistério cresce",
+    avatar: "👔",
+    who: "Chefe André",
+    goal: "Separar prioridade real de ruído nas novas demandas — e prestar atenção ao que André não diz",
+    minCorrect: 5,
+    winTitle: "Você leu além das mensagens",
+    winText: "Você separou o que era demanda real do que era desabafo — e reparou nos detalhes estranhos que André deixou escapar. Algo maior começa a fazer sentido.",
+    loseTitle: "Você deixou passar os sinais",
+    loseText: "Entre tantas demandas, você perdeu tanto uma prioridade real quanto um detalhe estranho que André deixou escapar sobre o código NH-07.",
+    secretTitle: "Fragmento 5b",
+    secretText: "«André escreve, tarde da noite: “Só pra constar: NH-07 não é só um código de arquivo. Era o número da nossa primeira turma de seleção. Você devia ter reparado nisso antes.”»",
+    requires: "chefe",
+    questions: [
+      {
+        context: "Segunda de manhã. André manda várias mensagens seguidas.",
+        speech: "Bom dia. Preciso de três coisas hoje: o relatório da Ana, a resposta pro cliente da sexta e uma olhada na proposta que te mandei. Nessa ordem, se der.",
+        ask: "O que 'nessa ordem, se der' comunica sobre prioridade?",
+        options: [
+          "As três coisas são igualmente urgentes e obrigatórias no mesmo minuto",
+          "Há uma ordem sugerida de prioridade, com alguma flexibilidade se não der tudo",
+          "Só a primeira importa, as outras duas são opcionais para sempre",
+          "Nenhuma das três é realmente necessária hoje"
+        ],
+        correct: 1,
+        explain: "'Nessa ordem, se der' define prioridade sequencial com margem, não urgência simultânea total.",
+        consequence: "Você tenta fazer as três ao mesmo tempo e nenhuma sai bem. André fica insatisfeito com a entrega."
+      },
+      {
+        context: "No meio da manhã, ele volta sobre a proposta que mencionou.",
+        speech: "Sobre a proposta: não precisa validar tudo, só me diz se algo ali te soa estranho, tipo fora do padrão.",
+        ask: "O pedido real, mais específico, é:",
+        options: [
+          "Uma revisão completa de todos os detalhes da proposta",
+          "Um olhar rápido focado em anomalias, não uma auditoria completa",
+          "Que você reescreva a proposta inteira",
+          "Que você ignore a proposta"
+        ],
+        correct: 1,
+        explain: "'Não precisa validar tudo' + 'algo estranho' pede triagem de anomalia, não revisão exaustiva.",
+        consequence: "Você passa a manhã inteira revisando cada linha e atrasa as outras duas tarefas por causa disso."
+      },
+      {
+        context: "Sobre a Ana, ele volta a mencionar.",
+        speech: "A propósito, a Ana perguntou se você comentou algo sobre o relatório dela com outras pessoas. Só chequei porque ela ficou preocupada.",
+        ask: "O que André está realmente fazendo aqui?",
+        options: [
+          "Acusando você diretamente de algo",
+          "Repassando uma preocupação da Ana, sem tomar partido, para você esclarecer se quiser",
+          "Ordenando que você se desculpe publicamente",
+          "Pedindo que você pare de falar com a Ana"
+        ],
+        correct: 1,
+        explain: "Ele atua como intermediário neutro, repassando a preocupação dela — não é acusação dele.",
+        consequence: "Você reage na defensiva como se fosse acusação de André. A conversa fica desnecessariamente tensa."
+      },
+      {
+        context: "À tarde, chega uma mensagem mais seca.",
+        speech: "Preciso que você segure a resposta pro cliente até eu confirmar um detalhe. Não manda nada ainda.",
+        ask: "A instrução operacional aqui é clara:",
+        options: [
+          "Enviar a resposta assim que possível, apesar do pedido",
+          "Pausar o envio até receber confirmação explícita de André",
+          "Cancelar a resposta definitivamente",
+          "Perguntar ao cliente diretamente o que fazer"
+        ],
+        correct: 1,
+        explain: "'Não manda nada ainda' é instrução direta de pausa até nova confirmação — sem espaço para interpretação criativa.",
+        consequence: "Você manda a resposta antes da confirmação. Um detalhe que André queria checar sai errado para o cliente."
+      },
+      {
+        context: "Mais tarde, ele muda de assunto de repente.",
+        speech: "Ei, engraçado… seu jeito de notar detalhe nas conversas me lembra alguém que passou por um processo seletivo aqui, anos atrás. NH-07, se não me engano.",
+        ask: "Essa fala, fora do contexto de trabalho, sugere que:",
+        options: [
+          "É só uma coincidência sem nenhuma importância",
+          "Há uma ligação não explicada entre você (ou o processo) e o código NH-07 que André conhece parcialmente",
+          "André está confundindo você com outra pessoa e isso não importa",
+          "Você deve ignorar completamente e mudar de assunto"
+        ],
+        correct: 1,
+        explain: "O comentário 'fora de contexto' é justamente o tipo de detalhe que a 'harmonia' pede para não ser tratado como ruído — é pista, não bate-papo.",
+        consequence: "Você troca de assunto rápido demais. A pista sobre NH-07 passa despercebida."
+      },
+      {
+        context: "André escreve de novo, mais tarde.",
+        speech: "Só reforçando: nenhuma das três coisas de hoje era vida ou morte. Eu só queria ver como você organiza prioridade sob pressão de mensagem.",
+        ask: "O que essa confissão revela sobre o dia inteiro de demandas?",
+        options: [
+          "Que tudo era urgência real e ele só está se desculpando",
+          "Que parte do dia funcionou como um teste informal de leitura de prioridade, não só trabalho comum",
+          "Que ele estava de mau humor o dia todo",
+          "Que você deveria ter ignorado tudo"
+        ],
+        correct: 1,
+        explain: "Ele revela que o dia também testava organização e leitura de prioridade — reforça o tema central do jogo.",
+        consequence: "Você não reflete sobre isso e trata como só mais um dia comum. Perde a chance de perceber o padrão dos testes."
+      },
+      {
+        context: "Última mensagem da noite, mais séria.",
+        speech: "Só pra constar: NH-07 não é só um código de arquivo. Era o número da nossa primeira turma de seleção. Você devia ter reparado nisso antes.",
+        ask: "Diante dessa revelação, a leitura mais madura é:",
+        options: [
+          "Ignorar a mensagem e não comentar nada",
+          "Reconhecer a pista, sem pânico, e juntar essa peça ao que já foi percebido nos outros fragmentos",
+          "Acusar André de estar mentindo sobre isso",
+          "Pedir demissão imediatamente por causa da mensagem"
+        ],
+        correct: 1,
+        explain: "A postura equilibrada é conectar essa pista às demais, sem alarme nem negação — exatamente o que 'ler o implícito' pede.",
+        consequence: "Você não conecta nada e a pista se perde. O mistério fica pela metade, sem sentido."
+      }
+    ]
   }
 ];
 
 const FULL_MYSTERY = "O envelope NH-07 e a porta da Rua das Acácias, 42, eram um teste de leitura. A Nova Horizonte não contratava só currículos: observava quem, nas conversas do dia a dia — entrevista, imprensa, rua, atendimento e mensagens de chefia — captava o que não estava escrito. Quem reuniu os cinco fragmentos e chegou à porta dos fundos descobriu o aviso gravado por dentro: «A harmonia começa quando o implícito deixa de ser ruído.»";
+
+const EXTRA_MYSTERY = "O código NH-07 nunca foi só um arquivo perdido: era o número da primeira turma de seleção da Nova Horizonte — o mesmo processo que você está vivendo agora, anos depois, sem saber. André, a recrutadora Marina, o jornalista Ricardo e até a cliente Bruna passaram, cada um à sua maneira, por aquela turma original — cada um testado num tipo diferente de conversa. A porta dos fundos da Rua das Acácias não guardava um segredo qualquer: guardava os registros de todos que, como você, aprenderam que ouvir o não dito é a habilidade mais rara — e mais harmônica — de todas.";
+
+const ORIGINAL_IDS = ["emprego", "imprensa", "rua", "cliente", "chefe"];
 
 const SAVE_KEY = "bobcat-interpretacao-harmonia";
 
@@ -887,6 +1484,9 @@ let xp = 0;
 let answered = false;
 let cleared = {};
 let secrets = {};
+let scores = {};
+let mysteryUnlocked = false;
+let epilogueOffered = false;
 let playCounts = {};
 let usedVariants = {};
 let timerId = null;
@@ -1043,23 +1643,66 @@ function onTimeUp(){
   updateHUD();
 }
 
-function loadSave(){
+const GAME_ID = "interpretacao-harmonia";
+
+function snapshotState(){
+  return {
+    cleared: cleared,
+    secrets: secrets,
+    scores: scores,
+    mysteryUnlocked: mysteryUnlocked,
+    epilogueOffered: epilogueOffered,
+    xp: xp,
+    playCounts: playCounts,
+    usedVariants: usedVariants,
+    totalScenarios: typeof SCENARIOS !== "undefined" ? SCENARIOS.length : 10
+  };
+}
+
+function applyState(data){
+  if (!data || typeof data !== "object") return;
+  cleared = data.cleared || {};
+  secrets = data.secrets || {};
+  scores = data.scores || {};
+  mysteryUnlocked = data.mysteryUnlocked || false;
+  epilogueOffered = data.epilogueOffered || false;
+  xp = data.xp || 0;
+  playCounts = data.playCounts || {};
+  usedVariants = data.usedVariants || {};
+}
+
+/** Carrega save: Supabase (se logado) → local unificado → chave legada do jogo */
+async function loadSave(){
+  try {
+    if (typeof getGameProgress === "function") {
+      const data = await getGameProgress(GAME_ID, SAVE_KEY);
+      applyState(data);
+      return;
+    }
+  } catch (e) {
+    console.error("loadSave cloud", e);
+  }
   try {
     const raw = localStorage.getItem(SAVE_KEY);
-    if (raw){
-      const data = JSON.parse(raw);
-      cleared = data.cleared || {};
-      secrets = data.secrets || {};
-      xp = data.xp || 0;
-      playCounts = data.playCounts || {};
-      usedVariants = data.usedVariants || {};
-    }
+    if (raw) applyState(JSON.parse(raw));
   } catch(e){}
 }
 
+/** Salva local + tenta nuvem (não bloqueia o jogo se a nuvem falhar) */
 function save(){
-  localStorage.setItem(SAVE_KEY, JSON.stringify({ cleared, secrets, xp, playCounts, usedVariants }));
+  const snap = snapshotState();
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(snap));
+  } catch(e){}
+  if (typeof saveGameProgress === "function") {
+    saveGameProgress(GAME_ID, snap).then(function(res){
+      if (res && res.savedTo === "cloud") {
+        /* ok */
+      }
+    }).catch(function(err){ console.error("saveGameProgress", err); });
+  }
 }
+
 
 function toast(msg, kind){
   const el = $("toast");
@@ -1078,6 +1721,17 @@ function clearedCount(){
   return SCENARIOS.filter(s => cleared[s.id]).length;
 }
 
+function originalClearedCount(){
+  return ORIGINAL_IDS.filter(id => cleared[id]).length;
+}
+
+function isUnlocked(s){
+  if (!s.requires) return true;
+  if (!cleared[s.requires]) return false;
+  if (s.requiresScore && (scores[s.requires] || 0) < s.requiresScore) return false;
+  return true;
+}
+
 function updateHUD(){
   $("doneNum").textContent = clearedCount();
   $("xpNum").textContent = xp;
@@ -1094,8 +1748,28 @@ function renderMenu(){
   grid.innerHTML = "";
   SCENARIOS.forEach(s => {
     const done = !!cleared[s.id];
+    const unlocked = isUnlocked(s);
     const btn = document.createElement("button");
-    btn.className = "scenario-card" + (done ? " cleared" : "");
+    btn.className = "scenario-card" + (done ? " cleared" : "") + (!unlocked ? " locked" : "");
+
+    if (!unlocked){
+      const parent = SCENARIOS.find(p => p.id === s.requires);
+      const hint = s.unlockHint || ("Desbloqueia após concluir: " + (parent ? parent.title : s.requires));
+      btn.disabled = true;
+      btn.innerHTML =
+        "<div class=\"sc-top\">" +
+          "<div class=\"sc-emoji\">🔒</div>" +
+          "<div class=\"sc-info\">" +
+            "<strong>" + s.title + "</strong>" +
+            "<span>" + s.sub + "</span>" +
+          "</div>" +
+          "<div class=\"sc-status wait\">Bloqueada</div>" +
+        "</div>" +
+        "<div class=\"sc-goal\">" + hint + "</div>";
+      grid.appendChild(btn);
+      return;
+    }
+
     btn.innerHTML =
       "<div class=\"sc-top\">" +
         "<div class=\"sc-emoji\">" + s.emoji + "</div>" +
@@ -1110,7 +1784,7 @@ function renderMenu(){
     grid.appendChild(btn);
   });
 
-  if (clearedCount() >= 5){
+  if (originalClearedCount() >= 5){
     const mysteryBtn = document.createElement("button");
     mysteryBtn.className = "scenario-card";
     mysteryBtn.style.borderColor = "rgba(255,210,63,.5)";
@@ -1118,8 +1792,8 @@ function renderMenu(){
       "<div class=\"sc-top\">" +
         "<div class=\"sc-emoji\">🔐</div>" +
         "<div class=\"sc-info\">" +
-          "<strong>Mistério completo</strong>" +
-          "<span>Você desbloqueou os cinco fragmentos</span>" +
+          "<strong>Mistério" + (cleared["chefe2"] ? " completo" : "") + "</strong>" +
+          "<span>" + (cleared["chefe2"] ? "Todos os fragmentos, incluindo o epílogo" : "Você desbloqueou os cinco fragmentos") + "</span>" +
         "</div>" +
       "</div>";
     mysteryBtn.addEventListener("click", showMystery);
@@ -1263,6 +1937,9 @@ function nextStep(){
 
 function endScenario(){
   stopTimer();
+  const qTotal = runtimeQuestions.length || current.questions.length;
+  const ratio = qTotal > 0 ? (correctCount / qTotal) : 0;
+  scores[current.id] = Math.max(scores[current.id] || 0, ratio);
   const passed = correctCount >= current.minCorrect;
   const card = $("resultCard");
 
@@ -1286,6 +1963,7 @@ function endScenario(){
         "<button class=\"btn btn-primary\" id=\"btnMenu\">Outros cenários</button>" +
       "</div>";
   } else {
+    save();
     GameSound.play("wrong");
     card.innerHTML =
       "<div class=\"big\">💔</div>" +
@@ -1306,11 +1984,22 @@ function endScenario(){
   $("btnRetry").addEventListener("click", () => startScenario(current.id));
   $("btnMenu").addEventListener("click", () => {
     const wasPass = passed;
+    const justId = current.id;
     current = null;
     renderMenu();
-    if (clearedCount() >= 5 && wasPass){
+    if (wasPass && originalClearedCount() >= 5 && !mysteryUnlocked){
+      mysteryUnlocked = true;
+      save();
       setTimeout(() => {
         if (confirm("Você concluiu os cinco cenários! Deseja revelar o mistério completo?")){
+          showMystery();
+        }
+      }, 300);
+    } else if (wasPass && justId === "chefe2" && !epilogueOffered){
+      epilogueOffered = true;
+      save();
+      setTimeout(() => {
+        if (confirm("Uma nova peça do mistério apareceu. Quer ver o desfecho agora?")){
           showMystery();
         }
       }, 300);
@@ -1331,6 +2020,14 @@ function showMystery(){
     }
   });
   $("fullMystery").textContent = FULL_MYSTERY;
+  const epi = $("epilogueMystery");
+  if (cleared["chefe2"]){
+    epi.textContent = "Epílogo: " + EXTRA_MYSTERY;
+    epi.style.display = "block";
+  } else {
+    epi.style.display = "none";
+    epi.textContent = "";
+  }
   $("finalXp").textContent = xp;
   showScreen("screenMystery");
   GameSound.play("win");
@@ -1358,8 +2055,10 @@ $("btnBackMenuFinal").addEventListener("click", () => {
   renderMenu();
 });
 
-loadSave();
-renderMenu();
+(async function boot(){
+  await loadSave();
+  renderMenu();
+})();
 </script>
 </body>
 </html>
