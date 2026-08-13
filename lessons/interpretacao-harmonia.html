@@ -168,10 +168,37 @@
   .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);opacity:0;
     background:var(--cream-2);border:1px solid var(--border);color:var(--ink);padding:11px 18px;
     border-radius:11px;font-size:13px;font-weight:700;box-shadow:var(--shadow);transition:all .25s;
-    z-index:200;max-width:88vw;text-align:center}
+    z-index:200;max-width:88vw;text-align:center;pointer-events:none}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .toast.bad{color:var(--orange-light)}
   .toast.good{color:var(--ok)}
+
+  .actions{position:relative;z-index:30;padding:12px 0 8px;display:flex;justify-content:center}
+  #btnNextQ{
+    min-height:54px;min-width:180px;padding:16px 28px;font-size:17px;font-weight:800;
+    -webkit-tap-highlight-color:rgba(255,91,61,.25);touch-action:manipulation;
+    position:relative;z-index:31;cursor:pointer;width:100%;max-width:340px;
+    border:none;border-radius:14px;color:#fff;
+    background:linear-gradient(180deg,var(--orange-light),var(--orange));
+    border-bottom:3px solid var(--orange-dark);
+    box-shadow:0 4px 16px rgba(225,58,38,.45);
+    font-family:"Fredoka",sans-serif;
+  }
+  #btnNextQ:active{transform:scale(0.97);opacity:0.95}
+
+  @media (max-width:480px){
+    body{padding-bottom:96px}
+    #playActions{
+      position:fixed;left:0;right:0;bottom:0;z-index:150;
+      justify-content:center;align-items:center;
+      padding:12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+      background:linear-gradient(to top, rgba(12,7,32,.98) 55%, rgba(12,7,32,.88));
+      border-top:1px solid var(--border);
+      box-shadow:0 -8px 24px rgba(0,0,0,.4);
+    }
+    #btnNextQ{max-width:100%;width:100%}
+    .toast{bottom:100px}
+  }
 </style>
 </head>
 <body>
@@ -1091,12 +1118,19 @@ function selectOption(i){
 }
 
 function nextStep(){
+  if (!current || !answered) return;
+  // trava só depois de avançar, por 350ms, para evitar toque duplo
+  if (nextStep._busy) return;
+  nextStep._busy = true;
+
   qIndex++;
+  answered = false;
   if (qIndex >= current.questions.length){
     endScenario();
   } else {
     loadQuestion();
   }
+  setTimeout(() => { nextStep._busy = false; }, 350);
 }
 
 function endScenario(){
@@ -1184,8 +1218,17 @@ $("hudBack").addEventListener("click", (e) => {
   }
 });
 
-$("btnNextQ").addEventListener("click", nextStep);
-$("btnBackMenuFinal").addEventListener("click", () => { current = null; renderMenu(); });
+// Um único listener — touch-action:manipulation no CSS evita o delay de 300ms do mobile
+$("btnNextQ").addEventListener("click", function(e){
+  e.preventDefault();
+  nextStep();
+});
+
+$("btnBackMenuFinal").addEventListener("click", () => {
+  stopTimer();
+  current = null;
+  renderMenu();
+});
 
 loadSave();
 renderMenu();
