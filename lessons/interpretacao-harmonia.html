@@ -44,8 +44,16 @@
   .stat.xp{color:var(--gold)}
   .stat.harm{color:var(--teal)}
   .stat.done{color:var(--pink)}
+  .stat.timer{color:var(--orange-light);min-width:52px;justify-content:center}
+  .stat.timer.urgent{background:rgba(255,91,61,.25);border-color:rgba(255,91,61,.5);animation:timerPulse .5s ease infinite}
+  @keyframes timerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
   .btn-icon{width:34px;height:34px;border-radius:10px;background:var(--cream);border:1px solid var(--border);
     color:var(--ink);font-size:15px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+
+  .timer-bar{height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-bottom:12px}
+  .timer-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--teal),var(--gold));
+    transition:width 0.2s linear}
+  .timer-fill.urgent{background:linear-gradient(90deg,var(--orange),var(--bad))}
 
   .wrap{max-width:640px;margin:0 auto;padding:14px 14px 0}
 
@@ -174,7 +182,8 @@
     <div class="hud-title"><span>🗣️</span> Interpretação</div>
   </div>
   <div class="hud-stats">
-    <div class="stat done">✓ <span id="doneNum">0</span>/3</div>
+    <div class="stat done">✓ <span id="doneNum">0</span>/5</div>
+    <div class="stat timer" id="timerStat" style="display:none">⏱ <span id="timerNum">30</span>s</div>
     <div class="stat harm">🤝 <span id="harmNum">—</span></div>
     <div class="stat xp">⭐ <span id="xpNum">0</span></div>
     <button class="btn-icon" data-sound-toggle title="Som">🔊</button>
@@ -187,10 +196,10 @@
     <div class="card intro">
       <h2>Harmonia nas entrelinhas</h2>
       <p>Escolha um <strong>cenário</strong>. Em cada um, alguém fala — e você precisa interpretar o que realmente quer dizer: intenção, tom e implícito.</p>
-      <p>Acerte a leitura e a harmonia sobe. Erre e o <strong>objetivo daquele desafio</strong> fica ameaçado.</p>
+      <p>Acerte a leitura e a harmonia sobe. Erre e o <strong>objetivo daquele desafio</strong> fica ameaçado. Cada pergunta tem <strong>contagem regressiva</strong> — sob pressão, a interpretação precipitada custa caro.</p>
 
       <div class="mystery-teaser">
-        <strong>🔐 Segredo opcional:</strong> conclua os três cenários com harmonia e junte os fragmentos de um mistério escondido entre as falas.
+        <strong>🔐 Segredo opcional:</strong> conclua os cinco cenários com harmonia e junte os fragmentos de um mistério escondido entre as falas.
       </div>
 
       <div class="scenario-grid" id="scenarioGrid"></div>
@@ -210,6 +219,7 @@
       <div class="harm-track"><div class="harm-fill" id="harmFill" style="width:0%"></div></div>
     </div>
 
+    <div class="timer-bar"><div class="timer-fill" id="timerFill" style="width:100%"></div></div>
     <div class="q-counter" id="qCounter">Pergunta 1 de 7</div>
 
     <div class="card">
@@ -239,7 +249,7 @@
     <div class="card result-card">
       <div class="big">🏆</div>
       <h2>Mistério revelado</h2>
-      <p>Você leu nas entrelinhas nos três cenários. Os fragmentos se juntam:</p>
+      <p>Você leu nas entrelinhas nos cinco cenários. Os fragmentos se juntam:</p>
       <div id="fragments" style="text-align:left;margin:12px 0"></div>
       <div class="mystery-box">
         <h3>🔐 O segredo completo</h3>
@@ -603,10 +613,242 @@ const SCENARIOS = [
         consequence: "Você responde com um comentário condescendente. Leo vai embora constrangido."
       }
     ]
+  },
+  {
+    id: "cliente",
+    emoji: "📞",
+    title: "Cliente insatisfeito",
+    sub: "Atendimento — reclamação pelo chat",
+    avatar: "😤",
+    who: "Cliente Bruna",
+    goal: "Resolver a reclamação sem perder a cliente",
+    minCorrect: 5,
+    winTitle: "Cliente retida",
+    winText: "Você leu o tom e o pedido real por trás da reclamação. Bruna sente-se ouvida, aceita a solução e permanece cliente.",
+    loseTitle: "Cliente perdida",
+    loseText: "A leitura precipitada transformou irritação em ruptura. Bruna cancela o serviço e publica uma avaliação dura — o estrago é maior que o valor da fatura.",
+    secretTitle: "Fragmento 4",
+    secretText: "«No histórico interno da Nova Horizonte, o código NH-07 também aparecia em fichas de candidatos que 'escutavam o não dito' no atendimento ao público.»",
+    questions: [
+      {
+        context: "Chat de suporte. Bruna escreve em letras maiúsculas no começo, depois diminui o tom.",
+        speech: "Paguei em dia e mesmo assim o acesso caiu. Já é a segunda vez este mês. Quero uma solução, não um texto pronto.",
+        ask: "O núcleo do que ela pede é:",
+        options: [
+          "Apenas um reembolso imediato e nada mais",
+          "Reconhecimento do problema recorrente e uma solução concreta, não resposta genérica",
+          "Que você admita que a empresa é fraudulenta",
+          "Que o chat seja encerrado o mais rápido possível"
+        ],
+        correct: 1,
+        explain: "'Segunda vez' + 'não um texto pronto' = ela quer validação da recorrência e ação específica.",
+        consequence: "Você cola um script genérico. Bruna explode e pede cancelamento na hora."
+      },
+      {
+        context: "Você propõe reativar o acesso. A resposta dela vem assim:",
+        speech: "Ok… mas e a garantia de que não acontece de novo? Porque 'vamos verificar' eu já ouvi.",
+        ask: "O subentendido é:",
+        options: [
+          "Ela rejeita qualquer reativação",
+          "Ela desconfia de promessas vagas e quer compromisso verificável",
+          "Ela está satisfeita e só desabafando",
+          "Ela quer falar com o presidente da empresa"
+        ],
+        correct: 1,
+        explain: "A crítica a 'vamos verificar' pede prazo, medida ou compensação clara — não mais generalidade.",
+        consequence: "Você repete 'vamos verificar'. A confiança cai e o cancelamento volta à mesa."
+      },
+      {
+        context: "Bruna muda o foco para o valor pago.",
+        speech: "Não estou pedindo favores. Paguei por um serviço que não tive. Isso é o mínimo.",
+        ask: "Qual leitura evita escalar o conflito?",
+        options: [
+          "Tratar como chantagem emocional",
+          "Reconhecer o direito dela e separar justiça da discussão pessoal",
+          "Ignorar a frase e mudar de assunto",
+          "Oferecer desconto em produto que ela não pediu"
+        ],
+        correct: 1,
+        explain: "Ela enquadra a demanda como justiça contratual. Contestá-la como 'drama' agrava; validar o direito abre espaço técnico.",
+        consequence: "Você minimiza o prejuízo. Bruna se sente desrespeitada e grava o chat."
+      },
+      {
+        context: "Após você explicar uma causa técnica, há uma pausa longa no chat.",
+        speech: "Certo. Então o erro foi de vocês. O que vocês vão fazer a respeito — além de 'desculpa'?",
+        ask: "A pergunta exige principalmente:",
+        options: [
+          "Mais uma desculpa elaborada",
+          "Ação reparadora (crédito, prazo, prioridade) alinhada à falha admitida",
+          "Que você negue a falha de novo",
+          "Encerrar o atendimento por tempo esgotado"
+        ],
+        correct: 1,
+        explain: "'Além de desculpa' desloca do simbólico para o reparo concreto.",
+        consequence: "Só desculpas. Bruna responde: 'Não resolve' e cancela."
+      },
+      {
+        context: "Você oferece um crédito na próxima fatura. Bruna responde:",
+        speech: "Pode ser… desde que o acesso volte hoje e alguém me avise se for cair de novo. Consegue isso?",
+        ask: "O acordo implícito que ela propõe é:",
+        options: [
+          "Só o crédito, sem outras condições",
+          "Pacote: crédito + restabelecimento imediato + comunicação proativa em nova falha",
+          "Troca do plano por um mais caro",
+          "Que você minta sobre o monitoramento"
+        ],
+        correct: 1,
+        explain: "'Desde que' lista condições. Aceitar pela metade quebra o acordo social da negociação.",
+        consequence: "Você confirma só o crédito. O acesso demora e ela cancela no dia seguinte."
+      },
+      {
+        context: "Quase no fim, o tom dela amansa.",
+        speech: "Olha, eu até gosto do serviço quando funciona. Por isso ainda estou aqui brigando em vez de só sair.",
+        ask: "Essa fala indica:",
+        options: [
+          "Ameaça velada de processo",
+          "Apego residual à marca — há espaço real para retenção se a solução for séria",
+          "Que ela já decidiu cancelar de qualquer forma",
+          "Elogio que encerra o caso sem ação"
+        ],
+        correct: 1,
+        explain: "'Por isso ainda estou aqui' sinaliza investimento emocional; é abertura, não encerramento.",
+        consequence: "Você trata como despedida. Perde a chance de consolidar a retenção."
+      },
+      {
+        context: "Antes de sair do chat, Bruna escreve:",
+        speech: "Se resolver, eu até tiro a reclamação pública. Se não, deixo lá. Justo, né?",
+        ask: "A leitura mais precisa é:",
+        options: [
+          "Chantagem ilegal que deve ser ignorada",
+          "Condicional clara: solução → ela retira o post; ausência de solução → mantém a crítica pública",
+          "Promessa de que já retirou a reclamação",
+          "Pedido para você também postar nas redes"
+        ],
+        correct: 1,
+        explain: "É uma barganha explícita e legível. Demonizar a frase impede negociar o desfecho prático.",
+        consequence: "Você acusa chantagem. A reclamação pública ganha uma atualização pior."
+      }
+    ]
+  },
+  {
+    id: "chefe",
+    emoji: "📱",
+    title: "Mensagem do chefe",
+    sub: "WhatsApp — sexta, 19h42",
+    avatar: "👔",
+    who: "Chefe André",
+    goal: "Interpretar o pedido e proteger a equipe sem gerar conflito",
+    minCorrect: 5,
+    winTitle: "Pedido bem lido",
+    winText: "Você captou o que era urgente, o que era opcional e o que era só desabafo. A equipe não foi acionada em vão e André confia mais no seu critério.",
+    loseTitle: "Mal-entendido com o chefe",
+    loseText: "A leitura errada gerou alarme desnecessário ou omissão grave. André fica irritado e a equipe paga o preço do fim de semana perdido — ou do prazo estourado.",
+    secretTitle: "Fragmento 5",
+    secretText: "«André, gestor na Nova Horizonte, guardava um cartão com a frase: “Antes de acionar o time, leia o que eu não escrevi.” O verso trazia o mesmo código NH-07.»",
+    questions: [
+      {
+        context: "Sexta à noite. Você já saiu do expediente. Chega mensagem de André.",
+        speech: "Conseguiu ver o relatório que a Ana mandou? Se puder dar uma olhada quando der…",
+        ask: "O tom mais fiel dessa mensagem é:",
+        options: [
+          "Ordem explícita para abrir o notebook agora",
+          "Pedido de baixa urgência — 'quando der' suaviza a cobrança imediata",
+          "Bronca disfarçada porque você não entregou nada",
+          "Convite para ligar para a Ana imediatamente"
+        ],
+        correct: 1,
+        explain: "'Quando der' e a forma interrogativa suavizam; não é o mesmo que 'preciso agora'.",
+        consequence: "Você aciona a equipe inteira na sexta à noite. André acha exagero e a equipe se revoltam."
+      },
+      {
+        context: "Dois minutos depois, outra mensagem:",
+        speech: "Na verdade o cliente perguntou se tem previsão. Não precisa resolver tudo agora, só me diga se está encaminhado.",
+        ask: "O pedido real enxuto é:",
+        options: [
+          "Entregar o relatório completo ainda hoje",
+          "Confirmar status/encaminhamento para ele responder ao cliente",
+          "Ignorar o cliente até segunda",
+          "Marcar reunião com o cliente no sábado"
+        ],
+        correct: 1,
+        explain: "Ele reduz o escopo: não 'resolver tudo', e sim informar se está encaminhado.",
+        consequence: "Você promete relatório final no domingo. Cria expectativa que não precisava."
+      },
+      {
+        context: "Você responde que está encaminhado. André escreve:",
+        speech: "Perfeito. A Ana às vezes trava nesses fechamentos… se notar algo estranho, me avisa antes de virar bola de neve.",
+        ask: "O subtexto sobre a Ana é:",
+        options: [
+          "Ordem para denunciar a Ana formalmente",
+          "Alerta discreto para monitoramento preventivo, sem espetáculo",
+          "Pedido para substituir a Ana no fim de semana",
+          "Elogio inequívoco ao trabalho da Ana"
+        ],
+        correct: 1,
+        explain: "'Me avisa antes de virar bola de neve' = vigilância leve e preventiva, não processo disciplinar.",
+        consequence: "Você confronta a Ana no grupo. O clima azeda e André se incomoda com o ruído."
+      },
+      {
+        context: "Uma mensagem de voz (transcrita no app) chega em seguida:",
+        speech: "Ah, e esquece aquele print que eu mandei ontem — era versão velha. Usa só o arquivo da pasta Compartilhada.",
+        ask: "A instrução operacional correta é:",
+        options: [
+          "Continuar com o print de ontem",
+          "Descartar o print antigo e trabalhar só com o arquivo da pasta Compartilhada",
+          "Misturar as duas versões para 'garantir'",
+          "Apagar a pasta Compartilhada"
+        ],
+        correct: 1,
+        explain: "Correção explícita de fonte de verdade: o print ontem está invalidado.",
+        consequence: "Você usa o print antigo na resposta ao cliente. Há inconsistência e constrangimento."
+      },
+      {
+        context: "André muda de assunto de forma abrupta.",
+        speech: "Sabe que eu quase não tiro o fim de semana? Enfim. Bom descanso aí — se não aparecer nada grave.",
+        ask: "A leitura equilibrada é:",
+        options: [
+          "Ele exige que você fique online o fim de semana inteiro",
+          "Desabafo + desejo de descanso, com ressalva só para emergência real",
+          "Ironia: na prática você não pode descansar",
+          "Pedido para você ligar para ele a cada hora"
+        ],
+        correct: 1,
+        explain: "'Bom descanso' + 'se não aparecer nada grave' autoriza pausa, com porta só para gravidade.",
+        consequence: "Você fica respondendo mensagens triviais o sábado todo. André nem pediu isso."
+      },
+      {
+        context: "Domingo 11h. Nova mensagem:",
+        speech: "O cliente agradeceu a previsão. Pode desconsiderar qualquer follow-up meu de sexta. Valeu.",
+        ask: "O efeito pragmático dessa mensagem é:",
+        options: [
+          "Reabrir todas as tarefas de sexta",
+          "Encerrar o fio de cobrança — nada pendente daquele pedido",
+          "Pedir relatório novo até segunda 8h",
+          "Criticar o trabalho feito"
+        ],
+        correct: 1,
+        explain: "'Desconsiderar qualquer follow-up' cancela a cadeia de ação anterior.",
+        consequence: "Você ainda manda cobrança para a Ana. Gera trabalho inútil e ruído."
+      },
+      {
+        context: "Última mensagem da thread:",
+        speech: "Ah, e na segunda a gente conversa sobre o ritmo da equipe. Nada sério — só organizar. Pode ir tranquilo.",
+        ask: "Como interpretar o 'nada sério'?",
+        options: [
+          "Demissão iminente disfarçada",
+          "Reunião de alinhamento sem tom punitivo anunciado — ainda assim vale preparar fatos, sem pânico",
+          "Cancelamento de qualquer conversa na segunda",
+          "Ordem para esconder problemas da equipe"
+        ],
+        correct: 1,
+        explain: "'Nada sério — só organizar' reduz alarme, mas 'conversar sobre o ritmo' ainda é pauta real de gestão.",
+        consequence: "Você entra em pânico e espalha boato de demissão. Na segunda o clima está destruído."
+      }
+    ]
   }
 ];
 
-const FULL_MYSTERY = "O envelope NH-07 e a porta da Rua das Acácias, 42, eram um teste de leitura. A Nova Horizonte não contratava só currículos: observava quem, nas conversas do dia a dia, captava o que não estava escrito. Quem reuniu os três fragmentos e chegou à porta dos fundos descobriu o aviso gravado por dentro: «A harmonia começa quando o implícito deixa de ser ruído.»";
+const FULL_MYSTERY = "O envelope NH-07 e a porta da Rua das Acácias, 42, eram um teste de leitura. A Nova Horizonte não contratava só currículos: observava quem, nas conversas do dia a dia — entrevista, imprensa, rua, atendimento e mensagens de chefia — captava o que não estava escrito. Quem reuniu os cinco fragmentos e chegou à porta dos fundos descobriu o aviso gravado por dentro: «A harmonia começa quando o implícito deixa de ser ruído.»";
 
 const SAVE_KEY = "bobcat-interpretacao-harmonia";
 
@@ -617,8 +859,63 @@ let xp = 0;
 let answered = false;
 let cleared = {};
 let secrets = {};
+let timerId = null;
+let timeLeft = 0;
+const TIME_PER_Q = 30; // segundos por pergunta
 
 function $(id){ return document.getElementById(id); }
+
+function stopTimer(){
+  if (timerId){ clearInterval(timerId); timerId = null; }
+  const st = $("timerStat");
+  if (st){ st.style.display = "none"; st.classList.remove("urgent"); }
+}
+
+function startTimer(){
+  stopTimer();
+  timeLeft = TIME_PER_Q;
+  const st = $("timerStat");
+  const fill = $("timerFill");
+  st.style.display = "flex";
+  st.classList.remove("urgent");
+  $("timerNum").textContent = timeLeft;
+  if (fill){
+    fill.style.width = "100%";
+    fill.classList.remove("urgent");
+  }
+  timerId = setInterval(() => {
+    timeLeft--;
+    $("timerNum").textContent = Math.max(0, timeLeft);
+    if (fill){
+      fill.style.width = Math.max(0, (timeLeft / TIME_PER_Q) * 100) + "%";
+      if (timeLeft <= 8) fill.classList.add("urgent");
+    }
+    if (timeLeft <= 8) st.classList.add("urgent");
+    if (timeLeft <= 0){
+      stopTimer();
+      if (!answered) onTimeUp();
+    }
+  }, 1000);
+}
+
+function onTimeUp(){
+  if (answered || !current) return;
+  answered = true;
+  const q = current.questions[qIndex];
+  document.querySelectorAll(".opt").forEach((el, idx) => {
+    el.disabled = true;
+    if (idx === q.correct) el.classList.add("correct");
+  });
+  GameSound.play("wrong");
+  const fb = $("feedback");
+  fb.className = "feedback-card show bad";
+  fb.innerHTML = "<div class=\"fb-title\">⏱ Tempo esgotado</div>" +
+    "<div>" + q.explain + "</div>" +
+    "<div class=\"fb-explain\"><strong>Sob pressão:</strong> a pressa virou leitura precipitada. " + q.consequence + "</div>";
+  toast("Tempo esgotado!", "bad");
+  $("playActions").style.display = "flex";
+  updateHUD();
+}
 
 function loadSave(){
   try {
@@ -685,7 +982,7 @@ function renderMenu(){
     grid.appendChild(btn);
   });
 
-  if (clearedCount() >= 3){
+  if (clearedCount() >= 5){
     const mysteryBtn = document.createElement("button");
     mysteryBtn.className = "scenario-card";
     mysteryBtn.style.borderColor = "rgba(255,210,63,.5)";
@@ -694,7 +991,7 @@ function renderMenu(){
         "<div class=\"sc-emoji\">🔐</div>" +
         "<div class=\"sc-info\">" +
           "<strong>Mistério completo</strong>" +
-          "<span>Você desbloqueou os três fragmentos</span>" +
+          "<span>Você desbloqueou os cinco fragmentos</span>" +
         "</div>" +
       "</div>";
     mysteryBtn.addEventListener("click", showMystery);
@@ -748,11 +1045,13 @@ function loadQuestion(){
   $("feedback").innerHTML = "";
   $("playActions").style.display = "none";
   updateHUD();
+  startTimer();
 }
 
 function selectOption(i){
   if (answered) return;
   answered = true;
+  stopTimer();
 
   const q = current.questions[qIndex];
   const opts = document.querySelectorAll(".opt");
@@ -801,6 +1100,7 @@ function nextStep(){
 }
 
 function endScenario(){
+  stopTimer();
   const passed = correctCount >= current.minCorrect;
   const card = $("resultCard");
 
@@ -846,9 +1146,9 @@ function endScenario(){
     const wasPass = passed;
     current = null;
     renderMenu();
-    if (clearedCount() >= 3 && wasPass){
+    if (clearedCount() >= 5 && wasPass){
       setTimeout(() => {
-        if (confirm("Você concluiu os três cenários! Deseja revelar o mistério completo?")){
+        if (confirm("Você concluiu os cinco cenários! Deseja revelar o mistério completo?")){
           showMystery();
         }
       }, 300);
@@ -878,6 +1178,7 @@ function showMystery(){
 $("hudBack").addEventListener("click", (e) => {
   if ($("screenPlay").classList.contains("show") || $("screenResult").classList.contains("show") || $("screenMystery").classList.contains("show")){
     e.preventDefault();
+    stopTimer();
     current = null;
     renderMenu();
   }
