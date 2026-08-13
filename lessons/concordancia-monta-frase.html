@@ -196,7 +196,7 @@
 
     <div class="actions" id="actions">
       <button class="btn btn-clear" id="btnClear">Limpar</button>
-      <button class="btn btn-hint" id="btnHint">Dica</button>
+      <button class="btn btn-hint" id="btnHint">💡 Dica 1</button>
       <button class="btn btn-check" id="btnCheck" disabled>Verificar</button>
     </div>
 
@@ -227,7 +227,8 @@
    correct: tokens da frase correta (na ordem)
    options: todas as opções (corretas + distratoras)
    type: 'verbal' | 'nominal' | 'mista'
-   tip: explicação curta após acertar
+   hint: dica conceitual (nível 1) — não revela palavras
+   tip: explicação completa após acertar
    ═══════════════════════════════════════════════════════════ */
 const ROUNDS = [
   {
@@ -235,6 +236,7 @@ const ROUNDS = [
     correct: ["Eles", "foram", "à", "praia."],
     options: ["Ele", "Eles", "foi", "foram", "a", "à", "para", "praia", "praia."],
     type: "verbal",
+    hint: "Olhe o sujeito: está no singular ou no plural? O verbo precisa combinar com ele. Também revise a preposição de 'ir' + lugar.",
     tip: "Sujeito plural (Eles) exige verbo no plural: foram. 'Ir a' + lugar feminino com artigo → à (crase)."
   },
   {
@@ -242,6 +244,7 @@ const ROUNDS = [
     correct: ["As", "meninas", "são", "inteligentes."],
     options: ["A", "As", "menina", "meninas", "é", "são", "inteligente", "inteligentes", "inteligentes."],
     type: "mista",
+    hint: "Artigo, substantivo, verbo e adjetivo precisam estar no mesmo número (singular/plural). Aqui o artigo já está no plural.",
     tip: "Artigo, substantivo e adjetivo no plural; verbo ser concorda com o sujeito plural (são)."
   },
   {
@@ -249,6 +252,7 @@ const ROUNDS = [
     correct: ["Nós", "gostamos", "de", "chocolate."],
     options: ["Eu", "Nós", "gosta", "gostamos", "gostam", "de", "do", "chocolate", "chocolate."],
     type: "verbal",
+    hint: "Qual é a pessoa do sujeito 'Nós'? 1ª do singular, 1ª do plural ou 3ª do plural? Conjugue o verbo nessa pessoa.",
     tip: "Sujeito 'Nós' (1ª pessoa do plural) → verbo no presente: gostamos."
   },
   {
@@ -256,6 +260,7 @@ const ROUNDS = [
     correct: ["O", "livro", "e", "a", "caneta", "estão", "na", "mesa."],
     options: ["O", "Os", "livro", "livros", "e", "a", "as", "caneta", "canetas", "está", "estão", "na", "mesa", "mesa."],
     type: "verbal",
+    hint: "Há dois núcleos no sujeito (livro + caneta). Quando o sujeito é composto e vem antes do verbo, o verbo vai para o plural.",
     tip: "Sujeito composto (livro e caneta) → verbo no plural: estão."
   },
   {
@@ -263,6 +268,7 @@ const ROUNDS = [
     correct: ["Minha", "amiga", "comprou", "duas", "blusas", "azuis."],
     options: ["Minha", "Minhas", "amiga", "amigas", "comprou", "compraram", "duas", "dois", "blusa", "blusas", "azul", "azuis", "azuis."],
     type: "nominal",
+    hint: "O numeral 'duas' já indica plural. O substantivo e o adjetivo que o acompanham também precisam ir para o plural.",
     tip: "Numeral + substantivo + adjetivo: tudo no plural (duas blusas azuis)."
   },
   {
@@ -270,6 +276,7 @@ const ROUNDS = [
     correct: ["Tu", "vais", "à", "escola", "amanhã?"],
     options: ["Tu", "Você", "vai", "vais", "vão", "a", "à", "na", "escola", "amanhã", "amanhã?"],
     type: "verbal",
+    hint: "O pronome 'Tu' pede a 2ª pessoa do singular (não a 3ª). E com o verbo 'ir' + lugar, prefira a preposição 'a'.",
     tip: "Com o pronome 'Tu' o verbo vai para a 2ª pessoa: vais. 'Ir a' + artigo feminino → à."
   },
   {
@@ -277,6 +284,7 @@ const ROUNDS = [
     correct: ["Aqueles", "meninos", "são", "altos."],
     options: ["Aquele", "Aqueles", "Aquela", "menino", "meninos", "é", "são", "alto", "altos", "altos."],
     type: "mista",
+    hint: "O demonstrativo 'Aqueles' já está no masculino plural. O substantivo e o adjetivo precisam acompanhar esse número e gênero.",
     tip: "Pronome demonstrativo, substantivo e adjetivo no masculino plural; verbo ser no plural."
   },
   {
@@ -284,6 +292,7 @@ const ROUNDS = [
     correct: ["A", "gente", "vai", "ao", "cinema."],
     options: ["A", "As", "gente", "gentes", "vai", "vamos", "vão", "ao", "aos", "cinema", "cinema."],
     type: "verbal",
+    hint: "'A gente' significa 'nós' no sentido, mas gramaticalmente é singular (3ª pessoa). Não use a conjugação de 'nós'.",
     tip: "'A gente' é singular (equivale a 'nós', mas a concordância é na 3ª pessoa do singular): vai."
   },
   {
@@ -291,6 +300,7 @@ const ROUNDS = [
     correct: ["Os", "alunos", "estudiosos", "passaram", "no", "teste."],
     options: ["O", "Os", "aluno", "alunos", "estudioso", "estudiosos", "passou", "passaram", "no", "nos", "teste", "teste."],
     type: "mista",
+    hint: "O artigo 'Os' marca plural. Substantivo, adjetivo e verbo precisam seguir o mesmo número.",
     tip: "Artigo, substantivo e adjetivo no plural; verbo no plural (passaram)."
   },
   {
@@ -298,6 +308,7 @@ const ROUNDS = [
     correct: ["Ela", "e", "eu", "fomos", "ao", "parque."],
     options: ["Ela", "Eu", "e", "foi", "fomos", "foram", "ao", "a", "parque", "parque."],
     type: "verbal",
+    hint: "Quando o sujeito composto inclui 'eu', a pessoa do verbo é a 1ª do plural (nós).",
     tip: "Sujeito composto com 'eu' → 1ª pessoa do plural: fomos."
   },
   {
@@ -305,6 +316,7 @@ const ROUNDS = [
     correct: ["Havia", "muitos", "problemas", "sérios", "no", "projeto."],
     options: ["Havia", "Haviam", "muito", "muitos", "problema", "problemas", "sério", "sérios", "no", "projeto", "projeto."],
     type: "mista",
+    hint: "Atenção ao verbo 'haver' no sentido de existir: ele é impessoal e não vai para o plural. Já o substantivo e o adjetivo acompanham o número do que existe.",
     tip: "O verbo 'haver' no sentido de existir é impessoal (fica no singular). Adjetivo e substantivo no plural."
   },
   {
@@ -312,6 +324,7 @@ const ROUNDS = [
     correct: ["Faz", "dois", "anos", "que", "ele", "saiu."],
     options: ["Faz", "Fazem", "dois", "duas", "ano", "anos", "que", "ele", "eles", "saiu", "saíram", "saiu."],
     type: "verbal",
+    hint: "O verbo 'fazer' indicando tempo decorrido é impessoal: não flexiona no plural, mesmo com 'dois anos'.",
     tip: "'Fazer' indicando tempo decorrido é impessoal → fica no singular: Faz dois anos."
   },
   {
@@ -319,6 +332,7 @@ const ROUNDS = [
     correct: ["Meu", "irmão", "mais", "velho", "mora", "longe."],
     options: ["Meu", "Meus", "irmão", "irmãos", "mais", "velho", "velhos", "mora", "moram", "longe", "longe."],
     type: "mista",
+    hint: "Trata-se de um único irmão. Possessivo, substantivo, adjetivo e verbo devem ficar no singular.",
     tip: "Um só irmão → singular em tudo: Meu irmão mais velho mora."
   },
   {
@@ -326,6 +340,7 @@ const ROUNDS = [
     correct: ["As", "notícias", "eram", "boas."],
     options: ["A", "As", "notícia", "notícias", "era", "eram", "boa", "boas", "boas."],
     type: "mista",
+    hint: "O artigo 'As' está no feminino plural. Substantivo, verbo e adjetivo precisam combinar com ele.",
     tip: "Artigo, substantivo e adjetivo no feminino plural; verbo no plural."
   },
   {
@@ -333,6 +348,7 @@ const ROUNDS = [
     correct: ["Vocês", "precisam", "estudar", "mais."],
     options: ["Você", "Vocês", "precisa", "precisam", "preciso", "estudar", "estuda", "mais", "mais."],
     type: "verbal",
+    hint: "'Vocês' exige a 3ª pessoa do plural — a mesma conjugação de 'eles/elas'.",
     tip: "'Vocês' pede 3ª pessoa do plural: precisam."
   },
   {
@@ -340,6 +356,7 @@ const ROUNDS = [
     correct: ["Um", "dos", "alunos", "chegou", "atrasado."],
     options: ["Um", "Uns", "dos", "das", "aluno", "alunos", "chegou", "chegaram", "atrasado", "atrasados", "atrasado."],
     type: "verbal",
+    hint: "O núcleo do sujeito é 'Um' (singular), não 'alunos'. O verbo concorda com o núcleo.",
     tip: "O núcleo do sujeito é 'Um' (singular) → verbo no singular: chegou. (Atrasado concorda com 'um aluno'.)"
   },
   {
@@ -347,6 +364,7 @@ const ROUNDS = [
     correct: ["Ela", "comprou", "uma", "calça", "preta", "e", "um", "sapato", "branco."],
     options: ["Ela", "comprou", "um", "uma", "calça", "preta", "pretas", "e", "um", "uma", "sapato", "branco", "branca", "branco."],
     type: "nominal",
+    hint: "Verifique o gênero de cada substantivo: 'calça' é feminina e 'sapato' é masculino. Artigo e adjetivo acompanham cada um.",
     tip: "Calça é feminina (uma calça preta); sapato é masculino (um sapato branco)."
   },
   {
@@ -354,6 +372,7 @@ const ROUNDS = [
     correct: ["Os", "dados", "do", "relatório", "estão", "incorretos."],
     options: ["O", "Os", "dado", "dados", "do", "da", "relatório", "está", "estão", "incorreto", "incorretos", "incorretos."],
     type: "mista",
+    hint: "O núcleo do sujeito é 'dados' (plural). Verbo e predicativo devem ir para o plural.",
     tip: "Núcleo do sujeito = 'dados' (plural) → verbo e predicativo no plural."
   },
   {
@@ -361,6 +380,7 @@ const ROUNDS = [
     correct: ["Quem", "fez", "os", "exercícios", "foram", "os", "alunos."],
     options: ["Quem", "fez", "fizeram", "os", "exercícios", "foi", "foram", "o", "os", "aluno", "alunos", "alunos."],
     type: "verbal",
+    hint: "Nesta construção, o verbo 'ser' costuma concordar com o predicativo ('os alunos'), não com 'quem'.",
     tip: "Em frases com 'quem' + predicativo plural, o verbo ser costuma ir para o plural concordando com o predicativo (foram os alunos)."
   },
   {
@@ -368,6 +388,7 @@ const ROUNDS = [
     correct: ["Mais", "de", "um", "aluno", "faltou", "à", "prova."],
     options: ["Mais", "de", "um", "aluno", "alunos", "faltou", "faltaram", "a", "à", "prova", "prova."],
     type: "verbal",
+    hint: "A expressão 'mais de um' leva o verbo para o singular, apesar da ideia de pluralidade.",
     tip: "A expressão 'mais de um' leva o verbo para o singular: faltou."
   },
   {
@@ -375,6 +396,7 @@ const ROUNDS = [
     correct: ["As", "crianças", "brincavam", "no", "parque."],
     options: ["A", "As", "criança", "crianças", "brincava", "brincavam", "no", "nos", "parque", "parque."],
     type: "mista",
+    hint: "Artigo no plural → substantivo e verbo também no plural.",
     tip: "Artigo e substantivo no plural → verbo no plural: brincavam."
   },
   {
@@ -382,6 +404,7 @@ const ROUNDS = [
     correct: ["Ele", "tinha", "comprado", "duas", "casas", "novas."],
     options: ["Ele", "tinha", "tinham", "comprado", "comprados", "duas", "dois", "casa", "casas", "nova", "novas", "novas."],
     type: "nominal",
+    hint: "'Duas' pede plural no substantivo e no adjetivo. Com ter/haver, o particípio permanece invariável.",
     tip: "Numeral + substantivo + adjetivo no feminino plural: duas casas novas. O particípio com ter/haver fica invariável."
   },
   {
@@ -389,6 +412,7 @@ const ROUNDS = [
     correct: ["Nós", "fomos", "ao", "shopping", "ontem."],
     options: ["Nós", "Eu", "foi", "fomos", "foram", "no", "ao", "a", "shopping", "ontem", "ontem."],
     type: "verbal",
+    hint: "Sujeito 'Nós' → 1ª pessoa do plural. E com o verbo 'ir', a regência preferida é a preposição 'a'.",
     tip: "'Nós' → fomos. Prefira 'ir a' (ao shopping) em vez de 'ir em'."
   },
   {
@@ -396,6 +420,7 @@ const ROUNDS = [
     correct: ["Seguem", "anexos", "os", "documentos", "solicitados."],
     options: ["Segue", "Seguem", "anexo", "anexos", "o", "os", "documento", "documentos", "solicitado", "solicitados", "solicitados."],
     type: "mista",
+    hint: "O sujeito real é 'os documentos' (plural). Verbo e o adjetivo 'anexo' devem concordar com ele.",
     tip: "O sujeito é 'os documentos' (plural) → verbo e adjetivo no plural: Seguem anexos..."
   },
   {
@@ -403,6 +428,7 @@ const ROUNDS = [
     correct: ["A", "maioria", "dos", "alunos", "gosta", "de", "futebol."],
     options: ["A", "As", "maioria", "maiorias", "dos", "das", "aluno", "alunos", "gosta", "gostam", "de", "futebol", "futebol."],
     type: "verbal",
+    hint: "Com 'a maioria de…', a concordância clássica é com o núcleo 'maioria' (singular). O plural também é aceito, mas aqui use a forma tradicional.",
     tip: "Com 'a maioria de' o verbo pode ficar no singular (concordando com 'maioria') ou no plural (com 'alunos'). A forma clássica é singular: gosta."
   }
 ];
@@ -420,7 +446,8 @@ let placed = [];          // array of { word, fromIndex } or null
 let usedOptions = new Set();
 let xp = 0;
 let streak = 0;
-let hintsUsed = 0;
+let hintsUsed = 0;        // quantas dicas já pedidas nesta rodada (0–3)
+let hintLevel = 0;        // próximo nível de dica a aplicar (1, 2 ou 3)
 let roundSolved = false;
 
 function shuffle(arr){
@@ -467,6 +494,7 @@ function loadRound(){
   current = ROUNDS[order[currentIndex]];
   roundSolved = false;
   hintsUsed = 0;
+  hintLevel = 0;
   placed = new Array(current.correct.length).fill(null);
   usedOptions = new Set();
 
@@ -477,15 +505,36 @@ function loadRound(){
   badge.className = "type-badge " + t.cls;
 
   document.getElementById("tipBox").style.display = "none";
+  document.getElementById("tipBox").innerHTML = "";
   document.getElementById("feedback").textContent = "";
   document.getElementById("feedback").className = "feedback";
   document.getElementById("winBanner").classList.remove("show");
   document.getElementById("actions").style.display = "flex";
   document.getElementById("btnCheck").disabled = true;
+  updateHintButton();
+
+  const pool = document.getElementById("pool");
+  pool.innerHTML = "";
+  delete pool.dataset.seeded;
 
   renderSlots();
   renderPool();
   updateHUD();
+}
+
+function updateHintButton(){
+  const btn = document.getElementById("btnHint");
+  if (hintLevel >= 3){
+    btn.textContent = "✓ Dicas esgotadas";
+    btn.disabled = true;
+    btn.style.opacity = "0.45";
+  } else {
+    const next = hintLevel + 1;
+    const labels = { 1: "💡 Dica 1 — regra", 2: "✨ Dica 2 — destacar", 3: "✅ Dica 3 — preencher" };
+    btn.textContent = labels[next] || "💡 Dica";
+    btn.disabled = false;
+    btn.style.opacity = "1";
+  }
 }
 
 function renderSlots(){
@@ -505,17 +554,39 @@ function renderSlots(){
 
 function renderPool(){
   const pool = document.getElementById("pool");
-  pool.innerHTML = "";
-  // Unique options, shuffled, but keep multiplicity if same word appears twice needed
-  const opts = shuffle([...current.options]);
-  opts.forEach((word, i) => {
-    const t = document.createElement("button");
-    t.className = "tile" + (usedOptions.has(i) ? " used" : "");
-    t.textContent = word;
-    t.dataset.optIdx = i;
-    t.dataset.word = word;
-    t.addEventListener("click", () => placeWord(word, i));
-    pool.appendChild(t);
+  // Preserve order of tiles if already rendered (avoid reshuffle on every remove)
+  if (!pool.dataset.seeded){
+    const opts = shuffle([...current.options]);
+    pool.innerHTML = "";
+    opts.forEach((word, i) => {
+      const t = document.createElement("button");
+      t.className = "tile";
+      t.textContent = word;
+      t.dataset.optIdx = i;
+      t.dataset.word = word;
+      t.addEventListener("click", () => placeWord(word, i));
+      pool.appendChild(t);
+    });
+    pool.dataset.seeded = "1";
+  }
+
+  // Update used state + optional highlights (dica 2+)
+  const stillNeed = {};
+  if (hintLevel >= 2){
+    current.correct.forEach(w => { stillNeed[w] = (stillNeed[w] || 0) + 1; });
+    placed.forEach(p => {
+      if (p && stillNeed[p.word] > 0) stillNeed[p.word]--;
+    });
+  }
+
+  pool.querySelectorAll(".tile").forEach(t => {
+    const idx = +t.dataset.optIdx;
+    t.classList.toggle("used", usedOptions.has(idx));
+    t.classList.remove("correct-hint");
+    if (hintLevel >= 2 && !usedOptions.has(idx) && stillNeed[t.dataset.word] > 0){
+      t.classList.add("correct-hint");
+      stillNeed[t.dataset.word]--;
+    }
   });
 }
 
@@ -581,9 +652,17 @@ function checkAnswer(){
   } else {
     streak = 0;
     GameSound.play("wrong");
-    document.getElementById("feedback").textContent = "Ainda não está correto. Revise a concordância!";
+    // Conta quantos espaços já estão certos
+    let right = 0;
+    placed.forEach((p, i) => {
+      if (p && p.word === current.correct[i]) right++;
+    });
+    const total = current.correct.length;
+    let msg = "Ainda não está correto. ";
+    if (right === 0) msg += "Nenhuma peça está no lugar certo — peça uma dica!";
+    else if (right < total) msg += right + " de " + total + " espaços já estão certos. Ajuste o restante.";
+    document.getElementById("feedback").textContent = msg;
     document.getElementById("feedback").className = "feedback bad";
-    // shake slots
     document.querySelectorAll(".slot.filled").forEach(s => {
       s.style.animation = "none";
       s.offsetHeight;
@@ -595,59 +674,132 @@ function checkAnswer(){
 
 function giveHint(){
   if (roundSolved) return;
-  // Find first wrong or empty slot and reveal the correct word
-  let target = -1;
-  for (let i = 0; i < current.correct.length; i++){
-    if (!placed[i] || placed[i].word !== current.correct[i]){
-      target = i;
-      break;
-    }
-  }
-  if (target === -1){
-    toast("Já está tudo certo!", "good");
+  if (hintLevel >= 3){
+    toast("As 3 dicas desta frase já foram usadas.", "bad");
     return;
   }
-  // Remove whatever is there
-  if (placed[target]){
-    usedOptions.delete(placed[target].fromIndex);
-    placed[target] = null;
+
+  hintLevel++;
+  hintsUsed++;
+  GameSound.play("hint");
+
+  // ── Nível 1: dica conceitual (regra) ──
+  if (hintLevel === 1){
+    const box = document.getElementById("tipBox");
+    box.innerHTML = "<strong>💡 Dica 1 — Regra:</strong> " + (current.hint || current.tip);
+    box.style.display = "block";
+    toast("Leia a regra e tente de novo!", "good");
+    updateHintButton();
+    return;
   }
-  // Find an available option that matches the correct word
-  const need = current.correct[target];
-  const poolTiles = [...document.querySelectorAll(".tile")];
-  let foundIdx = -1;
-  for (const t of poolTiles){
-    if (!t.classList.contains("used") && t.dataset.word === need){
-      foundIdx = +t.dataset.optIdx;
-      break;
-    }
-  }
-  // If the correct word was already used in a wrong place, free it
-  if (foundIdx === -1){
-    for (let i = 0; i < placed.length; i++){
-      if (placed[i] && placed[i].word === need){
-        usedOptions.delete(placed[i].fromIndex);
-        foundIdx = placed[i].fromIndex;
-        placed[i] = null;
+
+  // ── Nível 2: destacar no banco as palavras que fazem parte da resposta ──
+  if (hintLevel === 2){
+    const needed = new Set(current.correct);
+    // Contagem de quantas vezes cada palavra correta ainda precisa aparecer
+    const stillNeed = {};
+    current.correct.forEach(w => {
+      stillNeed[w] = (stillNeed[w] || 0) + 1;
+    });
+    placed.forEach(p => {
+      if (p && stillNeed[p.word] > 0) stillNeed[p.word]--;
+    });
+
+    const tiles = document.querySelectorAll(".tile");
+    let highlighted = 0;
+    tiles.forEach(t => {
+      t.classList.remove("correct-hint");
+      if (t.classList.contains("used")) return;
+      const w = t.dataset.word;
+      if (stillNeed[w] > 0){
+        t.classList.add("correct-hint");
+        stillNeed[w]--;
+        highlighted++;
+      }
+    });
+
+    // Também pulsa o primeiro slot vazio/errado
+    let target = -1;
+    for (let i = 0; i < current.correct.length; i++){
+      if (!placed[i] || placed[i].word !== current.correct[i]){
+        target = i;
         break;
       }
     }
+    const slots = document.querySelectorAll(".slot");
+    if (target >= 0 && slots[target]) slots[target].classList.add("hint-pulse");
+
+    const box = document.getElementById("tipBox");
+    box.innerHTML = "<strong>✨ Dica 2 — Destaque:</strong> As palavras com borda verde no banco fazem parte da frase correta. O espaço piscando é o próximo a preencher.";
+    box.style.display = "block";
+    toast(highlighted ? "Palavras corretas destacadas no banco!" : "Revise os espaços já preenchidos.", "good");
+    updateHintButton();
+    return;
   }
-  if (foundIdx !== -1){
-    placed[target] = { word: need, fromIndex: foundIdx };
-    usedOptions.add(foundIdx);
-  } else {
-    // fallback: force place without tracking
-    placed[target] = { word: need, fromIndex: -1 };
+
+  // ── Nível 3: preencher o próximo espaço errado/vazio ──
+  if (hintLevel === 3){
+    let target = -1;
+    for (let i = 0; i < current.correct.length; i++){
+      if (!placed[i] || placed[i].word !== current.correct[i]){
+        target = i;
+        break;
+      }
+    }
+    if (target === -1){
+      toast("Já está tudo certo! É só verificar.", "good");
+      updateHintButton();
+      return;
+    }
+
+    // Libera o que estiver no slot errado
+    if (placed[target]){
+      usedOptions.delete(placed[target].fromIndex);
+      placed[target] = null;
+    }
+
+    const need = current.correct[target];
+    let foundIdx = -1;
+
+    // Procura no pool uma peça livre com a palavra certa
+    document.querySelectorAll(".tile").forEach(t => {
+      if (foundIdx !== -1) return;
+      if (!t.classList.contains("used") && t.dataset.word === need){
+        foundIdx = +t.dataset.optIdx;
+      }
+    });
+
+    // Se a palavra certa está em outro slot, libera de lá
+    if (foundIdx === -1){
+      for (let i = 0; i < placed.length; i++){
+        if (placed[i] && placed[i].word === need){
+          usedOptions.delete(placed[i].fromIndex);
+          foundIdx = placed[i].fromIndex;
+          placed[i] = null;
+          break;
+        }
+      }
+    }
+
+    if (foundIdx !== -1){
+      placed[target] = { word: need, fromIndex: foundIdx };
+      usedOptions.add(foundIdx);
+    } else {
+      placed[target] = { word: need, fromIndex: -1 };
+    }
+
+    const box = document.getElementById("tipBox");
+    box.innerHTML = "<strong>✅ Dica 3 — Preenchido:</strong> O espaço " + (target + 1) + " recebeu a palavra certa (<em>" + need + "</em>). Complete o restante!";
+    box.style.display = "block";
+
+    renderSlots();
+    renderPool();
+    const slots = document.querySelectorAll(".slot");
+    if (slots[target]) slots[target].classList.add("hint-pulse");
+
+    toast("Espaço " + (target + 1) + " preenchido: «" + need + "»", "good");
+    updateHintButton();
   }
-  hintsUsed++;
-  GameSound.play("hint");
-  toast("Dica aplicada no espaço " + (target + 1), "good");
-  renderSlots();
-  renderPool();
-  // highlight
-  const slots = document.querySelectorAll(".slot");
-  if (slots[target]) slots[target].classList.add("hint-pulse");
 }
 
 function nextRound(){
