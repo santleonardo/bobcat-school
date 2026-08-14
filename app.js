@@ -197,6 +197,14 @@ const EXTRAS = [
     url: 'lessons/pt-interpretacao.html'
   },
   {
+    id: 'manual-portugues-avancado',
+    group: 'Manual Avançado — Língua Portuguesa',
+    name: 'Capa — Manual Avançado',
+    icon: '📕',
+    description: 'Período composto, funções e figuras de linguagem, semântica, coesão textual e redação — nível avançado',
+    url: 'lessons/manual-portugues-avancado.html'
+  },
+  {
     id: 'licao-2-interativa',
     group: 'Outros',
     name: 'Lição 2 — Visual Interativo (mesmo conteúdo)',
