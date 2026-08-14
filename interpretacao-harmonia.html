@@ -208,7 +208,7 @@
   </div>
   <div class="hud-stats">
     <div class="stat done">✓ <span id="doneNum">0</span>/5</div>
-    <div class="stat timer" id="timerStat" style="display:none">⏱ <span id="timerNum">30</span>s</div>
+    <div class="stat timer" id="timerStat" style="display:none">⏱ <span id="timerNum">60</span>s</div>
     <div class="stat harm">🤝 <span id="harmNum">—</span></div>
     <div class="stat xp">⭐ <span id="xpNum">0</span></div>
     <button class="btn-icon" id="btnPause" title="Pausar" style="display:none">⏸</button>
@@ -904,9 +904,24 @@ let inProgress = null; // { id, qIndex, correctCount } — cenário salvo para c
 let timerId = null;
 let timeLeft = 0;
 let paused = false;
-const TIME_PER_Q = 30; // segundos por pergunta
+const TIME_MIN = 60;  // piso do tempo adaptativo (segundos)
+const TIME_MAX = 90;  // teto do tempo adaptativo (segundos)
+let timeTotal = TIME_MIN; // duração da pergunta atual (definida por computeTimeForQuestion)
 
 function $(id){ return document.getElementById(id); }
+
+// Calcula o tempo da pergunta (entre TIME_MIN e TIME_MAX) de acordo com o
+// tamanho do texto (contexto + fala + pergunta + alternativas): perguntas
+// mais longas/complexas dão mais tempo de leitura, dentro do intervalo.
+function computeTimeForQuestion(q){
+  if (!q) return TIME_MIN;
+  const optsLen = (q.options || []).reduce((sum, o) => sum + (o ? o.length : 0), 0);
+  const totalLen = (q.speech || "").length + (q.context || "").length + (q.ask || "").length + optsLen;
+  const LEN_MIN = 300; // tamanho aproximado das perguntas mais curtas
+  const LEN_MAX = 440; // tamanho aproximado das perguntas mais longas
+  const ratio = Math.min(1, Math.max(0, (totalLen - LEN_MIN) / (LEN_MAX - LEN_MIN)));
+  return Math.round(TIME_MIN + (TIME_MAX - TIME_MIN) * ratio);
+}
 
 function stopTimer(){
   if (timerId){ clearInterval(timerId); timerId = null; }
@@ -916,25 +931,28 @@ function stopTimer(){
 
 function startTimer(resumeFrom){
   stopTimer();
-  timeLeft = (typeof resumeFrom === "number") ? resumeFrom : TIME_PER_Q;
+  const q = current ? current.questions[qIndex] : null;
+  timeTotal = computeTimeForQuestion(q);
+  timeLeft = (typeof resumeFrom === "number") ? resumeFrom : timeTotal;
   const st = $("timerStat");
   const fill = $("timerFill");
+  const urgentAt = Math.max(8, Math.round(timeTotal * 0.25));
   st.style.display = "flex";
   st.classList.remove("urgent");
   $("timerNum").textContent = timeLeft;
   if (fill){
-    fill.style.width = Math.max(0, (timeLeft / TIME_PER_Q) * 100) + "%";
-    fill.classList.toggle("urgent", timeLeft <= 8);
+    fill.style.width = Math.max(0, (timeLeft / timeTotal) * 100) + "%";
+    fill.classList.toggle("urgent", timeLeft <= urgentAt);
   }
-  st.classList.toggle("urgent", timeLeft <= 8);
+  st.classList.toggle("urgent", timeLeft <= urgentAt);
   timerId = setInterval(() => {
     timeLeft--;
     $("timerNum").textContent = Math.max(0, timeLeft);
     if (fill){
-      fill.style.width = Math.max(0, (timeLeft / TIME_PER_Q) * 100) + "%";
-      if (timeLeft <= 8) fill.classList.add("urgent");
+      fill.style.width = Math.max(0, (timeLeft / timeTotal) * 100) + "%";
+      if (timeLeft <= urgentAt) fill.classList.add("urgent");
     }
-    if (timeLeft <= 8) st.classList.add("urgent");
+    if (timeLeft <= urgentAt) st.classList.add("urgent");
     if (timeLeft <= 0){
       stopTimer();
       if (!answered) onTimeUp();
