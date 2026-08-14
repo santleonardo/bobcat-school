@@ -3483,6 +3483,48 @@ function nextStep(){
   setTimeout(() => { nextStep._busy = false; }, 350);
 }
 
+// Próxima fase / cenário na trilha de carreira e mistério
+const NEXT_PHASE = {
+  // Trilha emprego
+  "emprego": "emprego2",
+  "emprego2": "vendedor",
+  "vendedor": null, // se passar → gerente; se falhar → supervisor (handled dynamically)
+  "supervisor-vendas": "treinador",
+  "treinador": "vendedor2",
+  "vendedor2": "gerente-equipe",
+  // Fase 4
+  "gerente-equipe": "gerente-feedback",
+  "gerente-feedback": "gerente-escalada",
+  "gerente-escalada": "gerente-diretoria",
+  "gerente-diretoria": null, // fim ou recuperação
+  "diretor-recuperacao": "mentor-lideranca",
+  "mentor-lideranca": "gerente2",
+  "gerente2": null,
+  // Mistério (cenários originais + sequências)
+  "imprensa": "imprensa2",
+  "rua": "rua2",
+  "cliente": "cliente2",
+  "chefe": "chefe2"
+};
+
+function getNextPhaseId(fromId, passed){
+  if (!passed){
+    // Caminhos de recuperação após falha
+    if (fromId === "vendedor") return "supervisor-vendas";
+    if (fromId === "gerente-diretoria") return "diretor-recuperacao";
+    return null;
+  }
+  // Após passar vendas de primeira, pula direto para gerente
+  if (fromId === "vendedor") return "gerente-equipe";
+  return NEXT_PHASE[fromId] || null;
+}
+
+function getNextPhaseLabel(nextId){
+  const s = SCENARIOS.find(x => x.id === nextId);
+  if (!s) return "Próxima fase";
+  return "▶ Próxima: " + s.emoji + " " + s.title;
+}
+
 function endScenario(){
   stopTimer();
   // Cenário terminou (ganhou ou perdeu): não há mais progresso "em andamento" para salvar.
@@ -3501,6 +3543,10 @@ function endScenario(){
     GameSound.play("win");
     confetti({ particleCount: 80, spread: 55, origin: { y: 0.7 }, colors: ["#ffd23f","#8b5cf6","#2dd9b9"] });
 
+    const nextIdPass = getNextPhaseId(current.id, true);
+    const nextBtnPass = nextIdPass
+      ? "<button class=\"btn btn-primary\" id=\"btnNextPhase\">" + getNextPhaseLabel(nextIdPass) + "</button>"
+      : "<button class=\"btn btn-primary\" id=\"btnMenu\">Outros cenários</button>";
     card.innerHTML =
       "<div class=\"big\">🎉</div>" +
       "<h2>" + current.winTitle + "</h2>" +
@@ -3509,8 +3555,9 @@ function endScenario(){
       "<p>Harmonia: <strong style=\"color:var(--teal)\">" + correctCount + "/" + (runtimeQuestions.length || current.questions.length) + "</strong></p>" +
       "<div class=\"secret-text\"><strong>" + current.secretTitle + " desbloqueado</strong><br>" + current.secretText + "</div>" +
       "<div class=\"actions\">" +
+        nextBtnPass +
         "<button class=\"btn btn-ghost\" id=\"btnRetry\">Jogar de novo</button>" +
-        "<button class=\"btn btn-primary\" id=\"btnMenu\">Outros cenários</button>" +
+        (nextIdPass ? "<button class=\"btn btn-ghost\" id=\"btnMenu\">Outros cenários</button>" : "") +
       "</div>";
   } else {
     save();
@@ -3536,16 +3583,33 @@ function endScenario(){
       " (era preciso pelo menos " + current.minCorrect + ").</p>" +
       extraHint +
       "<div class=\"actions\">" +
-        "<button class=\"btn btn-primary\" id=\"btnRetry\">Tentar de novo</button>" +
-        "<button class=\"btn btn-ghost\" id=\"btnMenu\">Outros cenários</button>" +
+        (function(){
+          const nextIdFail = getNextPhaseId(current.id, false);
+          if (nextIdFail){
+            return "<button class=\"btn btn-primary\" id=\"btnNextPhase\">" + getNextPhaseLabel(nextIdFail) + "</button>" +
+              "<button class=\"btn btn-ghost\" id=\"btnRetry\">Tentar de novo</button>" +
+              "<button class=\"btn btn-ghost\" id=\"btnMenu\">Outros cenários</button>";
+          }
+          return "<button class=\"btn btn-primary\" id=\"btnRetry\">Tentar de novo</button>" +
+            "<button class=\"btn btn-ghost\" id=\"btnMenu\">Outros cenários</button>";
+        })() +
       "</div>";
   }
 
   showScreen("screenResult");
   updateHUD();
 
-  $("btnRetry").addEventListener("click", () => startScenario(current.id));
-  $("btnMenu").addEventListener("click", () => {
+  const nextPhaseBtn = $("btnNextPhase");
+  if (nextPhaseBtn){
+    const nextId = getNextPhaseId(current.id, passed);
+    nextPhaseBtn.addEventListener("click", () => {
+      if (nextId) startScenario(nextId);
+    });
+  }
+  const retryBtn = $("btnRetry");
+  if (retryBtn) retryBtn.addEventListener("click", () => startScenario(current.id));
+  const menuBtn = $("btnMenu");
+  if (menuBtn) menuBtn.addEventListener("click", () => {
     const wasPass = passed;
     const justId = current.id;
     current = null;
