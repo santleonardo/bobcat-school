@@ -205,6 +205,86 @@ const EXTRAS = [
     url: 'lessons/manual-portugues-avancado.html'
   },
   {
+    id: 'pa-periodo-coordenacao',
+    group: 'Manual Avançado — Língua Portuguesa',
+    name: 'Avançado 1 — Período Composto por Coordenação',
+    icon: '🔗',
+    description: 'Orações independentes ligadas por conjunções ou justaposição',
+    url: 'lessons/pa-periodo-coordenacao.html'
+  },
+  {
+    id: 'pa-periodo-subordinacao-i',
+    group: 'Manual Avançado — Língua Portuguesa',
+    name: 'Avançado 2 — Subordinação Substantiva e Adjetiva',
+    icon: '🧩',
+    description: 'Orações que funcionam como termo de outra oração',
+    url: 'lessons/pa-periodo-subordinacao-i.html'
+  },
+  {
+    id: 'pa-periodo-subordinacao-ii',
+    group: 'Manual Avançado — Língua Portuguesa',
+    name: 'Avançado 3 — Subordinação Adverbial',
+    icon: '🌦️',
+    description: 'Orações que expressam circunstância em relação à oração principal',
+    url: 'lessons/pa-periodo-subordinacao-ii.html'
+  },
+  {
+    id: 'pa-funcoes-linguagem',
+    group: 'Manual Avançado — Língua Portuguesa',
+    name: 'Avançado 4 — Funções da Linguagem',
+    icon: '📡',
+    description: 'As seis funções conforme os elementos da comunicação',
+    url: 'lessons/pa-funcoes-linguagem.html'
+  },
+  {
+    id: 'pa-figuras-linguagem',
+    group: 'Manual Avançado — Língua Portuguesa',
+    name: 'Avançado 5 — Figuras de Linguagem',
+    icon: '🎭',
+    description: 'Recursos expressivos de palavras, pensamento, som e sintaxe',
+    url: 'lessons/pa-figuras-linguagem.html'
+  },
+  {
+    id: 'pa-vicios-ambiguidade',
+    group: 'Manual Avançado — Língua Portuguesa',
+    name: 'Avançado 6 — Vícios de Linguagem e Ambiguidade',
+    icon: '⚠️',
+    description: 'Desvios que prejudicam a clareza da comunicação',
+    url: 'lessons/pa-vicios-ambiguidade.html'
+  },
+  {
+    id: 'pa-semantica',
+    group: 'Manual Avançado — Língua Portuguesa',
+    name: 'Avançado 7 — Semântica',
+    icon: '🧠',
+    description: 'Relações de sentido entre as palavras',
+    url: 'lessons/pa-semantica.html'
+  },
+  {
+    id: 'pa-coesao-coerencia',
+    group: 'Manual Avançado — Língua Portuguesa',
+    name: 'Avançado 8 — Coesão e Coerência Textual',
+    icon: '🧵',
+    description: 'O que garante a costura e a lógica interna de um texto',
+    url: 'lessons/pa-coesao-coerencia.html'
+  },
+  {
+    id: 'pa-generos-textuais',
+    group: 'Manual Avançado — Língua Portuguesa',
+    name: 'Avançado 9 — Gêneros e Tipologia Textual',
+    icon: '📰',
+    description: 'As formas relativamente estáveis com que organizamos os textos',
+    url: 'lessons/pa-generos-textuais.html'
+  },
+  {
+    id: 'pa-redacao-dissertativa',
+    group: 'Manual Avançado — Língua Portuguesa',
+    name: 'Avançado 10 — Redação: Dissertação Argumentativa',
+    icon: '✍️',
+    description: 'Estrutura, argumentação e proposta de intervenção',
+    url: 'lessons/pa-redacao-dissertativa.html'
+  },
+  {
     id: 'licao-2-interativa',
     group: 'Outros',
     name: 'Lição 2 — Visual Interativo (mesmo conteúdo)',
