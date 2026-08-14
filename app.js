@@ -1330,6 +1330,11 @@ async function renderExtras() {
       short: 'Manual Prático',
       blurb: 'Morfologia, sintaxe, concordância, crase, pontuação e interpretação — teoria e prática.'
     },
+    'Manual Avançado — Língua Portuguesa': {
+      icon: '📕',
+      short: 'Manual Avançado',
+      blurb: 'Período composto, funções e figuras de linguagem, semântica, coesão textual e redação dissertativa.'
+    },
     'Jogos': {
       icon: '🎮',
       short: 'Jogos',
@@ -1344,6 +1349,7 @@ async function renderExtras() {
   const GROUP_ORDER = [
     'Manual Básico — Classes Gramaticais',
     'Manual Prático — Língua Portuguesa',
+    'Manual Avançado — Língua Portuguesa',
     'Jogos',
     'Outros'
   ];
