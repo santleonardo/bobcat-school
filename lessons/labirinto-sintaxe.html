@@ -703,7 +703,7 @@ function findDeadEnds(g){
 
 /* ─── Rotas de escape: abre alguns atalhos extras no labirinto perfeito
    para que o jogador tenha mais de um caminho e possa fugir dos fantasmas ─── */
-const ESCAPE_ROUTES = 14; // mais atalhos (antes era 9 e quase não criavam loops úteis)
+const ESCAPE_ROUTES = 20; // mais atalhos/saídas (antes era 14) — labirinto com mais loops e caminhos alternativos
 function addEscapeRoutes(g, count){
   const idx = (r,c) => r*COLS+c;
   const DIRS = [
