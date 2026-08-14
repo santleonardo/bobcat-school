@@ -274,7 +274,7 @@
       <p>Escolha um <strong>cenário inicial</strong>. As próximas fases só aparecem aqui depois que você concluir a atual — avance pela trilha de carreira e pelo mistério passo a passo.</p>
       <p>Em cada um, alguém fala — e você precisa interpretar o que realmente quer dizer: intenção, tom e implícito.</p>
       <p>Acerte a leitura e a harmonia sobe. Erre e o <strong>objetivo daquele desafio</strong> fica ameaçado. Cada pergunta tem <strong>contagem regressiva</strong> — sob pressão, a interpretação precipitada custa caro.</p>
-      <p style="font-size:12.5px;color:var(--ink-soft)">Após a entrevista e a negociação, desbloqueie a <strong>Fase 3 — Vendas</strong> (10 clientes, meta 70%). Se falhar: supervisor → treinador → segunda chance. Passe e avance à <strong>Fase 4 — Gerente</strong>: reunião de equipe, feedbacks 1:1, escalada de cliente e diretoria. Se a diretoria não fechar, há plano de recuperação + mentoria.</p>
+      <p style="font-size:12.5px;color:var(--ink-soft)">Após a entrevista e a negociação, desbloqueie a <strong>Fase 3 — Vendas</strong> (10 clientes, meta 70%). Se falhar: supervisor → treinador → segunda chance. Passe e avance à <strong>Fase 4 — Gerente</strong> e depois à <strong>Fase 5 — Comitê</strong>: mesas de poder, parceiro estratégico, crise de reputação e conselho — interpretações mais ambíguas e custo de erro maior.</p>
 
       <div class="mystery-teaser">
         <strong>🔐 Segredo opcional:</strong> conclua os cinco cenários originais com harmonia e junte os fragmentos de um mistério escondido entre as falas.
@@ -2815,7 +2815,7 @@ const SCENARIOS = [
     goal: "Demonstrar evolução de liderança (≥ 70% em situações críticas)",
     minCorrect: 5,
     winTitle: "Gestão consolidada de verdade",
-    winText: "Você aplicou a leitura de equipe e de poder. A diretoria e o time reconhecem a evolução. A Fase 4 está concluída — caminho aberto para desafios maiores (Fase 5 em breve).",
+    winText: "Você aplicou a leitura de equipe e de poder. A diretoria e o time reconhecem a evolução. A Fase 4 está concluída. A diretoria convida você ao comitê de direção — Fase 5, onde a interpretação fica mais ambígua e o custo do erro é maior.",
     loseTitle: "Ainda não sustentou a evolução",
     loseText: "As situações críticas ainda mostraram gaps de leitura. Revise a mentoria e tente a segunda janela de novo.",
     secretTitle: "Registro de consolidação",
@@ -2921,6 +2921,911 @@ const SCENARIOS = [
         correct: 1,
         explain: "Reconhecimento explícito do gap anterior e da evolução. A Fase 4 se encerra com o mesmo fio da harmonia: ouvir o que não está dito.",
         consequence: "Você interpreta como 'missão cumprida para sempre' e relaxa a escuta. O ciclo pode se repetir."
+      }
+    ]
+  },
+  // ========== FASE 5: COMITÊ / DIREÇÃO — interpretações mais difíceis ==========
+  {
+    id: "comite-direcao",
+    emoji: "♟️",
+    title: "Fase 5 — Comitê de direção",
+    sub: "Mesa estratégica · agendas implícitas e poder",
+    avatar: "🏛️",
+    who: "Comitê de direção",
+    goal: "Ler agendas cruzadas sem perder a harmonia política (≥ 75%)",
+    minCorrect: 6,
+    winTitle: "Leitura política afiada",
+    winText: "Você separou o que foi dito do que foi negociado em silêncio. O comitê reconhece maturidade de interpretação sob pressão de poder.",
+    loseTitle: "Você leu só a superfície",
+    loseText: "Alguém saiu da sala com uma narrativa diferente da sua. Em comitê, interpretação rasa vira decisão ruim — ou inimigo silencioso.",
+    secretTitle: "Regra do comitê",
+    secretText: "«Na mesa alta, o silêncio de quem tem poder costuma pesar mais do que o discurso de quem precisa convencer.»",
+    requiresAny: ["gerente-diretoria", "gerente2"],
+    unlockHint: "Conclua a Fase 4 (diretoria ou segunda janela de gestão)",
+    careerPhase: 5,
+    questions: [
+      {
+        context: "Comitê discute expansão para o Nordeste. A CFO fala pouco; o diretor comercial empurra o plano.",
+        speech: "CFO (após 20s de silêncio): Os números fecham… no papel. Eu só queria entender de onde sai a folga se o churn do Sudeste continuar no ritmo atual.",
+        ask: "A leitura mais precisa do silêncio + da fala é:",
+        options: [
+          "Aprovação cautelosa — ela está só pedindo um detalhe técnico",
+          "Reserva estrutural: ela não compra a premissa e usa o churn como veto educado sem dizer 'não'",
+          "Desinteresse total pelo tema",
+          "Pedido para aumentar o orçamento da expansão"
+        ],
+        correct: 1,
+        explain: "Pausa longa + 'no papel' + condição sobre churn = oposição indireta. Em comitê, o 'não' raramente vem explícito de quem controla caixa.",
+        consequence: "Você trata como dúvida menor e força o plano. A CFO bloqueia depois, em outro fórum, e você parece despreparado."
+      },
+      {
+        context: "O CHRO observa a discussão sobre headcount da nova região.",
+        speech: "CHRO: Não sou contra crescer. Só me pergunto se estamos contratando velocidade ou só transferindo o problema de gestão que ainda não resolvemos aqui.",
+        ask: "O alvo real da fala é:",
+        options: [
+          "O mercado de trabalho do Nordeste",
+          "A maturidade da sua gestão (e da operação atual) — expansão como fuga, não como estratégia",
+          "O salário dos novos contratados",
+          "Uma crítica genérica à diretoria comercial"
+        ],
+        correct: 1,
+        explain: "'Transferindo o problema de gestão' aponta para o presente, não para o mapa. É teste à sua liderança, disfarçado de preocupação regional.",
+        consequence: "Você defende só o plano geográfico. O CHRO anota que você não engajou a crítica de fundo."
+      },
+      {
+        context: "André (seu diretor) fala em tom de apoio, mas olha para a CFO.",
+        speech: "André: Eu confio no time. Se a mesa preferir um piloto menor, a gente adapta — sem drama.",
+        ask: "O que André está fazendo de fato?",
+        options: [
+          "Retirando o apoio a você em público",
+          "Preservando capital político: apoia, mas sinaliza flexibilidade para não confrontar a CFO",
+          "Ordenando que você reduza o plano na hora",
+          "Pedindo sua demissão de forma codificada"
+        ],
+        correct: 1,
+        explain: "Apoio + 'se a mesa preferir' = proteção mútua. Ele não te abandona, mas também não vai à guerra sozinho. Leitura madura: ajuste de escopo, não de lealdade.",
+        consequence: "Você interpreta como traição e reage na defensiva. A relação com André esfria sem necessidade."
+      },
+      {
+        context: "Um conselheiro externo, pouco frequente nas reuniões, intervém.",
+        speech: "Conselheiro: Interessante. Só me lembro de três expansões 'óbvias' que viraram centro de custo em 18 meses. Não estou dizendo que é o caso — estou dizendo que a memória institucional existe.",
+        ask: "Essa intervenção funciona como:",
+        options: [
+          "História irrelevante para quebrar o clima",
+          "Aviso de risco com autoridade moral — pede evidência de aprendizado, não só de ambição",
+          "Apoio disfarçado ao seu plano",
+          "Ataque pessoal à CFO"
+        ],
+        correct: 1,
+        explain: "Memória institucional citada assim é âncora de ceticismo legítimo. Responder com o que mudou desde as expansões anteriores é o movimento certo.",
+        consequence: "Você ignora o histórico. O conselheiro marca arrogância e o clima vira contra o plano."
+      },
+      {
+        context: "A CEO, que quase não falou, encerra o bloco.",
+        speech: "CEO: Vamos tirar duas semanas. Quero um memo de uma página: premissas, o que quebra o plano, e quem é dono de cada risco. Sem slides.",
+        ask: "O pedido da CEO revela, sobretudo:",
+        options: [
+          "Que o plano foi rejeitado em definitivo",
+          "Que ela valoriza clareza de risco e accountability — e desconfia de narrativa longa sem dono",
+          "Que odeia apresentações",
+          "Que vai decidir sozinha sem ouvir o comitê"
+        ],
+        correct: 1,
+        explain: "Memo curto + premissas + o que quebra + donos = padrão de decisão de alta complexidade. Não é 'não'; é 'me deem algo decidível'.",
+        consequence: "Você volta com deck de 40 slides. A CEO interpreta excesso de spin e falta de rigor."
+      },
+      {
+        context: "No corredor, depois da reunião, a CFO te aborda.",
+        speech: "CFO: Não leve para o lado pessoal. Eu faço a mesma pergunta para qualquer plano que cresce mais rápido que a margem.",
+        ask: "A leitura equilibrada é:",
+        options: [
+          "Desculpa falsa — ela está contra você",
+          "Sinal de que o conflito é de critério (risco/caixa), não de pessoa — dá para realinhar com dados",
+          "Convite para desistir da expansão",
+          "Ameaça velada de bloqueio permanente"
+        ],
+        correct: 1,
+        explain: "Despersonalizar o conflito abre espaço técnico. Tratar como ataque pessoal fecha a porta política.",
+        consequence: "Você fica magoado e evita a CFO. O próximo plano morre sem diálogo de caixa."
+      },
+      {
+        context: "André manda mensagem à noite.",
+        speech: "André: Bom controle de sala hoje. Só um ponto: quando o CHRO falou de 'problema de gestão', você respondeu rápido demais. Na próxima, respire e devolva a pergunta.",
+        ask: "O feedback real é:",
+        options: [
+          "Que você falou demais na reunião",
+          "Que reação rápida a crítica estrutural soou defensiva — pausa e contra-pergunta preservam autoridade",
+          "Que você deveria ter ficado calado o tempo todo",
+          "Que o CHRO estava certo e você errou o plano"
+        ],
+        correct: 1,
+        explain: "Em comitê, velocidade na defesa = fragilidade percebida. Devolver a pergunta ('qual parte da gestão te preocupa?') mostra controle.",
+        consequence: "Você ignora o feedback. No próximo comitê, a mesma armadilha se repete com custo maior."
+      },
+      {
+        context: "Você prepara o memo. Bruno (ainda na sua equipe) comenta em tom baixo.",
+        speech: "Bruno: Se o piloto for menor, a meta da equipe não cabe. Alguém vai precisar dizer isso na mesa — ou a gente engole número irreal de novo.",
+        ask: "Como interpretar o papel dele e o seu?",
+        options: [
+          "Bruno está sendo insubordinado",
+          "Ele traz restrição operacional legítima que precisa subir com você — não ser filtrada por otimismo político",
+          "Você deve esconder o problema da meta",
+          "É hora de cortar a equipe"
+        ],
+        correct: 1,
+        explain: "Fase 5 exige subir restrições reais sem dramatizar. Filtrar o 'não cabe' para agradar o comitê cria meta tóxica depois.",
+        consequence: "Você omite a restrição. O piloto 'passa' e a equipe quebra a meta — e a confiança interna."
+      }
+    ]
+  },
+  {
+    id: "parceiro-estrategico",
+    emoji: "🤝",
+    title: "Fase 5 — Parceiro estratégico",
+    sub: "Negociação B2B de alto risco · duplo sentido",
+    avatar: "💼",
+    who: "Diretor do parceiro + seu comitê",
+    goal: "Interpretar o que o parceiro não coloca no contrato (≥ 75%)",
+    minCorrect: 6,
+    winTitle: "Acordo com os olhos abertos",
+    winText: "Você leu as cláusulas e o subtexto. O parceria avança sem surpresas que costumam aparecer seis meses depois.",
+    loseTitle: "Você comprou o discurso",
+    loseText: "O implícito ficou de fora da sua leitura. O contrato pode até ser assinado — o arrependimento vem na operação.",
+    secretTitle: "Cláusula invisível",
+    secretText: "«O que o parceiro repete com sorriso costuma ser o que ele mais precisa que você não questione.»",
+    requires: "comite-direcao",
+    unlockHint: "Conclua o Comitê de direção",
+    careerPhase: 5,
+    questions: [
+      {
+        context: "Kickoff com o diretor comercial do parceiro. Tom caloroso, quase informal demais para o tamanho do deal.",
+        speech: "Parceiro: A gente não é daqueles que vivem de contrato. O que importa é o espírito da parceria — confiança primeiro, papel depois.",
+        ask: "A leitura cautelosa correta é:",
+        options: [
+          "Sinal de cultura saudável — pode relaxar a revisão jurídica",
+          "Redução estratégica de formalidade: quanto menos estiver escrito, mais margem eles guardam na prática",
+          "Elogio genuíno à sua empresa",
+          "Pedido para assinar sem legal"
+        ],
+        correct: 1,
+        explain: "'Espírito > papel' em deal grande é clássico: desloca o poder para a interpretação futura. Confiança sim; formalidade zero não.",
+        consequence: "Você reduz a pressão por cláusulas claras. Meses depois, cada lado 'lembra' de um espírito diferente."
+      },
+      {
+        context: "Discussão de exclusividade regional.",
+        speech: "Parceiro: Exclusividade total trava a gente. O que a gente pode fazer é prioridade de fato — vocês entram primeiro em todo lead que fizer sentido.",
+        ask: "'Prioridade de fato' + 'que fizer sentido' significa:",
+        options: [
+          "Exclusividade disfarçada com outro nome",
+          "Compromisso não mensurável: eles mantêm liberdade total e oferecem uma preferência subjetiva",
+          "Garantia jurídica equivalente à exclusividade",
+          "Que a exclusividade virá no ano 2 automaticamente"
+        ],
+        correct: 1,
+        explain: "Sem critério objetivo, 'prioridade' e 'fizer sentido' são discricionariedade pura. Harmonia aqui é nomear a métrica ou aceitar o risco conscientemente.",
+        consequence: "Você aceita a formulação. No trimestre, leads bons vão para outro e 'não fazia sentido' vira resposta padrão."
+      },
+      {
+        context: "Eles pedem acesso a dados de clientes para 'melhorar a experiência conjunta'.",
+        speech: "Parceiro: É só para personalizar. Nada de lista fria. A gente trata dado como vocês tratariam.",
+        ask: "O ponto cego dessa garantia verbal é:",
+        options: [
+          "Não há ponto cego — confiança basta",
+          "Sem definição de finalidade, retenção e auditoria, 'como vocês tratariam' é incomparável e inaplicável",
+          "Eles querem roubar a base na hora",
+          "É só um teste de amizade"
+        ],
+        correct: 1,
+        explain: "Em parceria de dados, analogia cultural não substitui governança. A interpretação madura exige escopo escrito, não metáfora.",
+        consequence: "Você libera acesso amplo. Depois não consegue auditar uso nem provar desvio."
+      },
+      {
+        context: "Quando você propõe cláusula de saída com aviso de 90 dias, o clima muda pela primeira vez.",
+        speech: "Parceiro: Claro, claro… só que 90 dias trava investimento de verdade. Quem acredita na parceria não fica com a mão na maçaneta.",
+        ask: "A pressão moral esconde:",
+        options: [
+          "Um pedido legítimo de compromisso simétrico e só isso",
+          "Tentativa de tornar a saída politicamente cara — assimetria de risco a favor deles",
+          "Que eles vão sair em 30 dias",
+          "Que a cláusula é ilegal"
+        ],
+        correct: 1,
+        explain: "Transformar mecanismo de saída em falta de fé é tática. Parceria séria tolera porta de saída clara dos dois lados.",
+        consequence: "Você retira a cláusula por receio de parecer desconfiado. O risco fica só com você."
+      },
+      {
+        context: "O advogado deles 'brinca' na call.",
+        speech: "Advogado do parceiro: Relaxa, a gente não processa parceiro. Só cliente. [risos]",
+        ask: "Como tratar essa 'piada'?",
+        options: [
+          "Rir e seguir — é só humor de call",
+          "Sinal social de que litígio entre partes foi considerado e normalizado no lado deles — redobrar precisão contratual",
+          "Encerrar a negociação na hora",
+          "Pedir desculpas por ter sido formal demais"
+        ],
+        correct: 1,
+        explain: "Humor sobre processo revela repertório. Não é ofensa; é dado. A resposta é técnica, não emocional.",
+        consequence: "Você ri e afrouxa. O contrato fica com ambiguidades que o time jurídico deles conhece de cor."
+      },
+      {
+        context: "Fechamento verbal. O diretor do parceiro resume.",
+        speech: "Parceiro: Então estamos alinhados no essencial. Os detalhes o jurídico polishes. Pode celebrar com o time.",
+        ask: "O risco interpretativo do 'essencial' vs 'detalhes' é:",
+        options: [
+          "Nenhum — o essencial já basta para operar",
+          "O que eles chamam de detalhe (SLA, multa, dados, saída) pode ser o que define se a parceria é boa ou ruinosa",
+          "Que o jurídico vai melhorar tudo a seu favor",
+          "Que você já pode anunciar exclusividade ao mercado"
+        ],
+        correct: 1,
+        explain: "Separar 'essencial' de 'detalhe' cedo demais empurra o poder para quem redige o anexo. Celebre depois da assinatura, não do aperto de mão.",
+        consequence: "Você comunica vitória interna. O anexo chega pior do que o combinado e a equipe já estava mobilizada."
+      },
+      {
+        context: "Sua CFO, no debrief interno, é seca.",
+        speech: "CFO: Eles foram charmosos. Charmoso não aparece no DRE. Me mostra onde está o downside se o volume não vier.",
+        ask: "O que ela exige de você como leitor da negociação?",
+        options: [
+          "Que você defenda o parceiro",
+          "Traduzir o subtexto da mesa em risco financeiro explícito — não só o upside narrado",
+          "Que cancele a parceria",
+          "Que ignore o tom e foque só no carisma do deal"
+        ],
+        correct: 1,
+        explain: "Fase 5: interpretação de fala externa vira input de risco interno. Charm sem downside mapeado é falha de leitura executiva.",
+        consequence: "Você entrega só o upside. A CFO bloqueia ou aprova no escuro — os dois são ruins."
+      },
+      {
+        context: "Última mensagem do parceiro antes do contrato.",
+        speech: "Parceiro: Confio em vocês. Se algo emperrar no jurídico, me liga direto — a gente resolve entre líderes, sem formalizar demais.",
+        ask: "Essa oferta de 'resolver entre líderes' deve ser lida como:",
+        options: [
+          "Eficiência saudável sempre preferível ao jurídico",
+          "Canal paralelo que pode contornar salvaguardas — útil com critério, perigoso como hábito",
+          "Ordem para dispensar o jurídico",
+          "Sinal de que o contrato é só teatro"
+        ],
+        correct: 1,
+        explain: "Atalho entre líderes acelera e também enfraquece controles. Usar com consciência; não como regra.",
+        consequence: "Você normaliza o atalho. Decisões materiais ficam só no WhatsApp e o risco institucional sobe."
+      }
+    ]
+  },
+  {
+    id: "crise-reputacao",
+    emoji: "📰",
+    title: "Fase 5 — Crise de reputação",
+    sub: "Imprensa + redes + equipe · múltiplas audiências",
+    avatar: "🎤",
+    who: "Jornalista, clientes e time interno",
+    goal: "Ler cada audiência sem contradizer a outra (≥ 75%)",
+    minCorrect: 6,
+    winTitle: "Narrativa sob controle",
+    winText: "Você separou o que cada lado precisava ouvir — sem mentir e sem alimentar o fogo. A crise esfria com credibilidade intacta.",
+    loseTitle: "A narrativa escapou",
+    loseText: "Uma fala sua foi lida de um jeito numa sala e de outro na timeline. Em crise, interpretação errada de audiência vira segundo incêndio.",
+    secretTitle: "Lei da crise",
+    secretText: "«O que acalma o investidor pode revoltar o time. O que acalma o time pode virar manchete. Ler a sala é metade do cargo.»",
+    requires: "parceiro-estrategico",
+    unlockHint: "Conclua a negociação com o parceiro estratégico",
+    careerPhase: 5,
+    questions: [
+      {
+        context: "Vaza nas redes que um cliente grande teve dados expostos por falha em integração com parceiro. Jornalista liga.",
+        speech: "Jornalista: Vocês confirmam a violação e quantos usuários foram afetados? Sim ou não — o público merece clareza.",
+        ask: "A armadilha da formulação é:",
+        options: [
+          "Não há armadilha — basta responder sim ou não",
+          "Ela força binário antes dos fatos fechados e ainda amarra 'violação' como premissa — responder no enquadre dela solidifica a manchete",
+          "É só pedido neutro de transparência",
+          "Você deve recusar qualquer entrevista para sempre"
+        ],
+        correct: 1,
+        explain: "Pergunta carregada + pressa = controle da narrativa por quem pergunta. Clareza não exige aceitar a premissa intacta.",
+        consequence: "Você diz 'sim' no enquadre dela. A manchete ignora o restante da frase."
+      },
+      {
+        context: "Internamente, a equipe de vendas pede orientação no chat.",
+        speech: "Juliana: Cliente ligando sem parar. O que eu posso falar sem piorar — e sem parecer que estou escondendo?",
+        ask: "O que a equipe precisa de você, além de um script?",
+        options: [
+          "Só a proibição de falar com a imprensa",
+          "Limites claros do que é fato confirmado + permissão para admitir incerteza sem improvisar culpa",
+          "Um texto longo para colar em todos os clientes",
+          "Ordem de não atender o telefone"
+        ],
+        correct: 1,
+        explain: "Em crise, vendedor teme mentir e teme vacilar. O gestor interpreta esse medo e entrega moldura, não só silêncio.",
+        consequence: "Você manda 'não comentem'. Cada um inventa uma versão. O ruído interno vaza."
+      },
+      {
+        context: "A CEO quer uma nota pública em 40 minutos.",
+        speech: "CEO: Preciso de algo que mostre controle. Sem juridiquês que parece fuga — e sem confissão que o jurídico não bancou.",
+        ask: "O equilíbrio que ela pede é:",
+        options: [
+          "Tom emocional máximo para humanizar",
+          "Responsabilidade proporcional ao que já é verificável — empatia sem admissão jurídica prematura",
+          "Negação total de qualquer problema",
+          "Culpar publicamente o parceiro na primeira nota"
+        ],
+        correct: 1,
+        explain: "Crise executiva = calibrar verdade disponível. Nem vazio, nem overclaim. Essa é a leitura difícil.",
+        consequence: "Você escolhe um dos extremos. Ou a empresa parece fria, ou assume o que ainda não pode sustentar."
+      },
+      {
+        context: "Um cliente âncora manda e-mail só para você.",
+        speech: "Cliente: Eu não quero PR. Quero saber se os *meus* dados estão no pacote e o que vocês fazem nas próximas 24h. Resposta direta.",
+        ask: "Diferença crítica entre essa fala e a do jornalista:",
+        options: [
+          "Nenhuma — ambos querem o mesmo",
+          "Ele prioriza status pessoal + plano temporal; generalizar como na imprensa quebra a confiança bilateral",
+          "Ele quer desconto",
+          "É armadilha para processar"
+        ],
+        correct: 1,
+        explain: "Mesma crise, audiências diferentes. Tratar cliente âncora com boilerplate de imprensa é falha de interpretação de vínculo.",
+        consequence: "Você cola o press release. O cliente se sente número e escala para o jurídico dele."
+      },
+      {
+        context: "Nas redes, um ex-funcionário comenta com alcance.",
+        speech: "Ex-funcionário: 'Surpresa zero. Priorizavam crescimento em cima de base frágil. Eu avisei.'",
+        ask: "A resposta institucional mais inteligente à provocação é:",
+        options: [
+          "Refutar ponto a ponto na thread",
+          "Não amplificar o indivíduo; tratar o tema sistêmico nos canais oficiais com fatos, sem duelo pessoal",
+          "Processar imediatamente o ex-funcionário",
+          "Ignorar totalmente inclusive o tema técnico"
+        ],
+        correct: 1,
+        explain: "Duelo com ex-funcionário vira segundo ato da crise. Interpretar o efeito de plateia importa mais que o ego.",
+        consequence: "Você responde na thread. O post ganha 10x de alcance e a marca parece frágil."
+      },
+      {
+        context: "No war room, o jurídico e o comercial divergem.",
+        speech: "Jurídico: Qualquer 'sentimos muito pelo ocorrido' pode ser lido como admissão. Comercial: Sem empatia a gente perde a conta âncora hoje.",
+        ask: "Sua mediação precisa ler o conflito como:",
+        options: [
+          "Jurídico sendo burocrático demais",
+          "Tensão real entre risco legal e risco relacional — exige formulação que carregue cuidado sem fechar tipicidade",
+          "Comercial querendo mentir",
+          "Problema insolúvel; escolha um lado e ponto"
+        ],
+        correct: 1,
+        explain: "Fase 5: interpretar dois corretos em colisão. A saída é linguagem testada, não vitória de área.",
+        consequence: "Você impõe um lado. O outro área sabota o cumprimento ou a relação."
+      },
+      {
+        context: "André, no fim do dia, pergunta em privado.",
+        speech: "André: Sinceramente — você acha que a gente merecia essa crise, ou foi azar de parceiro?",
+        ask: "O que ele está testando?",
+        options: [
+          "Se você vai culpar o parceiro para se proteger",
+          "Sua capacidade de accountability calibrada: dono do que é nosso, sem autoflagelação nem fuga",
+          "Se você quer o cargo dele",
+          "Só um desabafo sem peso"
+        ],
+        correct: 1,
+        explain: "Pergunta íntima de líder em crise mede maturidade moral e política. Extremos (culpa total / zero culpa) preocupam.",
+        consequence: "Você escolhe um extremo. André recalibra a confiança na sua leitura de responsabilidade."
+      },
+      {
+        context: "Três dias depois, a curva de menções cai. A CEO pergunta:",
+        speech: "CEO: Podemos voltar ao normal ou ainda estamos em modo frágil?",
+        ask: "A resposta de quem leu a crise até o fim:",
+        options: [
+          "Normal total — crise acabou",
+          "Operação segue com monitoramento e restrições de fala até os fatos e o cliente âncora estabilizarem — 'silêncio nas redes' ≠ 'resolvido'",
+          "Manter war room para sempre",
+          "Anunciar que nunca houve crise"
+        ],
+        correct: 1,
+        explain: "Queda de menção é métrica de atenção, não de resolução. Interpretação avançada separa as duas.",
+        consequence: "Você declara normalidade cedo. Um fato novo reabre tudo com menos credibilidade."
+      }
+    ]
+  },
+  {
+    id: "conselho-final",
+    emoji: "⚖️",
+    title: "Fase 5 — Conselho e trilha executiva",
+    sub: "Avaliação para o próximo nível · leitura sob escrutínio",
+    avatar: "🤵",
+    who: "Conselho e CEO",
+    goal: "Sustentar leitura sofisticada sob avaliação (≥ 75%)",
+    minCorrect: 6,
+    winTitle: "Trilha executiva aberta",
+    winText: "O conselho viu em você alguém que lê o não dito em mesa de poder, crise e parceria. A Fase 5 está concluída — você entra no radar de direção ampliada.",
+    loseTitle: "Ainda não convenceu o conselho",
+    loseText: "Sob escrutínio, algumas leituras ficaram rasas ou defensivas. Há caminho de recuperação se você demonstrar evolução deliberada.",
+    secretTitle: "Veredito silencioso",
+    secretText: "«Conselho não testa só o que você decide. Testa se você percebe o jogo enquanto está dentro dele.»",
+    requires: "crise-reputacao",
+    unlockHint: "Conclua a crise de reputação",
+    careerPhase: 5,
+    questions: [
+      {
+        context: "Sessão de avaliação. Um conselheiro começa sem rodeios.",
+        speech: "Conselheiro: Em uma frase, o que você aprendeu sobre poder nestes últimos ciclos que não aprendeu vendendo?",
+        ask: "O que uma resposta de alto nível precisa conter?",
+        options: [
+          "Lista de técnicas de fechamento de vendas",
+          "Reconhecimento de que poder opera por implícito, coalizão e tempo — não só por argumento correto",
+          "Elogio à cultura da empresa",
+          "Pedido de promoção na primeira frase"
+        ],
+        correct: 1,
+        explain: "A pergunta separa operador comercial de leitor político. Resposta tática de vendas soará estreita.",
+        consequence: "Você responde com meta e pipeline. O conselho marca teto de papel, não de liderança ampliada."
+      },
+      {
+        context: "A CEO reformula.",
+        speech: "CEO: Me conta uma decisão sua que estava certa no mérito e mesmo assim foi mal executada politicamente.",
+        ask: "Por que essa pergunta é difícil de responder bem?",
+        options: [
+          "Porque não existe decisão assim",
+          "Porque exige auto-crítica de processo político sem invalidar o mérito — equilíbrio raro sob avaliação",
+          "Porque ela quer um culpado na equipe",
+          "Porque é pegadinha sem resposta possível"
+        ],
+        correct: 1,
+        explain: "Avaliação executiva busca metacognição. Só mérito ou só culpa não bastam; precisa do ângulo político.",
+        consequence: "Você nega ter errado politicamente. Parece falta de introspecção."
+      },
+      {
+        context: "Outro conselheiro cita a parceria.",
+        speech: "Conselheiro: Vocês quase assinaram prioridade 'de fato'. O que isso te ensinou sobre linguagem de acordo?",
+        ask: "A resposta que demonstra leitura avançada:",
+        options: [
+          "Que parceiros são sempre desonestos",
+          "Que formulação vaga é alocação de poder — e que celebrar alinhamento cedo demais cede esse poder",
+          "Que jurídico atrapalha negócio",
+          "Que o problema foi só o advogado deles"
+        ],
+        correct: 1,
+        explain: "Eles testam se o aprendizado foi estrutural (linguagem = poder) ou anedótico (culpar a outra parte).",
+        consequence: "Você personaliza o erro. O conselho não vê princípio transferível."
+      },
+      {
+        context: "Pergunta sobre a crise.",
+        speech: "Conselheiro: Na crise, você priorizou cliente âncora, imprensa ou time? Em que ordem — e o que sacrificou?",
+        ask: "O que está sendo avaliado?",
+        options: [
+          "Se você sabe a ordem 'certa' universal",
+          "Se você consegue explicitar trade-offs sob múltiplas audiências sem fingir que atendeu a todos 100%",
+          "Se você culpou a imprensa",
+          "Se você seguiu o manual de PR à risca"
+        ],
+        correct: 1,
+        explain: "Não há ordem mágica. Há clareza de trade-off. Fingir harmonia total com todas as audiências soará ingenuidade.",
+        consequence: "Você diz que atendeu a todos igualmente. O conselho duvida da profundidade da experiência."
+      },
+      {
+        context: "Tom mais pessoal.",
+        speech: "CEO: Tem gente boa no seu time que pode estar pronta para o seu lugar. Como você lê isso — ameaça ou saúde do sistema?",
+        ask: "A postura executiva madura é:",
+        options: [
+          "Negar que alguém esteja pronto",
+          "Tratar sucessão como saúde institucional — e mostrar o que você faz para desenvolver sem se tornar gargalo",
+          "Pedir para transferir os fortes para outra área",
+          "Interpretar como aviso de demissão iminente"
+        ],
+        correct: 1,
+        explain: "Líder que só se protege do sucessor limita a organização. Conselho valoriza quem amplia capacidade.",
+        consequence: "Você soa possessivo com o cargo. A trilha executiva estreita."
+      },
+      {
+        context: "Conselheiro cético:",
+        speech: "Conselheiro: Tudo que você descreveu depende de 'ler o implícito'. E se você estiver só sendo político demais e pouco decisivo?",
+        ask: "Como responder à acusação de excesso de política?",
+        options: [
+          "Insistir que política não existe na empresa",
+          "Separar: interpretação informa a decisão; não a substitui — e dar exemplo em que você decidiu com custo explícito",
+          "Concordar que deve decidir no impulso",
+          "Atacar a premissa do conselheiro"
+        ],
+        correct: 1,
+        explain: "A crítica é legítima. Resposta avançada mostra que ler não é adiar: é decidir com mapa.",
+        consequence: "Você fica só na defesa da escuta. Parece indeciso em ambiente que cobra corte."
+      },
+      {
+        context: "Fechamento da sessão.",
+        speech: "CEO: Vamos deliberar. Independente do resultado, o padrão de atenção que você trouxe à mesa é o tipo de coisa que a gente nota — e que falta em muita gente competente.",
+        ask: "Essa fala deve ser lida como:",
+        options: [
+          "Promessa quase certa de promoção",
+          "Reconhecimento real do atributo (interpretação) sem pré-compromisso de resultado — cortesia substantiva, não garantia",
+          "Sinal de que você foi eliminado",
+          "Pressão para você não buscar outras oportunidades"
+        ],
+        correct: 1,
+        explain: "Elogio de atributo ≠ decisão de cargo. Leitura madura agradece o padrão e tolera a incerteza do veredito.",
+        consequence: "Você age como se já tivesse o cargo. Qualquer 'não por agora' vira crise pessoal desnecessária."
+      },
+      {
+        context: "André te encontra na saída.",
+        speech: "André: Independentemente do que o conselho decidir, eu quero que você continue treinando a equipe a ouvir o que não é dito. Isso escalou com você — e não pode morrer no seu cargo.",
+        ask: "A mensagem de fundo é:",
+        options: [
+          "Que a decisão já foi negativa",
+          "Que o valor da interpretação precisa virar cultura, não dependência de uma pessoa — legado de liderança",
+          "Que você deve se desligar da equipe",
+          "Só conversa de corredor sem peso"
+        ],
+        correct: 1,
+        explain: "Escalar habilidade para o sistema é o passo além da Fase 4/5 individual. André aponta o próximo horizonte.",
+        consequence: "Você ouve só o lado pessoal. Perde o convite implícito a construir capacidade coletiva."
+      }
+    ]
+  },
+  {
+    id: "conselho-recuperacao",
+    emoji: "📋",
+    title: "Fase 5 — Recuperação no conselho",
+    sub: "Segunda conversa após avaliação incompleta",
+    avatar: "🤵",
+    who: "CEO e conselheiro",
+    goal: "Reabrir a trilha com diagnóstico honesto (≥ 75%)",
+    minCorrect: 5,
+    winTitle: "Trilha reaberta",
+    winText: "O conselho aceita um ciclo de mentoria executiva e nova demonstração. A porta não se fechou — ficou condicional.",
+    loseTitle: "Ainda sem convicção do conselho",
+    loseText: "Faltou profundidade no diagnóstico ou no plano. Você pode tentar de novo quando a leitura estiver mais afiada.",
+    secretTitle: "Nota do conselho",
+    secretText: "«Quem nomeia o próprio ponto cego sob avaliação ganha tempo. Quem só defende o passado perde o corredor.»",
+    requires: "conselho-final",
+    requiresFail: true,
+    unlockHint: "Disponível se a avaliação no conselho não atingir a harmonia mínima",
+    careerPhase: 5,
+    questions: [
+      {
+        context: "CEO retoma o tema com calma.",
+        speech: "CEO: O conselho não viu inconsistência de caráter. Viu teto de leitura em algumas mesas. O que você enxerga nesse feedback?",
+        ask: "Resposta que reabre jogo:",
+        options: [
+          "Que o conselho errou a avaliação",
+          "Aceitar o teto como hipótese de trabalho e localizar em quais tipos de mesa a leitura falhou",
+          "Pedir para repetir a mesma sessão igual",
+          "Culpar o nervosismo apenas"
+        ],
+        correct: 1,
+        explain: "Tratar feedback como mapa > como ofensa. Localizar o tipo de falha mostra metacognição.",
+        consequence: "Você contesta o veredito. A conversa vira litígio e a porta estreita."
+      },
+      {
+        context: "Conselheiro observa.",
+        speech: "Conselheiro: Em parceria, você oscilou entre confiança e formalismo. Onde estava o ponto cego?",
+        ask: "Autoavaliação avançada:",
+        options: [
+          "Não houve ponto cego",
+          "Ter subestimado como linguagem vaga aloca risco — e ter celebrado alinhamento antes do texto",
+          "O jurídico foi o problema",
+          "O parceiro mentiu e ponto"
+        ],
+        correct: 1,
+        explain: "Eles querem o princípio, não o vilão. Ponto cego nomeado = material de desenvolvimento.",
+        consequence: "Você externaliza 100%. Não há gancho de mentoria."
+      },
+      {
+        context: "Sobre crise.",
+        speech: "CEO: Na crise, houve momento em que a audiência ditou demais a sua fala?",
+        ask: "Leitura honesta típica de quem evolui:",
+        options: [
+          "Nunca — mantive o mesmo discurso em todos os canais",
+          "Sim: calibrar por audiência é necessário, e o risco é contradizer valores centrais ou fatos entre canais",
+          "A imprensa controlou tudo e eu só reagimos",
+          "O time interno exagerou o medo"
+        ],
+        correct: 1,
+        explain: "Admitir o tensionamento audiência vs. coerência é sofisticação. Negar o tensionamento parece rigididez ou denegação.",
+        consequence: "Você nega qualquer tensão. A CEO duvida da reflexão pós-crise."
+      },
+      {
+        context: "Plano.",
+        speech: "CEO: Em 90 dias, o que muda na sua forma de entrar em mesa de poder?",
+        ask: "Plano crível inclui:",
+        options: [
+          "Só ler mais livros de liderança",
+          "Práticas observáveis: pausa antes de defender, memo de riscos antes de celebrar, debrief político após mesas-chave",
+          "Evitar comitês por um tempo",
+          "Falar menos em todas as reuniões"
+        ],
+        correct: 1,
+        explain: "Comportamentos observáveis > intenções. Conselho compra hábito, não slogan.",
+        consequence: "Você promete 'ser mais estratégico'. Sem prática, não há como avaliar."
+      },
+      {
+        context: "Mentoria.",
+        speech: "CEO: Posso te colocar com alguém que já quebrou a cara em comitê e aprendeu. É exposição, não troféu. Topa?",
+        ask: "Interpretação correta da oferta:",
+        options: [
+          "Castigo disfarçado",
+          "Capital de desenvolvimento com custo de ego — aceitar é sinal de prontidão, não de fraqueza",
+          "Formalidade sem valor",
+          "Pré-aviso de saída"
+        ],
+        correct: 1,
+        explain: "Mentoria executiva pós-gap é investimento seletivo. Recusar por orgulho fecha o ciclo.",
+        consequence: "Você hesita. A CEO interpreta teto de aprendibilidade."
+      },
+      {
+        context: "Fecho.",
+        speech: "Conselheiro: A gente não precisa de alguém que nunca erra a leitura. Precisa de alguém que percebe rápido quando errou.",
+        ask: "O padrão que estão descrevendo é:",
+        options: [
+          "Perfeição interpretativa",
+          "Correção de curso consciente — meta-habilidade acima da leitura pontual",
+          "Obediência ao conselho",
+          "Velocidade de fala em reunião"
+        ],
+        correct: 1,
+        explain: "É a definição de maturidade em Fase 5: não só acertar, mas detectar o próprio erro de leitura a tempo.",
+        consequence: "Você ouve como exigência de nunca errar. A ansiedade piora a próxima mesa."
+      },
+      {
+        context: "CEO se levanta.",
+        speech: "CEO: Vai. Volta com evidência de hábito, não com discurso novo. A trilha continua aberta enquanto houver aprendizado visível.",
+        ask: "Condição da trilha:",
+        options: [
+          "Promoção automática em 90 dias",
+          "Aprendizado observável como critério contínuo — não um evento único de avaliação",
+          "Fim do acompanhamento",
+          "Transferência de área"
+        ],
+        correct: 1,
+        explain: "A porta é processo, não porta de evento. Evidência de hábito sustenta a narrativa de prontidão.",
+        consequence: "Você trata como prazo de promoção. No dia 91, a frustração é previsível."
+      }
+    ]
+  },
+  {
+    id: "mentor-executivo",
+    emoji: "🎯",
+    title: "Mentoria executiva",
+    sub: "Leitura de poder, crise e linguagem de acordo",
+    avatar: "🧠",
+    who: "Mentor executivo",
+    goal: "Afinar interpretação sob ambiguade alta (≥ 75%)",
+    minCorrect: 5,
+    winTitle: "Mentoria executiva concluída",
+    winText: "Você treinou as zonas cegas de comitê, parceria e crise. Liberado para a segunda demonstração no nível Fase 5.",
+    loseTitle: "Mentoria ainda incompleta",
+    loseText: "As zonas de ambiguidade ainda geram leitura rasa. Refaça antes da segunda demonstração.",
+    secretTitle: "Máxima do mentor",
+    secretText: "«Se duas leituras são plausíveis, a pergunta útil não é qual é a simpática — é qual sobrevive ao pior cenário.»",
+    requires: "conselho-recuperacao",
+    unlockHint: "Conclua a recuperação no conselho",
+    careerPhase: 5,
+    questions: [
+      {
+        context: "Mentor projeta a fala da CFO no comitê.",
+        speech: "Mentor: 'Os números fecham no papel.' — Quantas leituras competem aqui?",
+        ask: "A disciplina correta é:",
+        options: [
+          "Escolher a leitura mais otimista",
+          "Listar leituras concorrentes e testar qual se sustenta com o histórico e o interesse de quem fala",
+          "Ignorar a frase e focar no plano",
+          "Assumir sempre má-fé"
+        ],
+        correct: 1,
+        explain: "Ambiguidade alta exige hipóteses múltiplas + teste, não intuição única.",
+        consequence: "Você ancora na primeira leitura. O restante da mesa opera em outra."
+      },
+      {
+        context: "Sobre parceria.",
+        speech: "Mentor: Quando alguém eleva 'confiança' e rebaixa 'papel', qual pergunta você faz em silêncio?",
+        ask: "Pergunta-guia:",
+        options: [
+          "'Como faço para parecer mais confiante?'",
+          "'Que risco específico eles querem manter fora do texto — e eu aceito isso conscientemente?'",
+          "'Como encerro a reunião mais rápido?'",
+          "'Quem é o advogado deles?'"
+        ],
+        correct: 1,
+        explain: "A pergunta força o trade-off explícito. Sem ela, você 'confia' no vazio.",
+        consequence: "Você não formula o risco. O contrato herda a ambiguidade."
+      },
+      {
+        context: "Crise e audiências.",
+        speech: "Mentor: Você pode acertar o tom com o cliente e errar o tom com a imprensa no mesmo fato. O que isso exige?",
+        ask: "Capacidade central:",
+        options: [
+          "Um único discurso para todos",
+          "Mapa de audiência: mesmo núcleo factual, ênfases e limites diferentes sem contradição verificável",
+          "Priorizar sempre a imprensa",
+          "Não falar com ninguém até a crise passar"
+        ],
+        correct: 1,
+        explain: "Coerência factual + adaptação de ênfase. Não é mentir; é não tratar todas as salas como iguais.",
+        consequence: "Discurso único rígido ou discursos contraditórios — os dois destroem."
+      },
+      {
+        context: "Poder e pausa.",
+        speech: "Mentor: Por que devolver uma pergunta no comitê pode ser mais forte do que responder na hora?",
+        ask: "Mecanismo:",
+        options: [
+          "Para parecer inteligente",
+          "Porque força quem criticou a especificar o critério — e evita defesa prematura que soa frágil",
+          "Para ganhar tempo e mudar de assunto",
+          "Porque conselheiros odeiam respostas diretas"
+        ],
+        correct: 1,
+        explain: "Pausa + pergunta devolve o ônus da precisão a quem generalizou a crítica.",
+        consequence: "Você defende rápido. A crítica genérica fica no ar como se fosse fato."
+      },
+      {
+        context: "Trade-off.",
+        speech: "Mentor: Conselheiro te acusou de ser 'político demais'. Qual evidência neutraliza isso?",
+        ask: "Evidência forte:",
+        options: [
+          "Dizer que não gosta de política",
+          "Caso em que você decidiu com custo explícito após ter mapeado o implícito — leitura a serviço do corte, não da indecisão",
+          "Listar quantas reuniões você falou pouco",
+          "Culpar a cultura da empresa"
+        ],
+        correct: 1,
+        explain: "Política sem decisão = parálise. Decisão informada pela leitura = maturidade.",
+        consequence: "Sem exemplo de corte, a acusação gruda."
+      },
+      {
+        context: "Meta-habilidade.",
+        speech: "Mentor: O conselho disse que prefere quem detecta o próprio erro de leitura. Como se treina isso?",
+        ask: "Prática concreta:",
+        options: [
+          "Nunca admitir erro em público",
+          "Debrief curto após mesas-chave: 'que hipótese eu privilegiei e que sinal eu ignorei?'",
+          "Pedir feedback apenas quando for promovido",
+          "Gravar todas as reuniões sem consentimento"
+        ],
+        correct: 1,
+        explain: "Hábito de revisão de hipóteses. É o músculo da Fase 5.",
+        consequence: "Sem debrief, os mesmos pontos cegos se repetem com mais elegância."
+      },
+      {
+        context: "Encerramento.",
+        speech: "Mentor: Você não está treinando para nunca ser enganado. Está treinando para perceber mais cedo quando a leitura ficou cômoda demais.",
+        ask: "O horizonte da Fase 5 é:",
+        options: [
+          "Onisciência social",
+          "Vigilância epistêmica: conforto da leitura como sinal de alerta, não como validação",
+          "Desconfiança permanente de todos",
+          "Falar sempre por último"
+        ],
+        correct: 1,
+        explain: "Conforto demais = possível ponto cego. Essa é a interpretação mais difícil: duvidar da própria certeza.",
+        consequence: "Você busca certeza absoluta. Em ambiguidade real, trava ou simplifica demais."
+      }
+    ]
+  },
+  {
+    id: "fase5-demonstracao",
+    emoji: "♟️",
+    title: "Fase 5 — Segunda demonstração",
+    sub: "Comitê + crise + conselho · após mentoria",
+    avatar: "🏛️",
+    who: "Mesa de poder",
+    goal: "Provar hábito de leitura sob ambiguidade (≥ 75%)",
+    minCorrect: 6,
+    winTitle: "Fase 5 concluída",
+    winText: "Você sustentou leituras difíceis em sequência. O conselho registra evolução real. Trilha executiva consolidada — novos desafios virão quando a história da Nova Horizonte continuar.",
+    loseTitle: "Demonstração incompleta",
+    loseText: "Ainda há oscilação sob ambiguidade. Revise a mentoria e tente a demonstração de novo.",
+    secretTitle: "Registro final da Fase 5",
+    secretText: "«Da entrevista ao conselho, o fio foi o mesmo: a harmonia começa quando o implícito deixa de ser ruído — e o líder deixa de fingir que só existe o texto.»",
+    requires: "mentor-executivo",
+    unlockHint: "Conclua a mentoria executiva",
+    careerPhase: 5,
+    questions: [
+      {
+        context: "Novo comitê. CFO repete o padrão: silêncio longo, depois uma frase seca.",
+        speech: "CFO: Dessa vez o churn melhorou. O risco agora é outro: execução no prazo com o mesmo time.",
+        ask: "Mudança de eixo — o que ela está fazendo?",
+        options: [
+          "Aprovando o plano sem ressalvas",
+          "Deslocando o veto para capacidade operacional — novo critério, mesmo método de oposição indireta",
+          "Elogando sua gestão de churn",
+          "Pedindo demissão de alguém da operação"
+        ],
+        correct: 1,
+        explain: "Mesmo estilo, novo critério. Leitor avançado atualiza o mapa em vez de reagir ao fantasma do veto anterior.",
+        consequence: "Você responde como se fosse o churn de novo. Fora de sintonia com a mesa."
+      },
+      {
+        context: "Parceiro antigo tenta reabrir formulação vaga.",
+        speech: "Parceiro: Depois de tudo que passamos, acho que a gente já pode operar mais no espírito e menos no anexo.",
+        ask: "Resposta alinhada à Fase 5:",
+        options: [
+          "Concordar — a relação amadureceu",
+          "Preservar o que a crise e o jurídico ensinaram: espírito não substitui critério escrito nas zonas que já doeram",
+          "Encerrar a parceria",
+          "Aceitar e esconder do jurídico"
+        ],
+        correct: 1,
+        explain: "Relação boa ≠ desaprendizado. Zonas que já geraram dor permanecem formais.",
+        consequence: "Você afrouxa. O mesmo tipo de conflito volta com menos desculpa."
+      },
+      {
+        context: "Sinal fraco de crise: um post isolado, tom acusatório, baixo alcance.",
+        speech: "Analista de marca: Quer que a gente responda ou ignore? Está pequeno ainda.",
+        ask: "Critério avançado:",
+        options: [
+          "Sempre responder para mostrar controle",
+          "Avaliar verificabilidade da acusação + risco de amplificação + alinhamento com fatos já públicos — tamanho não é o único eixo",
+          "Sempre ignorar posts pequenos",
+          "Apagar e processar"
+        ],
+        correct: 1,
+        explain: "Alcance baixo pode ser faísca. O filtro é substância e trajetória, não só vanity métrica.",
+        consequence: "Você ignora por ser pequeno. O post encontra combustível e você entra atrasado."
+      },
+      {
+        context: "No conselho, perguntam de novo sobre sucessão.",
+        speech: "Conselheiro: Quem no seu time já aguenta uma mesa como esta com você na sala — e sem você?",
+        ask: "Demonstração de maturidade:",
+        options: [
+          "Dizer que ninguém ainda",
+          "Nomear com nuances: quem aguenta com suporte vs. quem já carrega sozinho — e o plano de exposição gradual",
+          "Indicar só quem não ameaça seu cargo",
+          "Mudar de assunto para números"
+        ],
+        correct: 1,
+        explain: "Mapa de prontidão honesto. Proteção de ego é legível para conselho experiente.",
+        consequence: "Resposta possessiva ou vaga. Marca teto de liderança de líderes."
+      },
+      {
+        context: "CEO testa a meta-habilidade.",
+        speech: "CEO: Me conta um momento recente em que sua primeira leitura estava errada e você corrigiu a tempo.",
+        ask: "O que valida a resposta?",
+        options: [
+          "Inventar um erro inofensivo",
+          "Caso real: hipótese inicial, sinal que a invalidou, ajuste de curso e efeito — prova do músculo de correção",
+          "Dizer que não errou nenhuma leitura",
+          "Culpar a falta de informação apenas"
+        ],
+        correct: 1,
+        explain: "Eles querem evidência do radar de erro, não perfeição.",
+        consequence: "Sem caso real, a mentoria parece não ter colado."
+      },
+      {
+        context: "CHRO provoca com leveza calculada.",
+        speech: "CHRO: Você ficou mais quieto nas últimas mesas. É estratégia ou insegurança?",
+        ask: "Leitura da provocação + resposta:",
+        options: [
+          "Ofensa — reagir na hora",
+          "Teste de autocompreensão: explicar a pausa como ferramenta (devolver pergunta, mapear) sem soar rígido nem frágil",
+          "Concordar que está inseguro",
+          "Ficar ainda mais quieto"
+        ],
+        correct: 1,
+        explain: "Pergunta binária armada. Resposta avançada recusa o binário e nomeia o método.",
+        consequence: "Você cai no binário. A impressão gruda."
+      },
+      {
+        context: "André, no debrief final.",
+        speech: "André: Do ponto de vista de quem te viu vender, gerir e agora navegar mesa alta — o fio condutor foi sempre o mesmo. Só o preço do erro que mudou.",
+        ask: "Essa síntese significa:",
+        options: [
+          "Que nada evoluiu",
+          "Que a competência central (interpretação do implícito) se manteve e a complexidade do tabuleiro aumentou — validação da trilha inteira",
+          "Que você deveria voltar a só vender",
+          "Que a Fase 5 foi desnecessária"
+        ],
+        correct: 1,
+        explain: "É o arco completo: mesma habilidade, stakes maiores. Reconhecer o fio é fechar a Fase 5 com coerência.",
+        consequence: "Você trata como conversa de elevador e perde o fechamento simbólico do percurso."
+      },
+      {
+        context: "CEO encerra com a mesma sobriedade da primeira avaliação.",
+        speech: "CEO: Pode seguir. Quando a próxima crise ou o próximo comitê vier, eu espero o mesmo padrão — com menos tempo de reação. O jogo só acelera.",
+        ask: "O mandato implícito é:",
+        options: [
+          "Fim de qualquer escrutínio",
+          "Continuidade sob expectativa de velocidade maior de leitura e correção — a Fase 5 não 'termina' o aprendizado",
+          "Promoção imediata anunciada amanhã",
+          "Aviso de que virá demissão na próxima falha"
+        ],
+        correct: 1,
+        explain: "Porta aberta + régua sobe. Interpretação final: sucesso é permissão para enfrentar ambiguidade mais rápida, não descanso.",
+        consequence: "Você relaxa o hábito. A próxima mesa chega mais rápida do que a sua leitura."
       }
     ]
   }
@@ -3482,10 +4387,18 @@ const NEXT_PHASE = {
   "gerente-equipe": "gerente-feedback",
   "gerente-feedback": "gerente-escalada",
   "gerente-escalada": "gerente-diretoria",
-  "gerente-diretoria": null, // fim ou recuperação
+  "gerente-diretoria": "comite-direcao", // avança à Fase 5 se passar
   "diretor-recuperacao": "mentor-lideranca",
   "mentor-lideranca": "gerente2",
-  "gerente2": null,
+  "gerente2": "comite-direcao",
+  // Fase 5
+  "comite-direcao": "parceiro-estrategico",
+  "parceiro-estrategico": "crise-reputacao",
+  "crise-reputacao": "conselho-final",
+  "conselho-final": null,
+  "conselho-recuperacao": "mentor-executivo",
+  "mentor-executivo": "fase5-demonstracao",
+  "fase5-demonstracao": null,
   // Mistério (cenários originais + sequências)
   "imprensa": "imprensa2",
   "rua": "rua2",
@@ -3498,6 +4411,7 @@ function getNextPhaseId(fromId, passed){
     // Caminhos de recuperação após falha
     if (fromId === "vendedor") return "supervisor-vendas";
     if (fromId === "gerente-diretoria") return "diretor-recuperacao";
+    if (fromId === "conselho-final") return "conselho-recuperacao";
     return null;
   }
   // Após passar vendas de primeira, pula direto para gerente
@@ -3559,6 +4473,10 @@ function endScenario(){
       extraHint = "<p style=\"margin-top:10px;padding:10px;border-radius:10px;background:rgba(255,210,63,.12);border:1px solid rgba(255,210,63,.35);color:var(--gold);font-size:13px\">📋 A diretoria quer um plano de recuperação. Volte ao menu e fale com André para defender sua gestão e liberar a mentoria.</p>";
     } else if (current.id === "mentor-lideranca"){
       extraHint = "<p style=\"margin-top:10px;padding:10px;border-radius:10px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.3);color:#c4b5fd;font-size:13px\">Refaça a mentoria para liberar a segunda janela de gestão.</p>";
+    } else if (current.id === "conselho-final"){
+      extraHint = "<p style=\"margin-top:10px;padding:10px;border-radius:10px;background:rgba(255,210,63,.12);border:1px solid rgba(255,210,63,.35);color:var(--gold);font-size:13px\">⚖️ O conselho deixou a trilha condicional. Volte ao menu e abra a recuperação para mentoria executiva.</p>";
+    } else if (current.id === "mentor-executivo"){
+      extraHint = "<p style=\"margin-top:10px;padding:10px;border-radius:10px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.3);color:#c4b5fd;font-size:13px\">Refaça a mentoria executiva antes da segunda demonstração.</p>";
     }
     card.innerHTML =
       "<div class=\"big\">💔</div>" +
