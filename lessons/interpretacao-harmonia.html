@@ -274,7 +274,7 @@
       <p>Escolha um <strong>cenário inicial</strong>. As próximas fases só aparecem aqui depois que você concluir a atual — avance pela trilha de carreira e pelo mistério passo a passo.</p>
       <p>Em cada um, alguém fala — e você precisa interpretar o que realmente quer dizer: intenção, tom e implícito.</p>
       <p>Acerte a leitura e a harmonia sobe. Erre e o <strong>objetivo daquele desafio</strong> fica ameaçado. Cada pergunta tem <strong>contagem regressiva</strong> — sob pressão, a interpretação precipitada custa caro.</p>
-      <p style="font-size:12.5px;color:var(--ink-soft)">Após a entrevista e a negociação, desbloqueie a <strong>Fase 3 — Vendas</strong> (10 clientes, meta 70%). Se falhar: supervisor → treinador → segunda chance. Passe e avance à <strong>Fase 4 — Gerente</strong> e depois à <strong>Fase 5 — Comitê</strong>: mesas de poder, parceiro estratégico, crise de reputação e conselho — interpretações mais ambíguas e custo de erro maior.</p>
+      <p style="font-size:12.5px;color:var(--ink-soft)">Trilha de carreira: entrevista → vendas → gerente → comitê. Trilha <strong>Moderação Pulse</strong>: 5 fases lendo posts e comentários para manter a harmonia; na Fase 5 a meta é <strong>7 acertos</strong> — se falhar, a plataforma se divide (Fase 6).</p>
 
       <div class="mystery-teaser">
         <strong>🔐 Segredo opcional:</strong> conclua os cinco cenários originais com harmonia e junte os fragmentos de um mistério escondido entre as falas.
@@ -3828,6 +3828,748 @@ const SCENARIOS = [
         consequence: "Você relaxa o hábito. A próxima mesa chega mais rápida do que a sua leitura."
       }
     ]
+  },
+  // ========== MODERADOR DE REDES — trilha Pulse Social ==========
+  {
+    id: "mod-1",
+    emoji: "🛡️",
+    title: "Moderação — Fase 1: Primeiros sinais",
+    sub: "Você é moderador(a) na Pulse Social · fila inicial",
+    avatar: "🧑‍💻",
+    who: "Usuários na fila de denúncias",
+    goal: "Ler o tom real dos posts e manter a harmonia básica (≥ 5/7)",
+    minCorrect: 5,
+    winTitle: "Fila sob controle",
+    winText: "Você separou irritação de ataque e opinião de ofensa. A timeline respira um pouco melhor.",
+    loseTitle: "Sinais mal lidos",
+    loseText: "Remoções erradas e liberação de tom agressivo aumentaram o ruído. A fila cresce — e a paciência da comunidade cai.",
+    secretTitle: "Manual interno · nota 1",
+    secretText: "«Nem todo CAPS é ódio. Nem todo “rs” é leveza. O contexto da thread pesa mais que a palavra isolada.»",
+    careerPhase: 1,
+    questions: [
+      {
+        context: "Post em grupo de futebol. Dois torcedores discutem o árbitro.",
+        speech: "Usuário A: ‘Esse juiz é um ladrão. Roubou o jogo de propósito. Gente assim não merece nem apitar pelada.’",
+        ask: "A leitura mais adequada para moderação é:",
+        options: [
+          "Crítica esportiva legítima — liberar sem ação",
+          "Acusação grave + desumanização: passa do debate para ataque à pessoa/função com tom de ódio",
+          "Ameaça direta de violência física iminente",
+          "Spam comercial disfarçado"
+        ],
+        correct: 1,
+        explain: "Chamar de ‘ladrão’ + ‘não merece’ eleva de crítica a estigma. Em moderação, o limiar não é só xingamento solto — é o padrão de acusação + exclusão.",
+        consequence: "Você libera. A thread vira eco de acusações e denúncias cruzadas explodem."
+      },
+      {
+        context: "Comentário sob post sobre política municipal.",
+        speech: "Usuário B: ‘Discordo 100% da prefeita, mas pelo menos ela apareceu no debate. O outro candidato só manda assessor.’",
+        ask: "Como classificar?",
+        options: [
+          "Discurso de ódio partidário",
+          "Opinião crítica com fato observável — tom duro, mas dentro do debate legítimo",
+          "Desinformação comprovada sobre o debate",
+          "Assédio à prefeita"
+        ],
+        correct: 1,
+        explain: "Discordância + comparação de presença pública não é ódio. Remover isso ensina a comunidade que discordar = punição.",
+        consequence: "Você remove. Um lado grita censura e a polarização sobe sem ganho de segurança."
+      },
+      {
+        context: "Resposta em thread de humor.",
+        speech: "Usuário C: ‘Kkkkk morre’ — respondendo a alguém que contou um tropeção embaraçoso.",
+        ask: "O tom real tende a ser:",
+        options: [
+          "Ameaça de morte literal",
+          "Gíria de deboche online (hipérbole), sem indício de intenção violenta no contexto de piada",
+          "Incitação coordenada a suicídio",
+          "Assédio sexual"
+        ],
+        correct: 1,
+        explain: "Em contexto de humor e sem histórico, ‘morre’ costuma ser hipérbole. Ainda assim, vale olhar o alvo e a frequência — um caso isolado ≠ padrão.",
+        consequence: "Banimento duro por uma hipérbole gera revolta e tickets de apelação em massa."
+      },
+      {
+        context: "Denúncia de ‘spam’ em comentário.",
+        speech: "Usuário D: ‘Gente, montei um guia grátis no link da bio sobre organização de estudos, quem quiser dá uma olhada 😊’",
+        ask: "Interpretação para ação:",
+        options: [
+          "Golpe financeiro óbvio",
+          "Auto-promoção leve; depende da regra da comunidade — não é automaticamente ódio ou desinformação",
+          "Phishing comprovado",
+          "Discurso de ódio"
+        ],
+        correct: 1,
+        explain: "Moderar bem é não misturar categorias. Auto-promoção pode violar regra de spam sem ser ‘conteúdo perigoso’.",
+        consequence: "Você trata como crime. O usuário legítimo perde confiança na moderação."
+      },
+      {
+        context: "Dois usuários em discussão; um denuncia o outro.",
+        speech: "Usuário E (denunciado): ‘Você é burro se acredita nisso.’ Usuário F (denunciante): ‘Ele me ofendeu!’",
+        ask: "O peso relativo:",
+        options: [
+          "Insulto leve em discussão acalorada — sancionável conforme regra, mas não equivalente a ameaça ou ódio protegido",
+          "Discurso de ódio contra grupo vulnerável",
+          "Violência gráfica",
+          "Nenhuma ação jamais em insultos"
+        ],
+        correct: 0,
+        explain: "‘Burro’ é grosseria interpessoal. A harmonia pede proporcionalidade: aviso ou exclusão do comentário, não o mesmo peso de ódio coletivo.",
+        consequence: "Punição máxima pelo insulto simples. A fila de casos graves fica no mesmo balde e a régua se perde."
+      },
+      {
+        context: "Post com ironia sobre celebridade.",
+        speech: "Usuário G: ‘Que exemplo de humildade… postando jatinho pela 3ª vez na semana. Inspirador mesmo.’",
+        ask: "Leitura do implícito:",
+        options: [
+          "Elogio sincero",
+          "Sarcasmo crítico à ostentação — ainda é opinião, não assédio por si só",
+          "Deepfake acusatório",
+          "Incitação a crime"
+        ],
+        correct: 1,
+        explain: "Ironia é ambígua, mas aqui o alvo é comportamento público de figura pública. Não é o mesmo que perseguir pessoa privada.",
+        consequence: "Remoção por ‘negatividade’ empurra a plataforma para estética sem crítica."
+      },
+      {
+        context: "Comentário com emoji e tom ambíguo.",
+        speech: "Usuário H: ‘Interessante sua opinião 🙃’ — após alguém defender uma teoria conspiratória.",
+        ask: "O que o moderador deve priorizar?",
+        options: [
+          "Banir por sarcasmo",
+          "Não há violação clara só pelo emoji; o problema, se houver, está no conteúdo da teoria — não nesta réplica isolada",
+          "É apoio explícito à conspiração",
+          "É ameaça codificada"
+        ],
+        correct: 1,
+        explain: "Moderar o emoji é excesso. Avalie a postagem da teoria pelas regras de desinformação; a réplica sarcástica não é o foco.",
+        consequence: "Você pune o 🙃 e ignora a desinformação. A comunidade percebe a prioridade invertida."
+      }
+    ]
+  },
+  {
+    id: "mod-2",
+    emoji: "⚡",
+    title: "Moderação — Fase 2: Polarização",
+    sub: "Threads divididas · dois lados engajados",
+    avatar: "🧑‍💻",
+    who: "Campos opostos na mesma postagem",
+    goal: "Não virar arma de um lado (≥ 5/7)",
+    minCorrect: 5,
+    winTitle: "Régua mantida no meio do fogo",
+    winText: "Você aplicou o mesmo critério aos dois polos. A harmonia não é silêncio — é previsibilidade justa.",
+    loseTitle: "A régua entortou",
+    loseText: "Um lado se sentiu protegido e o outro perseguido. A divisão na Pulse aumentou.",
+    secretTitle: "Manual interno · nota 2",
+    secretText: "«Quando os dois lados gritam censura, às vezes a moderação acertou. Quando só um grita e os números de denúncia assimétrica disparam, revise a régua.»",
+    requires: "mod-1",
+    unlockHint: "Conclua a Fase 1 de moderação",
+    careerPhase: 2,
+    questions: [
+      {
+        context: "Mesmo post político; dois comentários espelhados.",
+        speech: "Lado A: ‘Esses [grupo oposto] são praga.’ Lado B: ‘Esses [grupo A] são praga.’",
+        ask: "Ação coerente:",
+        options: [
+          "Remover só o lado que você discorda politicamente",
+          "Tratar os dois como desumanização de grupo — mesma regra, mesma consequência",
+          "Liberar os dois porque ‘é só política’",
+          "Banir todos que comentaram no post"
+        ],
+        correct: 1,
+        explain: "Harmonia exige isonomia. ‘Praga’ coletiviza e desumaniza nos dois vetores.",
+        consequence: "Você age só num lado. O outro radicaliza e a plataforma vira trincheira."
+      },
+      {
+        context: "Usuário cita estatística duvidosa com link duvidoso.",
+        speech: "Usuário: ‘Pesquisa mostra que 90% concorda comigo (link encurtado). Quem discorda é mal-caráter.’",
+        ask: "Camadas do problema:",
+        options: [
+          "Só o link encurtado já é crime",
+          "Mistura possível desinformação + ataque de caráter a quem discorda — avaliar fato e tom separadamente",
+          "É debate acadêmico legítimo",
+          "É spam de produto"
+        ],
+        correct: 1,
+        explain: "Moderação fina separa: (1) veracidade/política de desinformação e (2) insulto a discordantes. Não colapse tudo num único botão.",
+        consequence: "Você só apaga o link e deixa o ‘mal-caráter’. O tom hostil continua envenenando a thread."
+      },
+      {
+        context: "Manifestação de apoio a protesto pacífico vs. comentário que pede confronto.",
+        speech: "Usuário 1: ‘Vou ao ato amanhã, ordem e paz.’ Usuário 2: ‘Se aparecer [grupo], partiu porrada.’",
+        ask: "Diferença decisiva:",
+        options: [
+          "Os dois são igualmente violentos",
+          "Usuário 1 exerce expressão cívica; Usuário 2 incita violência — ações diferentes",
+          "Os dois devem ser banidos por política",
+          "Nenhum dos dois pode ser moderado"
+        ],
+        correct: 1,
+        explain: "Protesto pacífico ≠ incitação a agressão. A harmonia protege o primeiro e contém o segundo.",
+        consequence: "Você trata igual. Ou criminaliza o cívico ou normaliza a porrada."
+      },
+      {
+        context: "Denúncia em massa coordenada contra um post legítimo de minoria.",
+        speech: "Sistema: 400 denúncias em 12 minutos no mesmo post. Conteúdo: relato pessoal sem ofensa clara.",
+        ask: "O que os números implicam?",
+        options: [
+          "Que o post é objetivamente grave",
+          "Possível brigading — volume de denúncia não prova violação; ler o conteúdo, não só o contador",
+          "Banimento automático obrigatório",
+          "Que a conta denunciada é bot"
+        ],
+        correct: 1,
+        explain: "Ferramenta de denúncia pode ser arma. Moderador lê o post; o contador é sinal, não sentença.",
+        consequence: "Você remove pelo volume. O lado que organizou a fila aprende que quantidade vence critério."
+      },
+      {
+        context: "Humor de um lado ridiculariza símbolo do outro.",
+        speech: "Meme: deforma o logo de um movimento social com legenda ‘lixo’. Comentários riem.",
+        ask: "Critério útil:",
+        options: [
+          "Todo meme político é ódio",
+          "Avaliar se ultrapassa ridicularização para ataque a pessoas/classe protegida ou incitação — meme rude ≠ automaticamente removível, mas ‘lixo’ coletivo pode cruzar a linha da política da Pulse",
+          "Nunca moderar humor",
+          "Banir quem riu"
+        ],
+        correct: 1,
+        explain: "Zona cinzenta: políticas de ódio e de bullying entram quando o alvo é grupo ou pessoa, não só ideia. Aplique o texto da política, não o gosto pessoal pelo meme.",
+        consequence: "Decisão só no feeling. Os dois lados acusam viés com razão aparente."
+      },
+      {
+        context: "Moderador júnior pergunta no chat interno.",
+        speech: "Júnior: ‘O post do lado A é tecnicamente igual ao que removemos do lado B ontem. Removo?’",
+        ask: "Resposta que preserva harmonia institucional:",
+        options: [
+          "‘Deixa, esse lado é aliado da plataforma’",
+          "‘Se a regra bate, aplica — consistência é o que impede a divisão de acusar manipulação’",
+          "‘Remove os dois lados de tudo’",
+          "‘Ignora e fecha o ticket’"
+        ],
+        correct: 1,
+        explain: "Precedente é o ativo da moderação. Quebrar isonomia é o atalho mais rápido para plataforma dividida.",
+        consequence: "Exceção política vaza. A confiança na Pulse despenca."
+      },
+      {
+        context: "Usuário pede ‘só um aviso’ após ofensa clara repetida.",
+        speech: "Usuário reincidente: ‘Foi brincadeira. Vocês estão matando o debate. Só me avisa da próxima.’",
+        ask: "Leitura do pedido:",
+        options: [
+          "Arrependimento completo e fim do risco",
+          "Minimização + tentativa de negociar a régua — o histórico de reincidência pesa mais que o pedido educado",
+          "Ordem judicial implícita",
+          "Prova de que a política está errada"
+        ],
+        correct: 1,
+        explain: "Tom educado na apelação não apaga padrão. Harmonia também é proteger quem já foi alvo repetido.",
+        consequence: "Só aviso de novo. O alvo desiste da plataforma; o ofensor testa o limite outra vez."
+      }
+    ]
+  },
+  {
+    id: "mod-3",
+    emoji: "🔍",
+    title: "Moderação — Fase 3: Fato, opinião e boato",
+    sub: "Desinformação · saúde e eleições",
+    avatar: "🧑‍💻",
+    who: "Posts em circulação rápida",
+    goal: "Separar dúvida legítima de prejuízo verificável (≥ 5/7)",
+    minCorrect: 5,
+    winTitle: "Menos boato, mais clareza",
+    winText: "Você não censurou dúvida — continha afirmação nociva sem lastro. A Pulse fica um pouco menos inflamável.",
+    loseTitle: "Boato ganhou velocidade",
+    loseText: "Ou sobrou mão na opinião, ou faltou mão no falso verificável. A divisão se alimenta dos dois erros.",
+    secretTitle: "Manual interno · nota 3",
+    secretText: "«Opinião incomoda. Falso que causa dano coordenado destrói. Se você não distingue os dois, vira parte do problema.»",
+    requires: "mod-2",
+    unlockHint: "Conclua a Fase 2 de moderação",
+    careerPhase: 3,
+    questions: [
+      {
+        context: "Post de saúde em grupo grande.",
+        speech: "Usuário: ‘Descobri que vacina X causa Y em 100% dos casos. Médico nenhum admite. Passa pra frente.’",
+        ask: "Classificação típica sob política de desinformação de saúde:",
+        options: [
+          "Opinião pessoal inofensiva",
+          "Afirmação factual absoluta + pedido de viralização sem evidência — alto risco de dano, ação conforme política (rótulo/remoção)",
+          "Sátira óbvia",
+          "Conteúdo educativo oficial"
+        ],
+        correct: 1,
+        explain: "Não é ‘discordo do governo’: é claim causal total + amplificação. Diferente de alguém relatando dúvida pontual ao médico.",
+        consequence: "Você deixa rolar. O post viraliza e a fila de pânico sobe."
+      },
+      {
+        context: "Outro post no mesmo tema.",
+        speech: "Usuário: ‘Fiquei com efeito colateral leve depois da dose e o posto não me explicou bem. Alguém passou por isso?’",
+        ask: "Diferença crucial:",
+        options: [
+          "É a mesma desinformação do post anterior",
+          "Relato + pergunta — não afirma causalidade universal nem pede para ‘passar pra frente’ como verdade fechada",
+          "É ataque a profissionais de saúde",
+          "É spam"
+        ],
+        correct: 1,
+        explain: "Experiência subjetiva + busca de pares ≠ boato fechado. Moderar os dois igual ensina que relato é proibido.",
+        consequence: "Você remove o relato. Pessoas param de falar de efeitos reais e a confiança médica piora por outro caminho."
+      },
+      {
+        context: "Conteúdo eleitoral.",
+        speech: "Usuário: ‘Urna no município Z já estava fraudada às 9h — vídeo (sem fonte, filmagem ilegível).’",
+        ask: "Prioridade de interpretação:",
+        options: [
+          "Prova definitiva de fraude",
+          "Alegação grave de crime eleitoral sem lastro verificável — enquadra em política de desinformação eleitoral da plataforma",
+          "Opinião protegida absoluta",
+          "Problema só da Justiça, nunca da plataforma"
+        ],
+        correct: 1,
+        explain: "Plataformas que hostizam claim de fraude sem evidência aceleram crise de legitimidade. Ação alinhada à política publicada.",
+        consequence: "O vídeo ilegível roda. A polarização sobe com ‘prova’ que não prova."
+      },
+      {
+        context: "Sátira compartilhada como se fosse real.",
+        speech: "Site de humor: manchete absurda. Usuário cola no feed sem dizer que é sátira e comenta ‘eu avisei’.",
+        ask: "O problema está em:",
+        options: [
+          "A existência de humor político",
+          "O enquadre: circular sátira como fato engana — contexto ausente muda a interpretação do público",
+          "Qualquer compartilhamento de link externo",
+          "O emoji do post"
+        ],
+        correct: 1,
+        explain: "Intenção do site ≠ efeito no feed. Moderação olha o efeito razoável no leitor médio daquele contexto.",
+        consequence: "Você ignora. Milhares acreditam na manchete falsa e a correção não alcança."
+      },
+      {
+        context: "Usuário cita reportagem real com título sensacionalista.",
+        speech: "Usuário: ‘Segundo o jornal H, houve irregularidade no contrato. Fonte nos comentários.’ (link real)",
+        ask: "Como ler?",
+        options: [
+          "Automaticamente falso porque incomoda",
+          "Conteúdo jornalístico atribuído — não é o mesmo que boato anônimo; disputar via debate, não remoção automática por desconforto",
+          "Sempre remover notícia política",
+          "É discurso de ódio"
+        ],
+        correct: 1,
+        explain: "Fonte identificável e claim verificável entram no regime de debate público. Erro oposto ao boato sem fonte.",
+        consequence: "Você remove a reportagem. Acusam a Pulse de blindar poder — com algum fundamento."
+      },
+      {
+        context: "Deepfake amador de figura pública.",
+        speech: "Vídeo: rosto de político ‘confessando’ crime, legenda ‘não é IA confia’.",
+        ask: "Leitura e risco:",
+        options: [
+          "É só entretenimento inofensivo",
+          "Manipulação audiovisual apresentada como real — alto potencial de engano, política de mídia sintética se aplica",
+          "Prova jurídica válida",
+          "Problema apenas se o político denunciar"
+        ],
+        correct: 1,
+        explain: "O ‘não é IA’ aumenta o dolo de engano. Harmonia pública sofre quando a realidade compartilhada quebra.",
+        consequence: "O fake roda. Mesmo desmentido posterior não recupera o primeiro impacto."
+      },
+      {
+        context: "Comentário sob o deepfake.",
+        speech: "Usuário: ‘Se for fake eu deleto, mas enquanto isso a galera tem que ver.’",
+        ask: "O que essa fala revela?",
+        options: [
+          "Cuidado editorial exemplar",
+          "Consciência do risco + escolha de amplificar mesmo assim — responsabilidade do compartilhador",
+          "Que o vídeo é verdadeiro",
+          "Pedido formal de moderação"
+        ],
+        correct: 1,
+        explain: "Intenção ‘depois eu vejo’ não neutraliza o dano presente. Útil para graduação de pena e educação da comunidade.",
+        consequence: "Você trata como inocente total. O padrão de ‘compartilha primeiro’ se normaliza."
+      }
+    ]
+  },
+  {
+    id: "mod-4",
+    emoji: "🚨",
+    title: "Moderação — Fase 4: Assédio e coordenação",
+    sub: "Alvos, dogpiling e contas combinadas",
+    avatar: "🧑‍💻",
+    who: "Alvo + enxame de respostas",
+    goal: "Proteger pessoas sem apagar o debate legítimo (≥ 5/7)",
+    minCorrect: 5,
+    winTitle: "Alvo protegido, debate vivo",
+    winText: "Você interrompeu o enxame e manteve espaço para crítica proporcional. A Pulse não virou coliseu.",
+    loseTitle: "O enxame venceu",
+    loseText: "O alvo saiu ou se calou. A divisão celebra ‘vitória’ e treina o próximo ataque coordenado.",
+    secretTitle: "Manual interno · nota 4",
+    secretText: "«Crítica ao argumento é oxigênio. Dezena de contas no mesmo insulto pessoal é asfixxia. Conte volume, não só palavra.»",
+    requires: "mod-3",
+    unlockHint: "Conclua a Fase 3 de moderação",
+    careerPhase: 4,
+    questions: [
+      {
+        context: "Criadora posta opinião polêmica. Em 20 min, 80 respostas quase iguais.",
+        speech: "Padrão: ‘Sua cara de [insulto]. Apaga a conta.’ Repetido por perfis novos.",
+        ask: "Interpretação do fenômeno:",
+        options: [
+          "Debate orgânico saudável",
+          "Dogpiling / possível coordenação — assédio por volume, não só por uma frase isolada",
+          "Elogio disfarçado",
+          "Problema só da criadora"
+        ],
+        correct: 1,
+        explain: "Assédio em rede é padrão + repetição + alvo. A unidade de análise é a thread, não um comentário em vácuo.",
+        consequence: "Você avalia um comentário só e arquiva. O enxame completa o trabalho."
+      },
+      {
+        context: "Um crítico faz um post longo desmontando o argumento da criadora, sem xingamento.",
+        speech: "Crítico: ‘Os três dados que ela usou estão fora de contexto; fontes A, B e C.’",
+        ask: "Ação:",
+        options: [
+          "Remover porque ‘aumenta o clima’",
+          "Manter: crítica substantiva é o oposto funcional do dogpiling pessoal",
+          "Banir por discordância",
+          "Obrigar desculpas públicas"
+        ],
+        correct: 1,
+        explain: "Se a moderação apaga crítica fundamentada junto com insulto, a harmonia vira quietude forçada e viés real.",
+        consequence: "Você remove o crítico sério. A criadora fica só com ódio residual e zero debate."
+      },
+      {
+        context: "Vazamento de dados pessoais do alvo nos comentários.",
+        speech: "Usuário: ‘Ela mora na rua tal, trabalha no lugar X, telefone…’",
+        ask: "Classificação:",
+        options: [
+          "Jornalismo cidadão",
+          "Doxxing — risco offline alto, remoção prioritária e escalação",
+          "Opinião política",
+          "Auto-promoção"
+        ],
+        correct: 1,
+        explain: "Dado pessoal para exposição não é discurso: é risco de segurança. Harmonia online inclui não exportar violência para a vida real.",
+        consequence: "Você demora. O dano sai da plataforma antes da política ser aplicada."
+      },
+      {
+        context: "Conta alegando ser ‘fã’ manda dezenas de DMs.",
+        speech: "Trecho de DM: ‘Por que você não me responde? Eu só quero conversar. Já te falei 40 vezes.’",
+        ask: "Leitura:",
+        options: [
+          "Interesse amigável inofensivo",
+          "Possível assédio por persistência após ausência de reciprocidade — padrão de pressão",
+          "Spam de produto",
+          "Desinformação eleitoral"
+        ],
+        correct: 1,
+        explain: "Frequência + cobrança de resposta após silêncio é sinal clássico. Ferramentas de restrição existem para isso.",
+        consequence: "Você arquiva como ‘fã chato’. O alvo bloqueia a plataforma inteira."
+      },
+      {
+        context: "Humor pesado entre amigos no mesmo grupo privado vs. mesmo texto no post público do alvo.",
+        speech: "Mesma frase de deboche. Contexto A: grupo fechado de amigos que se conhecem. Contexto B: respostas públicas a estranha.",
+        ask: "O que muda a interpretação?",
+        options: [
+          "Nada — a frase é sempre idêntica em gravidade",
+          "Consentimento e relação: o mesmo texto muda de brincadeira a assédio conforme audiência e poder",
+          "Só o horário da postagem importa",
+          "Só o número de emojis"
+        ],
+        correct: 1,
+        explain: "Moderação contextual não é hipocrisia: é semântica social. Política bem feita descreve isso.",
+        consequence: "Régua cega ao contexto. Ou você pune intimidade legítima ou libera assédio público."
+      },
+      {
+        context: "Ameaça ‘de brincadeira’.",
+        speech: "Usuário: ‘Se eu te encontrar na rua… 😂 brincadeira, ou não.’",
+        ask: "Como tratar a ambiguidade?",
+        options: [
+          "Sempre inofensivo por causa do emoji",
+          "Ameaça ambígua ainda é ameaça razoavelmente interpretável — priorize segurança do alvo",
+          "Só age se houver endereço exato",
+          "É crítica literária"
+        ],
+        correct: 1,
+        explain: "O ‘ou não’ mantém o medo ligado. Em dúvida razoável de segurança, a harmonia pende para proteger a pessoa.",
+        consequence: "Você espera o ‘se’. O alvo já cancelou presença em evento público."
+      },
+      {
+        context: "Liderança da comunidade pede ‘exemplo’.",
+        speech: "Admin voluntário: ‘Remove todo mundo que criticou ela, senão vamos embora da Pulse.’",
+        ask: "Pressão interpretada:",
+        options: [
+          "Ordem a ser obedecida integralmente",
+          "Ultimato que tenta capturar a régua — aplique política, não o desejo de um lado de silenciar crítica legítima",
+          "Prova de que crítica é crime",
+          "Motivo para banir a criadora"
+        ],
+        correct: 1,
+        explain: "Captura da moderação por facção é o caminho da Fase 6 (plataforma dividida). Critério > coalizão.",
+        consequence: "Você vira braço de um lado. O outro lado declara guerra de denúncias."
+      }
+    ]
+  },
+  {
+    id: "mod-5",
+    emoji: "🌋",
+    title: "Moderação — Fase 5: Crise na timeline",
+    sub: "Conteúdo viral · decisões sob pressão · meta 7 acertos",
+    avatar: "🧑‍💻",
+    who: "Toda a Pulse ao mesmo tempo",
+    goal: "Acertar pelo menos 7 leituras e segurar a harmonia da plataforma",
+    minCorrect: 7,
+    winTitle: "Crise contida — harmonia possível",
+    winText: "Você leu intenções, padrões e efeitos colaterais sob fogo. A Pulse não se partiu ao meio. A comunidade ainda discute — mas no mesmo chão.",
+    loseTitle: "A plataforma rachou",
+    loseText: "Leituras erradas em cadeia. Dois mundos de usuários acusam a Pulse de ser ‘do outro lado’. Abre-se a Fase 6: plataforma dividida.",
+    secretTitle: "Manual interno · nota 5",
+    secretText: "«Na crise viral, cada ticket errado vira prova para um lado. A harmonia não é gostar de todos — é não alimentar a guerra civil de narrativas.»",
+    requires: "mod-4",
+    unlockHint: "Conclua a Fase 4 de moderação",
+    careerPhase: 5,
+    questions: [
+      {
+        context: "Vídeo truncado viral: parece agressão; a versão completa mostra empurrão mútuo após provocação.",
+        speech: "Hashtag pede banimento imediato de um lado. A outra metade pede banimento do lado oposto com o corte invertido.",
+        ask: "Primeira leitura responsável:",
+        options: [
+          "Escolher o corte com mais views e moderar em cima dele",
+          "Buscar contexto integral antes de sentença pública — cortes virais são arma de enquadramento",
+          "Banir os dois lados sem ver nada",
+          "Não moderar violência nunca"
+        ],
+        correct: 1,
+        explain: "Quem modera o recorte modera a propaganda. Harmonia exige o máximo de contexto possível no tempo disponível.",
+        consequence: "Você valida um corte. O outro lado arquiva sua decisão como prova de viés para sempre."
+      },
+      {
+        context: "Funcionário da Pulse posta opinião pessoal polêmica no perfil pessoal.",
+        speech: "Público: ‘A empresa pensa isso.’ Interno: ‘É perfil pessoal dele.’",
+        ask: "O conflito de interpretação é:",
+        options: [
+          "Só o público está certo sempre",
+          "Tensão real entre pessoa e marca — comunicação deve separar sem fingir que o vínculo não existe",
+          "Funcionário pode tudo em qualquer rede",
+          "Empresa deve fingir que o post não existe"
+        ],
+        correct: 1,
+        explain: "Crise de atribuição. Moderação de produto ≠ HR/comms, mas sua leitura do que a multidão ‘ouve’ informa o escalonamento.",
+        consequence: "Você trata como ‘só pessoa’. A narrativa ‘Pulse endossa’ consolida."
+      },
+      {
+        context: "Lista anônima ‘cancela esses 50 usuários’ circula.",
+        speech: "Post: nomes, prints fora de contexto, pedido para denunciar em massa.",
+        ask: "Natureza do conteúdo:",
+        options: [
+          "Jornalismo investigativo padrão",
+          "Coordenação de assédio / lista de alvos — prioridade alta de contenção",
+          "Debate filosófico abstrato",
+          "Conteúdo educativo escolar"
+        ],
+        correct: 1,
+        explain: "Listas de alvos transformam discordância em caça. É o motor da divisão.",
+        consequence: "A lista roda. Dezenas de contas legítimas sofrem dogpiling ‘justificado’."
+      },
+      {
+        context: "Um dos listados responde com dados falsos sobre os autores da lista.",
+        speech: "Alvo: inventa crime contra quem criou a lista e pede o mesmo tratamento.",
+        ask: "Como evitar a espiral?",
+        options: [
+          "Permitir vingança porque ‘começaram’",
+          "Aplicar a mesma política de assédio/desinformação ao contra-ataque — origem não autoriza espelho ilegal",
+          "Banir só o alvo original",
+          "Apagar toda a rede social"
+        ],
+        correct: 1,
+        explain: "Olho por olho vira política oficial da divisão. Régua única é o que ainda segura um chão comum.",
+        consequence: "Você tolera o espelho. Dois ódios se legitimam mutuamente."
+      },
+      {
+        context: "Anunciante pressiona.",
+        speech: "Anunciante: ‘Se não limparem o lado que ataca nossa marca, pausamos a verba.’ O ‘ataque’ é crítica a produto com print verdadeiro.",
+        ask: "Leitura da pressão:",
+        options: [
+          "Ordem de moderação válida por ser cliente",
+          "Tentativa de comprar a régua — crítica verídica a produto não vira ódio porque o marketing pediu",
+          "Motivo para banir o anunciante dos usuários",
+          "Prova de que a crítica é falsa"
+        ],
+        correct: 1,
+        explain: "Captura comercial da moderação é tão corrosiva quanto captura política. Harmonia inclui não vender viés.",
+        consequence: "Você remove crítica legítima. Usuários descobrem e a confiança despenca mais que a verba."
+      },
+      {
+        context: "Tom de ‘guerra civil’ nos trending topics.",
+        speech: "Frases repetidas: ‘É nós ou eles.’ ‘Se a Pulse não escolher, a gente derruba.’",
+        ask: "O que está em jogo para a plataforma?",
+        options: [
+          "Só engajamento positivo",
+          "Pressão para abandonar neutralidade de regras em favor de facção — ceder é inaugurar a Fase 6",
+          "Pedido de novo recurso de UI",
+          "Elogio à moderação"
+        ],
+        correct: 1,
+        explain: "‘Escolham um lado’ é o fim do contrato social da rede. Sua leitura deve nomear isso para a liderança.",
+        consequence: "Você ‘escolhe um lado’ para acalmar. O lado oposto migra ou sabota — plataforma dividida."
+      },
+      {
+        context: "Último ticket da crise: usuário moderado pede transparência.",
+        speech: "Usuário: ‘Me digam exatamente qual regra e qual trecho. Sem isso é arbitrário.’",
+        ask: "Resposta que reduz divisão:",
+        options: [
+          "‘Confia no processo’ sem detalhes",
+          "Citar regra + trecho + efeito — transparência proporcional diminui a narrativa de perseguição",
+          "Banir por questionar",
+          "Publicar dados pessoais do moderador"
+        ],
+        correct: 1,
+        explain: "Arbitrariedade percebida alimenta facções. Clareza não é fraqueza: é infraestrutura de harmonia.",
+        consequence: "Resposta opaca. O usuário vira ativista anti-Pulse com audiência."
+      },
+      {
+        context: "Retrospectiva interna pós-pico.",
+        speech: "Líder de trust & safety: ‘Quantas decisões foram pelo medo do trend e não pela política?’",
+        ask: "A pergunta exige de você:",
+        options: [
+          "Negar qualquer influência externa",
+          "Admitir onde a pressão distorceu a leitura e corrigir o processo — meta-leitura da própria moderação",
+          "Culpar só os usuários",
+          "Encerrar a área de moderação"
+        ],
+        correct: 1,
+        explain: "Fase 5 completa quando o moderador também se lê. Sem isso, a próxima crise repete o viés.",
+        consequence: "Você nega tudo. O padrão se repete e a divisão se institucionaliza."
+      },
+      {
+        context: "Métrica final do dia.",
+        speech: "Painel: denúncias ↑, retenção de novos usuários ↓, posts com ‘nós vs eles’ ↑.",
+        ask: "Interpretação agregada:",
+        options: [
+          "Sucesso de engajamento",
+          "Sinais de erosão do chão comum — a harmonia está no limite; erros de leitura agora têm preço estrutural",
+          "Que a moderação deve parar",
+          "Que só anúncio resolve"
+        ],
+        correct: 1,
+        explain: "Números narram divisão. Sua próxima decisão ainda pode puxar para cima ou empurrar para a Fase 6.",
+        consequence: "Você celebra o engajamento tóxico. A Pulse entra no modo facção."
+      }
+    ]
+  },
+  {
+    id: "mod-6",
+    emoji: "💔",
+    title: "Moderação — Fase 6: Plataforma dividida",
+    sub: "Dois mundos · reconstruir um mínimo de chão comum",
+    avatar: "🧑‍💻",
+    who: "Facções e usuários exaustos",
+    goal: "Ler o racha e evitar que a Pulse vire duas bolhas permanentes (≥ 5/7)",
+    minCorrect: 5,
+    winTitle: "Fissura estabilizada",
+    winText: "Você não desfez toda a divisão — mas impediu que a régua virasse bandeira de um lado. Há de novo um fio de harmonia possível.",
+    loseTitle: "Cisão consolidada",
+    loseText: "Cada decisão reforçou um polo. A Pulse opera como duas plataformas sob o mesmo logo.",
+    secretTitle: "Manual interno · nota 6",
+    secretText: "«Plataforma dividida não se cura com um post de desculpas. Cura-se com centenas de decisões chatas, isonômicas e explicadas.»",
+    requires: "mod-5",
+    requiresFail: true,
+    unlockHint: "Aparece se a crise da Fase 5 não atingir 7 acertos — a plataforma se divide",
+    careerPhase: 5,
+    questions: [
+      {
+        context: "Dois hashtags espelho dominam o trending.",
+        speech: "#PulseDoLadoA vs #PulseDoLadoB — ambos com prints seletivos das suas decisões.",
+        ask: "Leitura correta do fenômeno:",
+        options: [
+          "Prova de que a moderação deve declarar um lado oficial",
+          "Guerra de narrativa sobre a régua — responder com transparência de critérios, não com adesão a hashtag",
+          "Motivo para apagar todas as hashtags para sempre",
+          "Irrelevância total"
+        ],
+        correct: 1,
+        explain: "Hashtags de facção disputam o significado da moderação. Entrar numa delas confirma a cisão.",
+        consequence: "Você retuita um lado ‘só para esclarecer’. O print vira bandeira."
+      },
+      {
+        context: "Usuários moderados de lados opostos pedem anistia simétrica.",
+        speech: "Lado A e Lado B: ‘Reativem todos os nossos se quiserem paz.’",
+        ask: "O risco do simetrismo cego:",
+        options: [
+          "Não há risco — paz acima de tudo",
+          "Anistia em bloco pode reativar assédio real junto com casos limítrofes — revisar caso a caso sob a mesma política",
+          "Banir os dois lados para sempre",
+          "Atender só quem paga anúncio"
+        ],
+        correct: 1,
+        explain: "Paz falsa reabre o ferimento. Isonomia não é anistia automática: é mesmo critério na revisão.",
+        consequence: "Anistia em massa. Os piores ofensores voltam no primeiro ciclo."
+      },
+      {
+        context: "Moderador da equipe confessa viés.",
+        speech: "Colega: ‘Eu estava removendo mais o lado B, admito. Cansaço.’",
+        ask: "Resposta de liderança de fila:",
+        options: [
+          "Ignorar para não criar problema",
+          "Acolher o dado, redistribuir tickets e auditar amostra — viés admitido é oportunidade de correção",
+          "Demitir na hora sem processo",
+          "Mandar o colega só moderar o lado A"
+        ],
+        correct: 1,
+        explain: "Divisão interna vaza. Corrigir processo é o que reconstruí confiança externa.",
+        consequence: "Você engaveta. O viés continua e um vazamento interno confirma a facção."
+      },
+      {
+        context: "Proposta de ‘feeds separados por lado’.",
+        speech: "Produto: ‘E se cada um vê só o seu mundo? Cai o conflito.’",
+        ask: "Efeito sobre harmonia de longo prazo:",
+        options: [
+          "Solução definitiva de paz",
+          "Pode reduzir atrito imediato e cimentar duas realidades — o oposto de chão comum",
+          "Obrigatório por lei",
+          "Irrelevante para moderação"
+        ],
+        correct: 1,
+        explain: "Fase 6 tenta reconstruir um mínimo compartilhado. Bolhas totais são rendição elegante.",
+        consequence: "Feeds apartados viram política. A marca ‘Pulse’ vira só casca."
+      },
+      {
+        context: "Usuário do centro, silencioso até agora, posta.",
+        speech: "Usuário: ‘Eu só queria falar de hobby. Vocês transformaram tudo em guerra. Estou saindo.’",
+        ask: "O que esse churn significa?",
+        options: [
+          "Vitória da moderação",
+          "Perda da maioria silenciosa — o custo real da divisão não são só os extremos gritando",
+          "Que hobby deve ser proibido",
+          "Que a Pulse deve só ter conteúdo político"
+        ],
+        correct: 1,
+        explain: "Quem parte é quem sustentava clima utilizável. Harmonia mede quem fica sem gritar.",
+        consequence: "Você foca só nos extremos. O meio esvazia e sobram as facções."
+      },
+      {
+        context: "Decisão-teste: mesmo tipo de ofensa dos dois lados no mesmo dia.",
+        speech: "Dois posts espelho, mesma gravidade, horários diferentes, pressões de mídia diferentes.",
+        ask: "Como provar (e praticar) saída da divisão?",
+        options: [
+          "Suavizar o lado com mais imprensa",
+          "Mesma ação, mesma mensagem de regra, mesmo tempo de resposta possível — documentar para auditoria",
+          "Não registrar nada",
+          "Priorizar só quem denuncia mais"
+        ],
+        correct: 1,
+        explain: "Isonomia observável é o antídoto narrativo. Sem ela, qualquer acerto parece parcial.",
+        consequence: "Tratamento desigual ‘por contexto de imprensa’. O print comparativo destrói o que restava."
+      },
+      {
+        context: "Encerramento simbólico da Fase 6.",
+        speech: "Liderança: ‘Podemos ser uma plataforma onde gente que se detesta ainda lê a mesma regra e entende o porquê?’",
+        ask: "A meta realista de harmonia é:",
+        options: [
+          "Fazer todos se gostarem",
+          "Critério compartilhado legível — não consenso afetivo total",
+          "Eliminar todo conflito",
+          "Escolher um lado e educar o outro até sumir"
+        ],
+        correct: 1,
+        explain: "Harmonia em rede plural é previsibilidade justa, não utopia afetiva. Essa é a leitura final da trilha do moderador.",
+        consequence: "Você busca aplauso unânime. Frustra-se e abandona a régua."
+      }
+    ]
   }
 ];
 
@@ -4520,6 +5262,13 @@ const NEXT_PHASE = {
   "conselho-recuperacao": "mentor-executivo",
   "mentor-executivo": "fase5-demonstracao",
   "fase5-demonstracao": null,
+  // Moderação Pulse
+  "mod-1": "mod-2",
+  "mod-2": "mod-3",
+  "mod-3": "mod-4",
+  "mod-4": "mod-5",
+  "mod-5": null,
+  "mod-6": null,
   // Mistério (cenários originais + sequências)
   "imprensa": "imprensa2",
   "rua": "rua2",
@@ -4533,6 +5282,7 @@ function getNextPhaseId(fromId, passed){
     if (fromId === "vendedor") return "supervisor-vendas";
     if (fromId === "gerente-diretoria") return "diretor-recuperacao";
     if (fromId === "conselho-final") return "conselho-recuperacao";
+    if (fromId === "mod-5") return "mod-6";
     return null;
   }
   // Após passar vendas de primeira, pula direto para gerente
@@ -4598,6 +5348,8 @@ function endScenario(){
       extraHint = "<p style=\"margin-top:10px;padding:10px;border-radius:10px;background:rgba(255,210,63,.12);border:1px solid rgba(255,210,63,.35);color:var(--gold);font-size:13px\">⚖️ O conselho deixou a trilha condicional. Volte ao menu e abra a recuperação para mentoria executiva.</p>";
     } else if (current.id === "mentor-executivo"){
       extraHint = "<p style=\"margin-top:10px;padding:10px;border-radius:10px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.3);color:#c4b5fd;font-size:13px\">Refaça a mentoria executiva antes da segunda demonstração.</p>";
+    } else if (current.id === "mod-5"){
+      extraHint = "<p style=\"margin-top:10px;padding:10px;border-radius:10px;background:rgba(255,91,61,.12);border:1px solid rgba(255,91,61,.35);color:var(--orange-light);font-size:13px\">💔 Sem 7 acertos, a Pulse se divide. Abra a <strong>Fase 6 — Plataforma dividida</strong> para tentar recuperar um mínimo de chão comum.</p>";
     }
     card.innerHTML =
       "<div class=\"big\">💔</div>" +
