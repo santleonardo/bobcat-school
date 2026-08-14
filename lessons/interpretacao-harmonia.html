@@ -3845,6 +3845,8 @@ let qIndex = 0;
 let correctCount = 0;
 let xp = 0;
 let answered = false;
+let selectedIndex = null;
+let feedbackShown = false;
 let cleared = {};
 let secrets = {};
 let scores = {};
@@ -3935,10 +3937,28 @@ function localVaryQuestion(q, scenarioId, qIdx, playCount){
   };
 }
 
+
+function phaseLabelForToast(scenario){
+  const p = scenario && scenario.careerPhase;
+  if (p >= 5) return "Fase 5 — dificuldade máxima";
+  if (p === 4) return "Fase 4 — dificuldade alta";
+  if (p === 3) return "Fase 3 — dificuldade elevada";
+  return "Falas novas";
+}
+
 async function fetchAiVariants(scenario, playCount){
-  const items = scenario.questions.map(q => ({ speech: q.speech, context: q.context }));
+  const phase = scenario.careerPhase || (scenario.id && scenario.id.indexOf("gerente") === 0 ? 4 : (scenario.id && (scenario.id.indexOf("comite") === 0 || scenario.id.indexOf("parceiro") === 0 || scenario.id.indexOf("crise") === 0 || scenario.id.indexOf("conselho") === 0 || scenario.id.indexOf("fase5") === 0 || scenario.id.indexOf("mentor-exec") === 0) ? 5 : (scenario.id && (scenario.id.indexOf("vendedor") === 0 || scenario.id === "supervisor-vendas" || scenario.id === "treinador") ? 3 : 1)));
+  const items = scenario.questions.map(q => ({
+    speech: q.speech,
+    context: q.context,
+    ask: q.ask,
+    options: (q.options || []).slice(),
+    correctIndex: typeof q.correct === "number" ? q.correct : 0
+  }));
+  // Timeout maior em fases altas (mais tokens)
+  const timeoutMs = phase >= 4 ? 22000 : 14000;
   const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), 12000);
+  const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
     const resp = await fetch("/api/npc-variant", {
       method: "POST",
@@ -3948,6 +3968,7 @@ async function fetchAiVariants(scenario, playCount){
         who: scenario.who,
         goal: scenario.goal,
         playCount,
+        careerPhase: phase,
         items
       }),
       signal: ctrl.signal
@@ -3964,13 +3985,62 @@ async function fetchAiVariants(scenario, playCount){
 }
 
 function buildRuntimeQuestions(scenario, aiItems, playCount){
+  const phase = scenario.careerPhase || 1;
   return scenario.questions.map((q, idx) => {
-    const base = localVaryQuestion(q, scenario.id, idx, playCount);
+    // Base: embaralha opções locais
+    let working = {
+      context: q.context,
+      speech: q.speech,
+      ask: q.ask,
+      options: (q.options || []).slice(),
+      correct: typeof q.correct === "number" ? q.correct : 0,
+      explain: q.explain,
+      consequence: q.consequence
+    };
     if (aiItems && aiItems[idx]){
-      if (aiItems[idx].speech) base.speech = aiItems[idx].speech;
-      if (aiItems[idx].context) base.context = aiItems[idx].context;
+      const ai = aiItems[idx];
+      if (ai.speech) working.speech = ai.speech;
+      if (ai.context) working.context = ai.context;
+      if (Array.isArray(ai.options) && ai.options.length >= 4){
+        working.options = ai.options.slice(0, 4);
+        // correctIndex da IA = mesmo índice semântico do original
+        if (typeof ai.correctIndex === "number") working.correct = ai.correctIndex;
+        else working.correct = q.correct;
+      }
     }
-    return base;
+    // Offline / reforço: em fases altas, torna a redação da opção correta menos "rótulo didático"
+    if (phase >= 3 && playCount >= 1){
+      working.options = working.options.map(function(t, i){
+        if (i !== working.correct) return t;
+        return String(t)
+          .replace(/^A leitura mais (precisa|fiel|útil|segura|correta) é:\s*/i, "")
+          .replace(/^A (melhor|postura|resposta) (mais )?/i, "")
+          .replace(/\s*—\s*/g, " — ");
+      });
+    }
+    // Sempre embaralha para a posição da certa não ficar previsível
+    const seed = ((playCounts[scenario.id] || 1) * 97 + idx * 13 + playCount * 31 + phase * 17) >>> 0;
+    const rand = mulberry32(seed);
+    const indexed = working.options.map(function(text, i){ return { text: text, i: i }; });
+    const shuffled = shuffleWithRand(indexed, rand);
+    const correct = shuffled.findIndex(function(o){ return o.i === working.correct; });
+    // Variação leve de abertura só se não veio da IA
+    let speech = working.speech;
+    let context = working.context;
+    if (!(aiItems && aiItems[idx] && aiItems[idx].speech) && playCount >= 2){
+      const op = SPEECH_OPENERS[Math.floor(rand() * SPEECH_OPENERS.length)];
+      if (op && speech.length > 3) speech = op + speech.charAt(0).toLowerCase() + speech.slice(1);
+      context = CONTEXT_TWISTS[Math.floor(rand() * CONTEXT_TWISTS.length)](context);
+    }
+    return {
+      context: context,
+      speech: speech,
+      ask: working.ask,
+      options: shuffled.map(function(o){ return o.text; }),
+      correct: correct < 0 ? working.correct : correct,
+      explain: working.explain,
+      consequence: working.consequence
+    };
   });
 }
 
@@ -4011,20 +4081,17 @@ function startTimer(resumeFrom){
 }
 
 function onTimeUp(){
-  if (answered || !current) return;
+  if (feedbackShown || !current) return;
+  // Tempo esgotado = resposta em branco (errada), mas o feedback só sai no Continuar
   answered = true;
-  const q = (runtimeQuestions[qIndex] || current.questions[qIndex]);
-  document.querySelectorAll(".opt").forEach((el, idx) => {
+  selectedIndex = -1; // marca "sem escolha"
+  feedbackShown = false;
+  document.querySelectorAll(".opt").forEach((el) => {
     el.disabled = true;
-    if (idx === q.correct) el.classList.add("correct");
   });
-  GameSound.play("wrong");
-  const fb = $("feedback");
-  fb.className = "feedback-card show bad";
-  fb.innerHTML = "<div class=\"fb-title\">⏱ Tempo esgotado</div>" +
-    "<div>" + q.explain + "</div>" +
-    "<div class=\"fb-explain\"><strong>Sob pressão:</strong> a pressa virou leitura precipitada. " + q.consequence + "</div>";
-  toast("Tempo esgotado!", "bad");
+  toast("Tempo esgotado — toque em Continuar", "bad");
+  const btn = $("btnNextQ");
+  if (btn) btn.textContent = "Continuar";
   $("playActions").style.display = "flex";
   updateHUD();
 }
@@ -4258,7 +4325,7 @@ async function startScenario(id){
   // Sempre tenta IA; se falhar, usa variação local (na 1ª também embaralha opções)
   aiItems = await fetchAiVariants(current, pc);
   runtimeQuestions = buildRuntimeQuestions(current, aiItems, pc);
-  if (aiItems) toast("Falas novas geradas pela IA", "good");
+  if (aiItems) toast(phaseLabelForToast(current) + " · falas e alternativas pela IA", "good");
   else if (pc >= 2) toast("Falas variadas (modo offline)", "good");
   loadQuestion();
 }
@@ -4281,6 +4348,10 @@ function resumeScenario(){
 
 function loadQuestion(){
   answered = false;
+  selectedIndex = null;
+  feedbackShown = false;
+  const btnN = $("btnNextQ");
+  if (btnN) btnN.textContent = "Continuar";
   const q = (runtimeQuestions[qIndex] || current.questions[qIndex]);
   const qTotal = runtimeQuestions.length || current.questions.length;
 
@@ -4317,21 +4388,58 @@ function loadQuestion(){
 }
 
 function selectOption(i){
-  if (answered) return;
+  // Só registra a escolha — sem revelar certo/errado (mistério preservado)
+  if (feedbackShown) return;
+  if (answered && selectedIndex !== null){
+    // permite trocar a opção enquanto o feedback não foi revelado
+    selectedIndex = i;
+    document.querySelectorAll(".opt").forEach((el, idx) => {
+      el.classList.toggle("selected", idx === i);
+      el.disabled = false;
+    });
+    return;
+  }
   answered = true;
+  selectedIndex = i;
+  feedbackShown = false;
   stopTimer();
 
+  document.querySelectorAll(".opt").forEach((el, idx) => {
+    el.classList.toggle("selected", idx === i);
+    el.disabled = false; // ainda pode mudar de ideia antes de Continuar
+  });
+
+  $("feedback").className = "feedback-card";
+  $("feedback").innerHTML = "";
+  const btn = $("btnNextQ");
+  if (btn) btn.textContent = "Continuar";
+  $("playActions").style.display = "flex";
+}
+
+function revealFeedback(){
+  if (!current || selectedIndex === null || feedbackShown) return;
+  feedbackShown = true;
+  const i = selectedIndex;
   const q = (runtimeQuestions[qIndex] || current.questions[qIndex]);
+  const timedOut = (i < 0);
   const opts = document.querySelectorAll(".opt");
   opts.forEach((el, idx) => {
     el.disabled = true;
+    el.classList.remove("selected");
     if (idx === q.correct) el.classList.add("correct");
-    if (idx === i && i !== q.correct) el.classList.add("wrong");
-    if (idx === i) el.classList.add("selected");
+    if (!timedOut && idx === i && i !== q.correct) el.classList.add("wrong");
+    if (!timedOut && idx === i) el.classList.add("selected");
   });
 
   const fb = $("feedback");
-  if (i === q.correct){
+  if (timedOut){
+    GameSound.play("wrong");
+    fb.className = "feedback-card show bad";
+    fb.innerHTML = "<div class=\"fb-title\">⏱ Tempo esgotado</div>" +
+      "<div>" + q.explain + "</div>" +
+      "<div class=\"fb-explain\"><strong>Sob pressão:</strong> a pressa virou leitura precipitada. " + q.consequence + "</div>";
+    toast("Tempo esgotado!", "bad");
+  } else if (i === q.correct){
     correctCount++;
     xp += 12;
     GameSound.play("correct");
@@ -4354,18 +4462,31 @@ function selectOption(i){
   $("harmLabel").textContent = harm + "%";
   $("harmNum").textContent = harm + "%";
   $("xpNum").textContent = xp;
-  $("playActions").style.display = "flex";
+  const btn = $("btnNextQ");
+  if (btn){
+    const last = qIndex >= (runtimeQuestions.length || current.questions.length) - 1;
+    btn.textContent = last ? "Ver resultado" : "Próxima pergunta";
+  }
   save();
 }
 
 function nextStep(){
   if (!current || !answered) return;
-  // trava só depois de avançar, por 350ms, para evitar toque duplo
   if (nextStep._busy) return;
-  nextStep._busy = true;
 
+  // 1º toque em Continuar: revela o feedback (sem avançar)
+  if (!feedbackShown){
+    if (selectedIndex === null) return;
+    revealFeedback();
+    return;
+  }
+
+  // 2º toque: avança
+  nextStep._busy = true;
   qIndex++;
   answered = false;
+  selectedIndex = null;
+  feedbackShown = false;
   if (qIndex >= (runtimeQuestions.length || current.questions.length)){
     endScenario();
   } else {
