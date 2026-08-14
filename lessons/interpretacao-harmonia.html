@@ -271,7 +271,8 @@
   <div class="screen show" id="screenMenu">
     <div class="card intro">
       <h2>Harmonia nas entrelinhas</h2>
-      <p>Escolha um <strong>cenário</strong>. Em cada um, alguém fala — e você precisa interpretar o que realmente quer dizer: intenção, tom e implícito.</p>
+      <p>Escolha um <strong>cenário inicial</strong>. As próximas fases só aparecem aqui depois que você concluir a atual — avance pela trilha de carreira e pelo mistério passo a passo.</p>
+      <p>Em cada um, alguém fala — e você precisa interpretar o que realmente quer dizer: intenção, tom e implícito.</p>
       <p>Acerte a leitura e a harmonia sobe. Erre e o <strong>objetivo daquele desafio</strong> fica ameaçado. Cada pergunta tem <strong>contagem regressiva</strong> — sob pressão, a interpretação precipitada custa caro.</p>
       <p style="font-size:12.5px;color:var(--ink-soft)">Após a entrevista e a negociação, desbloqueie a <strong>Fase 3 — Vendas</strong> (10 clientes, meta 70%). Se falhar: supervisor → treinador → segunda chance. Passe e avance à <strong>Fase 4 — Gerente</strong>: reunião de equipe, feedbacks 1:1, escalada de cliente e diretoria. Se a diretoria não fechar, há plano de recuperação + mentoria.</p>
 
@@ -3277,30 +3278,15 @@ function renderMenu(){
 
   const grid = $("scenarioGrid");
   grid.innerHTML = "";
+  // Só mostra cenários disponíveis: início de cada trilha + fases já desbloqueadas.
+  // Próximas fases NÃO aparecem até o jogador passar da anterior.
   SCENARIOS.forEach(s => {
     const done = !!cleared[s.id];
     const unlocked = isUnlocked(s);
+    if (!unlocked) return; // oculto até desbloquear
+
     const btn = document.createElement("button");
-    btn.className = "scenario-card" + (done ? " cleared" : "") + (!unlocked ? " locked" : "");
-
-    if (!unlocked){
-      const parent = SCENARIOS.find(p => p.id === s.requires);
-      const hint = s.unlockHint || ("Desbloqueia após concluir: " + (parent ? parent.title : s.requires));
-      btn.disabled = true;
-      btn.innerHTML =
-        "<div class=\"sc-top\">" +
-          "<div class=\"sc-emoji\">🔒</div>" +
-          "<div class=\"sc-info\">" +
-            "<strong>" + s.title + "</strong>" +
-            "<span>" + s.sub + "</span>" +
-          "</div>" +
-          "<div class=\"sc-status wait\">Bloqueada</div>" +
-        "</div>" +
-        "<div class=\"sc-goal\">" + hint + "</div>";
-      grid.appendChild(btn);
-      return;
-    }
-
+    btn.className = "scenario-card" + (done ? " cleared" : "");
     btn.innerHTML =
       "<div class=\"sc-top\">" +
         "<div class=\"sc-emoji\">" + s.emoji + "</div>" +
