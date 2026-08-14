@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Gêneros em Cena</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="game-sound.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<style>
+  :root{
+    --orange:#ff5b3d;--orange-dark:#e13a26;--orange-light:#ff7a5c;
+    --purple:#8b5cf6;--blue:#4da3ff;--pink:#ff4d94;--teal:#2dd9b9;
+    --cream:#1e1730;--cream-2:#241b3d;--cream-3:#0c0720;
+    --ink:#f7f1ec;--ink-soft:rgba(247,241,236,0.72);
+    --ok:#3dd68c;--ok-bg:rgba(61,214,140,0.18);--bad:#ff5b3d;
+    --border:rgba(255,255,255,0.14);--gold:#ffd23f;
+    --shadow:0 8px 26px rgba(0,0,0,0.45);--radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{font-family:"Inter",sans-serif;color:var(--ink);min-height:100vh;line-height:1.5;
+    -webkit-font-smoothing:antialiased;padding-bottom:48px;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(139,92,246,.36), transparent 42%),
+      radial-gradient(circle at 88% 14%, rgba(45,217,185,.22), transparent 45%),
+      radial-gradient(circle at 50% 100%, rgba(255,91,61,.22), transparent 55%),
+      var(--cream-3);background-attachment:fixed}
+  h1,h2,h3{font-family:"Fredoka","Poppins",sans-serif;letter-spacing:-.01em}
+
+  .hud{position:sticky;top:0;z-index:100;background:rgba(12,7,32,.9);backdrop-filter:blur(12px);
+    padding:12px 16px;border-bottom:1px solid var(--border);box-shadow:0 2px 0 rgba(139,92,246,.3);
+    display:flex;align-items:center;gap:10px;justify-content:space-between;flex-wrap:wrap}
+  .hud-title{display:flex;align-items:center;gap:9px;font-weight:800;font-size:14.5px;font-family:"Fredoka",sans-serif}
+  .hud-back{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
+    border-radius:10px;background:var(--cream);border:1px solid var(--border);color:var(--ink);
+    font-size:16px;text-decoration:none;cursor:pointer}
+  .hud-stats{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .stat{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:5px 11px;
+    font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:5px}
+  .stat.xp{color:var(--gold)}.stat.clarity{color:var(--teal)}.stat.done{color:var(--pink)}
+  .btn-icon{width:34px;height:34px;border-radius:10px;background:var(--cream);border:1px solid var(--border);
+    color:var(--ink);font-size:15px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+
+  .wrap{max-width:640px;margin:0 auto;padding:14px 14px 0}
+  .screen{display:none}.screen.show{display:block;animation:fadeUp .35s ease}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  .card{background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
+    border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+
+  .intro h2{font-size:22px;margin-bottom:8px}
+  .intro p{font-size:13.5px;color:var(--ink-soft);line-height:1.6;margin-bottom:10px}
+
+  .scenario-grid{display:flex;flex-direction:column;gap:12px;margin:16px 0}
+  .scenario-card{display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:16px;
+    background:rgba(255,255,255,.04);border:1.5px solid var(--border);cursor:pointer;text-align:left;
+    color:inherit;font:inherit;width:100%;transition:transform .12s,border-color .15s,box-shadow .15s}
+  .scenario-card:hover{border-color:var(--purple);box-shadow:0 0 0 2px rgba(139,92,246,.25);transform:translateY(-2px)}
+  .scenario-card.cleared{border-color:rgba(61,214,140,.45);background:rgba(61,214,140,.08)}
+  .sc-top{display:flex;align-items:center;gap:12px}
+  .sc-emoji{font-size:28px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;
+    border-radius:14px;background:rgba(139,92,246,.2)}
+  .sc-info{flex:1}.sc-info strong{display:block;font-size:15px;font-family:"Fredoka",sans-serif;margin-bottom:2px}
+  .sc-info span{font-size:12px;color:var(--ink-soft);line-height:1.4}
+  .sc-goal{font-size:12.5px;padding:8px 11px;border-radius:10px;background:rgba(255,210,63,.1);
+    border:1px solid rgba(255,210,63,.3);color:var(--gold);line-height:1.4}
+  .sc-status{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+  .sc-status.ok{color:var(--ok)}.sc-status.wait{color:var(--ink-soft)}
+
+  .btn{border:none;padding:13px 24px;border-radius:14px;font-size:14.5px;font-weight:800;cursor:pointer;
+    font-family:"Fredoka",sans-serif;transition:transform .15s;box-shadow:0 4px 14px rgba(0,0,0,.3);
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;min-height:48px}
+  .btn:active{transform:scale(.93)}
+  .btn-primary{background:linear-gradient(180deg,var(--orange-light),var(--orange));color:#fff;
+    border-bottom:3px solid var(--orange-dark)}
+  .btn-ghost{background:linear-gradient(180deg,#4a3f6a,#352d52);color:var(--ink);border:1px solid var(--border)}
+
+  .phase-header{text-align:center;margin-bottom:12px}
+  .phase-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:99px;
+    font-size:11px;font-weight:800;background:rgba(139,92,246,.2);color:#c4b5fd;
+    border:1px solid rgba(139,92,246,.4);margin-bottom:8px}
+  .phase-title{font-size:18px;margin-bottom:4px}
+  .phase-sub{font-size:12.5px;color:var(--ink-soft)}
+  .phase-goal{font-size:12.5px;color:var(--gold);margin-top:6px;font-weight:600}
+
+  .clarity-meter{margin-bottom:12px}
+  .clarity-label{display:flex;justify-content:space-between;font-size:11px;font-weight:800;margin-bottom:5px}
+  .clarity-label span:last-child{color:var(--teal)}
+  .clarity-track{height:10px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+  .clarity-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--pink),var(--teal));
+    transition:width .45s ease;box-shadow:0 0 12px rgba(45,217,185,.4)}
+
+  .q-counter{text-align:center;font-size:12px;color:var(--ink-soft);margin-bottom:10px;font-weight:600}
+
+  .text-box{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:14px;
+    padding:14px 16px;font-size:14px;line-height:1.65;margin-bottom:14px;white-space:pre-wrap}
+  .text-box .label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;
+    color:var(--gold);margin-bottom:8px}
+
+  .step-label{font-size:11px;font-weight:800;color:var(--teal);text-transform:uppercase;
+    letter-spacing:.04em;margin-bottom:8px;text-align:center}
+  .question{font-size:15px;font-weight:700;text-align:center;margin-bottom:12px;line-height:1.45}
+
+  .options{display:flex;flex-direction:column;gap:9px;margin-bottom:12px}
+  .opt{padding:13px 14px;border-radius:14px;background:linear-gradient(160deg,#2e2350,#241b3d);
+    border:1.5px solid var(--border);color:var(--ink);font-size:13.5px;font-weight:600;text-align:left;
+    cursor:pointer;transition:transform .12s,border-color .15s;line-height:1.45;touch-action:manipulation}
+  .opt:hover{border-color:var(--purple)}
+  .opt:active{transform:scale(.98)}
+  .opt.correct{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
+  .opt.wrong{border-color:var(--bad);background:rgba(255,91,61,.12);color:var(--orange-light)}
+  .opt:disabled{cursor:default;opacity:.9}
+
+  .feedback-card{display:none;border-radius:14px;padding:14px;margin-bottom:12px;font-size:13.5px;line-height:1.55}
+  .feedback-card.show{display:block;animation:fadeUp .3s ease}
+  .feedback-card.good{background:var(--ok-bg);border:1px solid rgba(61,214,140,.4);color:var(--ok)}
+  .feedback-card.bad{background:rgba(255,91,61,.12);border:1px solid rgba(255,91,61,.4);color:var(--orange-light)}
+  .feedback-card .fb-title{font-weight:800;font-size:14px;margin-bottom:4px}
+  .feedback-card .fb-explain{color:var(--ink-soft);font-size:12.5px;margin-top:6px}
+
+  .actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:8px;position:relative;z-index:30}
+  #btnNext{min-height:52px;min-width:160px;padding:16px 28px;font-size:16px;width:100%;max-width:320px;
+    touch-action:manipulation}
+
+  @media (max-width:480px){
+    body{padding-bottom:96px}
+    #playActions{
+      position:fixed;left:0;right:0;bottom:0;z-index:150;
+      justify-content:center;align-items:center;
+      padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));
+      background:linear-gradient(to top,rgba(12,7,32,.98) 55%,rgba(12,7,32,.88));
+      border-top:1px solid var(--border);box-shadow:0 -8px 24px rgba(0,0,0,.4);
+    }
+    #btnNext{max-width:100%;width:100%}
+    .toast{bottom:100px}
+  }
+
+  .result-card{text-align:center;padding:22px 18px}
+  .result-card .big{font-size:48px;margin-bottom:10px}
+  .result-card h2{font-size:20px;margin-bottom:8px}
+  .result-card p{font-size:13.5px;color:var(--ink-soft);line-height:1.55;margin-bottom:10px}
+  .result-goal{font-size:14px;font-weight:700;padding:12px 14px;border-radius:12px;margin:14px 0;line-height:1.5}
+  .result-goal.win{background:var(--ok-bg);border:1px solid rgba(61,214,140,.4);color:var(--ok)}
+  .result-goal.lose{background:rgba(255,91,61,.12);border:1px solid rgba(255,91,61,.4);color:var(--orange-light)}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);opacity:0;
+    background:var(--cream-2);border:1px solid var(--border);color:var(--ink);padding:11px 18px;
+    border-radius:11px;font-size:13px;font-weight:700;box-shadow:var(--shadow);transition:all .25s;
+    z-index:200;max-width:88vw;text-align:center;pointer-events:none}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast.bad{color:var(--orange-light)}.toast.good{color:var(--ok)}
+
+  .tipo-chip{display:inline-block;font-size:11px;font-weight:800;padding:3px 9px;border-radius:99px;
+    margin-bottom:8px;background:rgba(77,163,255,.15);color:#7ec0ff;border:1px solid rgba(77,163,255,.35)}
+</style>
+</head>
+<body>
+
+<div class="hud">
+  <div style="display:flex;align-items:center;gap:8px">
+    <a class="hud-back" href="../index.html" title="Voltar" id="hudBack">←</a>
+    <div class="hud-title"><span>📰</span> Gêneros em Cena</div>
+  </div>
+  <div class="hud-stats">
+    <div class="stat done">✓ <span id="doneNum">0</span>/3</div>
+    <div class="stat clarity">✨ <span id="clarityNum">—</span></div>
+    <div class="stat xp">⭐ <span id="xpNum">0</span></div>
+    <button class="btn-icon" data-sound-toggle title="Som">🔊</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <!-- MENU -->
+  <div class="screen show" id="screenMenu">
+    <div class="card intro">
+      <h2>Gêneros em Cena</h2>
+      <p>Você é o <strong>editor de plantão</strong>. Chegam textos misturados: classifique o <strong>gênero</strong>, diga a <strong>tipologia</strong> dominante e escolha o <strong>destino</strong> certo de publicação.</p>
+      <p>Acerte e a clareza editorial sobe. Erre e o texto vai para o lugar errado — com consequências.</p>
+      <div class="scenario-grid" id="scenarioGrid"></div>
+    </div>
+  </div>
+
+  <!-- PLAY -->
+  <div class="screen" id="screenPlay">
+    <div class="phase-header">
+      <div class="phase-badge" id="phaseBadge">📬</div>
+      <div class="phase-title" id="phaseTitle">—</div>
+      <div class="phase-sub" id="phaseSub">—</div>
+      <div class="phase-goal" id="phaseGoal">—</div>
+    </div>
+    <div class="clarity-meter">
+      <div class="clarity-label"><span>Clareza editorial</span><span id="clarityLabel">0%</span></div>
+      <div class="clarity-track"><div class="clarity-fill" id="clarityFill" style="width:0%"></div></div>
+    </div>
+    <div class="q-counter" id="qCounter">Texto 1 de 7</div>
+    <div class="card">
+      <div class="text-box">
+        <div class="label">📄 Texto recebido</div>
+        <div id="textBody">…</div>
+      </div>
+      <div class="step-label" id="stepLabel">Passo 1 · Gênero</div>
+      <div class="question" id="question">…</div>
+      <div class="options" id="options"></div>
+      <div class="feedback-card" id="feedback"></div>
+      <div class="actions" id="playActions" style="display:none">
+        <button class="btn btn-primary" id="btnNext">Continuar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="screenResult">
+    <div class="card result-card" id="resultCard"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   GÊNEROS EM CENA — classificar gênero, tipologia e destino
+   ═══════════════════════════════════════════════════════════ */
+
+const SCENARIOS = [
+  {
+    id: "caixa",
+    emoji: "📬",
+    title: "Caixa de entrada",
+    sub: "Arquivar cada texto no gênero certo",
+    goal: "Organizar a redação sem misturar os gêneros",
+    minCorrect: 5,
+    winTitle: "Redação organizada!",
+    winText: "Os textos foram para os arquivos certos. A equipe consegue achar notícia, opinião e aviso sem confusão.",
+    loseTitle: "Arquivo bagunçado",
+    loseText: "Vários textos caíram na pasta errada. Amanhã alguém vai publicar uma receita no espaço de editorial…",
+    rounds: [
+      {
+        text: "Misture os secos. Acrescente os ovos um a um. Asse em forno preaquecido a 180 °C por 40 minutos. Sirva morno.",
+        genre: "Receita",
+        genreOpts: ["Notícia", "Receita", "Editorial", "Conto"],
+        tipo: "Injuntivo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Caderno de culinária / blog de receitas",
+        destOpts: ["Caderno de culinária / blog de receitas", "Primeira página do jornal", "Seção de opinião", "Mural de contos da escola"],
+        explain: "Verbos no imperativo e sequência de passos = gênero receita, tipologia injuntiva (instruir)."
+      },
+      {
+        text: "Um ônibus escolar capotou na BR-101 na manhã desta terça-feira. Ninguém ficou ferido com gravidade, segundo a Polícia Rodoviária. O trânsito foi liberado por volta das 11h.",
+        genre: "Notícia",
+        genreOpts: ["Crônica", "Notícia", "Carta formal", "Propaganda"],
+        tipo: "Narrativo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Seção de cidade / plantão de notícias",
+        destOpts: ["Seção de cidade / plantão de notícias", "Caderno de receitas", "Editorial de capa", "Mural de poemas"],
+        explain: "Lead com o quê/onde/quando e fatos em 3ª pessoa = notícia (tipologia narrativa informativa)."
+      },
+      {
+        text: "É urgente rever a política de celulares na escola. Sem regras claras, a atenção em sala despenca — e quem mais perde são os alunos que já chegam com defasagem.",
+        genre: "Editorial / artigo de opinião",
+        genreOpts: ["Notícia", "Receita", "Editorial / artigo de opinião", "Bula"],
+        tipo: "Dissertativo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Espaço de opinião do jornal escolar",
+        destOpts: ["Espaço de opinião do jornal escolar", "Lista de compras", "Manual do laboratório", "Agenda de jogos"],
+        explain: "Tese + argumento = artigo/editorial, tipologia dissertativa (expor e defender ideia)."
+      },
+      {
+        text: "Naquela tarde de março, Dona Lurdes ainda esperava o correio. O envelope azul nunca chegou — só o cheiro de chuva e o silêncio da varanda.",
+        genre: "Conto / crônica",
+        genreOpts: ["Notícia", "Conto / crônica", "Regulamento", "Anúncio"],
+        tipo: "Narrativo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Caderno literário / revista de contos",
+        destOpts: ["Caderno literário / revista de contos", "Boletim meteorológico", "Contrato de aluguel", "Cardápio da cantina"],
+        explain: "Personagem, tempo, atmosfera e enredo = conto/crônica, tipologia narrativa."
+      },
+      {
+        text: "É proibido entrar no laboratório sem jaleco. Em caso de contato com reagente na pele, lave com água corrente por 15 minutos e avise o responsável imediatamente.",
+        genre: "Regulamento / instrução de segurança",
+        genreOpts: ["Conto", "Editorial", "Regulamento / instrução de segurança", "Charge"],
+        tipo: "Injuntivo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Manual de segurança do laboratório",
+        destOpts: ["Manual de segurança do laboratório", "Seção de esportes", "Coluna de fofoca", "Lista de presença"],
+        explain: "Normas e ordens (“é proibido”, “lave”, “avise”) = regulamento/instrução, tipologia injuntiva."
+      },
+      {
+        text: "A fachada amarela descascava sob o sol de janeiro. No parapeito, um vaso rachado segurava duas samambaias teimosas; o cheiro de café escapava pela janela entreaberta.",
+        genre: "Descrição / perfil de lugar",
+        genreOpts: ["Notícia", "Receita", "Descrição / perfil de lugar", "Ofício"],
+        tipo: "Descritivo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Texto de ambientação / guia turístico literário",
+        destOpts: ["Texto de ambientação / guia turístico literário", "Placar de futebol", "Tabela periódica", "Extrato bancário"],
+        explain: "Adjetivos, detalhes sensoriais, verbos de estado = descrição, tipologia descritiva."
+      },
+      {
+        text: "Prezada Coordenação, solicito autorização para uso da sala de multimídia no dia 20, das 14h às 16h, para ensaio do grêmio. Atenciosamente, Ana Souza.",
+        genre: "Carta / e-mail formal",
+        genreOpts: ["Conto", "Carta / e-mail formal", "Propaganda", "Notícia"],
+        tipo: "Dissertativo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Protocolo administrativo da escola",
+        destOpts: ["Protocolo administrativo da escola", "Playlist da festa", "Cardápio da semana", "Mural de memes"],
+        explain: "Vocativo, pedido objetivo e despedida formal = carta/e-mail formal (exposição de pedido)."
+      }
+    ]
+  },
+  {
+    id: "grafica",
+    emoji: "🖨️",
+    title: "Gráfica escolar",
+    sub: "Escolher o molde certo antes de imprimir",
+    goal: "Imprimir cada peça no formato do gênero correto",
+    minCorrect: 5,
+    winTitle: "Impressão aprovada!",
+    winText: "Tudo saiu no molde certo: ninguém confundiu panfleto com editorial nem receita com regulamento.",
+    loseTitle: "Lote rejeitado",
+    loseText: "A gráfica misturou os moldes. Houve panfleto com cara de notícia e aviso com cara de conto.",
+    rounds: [
+      {
+        text: "ÚLTIMAS VAGAS! Curso de teatro juvenil. Inscrições até sexta. Garanta sua vaga — transforme o palco na sua voz!",
+        genre: "Anúncio / propaganda",
+        genreOpts: ["Notícia", "Anúncio / propaganda", "Bula", "Ata de reunião"],
+        tipo: "Injuntivo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Panfleto / stories da escola",
+        destOpts: ["Panfleto / stories da escola", "Diário oficial", "Enciclopédia", "Boletim de notas"],
+        explain: "Chamada, benefício e apelo à ação = anúncio/propaganda (persuadir + instruir a agir)."
+      },
+      {
+        text: "O time sub-17 venceu por 2 a 1 e se classificou à final. O segundo gol saiu aos 47 do segundo tempo, de falta cobrada por Ribeiro.",
+        genre: "Notícia esportiva",
+        genreOpts: ["Editorial", "Notícia esportiva", "Receita", "Poema"],
+        tipo: "Narrativo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Caderno de esportes",
+        destOpts: ["Caderno de esportes", "Manual do usuário", "Lista de materiais", "Convite de casamento"],
+        explain: "Fatos, placar, tempo do jogo = notícia esportiva, narrativa factual."
+      },
+      {
+        text: "Não use o medicamento se for alérgico à substância. Conserve à temperatura ambiente. Em caso de superdosagem, procure socorro médico.",
+        genre: "Bula",
+        genreOpts: ["Crônica", "Bula", "Charge", "Curriculum"],
+        tipo: "Injuntivo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Folheto informativo do medicamento",
+        destOpts: ["Folheto informativo do medicamento", "Revista de moda", "Horóscopo", "Cardápio"],
+        explain: "Advertências e instruções de uso = bula, tipologia injuntiva."
+      },
+      {
+        text: "A cidade não precisa de mais asfalto sem calçada. Precisa de sombra, banco e tempo para caminhar — isso também é infraestrutura.",
+        genre: "Artigo de opinião",
+        genreOpts: ["Notícia policial", "Artigo de opinião", "Receita", "Lista telefônica"],
+        tipo: "Dissertativo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Coluna de opinião",
+        destOpts: ["Coluna de opinião", "Tabela de preços", "Mapa do metrô", "Gabárto de prova"],
+        explain: "Posicionamento + argumento de valor = artigo de opinião, dissertativo."
+      },
+      {
+        text: "Era uma vez uma raposa que dizia proteger as galinhas. Toda noite, porém, uma pena nova aparecia atrás do celeiro.",
+        genre: "Fábula",
+        genreOpts: ["Relatório científico", "Fábula", "Ofício", "Nota fiscal"],
+        tipo: "Narrativo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Livro de fábulas / leitura infantil",
+        destOpts: ["Livro de fábulas / leitura infantil", "Código de trânsito", "Extrato de ponto", "Menu de configurações"],
+        explain: "Narrativa com moral implícita e animais personificados = fábula."
+      },
+      {
+        text: "O candidato possui experiência em mediação de conflitos e fluência em libras. Disponibilidade para viagens. Referências sob consulta.",
+        genre: "Currículo / perfil profissional",
+        genreOpts: ["Conto de terror", "Currículo / perfil profissional", "Receita de bolo", "Letra de música"],
+        tipo: "Descritivo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Banco de currículos / RH",
+        destOpts: ["Banco de currículos / RH", "Caderno de passatempos", "Cardápio vegano", "Guia de TV"],
+        explain: "Qualificações e dados objetivos sobre a pessoa = currículo (descrição profissional)."
+      },
+      {
+        text: "Senhores pais, a reunião bimestral ocorre na quinta, às 19h, no auditório. Comparecer com a caderneta. Gratos pela atenção.",
+        genre: "Aviso / comunicado escolar",
+        genreOpts: ["Romance", "Aviso / comunicado escolar", "Piada", "Receita"],
+        tipo: "Injuntivo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Agenda da escola / grupo oficial",
+        destOpts: ["Agenda da escola / grupo oficial", "Antologia poética", "Catálogo de peças", "Diário íntimo"],
+        explain: "Informação prática + orientação de conduta = aviso/comunicado."
+      }
+    ]
+  },
+  {
+    id: "camuflado",
+    emoji: "🎭",
+    title: "Gênero camuflado",
+    sub: "O texto vestiu a roupa errada — desmascare",
+    goal: "Identificar o gênero real apesar da camuflagem",
+    minCorrect: 5,
+    winTitle: "Camuflagens desfeitas!",
+    winText: "Você leu as marcas profundas do texto, não só a fantasia da superfície.",
+    loseTitle: "Ainda engando pela fantasia",
+    loseText: "Alguns textos passaram com a roupa errada. Na próxima, olhe verbos, estrutura e intenção.",
+    rounds: [
+      {
+        text: "“Reportagem exclusiva”\n1. Ligue o forno. 2. Unte a forma. 3. Não abra a porta antes de 30 minutos. 4. Decore a gosto.",
+        genre: "Receita (fantasiada de reportagem)",
+        genreOpts: ["Notícia real", "Receita (fantasiada de reportagem)", "Editorial", "Conto"],
+        tipo: "Injuntivo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Seção de culinária (não o plantão de notícias)",
+        destOpts: ["Seção de culinária (não o plantão de notícias)", "Primeira página", "Polícia", "Esportes"],
+        explain: "O título mente: a estrutura é injuntiva (passos). Gênero real = receita."
+      },
+      {
+        text: "Em tom de conto de fadas: “Era uma vez um prefeito que prometeu ciclovias. Os dias passaram, os carros não.” Moral: promessa sem cronograma é só enredo.",
+        genre: "Crônica / opinião em forma de fábula",
+        genreOpts: ["Notícia objetiva", "Crônica / opinião em forma de fábula", "Bula", "Ata"],
+        tipo: "Dissertativo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Coluna de crônica ou opinião",
+        destOpts: ["Coluna de crônica ou opinião", "Boletim de ocorrência", "Manual técnico", "Lista de presença"],
+        explain: "Usa casca narrativa, mas a intenção é comentar a realidade (opinião/crônica)."
+      },
+      {
+        text: "URGENTE — estoque limitado!!!\nO índice de inflação acumulada em 12 meses ficou em 4,2%, segundo o IBGE, abaixo da meta central.",
+        genre: "Notícia (fantasiada de propaganda)",
+        genreOpts: ["Propaganda de loja", "Notícia (fantasiada de propaganda)", "Receita", "Poema"],
+        tipo: "Narrativo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Editoria de economia",
+        destOpts: ["Editoria de economia", "Vitrine de liquidação", "Caderno infantil", "Classificados de emprego"],
+        explain: "O grito de “URGENTE!!!” é fantasia; o corpo traz dado oficial e fato = notícia."
+      },
+      {
+        text: "Queridos leitores, hoje o céu estava do tamanho de um suspiro. Mas o que importa: proibido estacionar na faixa amarela das 7h às 19h.",
+        genre: "Aviso / regulamento (com trecho lírico)",
+        genreOpts: ["Poema puro", "Aviso / regulamento (com trecho lírico)", "Conto completo", "Entrevista"],
+        tipo: "Injuntivo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Quadro de avisos de trânsito / condomínio",
+        destOpts: ["Quadro de avisos de trânsito / condomínio", "Antologia de poesia", "Romance de época", "Podcast de fofoca"],
+        explain: "O trecho lírico é isca; o núcleo é norma (“proibido estacionar”) = aviso/regulamento."
+      },
+      {
+        text: "Passo a passo para ser feliz: 1) defina tese 2) traga dois argumentos com dado 3) conclua sem slogan vazio. Vale na redação do Enem.",
+        genre: "Orientação de redação dissertativa",
+        genreOpts: ["Receita de bolo", "Orientação de redação dissertativa", "Notícia policial", "Letra de funk"],
+        tipo: "Injuntivo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Material de preparatório / apostila",
+        destOpts: ["Material de preparatório / apostila", "Cardápio", "Guia de séries", "Placar ao vivo"],
+        explain: "Formato de “passos”, mas o conteúdo ensina estrutura dissertativa = orientação de estudo."
+      },
+      {
+        text: "Segundo a diretoria, “os portões fecharão às 7h10”. Já os alunos juram que o relógio da quadra atrasa de propósito.",
+        genre: "Notícia / reportagem escolar",
+        genreOpts: ["Conto fantástico", "Notícia / reportagem escolar", "Bula", "Contrato"],
+        tipo: "Narrativo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Jornal da escola — seção cotidiano",
+        destOpts: ["Jornal da escola — seção cotidiano", "Livro de magia", "Manual do micro-ondas", "Testamento"],
+        explain: "Fonte + versão dos alunos + fato escolar = reportagem/notícia, mesmo com tom leve."
+      },
+      {
+        text: "Compre já!… Na verdade, antes compare preços e leia a letra miúda. Consumir também é decidir com informação.",
+        genre: "Artigo de conscientização (mascara de anúncio)",
+        genreOpts: ["Só propaganda agressiva", "Artigo de conscientização (mascara de anúncio)", "Receita", "Fábula infantil"],
+        tipo: "Dissertativo",
+        tipoOpts: ["Narrativo", "Descritivo", "Dissertativo", "Injuntivo"],
+        dest: "Coluna de cidadania / consumo consciente",
+        destOpts: ["Coluna de cidadania / consumo consciente", "Banner de liquidação pura", "Cardápio", "Gabárto"],
+        explain: "Abre como anúncio e vira argumentação sobre consumo = texto dissertativo de conscientização."
+      }
+    ]
+  }
+];
+
+const SAVE_KEY = "bobcat-generos-em-cena";
+const GAME_ID = "generos-em-cena";
+let current = null;
+let qIndex = 0;
+let step = 0; // 0 gênero, 1 tipologia, 2 destino
+let correctRounds = 0; // rodadas em que os 3 passos foram certos
+let stepOk = [false, false, false];
+let xp = 0;
+let answered = false;
+let cleared = {};
+
+function $(id){ return document.getElementById(id); }
+
+function snapshotState(){
+  return {
+    cleared: cleared,
+    xp: xp,
+    totalScenarios: typeof SCENARIOS !== "undefined" ? SCENARIOS.length : 3
+  };
+}
+
+function applyState(data){
+  if (!data || typeof data !== "object") return;
+  cleared = data.cleared || {};
+  xp = data.xp || 0;
+}
+
+/** Supabase (se logado) → local unificado → chave legada */
+async function loadSave(){
+  try {
+    if (typeof getGameProgress === "function") {
+      const data = await getGameProgress(GAME_ID, SAVE_KEY);
+      applyState(data);
+      return;
+    }
+  } catch (e) {
+    console.error("loadSave cloud", e);
+  }
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (raw) applyState(JSON.parse(raw));
+  } catch(e){}
+}
+
+/** Local imediato + nuvem em background */
+function save(){
+  const snap = snapshotState();
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify(snap));
+  } catch(e){}
+  if (typeof saveGameProgress === "function") {
+    saveGameProgress(GAME_ID, snap).catch(function(err){
+      console.error("saveGameProgress", err);
+    });
+  }
+}
+
+function toast(msg, kind){
+  const el = $("toast");
+  el.textContent = msg;
+  el.className = "toast show" + (kind ? " " + kind : "");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+function showScreen(id){
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("show"));
+  $(id).classList.add("show");
+}
+
+function clearedCount(){
+  return SCENARIOS.filter(s => cleared[s.id]).length;
+}
+
+function updateHUD(){
+  $("doneNum").textContent = clearedCount();
+  $("xpNum").textContent = xp;
+  if (current){
+    const pct = Math.round((correctRounds / current.rounds.length) * 100);
+    $("clarityNum").textContent = pct + "%";
+  } else $("clarityNum").textContent = "—";
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderMenu(){
+  const grid = $("scenarioGrid");
+  grid.innerHTML = "";
+  SCENARIOS.forEach(s => {
+    const done = !!cleared[s.id];
+    const btn = document.createElement("button");
+    btn.className = "scenario-card" + (done ? " cleared" : "");
+    btn.innerHTML =
+      "<div class=\"sc-top\">" +
+        "<div class=\"sc-emoji\">" + s.emoji + "</div>" +
+        "<div class=\"sc-info\"><strong>" + s.title + "</strong><span>" + s.sub + "</span></div>" +
+        "<div class=\"sc-status " + (done ? "ok" : "wait") + "\">" + (done ? "✓ Feito" : "Jogar") + "</div>" +
+      "</div>" +
+      "<div class=\"sc-goal\"><strong>Objetivo:</strong> " + s.goal + "</div>";
+    btn.addEventListener("click", () => startScenario(s.id));
+    grid.appendChild(btn);
+  });
+  updateHUD();
+  showScreen("screenMenu");
+}
+
+function startScenario(id){
+  current = SCENARIOS.find(s => s.id === id);
+  if (!current) return;
+  qIndex = 0;
+  correctRounds = 0;
+  step = 0;
+  stepOk = [false, false, false];
+  answered = false;
+  showScreen("screenPlay");
+  loadRound();
+}
+
+function currentRound(){
+  return current.rounds[qIndex];
+}
+
+function loadRound(){
+  answered = false;
+  step = 0;
+  phase = "step";
+  stepOk = [false, false, false];
+  const r = currentRound();
+
+  $("phaseBadge").textContent = current.emoji + " " + current.title;
+  $("phaseTitle").textContent = current.title;
+  $("phaseSub").textContent = current.sub;
+  $("phaseGoal").textContent = "Objetivo: " + current.goal;
+  $("textBody").textContent = r.text;
+  $("qCounter").textContent = "Texto " + (qIndex + 1) + " de " + current.rounds.length;
+
+  const pct = Math.round((correctRounds / current.rounds.length) * 100);
+  $("clarityFill").style.width = pct + "%";
+  $("clarityLabel").textContent = pct + "%";
+
+  $("feedback").className = "feedback-card";
+  $("feedback").innerHTML = "";
+  $("playActions").style.display = "none";
+  renderStep();
+  updateHUD();
+}
+
+function renderStep(){
+  const r = currentRound();
+  const box = $("options");
+  box.innerHTML = "";
+  answered = false;
+
+  let opts, correct, label, ask;
+  if (step === 0){
+    label = "Passo 1 · Gênero textual";
+    ask = "Qual é o gênero (ou o gênero real) deste texto?";
+    opts = shuffle(r.genreOpts);
+    correct = r.genre;
+  } else if (step === 1){
+    label = "Passo 2 · Tipologia dominante";
+    ask = "A tipologia predominante é:";
+    opts = shuffle(r.tipoOpts);
+    correct = r.tipo;
+  } else {
+    label = "Passo 3 · Destino de publicação";
+    ask = "Para onde este texto deve ir?";
+    opts = shuffle(r.destOpts);
+    correct = r.dest;
+  }
+
+  $("stepLabel").textContent = label;
+  $("question").textContent = ask;
+
+  opts.forEach(text => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.textContent = text;
+    b.addEventListener("click", () => selectOpt(text, correct));
+    box.appendChild(b);
+  });
+}
+
+function selectOpt(chosen, correct){
+  if (answered) return;
+  answered = true;
+  const ok = chosen === correct;
+  stepOk[step] = ok;
+
+  document.querySelectorAll(".opt").forEach(el => {
+    el.disabled = true;
+    if (el.textContent === correct) el.classList.add("correct");
+    if (el.textContent === chosen && !ok) el.classList.add("wrong");
+  });
+
+  const fb = $("feedback");
+  if (ok){
+    xp += 4;
+    GameSound.play("correct");
+    fb.className = "feedback-card show good";
+    fb.innerHTML = "<div class=\"fb-title\">✓ Leitura certa</div><div>Boa identificação neste passo.</div>";
+    toast("Acertou", "good");
+  } else {
+    GameSound.play("wrong");
+    fb.className = "feedback-card show bad";
+    fb.innerHTML = "<div class=\"fb-title\">✗ Não era esse</div><div>Resposta esperada: <strong>" + correct + "</strong></div>";
+    toast("Revise as marcas do texto", "bad");
+  }
+  $("xpNum").textContent = xp;
+  $("playActions").style.display = "flex";
+  save();
+}
+
+let phase = "step"; // "step" | "roundEnd"
+
+function nextStep(){
+  if (nextStep._busy) return;
+  nextStep._busy = true;
+  setTimeout(() => { nextStep._busy = false; }, 350);
+
+  // Depois do feedback final da rodada → próximo texto ou fim
+  if (phase === "roundEnd"){
+    phase = "step";
+    qIndex++;
+    if (qIndex >= current.rounds.length){
+      endScenario();
+    } else {
+      loadRound();
+    }
+    return;
+  }
+
+  if (step < 2){
+    step++;
+    $("feedback").className = "feedback-card";
+    $("feedback").innerHTML = "";
+    $("playActions").style.display = "none";
+    renderStep();
+    return;
+  }
+
+  // Acabou o passo 3 → fecha a rodada
+  const r = currentRound();
+  const fullOk = stepOk[0] && stepOk[1] && stepOk[2];
+  if (fullOk){
+    correctRounds++;
+    xp += 8;
+  }
+
+  const fb = $("feedback");
+  fb.className = "feedback-card show " + (fullOk ? "good" : "bad");
+  fb.innerHTML = "<div class=\"fb-title\">" + (fullOk ? "📰 Texto bem encaminhado" : "📌 Ficou uma marca pelo caminho") + "</div>" +
+    "<div class=\"fb-explain\">" + r.explain + "</div>";
+
+  const pct = Math.round((correctRounds / current.rounds.length) * 100);
+  $("clarityFill").style.width = pct + "%";
+  $("clarityLabel").textContent = pct + "%";
+  $("clarityNum").textContent = pct + "%";
+  $("xpNum").textContent = xp;
+  $("playActions").style.display = "flex";
+  phase = "roundEnd";
+  save();
+}
+
+function endScenario(){
+  const passed = correctRounds >= current.minCorrect;
+  const card = $("resultCard");
+  if (passed){
+    cleared[current.id] = true;
+    xp += 25;
+    save();
+    GameSound.play("win");
+    confetti({ particleCount: 80, spread: 55, origin: { y: 0.7 }, colors: ["#ffd23f","#8b5cf6","#2dd9b9"] });
+    card.innerHTML =
+      "<div class=\"big\">🎉</div><h2>" + current.winTitle + "</h2>" +
+      "<div class=\"result-goal win\">Objetivo: " + current.goal + "</div>" +
+      "<p>" + current.winText + "</p>" +
+      "<p>Clareza: <strong style=\"color:var(--teal)\">" + correctRounds + "/" + current.rounds.length + "</strong> textos impecáveis</p>" +
+      "<div class=\"actions\">" +
+        "<button class=\"btn btn-ghost\" id=\"btnRetry\">Jogar de novo</button>" +
+        "<button class=\"btn btn-primary\" id=\"btnMenu\">Outros cenários</button></div>";
+  } else {
+    GameSound.play("wrong");
+    card.innerHTML =
+      "<div class=\"big\">📂</div><h2>" + current.loseTitle + "</h2>" +
+      "<div class=\"result-goal lose\">Objetivo não alcançado</div>" +
+      "<p>" + current.loseText + "</p>" +
+      "<p>Clareza: " + correctRounds + "/" + current.rounds.length +
+      " (mínimo " + current.minCorrect + ")</p>" +
+      "<div class=\"actions\">" +
+        "<button class=\"btn btn-primary\" id=\"btnRetry\">Tentar de novo</button>" +
+        "<button class=\"btn btn-ghost\" id=\"btnMenu\">Outros cenários</button></div>";
+  }
+  showScreen("screenResult");
+  updateHUD();
+  $("btnRetry").addEventListener("click", () => startScenario(current.id));
+  $("btnMenu").addEventListener("click", () => { current = null; renderMenu(); });
+}
+
+$("hudBack").addEventListener("click", (e) => {
+  if ($("screenPlay").classList.contains("show") || $("screenResult").classList.contains("show")){
+    e.preventDefault();
+    current = null;
+    renderMenu();
+  }
+});
+
+$("btnNext").addEventListener("click", nextStep);
+
+(async function boot(){
+  await loadSave();
+  renderMenu();
+})();
+</script>
+</body>
+</html>
