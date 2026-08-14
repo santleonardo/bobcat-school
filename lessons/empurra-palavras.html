@@ -90,6 +90,7 @@
   .player{position:absolute;display:flex;align-items:center;justify-content:center;
     transition:left .14s ease,top .14s ease;z-index:3;pointer-events:none;
     filter:drop-shadow(0 0 8px rgba(255,210,63,.7))}
+  .player.shake{animation:shake .32s}
 
   .dpad{display:grid;grid-template-columns:38px 38px 38px;grid-template-rows:38px 38px 38px;gap:5px}
   .dpad button{background:linear-gradient(180deg,var(--orange-light),var(--orange));border:none;
@@ -482,13 +483,30 @@ const VECT = { N:{dr:-1,dc:0}, S:{dr:1,dc:0}, E:{dr:0,dc:1}, W:{dr:0,dc:-1} };
 
 function tileAt(r,c){ return tiles.find(t => t.row === r && t.col === c); }
 
+function shakePlayer(){
+  if (!player.el) return;
+  player.el.classList.remove('shake');
+  void player.el.offsetWidth; // reinicia a animação
+  player.el.classList.add('shake');
+  setTimeout(() => player.el && player.el.classList.remove('shake'), 320);
+}
+
 function move(dir){
   const v = VECT[dir];
   const nr = player.row + v.dr, nc = player.col + v.dc;
-  if (nc < 0 || nc >= COLS || nr < 0 || nr >= ROWS) return;
+  if (nc < 0 || nc >= COLS || nr < 0 || nr >= ROWS){
+    // Borda do campo — dá um retorno visual/sonoro em vez de não fazer nada,
+    // pra não parecer que o botão está travado (ex: seta pra baixo quando
+    // o bonequinho já está na última linha, o corredor).
+    GameSound.play('wrong');
+    shakePlayer();
+    return;
+  }
   if (nr === 0){
     // linha 0 é só alcançável empurrando uma caixinha até lá — o jogador
     // nunca anda direto pra dentro da faixa de chegada.
+    GameSound.play('wrong');
+    shakePlayer();
     return;
   }
 
@@ -549,9 +567,15 @@ function shakeTile(tile){
 function pull(dir){
   const v = VECT[dir];
   const nr = player.row + v.dr, nc = player.col + v.dc;
-  if (nc < 0 || nc >= COLS || nr < 0 || nr >= ROWS) return;
+  if (nc < 0 || nc >= COLS || nr < 0 || nr >= ROWS){
+    GameSound.play('wrong');
+    shakePlayer();
+    return;
+  }
   if (nr === 0){
     // o jogador nunca anda direto pra dentro da faixa de chegada.
+    GameSound.play('wrong');
+    shakePlayer();
     return;
   }
   if (tileAt(nr, nc)){
