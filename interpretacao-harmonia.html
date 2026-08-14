@@ -182,6 +182,21 @@
     body{padding-bottom:64px}
     .card{padding-bottom:20px}
   }
+
+  .resume-box{display:none;font-size:12.5px;color:var(--ink-soft);background:rgba(255,210,63,.1);
+    border:1px solid rgba(255,210,63,.3);border-radius:12px;padding:12px 14px;margin-bottom:14px;line-height:1.5}
+  .resume-box strong{color:var(--gold)}
+  .resume-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .resume-actions .btn{padding:9px 16px;font-size:13px}
+
+  .pause-overlay{position:fixed;inset:0;background:rgba(6,3,18,.82);backdrop-filter:blur(6px);
+    display:none;align-items:center;justify-content:center;z-index:300;padding:20px}
+  .pause-overlay.show{display:flex;animation:fadeUp .2s ease}
+  .pause-card{max-width:360px;width:100%;text-align:center}
+  .pause-card h2{font-size:20px;margin-bottom:8px}
+  .pause-card p{font-size:13px;color:var(--ink-soft);margin-bottom:16px;line-height:1.5}
+  .pause-card .actions{flex-direction:column;align-items:stretch}
+  .pause-card .btn{width:100%}
 </style>
 </head>
 <body>
@@ -196,6 +211,8 @@
     <div class="stat timer" id="timerStat" style="display:none">⏱ <span id="timerNum">30</span>s</div>
     <div class="stat harm">🤝 <span id="harmNum">—</span></div>
     <div class="stat xp">⭐ <span id="xpNum">0</span></div>
+    <button class="btn-icon" id="btnPause" title="Pausar" style="display:none">⏸</button>
+    <button class="btn-icon" id="btnReset" title="Reiniciar progresso">🔄</button>
     <button class="btn-icon" data-sound-toggle title="Som">🔊</button>
   </div>
 </div>
@@ -211,6 +228,8 @@
       <div class="mystery-teaser">
         <strong>🔐 Segredo opcional:</strong> conclua os cinco cenários com harmonia e junte os fragmentos de um mistério escondido entre as falas.
       </div>
+
+      <div class="resume-box" id="resumeBox"></div>
 
       <div class="scenario-grid" id="scenarioGrid"></div>
     </div>
@@ -273,6 +292,18 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<div class="pause-overlay" id="pauseOverlay">
+  <div class="card pause-card">
+    <h2>⏸ Jogo pausado</h2>
+    <p>O cronômetro está parado. O que você quer fazer?</p>
+    <div class="actions">
+      <button class="btn btn-primary" id="btnResumeGame">▶ Continuar jogando</button>
+      <button class="btn btn-ghost" id="btnSaveExit">💾 Salvar e jogar depois</button>
+      <button class="btn btn-ghost" id="btnRestartScenario">🔁 Reiniciar este cenário</button>
+    </div>
+  </div>
+</div>
 
 <script>
 const SCENARIOS = [
@@ -869,8 +900,10 @@ let xp = 0;
 let answered = false;
 let cleared = {};
 let secrets = {};
+let inProgress = null; // { id, qIndex, correctCount } — cenário salvo para continuar depois
 let timerId = null;
 let timeLeft = 0;
+let paused = false;
 const TIME_PER_Q = 30; // segundos por pergunta
 
 function $(id){ return document.getElementById(id); }
@@ -881,18 +914,19 @@ function stopTimer(){
   if (st){ st.style.display = "none"; st.classList.remove("urgent"); }
 }
 
-function startTimer(){
+function startTimer(resumeFrom){
   stopTimer();
-  timeLeft = TIME_PER_Q;
+  timeLeft = (typeof resumeFrom === "number") ? resumeFrom : TIME_PER_Q;
   const st = $("timerStat");
   const fill = $("timerFill");
   st.style.display = "flex";
   st.classList.remove("urgent");
   $("timerNum").textContent = timeLeft;
   if (fill){
-    fill.style.width = "100%";
-    fill.classList.remove("urgent");
+    fill.style.width = Math.max(0, (timeLeft / TIME_PER_Q) * 100) + "%";
+    fill.classList.toggle("urgent", timeLeft <= 8);
   }
+  st.classList.toggle("urgent", timeLeft <= 8);
   timerId = setInterval(() => {
     timeLeft--;
     $("timerNum").textContent = Math.max(0, timeLeft);
@@ -939,12 +973,21 @@ function loadSave(){
       cleared = data.cleared || {};
       secrets = data.secrets || {};
       xp = data.xp || 0;
+      inProgress = data.inProgress || null;
     }
   } catch(e){}
 }
 
 function save(){
-  localStorage.setItem(SAVE_KEY, JSON.stringify({ cleared, secrets, xp }));
+  localStorage.setItem(SAVE_KEY, JSON.stringify({ cleared, secrets, xp, inProgress }));
+}
+
+// Salva o ponto exato do cenário em andamento (cenário, pergunta e acertos)
+// para o jogador poder sair e continuar depois de onde parou.
+function saveProgress(){
+  if (!current) return;
+  inProgress = { id: current.id, qIndex, correctCount };
+  save();
 }
 
 function toast(msg, kind){
@@ -958,6 +1001,7 @@ function toast(msg, kind){
 function showScreen(id){
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("show"));
   $(id).classList.add("show");
+  $("btnPause").style.display = (id === "screenPlay") ? "inline-flex" : "none";
 }
 
 function clearedCount(){
@@ -976,6 +1020,28 @@ function updateHUD(){
 }
 
 function renderMenu(){
+  const resumeBox = $("resumeBox");
+  const resumeSc = inProgress ? SCENARIOS.find(s => s.id === inProgress.id) : null;
+  if (resumeSc){
+    resumeBox.style.display = "block";
+    resumeBox.innerHTML =
+      "<strong>💾 Você tem um jogo salvo:</strong> " + resumeSc.emoji + " " + resumeSc.title +
+      " — pergunta " + (inProgress.qIndex + 1) + " de " + resumeSc.questions.length + "." +
+      "<div class=\"resume-actions\">" +
+        "<button class=\"btn btn-primary\" id=\"btnResumeSaved\">▶ Continuar</button>" +
+        "<button class=\"btn btn-ghost\" id=\"btnDiscardSaved\">Descartar</button>" +
+      "</div>";
+    $("btnResumeSaved").addEventListener("click", resumeScenario);
+    $("btnDiscardSaved").addEventListener("click", () => {
+      inProgress = null;
+      save();
+      renderMenu();
+    });
+  } else {
+    resumeBox.style.display = "none";
+    resumeBox.innerHTML = "";
+  }
+
   const grid = $("scenarioGrid");
   grid.innerHTML = "";
   SCENARIOS.forEach(s => {
@@ -1021,6 +1087,18 @@ function startScenario(id){
   if (!current) return;
   qIndex = 0;
   correctCount = 0;
+  answered = false;
+  if (inProgress && inProgress.id === id){ inProgress = null; save(); }
+  showScreen("screenPlay");
+  loadQuestion();
+}
+
+function resumeScenario(){
+  if (!inProgress) return;
+  current = SCENARIOS.find(s => s.id === inProgress.id);
+  if (!current){ inProgress = null; save(); renderMenu(); return; }
+  qIndex = inProgress.qIndex;
+  correctCount = inProgress.correctCount;
   answered = false;
   showScreen("screenPlay");
   loadQuestion();
@@ -1129,6 +1207,9 @@ function endScenario(){
   const passed = correctCount >= current.minCorrect;
   const card = $("resultCard");
 
+  // Cenário terminou (ganhou ou perdeu): não há mais progresso "em andamento" para salvar.
+  if (inProgress && inProgress.id === current.id){ inProgress = null; }
+
   if (passed){
     cleared[current.id] = true;
     secrets[current.id] = { title: current.secretTitle, text: current.secretText };
@@ -1149,6 +1230,7 @@ function endScenario(){
         "<button class=\"btn btn-primary\" id=\"btnMenu\">Outros cenários</button>" +
       "</div>";
   } else {
+    save();
     GameSound.play("wrong");
     card.innerHTML =
       "<div class=\"big\">💔</div>" +
@@ -1230,6 +1312,57 @@ $("btnBackMenuFinal").addEventListener("click", () => {
   stopTimer();
   current = null;
   renderMenu();
+});
+
+// ---- Pausar / Salvar e jogar depois / Reiniciar cenário ----
+function openPause(){
+  if (!current || !$("screenPlay").classList.contains("show")) return;
+  paused = true;
+  if (timerId){ clearInterval(timerId); timerId = null; }
+  $("pauseOverlay").classList.add("show");
+}
+
+function closePause(){
+  paused = false;
+  $("pauseOverlay").classList.remove("show");
+}
+
+$("btnPause").addEventListener("click", openPause);
+
+$("btnResumeGame").addEventListener("click", () => {
+  closePause();
+  if (!answered) startTimer(timeLeft);
+});
+
+$("btnSaveExit").addEventListener("click", () => {
+  saveProgress();
+  closePause();
+  stopTimer();
+  current = null;
+  toast("Progresso salvo! Continue quando quiser.", "good");
+  renderMenu();
+});
+
+$("btnRestartScenario").addEventListener("click", () => {
+  const id = current.id;
+  closePause();
+  startScenario(id);
+});
+
+// ---- Reiniciar todo o progresso ----
+$("btnReset").addEventListener("click", () => {
+  if (confirm("Isso vai apagar TODO o seu progresso (cenários concluídos, segredos, XP e jogo salvo). Deseja continuar?")){
+    stopTimer();
+    closePause();
+    cleared = {};
+    secrets = {};
+    xp = 0;
+    inProgress = null;
+    current = null;
+    localStorage.removeItem(SAVE_KEY);
+    toast("Progresso reiniciado", "bad");
+    renderMenu();
+  }
 });
 
 loadSave();
