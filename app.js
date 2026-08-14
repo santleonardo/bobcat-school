@@ -339,6 +339,14 @@ const EXTRAS = [
     icon: '🗣️',
     description: 'Converse em entrevistas, coletivas e na rua: interprete o implícito, mantenha a harmonia e desvende um mistério',
     url: 'lessons/interpretacao-harmonia.html'
+  },
+  {
+    id: 'generos-em-cena',
+    group: 'Jogos',
+    name: 'Gêneros em Cena',
+    icon: '📰',
+    description: 'Classifique o gênero, a tipologia e o destino de cada texto — você é o editor de plantão',
+    url: 'lessons/generos-em-cena.html'
   }
 
 ];
