@@ -256,7 +256,7 @@
     <div class="hud-title"><span>🗣️</span> Interpretação</div>
   </div>
   <div class="hud-stats">
-    <div class="stat done">✓ <span id="doneNum">0</span>/5</div>
+    <div class="stat done">✓ <span id="doneNum">0</span>/<span id="doneTotal">5</span></div>
     <div class="stat timer" id="timerStat" style="display:none">⏱ <span id="timerNum">60</span>s</div>
     <div class="stat harm">🤝 <span id="harmNum">—</span></div>
     <div class="stat xp">⭐ <span id="xpNum">0</span></div>
@@ -273,9 +273,10 @@
       <h2>Harmonia nas entrelinhas</h2>
       <p>Escolha um <strong>cenário</strong>. Em cada um, alguém fala — e você precisa interpretar o que realmente quer dizer: intenção, tom e implícito.</p>
       <p>Acerte a leitura e a harmonia sobe. Erre e o <strong>objetivo daquele desafio</strong> fica ameaçado. Cada pergunta tem <strong>contagem regressiva</strong> — sob pressão, a interpretação precipitada custa caro.</p>
+      <p style="font-size:12.5px;color:var(--ink-soft)">Após a entrevista e a negociação da proposta, desbloqueie a <strong>Fase 3 — Vendas</strong>: 10 clientes de tecnologia, meta de 70% de harmonia. Se não atingir, defenda-se com o supervisor, treine a leitura de falas e tenha uma segunda chance. Passe e seja promovido a gerente (Fase 4 em breve).</p>
 
       <div class="mystery-teaser">
-        <strong>🔐 Segredo opcional:</strong> conclua os cinco cenários com harmonia e junte os fragmentos de um mistério escondido entre as falas.
+        <strong>🔐 Segredo opcional:</strong> conclua os cinco cenários originais com harmonia e junte os fragmentos de um mistério escondido entre as falas.
       </div>
 
       <div class="resume-box" id="resumeBox"></div>
@@ -1523,6 +1524,569 @@ const SCENARIOS = [
         consequence: "Você não conecta nada e a pista se perde. O mistério fica pela metade, sem sentido."
       }
     ]
+  },
+  // ========== FASE 3 DO EMPREGO: VENDEDOR ==========
+  {
+    id: "vendedor",
+    emoji: "🛒",
+    title: "Fase 3 — Vendas de tecnologia",
+    sub: "Você é vendedor(a) na Nova Horizonte Tech · 10 clientes",
+    avatar: "🧑‍💼",
+    who: "Cliente em potencial",
+    goal: "Vender pelo menos 7 produtos (harmonia ≥ 70%)",
+    minCorrect: 7,
+    winTitle: "Meta batida! Você foi promovido a gerente",
+    winText: "Você leu os sinais de compra, as objeções e o que não foi dito. Sete ou mais vendas fechadas. A vaga de gerente é sua — Fase 4 em desenvolvimento.",
+    loseTitle: "Meta não atingida — vaga ameaçada",
+    loseText: "Menos de 7 vendas. O supervisor de vendas quer conversar com você. Defenda sua posição com boa leitura das críticas dele.",
+    secretTitle: "Nota de carreira",
+    secretText: "«Na Nova Horizonte Tech, quem vende bem não é só quem fala: é quem escuta o que o cliente não diz em voz alta.»",
+    requires: "emprego2",
+    requiresScore: 0.7,
+    unlockHint: "Conclua a Negociação da proposta (emprego2) com pelo menos 70% de harmonia",
+    careerPhase: 3,
+    questions: [
+      {
+        context: "Cliente olha o smartphone top de linha na vitrine. Pega o aparelho, gira na mão e solta um suspiro.",
+        speech: "O meu ainda funciona… mas anda travando nas reuniões de vídeo. E a bateria não segura o dia inteiro.",
+        ask: "A leitura mais precisa dessa fala é:",
+        options: [
+          "Ele só está matando tempo e não pretende comprar nada",
+          "Sinal de compra: reconhece dor real (travamento + bateria) e está aberto a solução",
+          "Ele quer que você diga que o aparelho atual é ótimo",
+          "Está pedindo desconto antes de qualquer demonstração"
+        ],
+        correct: 1,
+        explain: "Reconhecer problema concreto no uso diário é um dos sinais mais fortes de abertura. Ele já justificou a troca para si mesmo.",
+        consequence: "Você trata como curiosidade e não oferece demonstração. Ele sai e compra na concorrência."
+      },
+      {
+        context: "Cliente compara o notebook que você apresentou com um modelo mais barato de outra marca no celular.",
+        speech: "Esse da outra marca está quase R$ 800 mais barato. A diferença de desempenho justifica mesmo?",
+        ask: "O que ele realmente está pedindo?",
+        options: [
+          "Que você baixe o preço imediatamente para o valor da concorrência",
+          "Uma justificativa clara de valor (desempenho, suporte, garantia) que feche a conta na cabeça dele",
+          "Que você critique a outra marca de forma agressiva",
+          "Que você mude de assunto para outro produto"
+        ],
+        correct: 1,
+        explain: "Comparação de preço é quase sempre pedido de argumento de valor, não pedido automático de desconto.",
+        consequence: "Você só fala de desconto. Ele sai com a impressão de que o produto não vale a diferença."
+      },
+      {
+        context: "Cliente testa o fone de ouvido com cancelamento de ruído. Coloca e tira várias vezes.",
+        speech: "Legal o cancelamento… mas eu uso muito no transporte. Será que não fica estranho falar com as pessoas?",
+        ask: "A preocupação implícita é:",
+        options: [
+          "Ele não gostou do design e está rejeitando o produto",
+          "Dúvida de usabilidade no dia a dia (modo transparência / conversa) — precisa de demonstração prática",
+          "Ele quer um modelo sem cancelamento de ruído",
+          "Está pedindo que você baixe o volume da loja"
+        ],
+        correct: 1,
+        explain: "A pergunta sobre 'falar com as pessoas' aponta para o modo transparência e o fluxo real de uso, não para rejeição estética.",
+        consequence: "Você ignora a dúvida. Ele compra um modelo inferior em outra loja que explicou o modo transparência."
+      },
+      {
+        context: "Cliente precisa de um tablet para a filha estudar. Está com pressa.",
+        speech: "A prova dela é semana que vem. Se eu levar hoje, chega a tempo de configurar e instalar os apps?",
+        ask: "O sinal mais importante nessa fala é:",
+        options: [
+          "Só curiosidade sobre prazo de entrega genérico",
+          "Urgência real + necessidade de suporte pós-venda rápido — oportunidade de fechar com configuração inclusa",
+          "Ele quer que você entregue na casa dele amanhã de graça",
+          "Está testando se a loja tem estoque"
+        ],
+        correct: 1,
+        explain: "Prazo curto + menção a configuração = pedido implícito de solução completa, não só do aparelho.",
+        consequence: "Você só confirma estoque. Ele sente que vai se virar sozinho e desiste."
+      },
+      {
+        context: "Cliente interessado no smartwatch. Menciona que já teve um de outra marca.",
+        speech: "O anterior durou menos de um ano. A pulseira descascou e o sensor de batimento ficou maluco.",
+        ask: "Como interpretar essa fala no contexto da venda?",
+        options: [
+          "Ele está reclamando só para conseguir desconto",
+          "Experiência negativa anterior — precisa de prova de qualidade (garantia, material, sensores) antes de confiar de novo",
+          "Ele não quer nenhum smartwatch",
+          "Está pedindo que você ignore a história e fale só de preço"
+        ],
+        correct: 1,
+        explain: "Histórico de frustração com produto similar pede reconstrução de confiança, não discurso genérico de venda.",
+        consequence: "Você força o fechamento. Ele sente pressão e sai sem comprar."
+      },
+      {
+        context: "Casal olha o monitor ultrawide. A mulher fala baixo para o marido.",
+        speech: "(sussurro) Eu ainda preciso conversar com ele em casa… o orçamento do mês já está apertado.",
+        ask: "A leitura correta para o vendedor é:",
+        options: [
+          "Ela já decidiu não comprar e está só enrolando",
+          "Há interesse, mas a decisão é compartilhada e o orçamento é restrição real — não forçar fechamento imediato",
+          "Você deve ignorar a mulher e falar só com o marido",
+          "Oferecer o produto mais caro para impressionar"
+        ],
+        correct: 1,
+        explain: "Decisão a dois + menção explícita a orçamento = respeitar o processo e oferecer opções (parcelamento, modelo intermediário) sem pressão.",
+        consequence: "Você insiste no fechamento na hora. O casal se sente pressionado e não volta."
+      },
+      {
+        context: "Cliente técnico pergunta sobre o SSD.",
+        speech: "Vocês usam controlador de qual fabricante? Porque eu já vi modelo com DRAM fake que morre em seis meses.",
+        ask: "Essa pergunta indica que:",
+        options: [
+          "Ele está tentando humilhar o vendedor",
+          "É um comprador informado — responde com dados concretos (controlador, DRAM, garantia) ou busca a ficha técnica",
+          "Você deve mudar para um produto mais simples",
+          "Ele não vai comprar de qualquer forma"
+        ],
+        correct: 1,
+        explain: "Pergunta técnica específica é sinal de interesse sério. Responder com precisão ou honestidade ('vou confirmar na ficha') mantém a harmonia.",
+        consequence: "Você inventa uma resposta. Ele percebe e perde a confiança na loja."
+      },
+      {
+        context: "Cliente preocupado com garantia do roteador mesh.",
+        speech: "Se der problema em seis meses, eu preciso trazer o aparelho ou vocês resolvem remoto?",
+        ask: "O que ele realmente quer saber?",
+        options: [
+          "Se a loja aceita troca sem nota fiscal",
+          "O fluxo real de suporte e o nível de tranquilidade pós-compra",
+          "Se o produto é tão ruim que vai quebrar",
+          "Se pode devolver depois de um ano"
+        ],
+        correct: 1,
+        explain: "Perguntas de pós-venda são quase sempre sobre redução de risco. Clareza no processo fecha mais do que qualquer desconto.",
+        consequence: "Você responde de forma vaga. A incerteza faz ele adiar a compra."
+      },
+      {
+        context: "Cliente quer parcelar a câmera mirrorless.",
+        speech: "No cartão em 12x o valor fica salgado. Tem alguma condição melhor se eu der uma entrada?",
+        ask: "A intenção por trás da pergunta é:",
+        options: [
+          "Só reclamar do preço",
+          "Negociar condições de pagamento — há abertura real se você apresentar alternativas claras",
+          "Pedir para levar sem pagar nada",
+          "Testar se você tem autorização de desconto"
+        ],
+        correct: 1,
+        explain: "Proposta de entrada + prazo = sinal de compra com restrição de fluxo de caixa, não rejeição do produto.",
+        consequence: "Você diz que não tem flexibilidade nenhuma. Ele desiste mesmo gostando da câmera."
+      },
+      {
+        context: "Último cliente do dia. Já testou o console e os jogos demonstrativos.",
+        speech: "Tá, acho que é isso. Só me confirma se a garantia cobre queda acidental… e se vocês configuram a conta na hora.",
+        ask: "Essa fala deve ser lida como:",
+        options: [
+          "Mais uma objeção que pode matar a venda",
+          "Sinal clássico de fechamento: restam só pontos de segurança (garantia + setup) antes da decisão final",
+          "Ele ainda está em dúvida profunda e precisa de mais demonstração",
+          "Está pedindo desconto de última hora"
+        ],
+        correct: 1,
+        explain: "'Acho que é isso' + perguntas pontuais de garantia e configuração = o cliente já decidiu mentalmente. Só falta remover o último risco.",
+        consequence: "Você trata como objeção longa e começa a reexplicar o produto. O momento de fechar passa."
+      }
+    ]
+  },
+  {
+    id: "supervisor-vendas",
+    emoji: "📋",
+    title: "Conversa com o supervisor",
+    sub: "Supervisor de vendas — Nova Horizonte Tech",
+    avatar: "👨‍💼",
+    who: "Supervisor Carlos",
+    goal: "Defender sua posição e manter a vaga (harmonia ≥ 70%)",
+    minCorrect: 5,
+    winTitle: "Você convenceu o supervisor",
+    winText: "Carlos aceitou sua defesa. Ele vai te dar uma segunda chance — mas antes você precisa passar pelo treinador de interpretação de clientes.",
+    loseTitle: "A vaga continua ameaçada",
+    loseText: "Carlos não ficou convencido. A meta continua em aberto e a pressão aumenta. Tente de novo quando estiver preparado.",
+    secretTitle: "Feedback interno",
+    secretText: "«Carlos anota: candidato ouve crítica sem se defender no automático. Bom sinal de maturidade comercial.»",
+    requires: "vendedor",
+    requiresFail: true,
+    unlockHint: "Disponível se você não atingir a meta de 7 vendas na Fase 3",
+    careerPhase: 3,
+    questions: [
+      {
+        context: "Carlos chama você na sala. Tom sério, mas não agressivo. Tem a planilha de vendas aberta.",
+        speech: "Olha, o número ficou abaixo do combinado. Eu preciso entender o que aconteceu — não é só cobrança, é diagnóstico.",
+        ask: "A intenção real dessa abertura é:",
+        options: [
+          "Já decidir pela sua demissão e só cumprir formalidade",
+          "Abrir espaço para você explicar o contexto antes de qualquer decisão",
+          "Pedir que você aceite a culpa sem questionar",
+          "Comparar você publicamente com o melhor vendedor da equipe"
+        ],
+        correct: 1,
+        explain: "'Não é só cobrança, é diagnóstico' sinaliza processo de análise, não sentença pronta.",
+        consequence: "Você entra na defensiva imediata. Carlos marca como 'não aceita feedback'."
+      },
+      {
+        context: "Ele aponta algumas conversas que você perdeu.",
+        speech: "Em pelo menos três casos o cliente deu sinal claro de interesse e a venda esfriou. O que você acha que faltou?",
+        ask: "A melhor leitura dessa pergunta é:",
+        options: [
+          "Ele quer que você invente uma desculpa externa (preço, estoque, concorrência)",
+          "Convite a autoavaliação honesta sobre leitura de sinais e fechamento",
+          "Armadilha para você confessar incompetência",
+          "Pedido para você culpar os clientes"
+        ],
+        correct: 1,
+        explain: "Pergunta aberta sobre 'o que faltou' em casos específicos pede reflexão, não desculpa pronta.",
+        consequence: "Você culpa só o mercado. Carlos interpreta como falta de responsabilidade."
+      },
+      {
+        context: "Você menciona que alguns clientes estavam só pesquisando preço.",
+        speech: "Pesquisar preço também é etapa de compra. A diferença é quem consegue transformar pesquisa em decisão.",
+        ask: "O que Carlos está comunicando?",
+        options: [
+          "Que você não deveria atender quem só pesquisa",
+          "Que o papel do vendedor é avançar o cliente na jornada, não só responder preço",
+          "Que preço não importa nunca",
+          "Que você deve ignorar comparações de preço"
+        ],
+        correct: 1,
+        explain: "Ele redefine 'só pesquisando' como oportunidade ainda não convertida — foco em avanço da conversa.",
+        consequence: "Você discorda na hora. O clima azeda e a conversa vira confronto."
+      },
+      {
+        context: "Carlos fala do ritmo da equipe.",
+        speech: "Não estou pedindo milagre. Estou pedindo consistência. Sete em dez é o piso que a gente usa para manter a vaga estável.",
+        ask: "A leitura mais fiel é:",
+        options: [
+          "A meta é arbitrária e ele está inventando número",
+          "Há critério claro e transparente; a conversa é sobre atingir o piso, não sobre perfeição",
+          "Ele quer que você venda 10 em 10 da próxima vez",
+          "A vaga já está perdida de qualquer forma"
+        ],
+        correct: 1,
+        explain: "Expor o número e o motivo reduz ansiedade e deixa o caminho objetivo: atingir o piso.",
+        consequence: "Você trata como ameaça pessoal. Perde a chance de negociar o plano de recuperação."
+      },
+      {
+        context: "Ele oferece o próximo passo.",
+        speech: "Se você topa, eu te mando pro treinador antes da segunda rodada. Ele trabalha justamente a leitura de fala de cliente. Aceita?",
+        ask: "Essa proposta significa, sobretudo:",
+        options: [
+          "Castigo disfarçado de treinamento",
+          "Investimento na sua recuperação — segunda chance condicionada a preparação",
+          "Que ele não acredita mais em você",
+          "Que a vaga será de outra pessoa enquanto você treina"
+        ],
+        correct: 1,
+        explain: "Oferecer treino antes da nova tentativa é sinal de que a empresa ainda aposta no colaborador.",
+        consequence: "Você recusa o treino por orgulho. Carlos interpreta como resistência a feedback."
+      },
+      {
+        context: "Fechando a conversa.",
+        speech: "Independente do resultado da próxima rodada, eu preciso ver que você escuta o que o cliente não fala. Isso é o que separa quem fica de quem só passa.",
+        ask: "A mensagem central que Carlos deixa é:",
+        options: [
+          "Só o número de vendas importa, interpretação é detalhe",
+          "A habilidade de ler o implícito é critério de permanência e de promoção",
+          "Você deve decorar scripts prontos",
+          "Clientes difíceis devem ser evitados"
+        ],
+        correct: 1,
+        explain: "Ele eleva a interpretação do implícito a critério central de carreira, não só de uma meta.",
+        consequence: "Você foca só em 'vender mais falando mais'. Repete os mesmos erros de leitura."
+      },
+      {
+        context: "Carlos se levanta e estende a mão.",
+        speech: "Combinado, então. Treina, volta e me mostra. Eu torço para o número virar.",
+        ask: "O tom final deve ser lido como:",
+        options: [
+          "Formalidade fria sem apoio real",
+          "Apoio condicional genuíno — a porta está aberta se você entregar resultado e evolução",
+          "Sinal de que a demissão já está decidida",
+          "Pressão para você desistir sozinho"
+        ],
+        correct: 1,
+        explain: "'Eu torço' + combinação clara = apoio real com expectativa de entrega, não ameaça vazia.",
+        consequence: "Você sai defensivo. A relação com o supervisor fica marcada por desconfiança."
+      }
+    ]
+  },
+  {
+    id: "treinador",
+    emoji: "🎓",
+    title: "Treino de interpretação de clientes",
+    sub: "Treinador de vendas — leitura de falas",
+    avatar: "🧠",
+    who: "Treinador Leo",
+    goal: "Dominar a leitura de sinais de clientes (harmonia ≥ 70%)",
+    minCorrect: 5,
+    winTitle: "Treino concluído com harmonia",
+    winText: "Leo liberou você para a segunda chance de vendas. Agora é hora de aplicar o que treinou com os próximos 10 clientes.",
+    loseTitle: "Treino insuficiente",
+    loseText: "Ainda faltam leituras mais precisas. Revise e tente o treino de novo antes da segunda rodada de vendas.",
+    secretTitle: "Dica do treinador",
+    secretText: "«Cliente que fala 'vou pensar' quase nunca está pensando no produto — está pensando no risco. Trate o risco, não o silêncio.»",
+    requires: "supervisor-vendas",
+    unlockHint: "Conclua a conversa com o supervisor de vendas",
+    careerPhase: 3,
+    questions: [
+      {
+        context: "Leo projeta uma gravação de cliente na tela.",
+        speech: "Cliente: 'Tá interessante, mas eu vou pensar e te retorno.' — O que essa frase costuma esconder?",
+        ask: "A interpretação mais útil para o vendedor é:",
+        options: [
+          "O cliente vai voltar com certeza em poucos dias",
+          "Há uma objeção ou risco não verbalizado — vale explorar educadamente o que trava a decisão",
+          "É rejeição educada e definitiva",
+          "Ele só quer que você pare de falar"
+        ],
+        correct: 1,
+        explain: "'Vou pensar' é quase sempre adiamento por risco (preço, necessidade, opinião de terceiros). Explorar o risco reabre a conversa.",
+        consequence: "Você aceita o 'vou pensar' e encerra. A venda morre no silêncio."
+      },
+      {
+        context: "Outra gravação. Cliente compara dois modelos.",
+        speech: "Cliente: 'O mais barato resolve o básico, né? O caro é só frescura de marca.'",
+        ask: "Como ler essa fala?",
+        options: [
+          "Ele já decidiu pelo barato e qualquer argumento é perda de tempo",
+          "Está testando se a diferença de valor é real ou só marketing — precisa de prova concreta de benefício",
+          "Está ofendendo a marca de propósito",
+          "Quer que você concorde e venda o mais barato"
+        ],
+        correct: 1,
+        explain: "Chamar o premium de 'frescura' é provocação para ver se você defende valor com fatos, não com discurso de marca.",
+        consequence: "Você fica na defensiva da marca. Ele confirma o preconceito e leva o barato (ou nada)."
+      },
+      {
+        context: "Leo pausa e pergunta para você.",
+        speech: "Quando o cliente cruza os braços e responde só 'uhm' e 'sei', o que isso costuma indicar na prática?",
+        ask: "A leitura mais segura é:",
+        options: [
+          "Concordância silenciosa — pode fechar a venda",
+          "Desengajamento ou discordância não verbalizada — precisa mudar abordagem ou checar entendimento",
+          "Ele está concentrado e gostando",
+          "Sinal para aumentar o volume da voz"
+        ],
+        correct: 1,
+        explain: "Respostas mínimas + linguagem corporal fechada = perda de conexão. Continuar o mesmo discurso piora a harmonia.",
+        consequence: "Você ignora o sinal e empurra o pitch. O cliente se fecha de vez."
+      },
+      {
+        context: "Simulação: cliente fala de orçamento familiar.",
+        speech: "Cliente: 'Minha esposa que controla as contas. Se eu chegar com isso em casa sem alinhar, vira problema.'",
+        ask: "A ação de interpretação correta é:",
+        options: [
+          "Insistir para ele decidir sozinho na hora",
+          "Reconhecer a decisão compartilhada e oferecer material ou condição que facilite o alinhamento em casa",
+          "Criticar a dinâmica do casal",
+          "Oferecer desconto secreto para ele não contar"
+        ],
+        correct: 1,
+        explain: "Decisão a dois é restrição real. Facilitar o alinhamento (resumo, garantia, parcelamento) aumenta chance de retorno positivo.",
+        consequence: "Você pressiona. Ele compra sob pressão e devolve depois, ou não compra e não volta."
+      },
+      {
+        context: "Leo mostra um fechamento que deu errado.",
+        speech: "Vendedor perguntou 'Posso separar o seu?' logo após o cliente dizer 'não sei se preciso disso agora'. O que houve?",
+        ask: "O erro de leitura foi:",
+        options: [
+          "Nenhum — pergunta de fechamento sempre funciona",
+          "Ignorar o sinal de dúvida sobre necessidade e forçar avanço prematuro",
+          "O vendedor deveria ter oferecido um modelo mais caro",
+          "O cliente estava mentindo sobre a dúvida"
+        ],
+        correct: 1,
+        explain: "Fechar em cima de dúvida de necessidade aumenta resistência. Antes é preciso validar ou recriar a necessidade.",
+        consequence: "No papel, você repete o erro. Na vida real, o cliente se sente pressionado e sai."
+      },
+      {
+        context: "Último exercício do treino.",
+        speech: "Cliente: 'Se vocês tiverem uma condição especial hoje, eu levo. Se não, eu pesquiso mais um pouco.'",
+        ask: "A leitura mais precisa para agir bem é:",
+        options: [
+          "Ele só quer desconto e vai embora de qualquer forma",
+          "Há urgência artificial dele e abertura real — vale apresentar a melhor condição possível com clareza de prazo",
+          "Você deve inventar uma promoção inexistente",
+          "Ignorar a condição e falar só de produto"
+        ],
+        correct: 1,
+        explain: "Ele mesmo cria janela de decisão ('hoje'). Responder com condição real e limite de tempo respeita o jogo e fecha mais.",
+        consequence: "Você finge promoção. Depois o cliente descobre e a confiança na loja cai."
+      },
+      {
+        context: "Leo encerra a sessão.",
+        speech: "Lembra: harmonia não é concordar com tudo. É mostrar que você entendeu o que pesa para a pessoa — mesmo quando a resposta é 'não agora'.",
+        ask: "O princípio central que o treinador reforça é:",
+        options: [
+          "Sempre dizer sim ao cliente",
+          "Validar a preocupação real do cliente antes de empurrar a solução",
+          "Nunca aceitar um 'não'",
+          "Falar menos e deixar o produto se vender sozinho"
+        ],
+        correct: 1,
+        explain: "Entender o peso da preocupação (risco, dinheiro, tempo, opinião alheia) é o que permite responder de forma relevante.",
+        consequence: "Você trata interpretação como truque de persuasão. Os clientes sentem e se afastam."
+      }
+    ]
+  },
+  {
+    id: "vendedor2",
+    emoji: "🛒",
+    title: "Fase 3 — Segunda chance de vendas",
+    sub: "Nova Horizonte Tech · mais 10 clientes · após o treino",
+    avatar: "🧑‍💼",
+    who: "Cliente em potencial",
+    goal: "Vender pelo menos 7 produtos nesta segunda rodada",
+    minCorrect: 7,
+    winTitle: "Promovido a gerente!",
+    winText: "Segunda chance bem aproveitada. Você aplicou a leitura de sinais e bateu a meta. A promoção a gerente está confirmada — a Fase 4 (gestão de equipe) ainda será desenvolvida.",
+    loseTitle: "Segunda meta não atingida",
+    loseText: "Ainda não chegou a 7 vendas. A vaga permanece sob avaliação. Você pode tentar a segunda rodada de novo após revisar o treino.",
+    secretTitle: "Registro de promoção",
+    secretText: "«Quem recupera a meta depois do feedback e do treino demonstra exatamente o que a Nova Horizonte procura em um futuro gerente.»",
+    requires: "treinador",
+    unlockHint: "Conclua o treino de interpretação de clientes",
+    careerPhase: 3,
+    questions: [
+      {
+        context: "Cliente chega pedindo notebook para home office. Já pesquisou online.",
+        speech: "Vi um modelo parecido 15% mais barato no site. Aqui o atendimento compensa a diferença?",
+        ask: "A pergunta real por trás é:",
+        options: [
+          "Só pressão para igualar o preço do site",
+          "Pedido de valor agregado (suporte, garantia, configuração, troca) que justifique pagar mais na loja",
+          "Ameaça de nunca comprar em loja física",
+          "Teste para ver se você fala mal do site"
+        ],
+        correct: 1,
+        explain: "Quem já pesquisou preço e ainda veio à loja está aberto a argumentos de serviço e segurança, não só de desconto.",
+        consequence: "Você só discute preço. Ele usa a loja como showroom e compra online."
+      },
+      {
+        context: "Cliente testa o fone e faz cara de dúvida.",
+        speech: "O grave está forte… será que não cansa em uso longo? Eu fico de 3 a 4 horas em call.",
+        ask: "Como interpretar?",
+        options: [
+          "Rejeição ao produto — trocar de modelo imediatamente",
+          "Preocupação de conforto/uso prolongado — demonstrar equalização, modo call ou modelo alternativo",
+          "Ele quer o mais barato da linha",
+          "Está só reclamando por hábito"
+        ],
+        correct: 1,
+        explain: "Uso longo em call = critério de conforto e microfone. Responder a isso com demonstração mantém a venda viva.",
+        consequence: "Você ignora e insiste no mesmo modelo. Ele sai sem comprar."
+      },
+      {
+        context: "Mãe comprando tablet para o filho adolescente.",
+        speech: "Ele jura que é para estudar. Eu só não quero descobrir daqui a um mês que virou só videogame.",
+        ask: "O medo implícito é:",
+        options: [
+          "Preço alto demais",
+          "Uso inadequado / falta de controle parental — precisa de solução (controles, perfis, apps educativos)",
+          "Que o filho não saiba usar tecnologia",
+          "Que a garantia não cubra queda"
+        ],
+        correct: 1,
+        explain: "A preocupação é comportamento de uso, não o hardware. Oferecer controles parentais e configuração resolve a objeção real.",
+        consequence: "Você fala só de desempenho. Ela adia a compra por medo de uso errado."
+      },
+      {
+        context: "Cliente corporativo avaliando monitores para o time.",
+        speech: "Se um der problema, o prazo de RMA da marca é longo. Vocês têm unidade de backup enquanto isso?",
+        ask: "O que ele está priorizando?",
+        options: [
+          "Desconto por volume",
+          "Continuidade operacional (risco de downtime) — suporte e política de troca rápida",
+          "A cor do monitor",
+          "Se a marca é importada ou nacional"
+        ],
+        correct: 1,
+        explain: "Pergunta de RMA + backup = foco em operação, não em especificação. Responder com política clara de suporte fecha B2B.",
+        consequence: "Você responde só com a garantia de fábrica. Ele leva a compra para quem oferece backup."
+      },
+      {
+        context: "Jovem casal olha smartwatch para os dois.",
+        speech: "A gente queria o mesmo modelo, mas o orçamento só fecha se for o intermediário. O top fica para depois?",
+        ask: "A leitura correta é:",
+        options: [
+          "Eles vão desistir se não levarem o top",
+          "Decisão já inclinada para o intermediário — facilitar o fechamento do que cabe agora e deixar upgrade futuro aberto",
+          "Forçar o top com desconto agressivo",
+          "Separar os dois e vender só para um"
+        ],
+        correct: 1,
+        explain: "Eles mesmos propuseram o caminho. Confirmar o intermediário e o caminho de upgrade evita perda por overselling.",
+        consequence: "Você insiste no top. Eles saem para 'pensar' e não voltam."
+      },
+      {
+        context: "Cliente com SSD antigo no notebook.",
+        speech: "Se eu trocar só o SSD, o resto aguenta mais uns anos, né? Ou vocês acham que é jogar dinheiro fora?",
+        ask: "Ele busca, na verdade:",
+        options: [
+          "Permissão para não gastar nada",
+          "Validação técnica de que o upgrade faz sentido (ou não) — honestidade gera confiança e pode abrir outras vendas",
+          "Que você venda um notebook novo de qualquer jeito",
+          "Um diagnóstico gratuito completo do hardware"
+        ],
+        correct: 1,
+        explain: "Pergunta de custo-benefício honestidade. Resposta franca (quando o SSD resolve e quando não) diferencia o atendimento.",
+        consequence: "Você empurra notebook novo sem base. Ele desconfia e compra o SSD em outro lugar."
+      },
+      {
+        context: "Cliente interessado em câmera para viagem.",
+        speech: "A viagem é em 10 dias. Se eu levar hoje, tem curso rápido ou material para não chegar lá sem saber usar?",
+        ask: "O sinal de compra + necessidade é:",
+        options: [
+          "Só curiosidade sobre cursos pagos",
+          "Urgência de aprendizado + compra iminente — oferecer setup, guia rápido ou indicação de tutorial resolve",
+          "Pedido de desconto por ser viajante",
+          "Ele quer alugar, não comprar"
+        ],
+        correct: 1,
+        explain: "Prazo curto de viagem + medo de não saber usar = barreira de competência. Remover essa barreira fecha a venda.",
+        consequence: "Você só entrega a caixa. Ele adia com medo de chegar sem saber operar."
+      },
+      {
+        context: "Cliente questiona o roteador mesh depois de ver review negativa.",
+        speech: "Li que em apartamento com parede grossa o sinal cai. Aqui a planta é parecida. Isso é marketing ou problema real?",
+        ask: "Como responder à altura da pergunta?",
+        options: [
+          "Negar qualquer review negativa",
+          "Tratar a preocupação como legítima e explicar cobertura real, posicionamento dos nós ou alternativa adequada",
+          "Mudar de assunto para promoção",
+          "Dizer que todas as reviews são falsas"
+        ],
+        correct: 1,
+        explain: "Cliente informado com receio específico merece resposta técnica honesta. Isso reconstrói confiança.",
+        consequence: "Você despreza a review. Ele acredita mais nela do que em você e não compra."
+      },
+      {
+        context: "Cliente no fechamento do console.",
+        speech: "Fecha se tiver o jogo que eu quero incluso ou com desconto bom. Senão eu monto o pacote em outro lugar.",
+        ask: "A postura adequada é:",
+        options: [
+          "Aceitar qualquer exigência sem verificar estoque/condição",
+          "Verificar o que é possível de verdade e apresentar o melhor pacote real — transparência fecha mais que promessa vazia",
+          "Ignorar o pedido de jogo e falar só do hardware",
+          "Oferecer algo que a loja não tem"
+        ],
+        correct: 1,
+        explain: "Condição clara de fechamento. Cumprir ou ser honesto sobre o limite mantém a harmonia e a chance de venda.",
+        consequence: "Você promete o que não tem. Depois a venda vira problema de pós-venda."
+      },
+      {
+        context: "Último cliente. Já escolheu o produto e puxa o cartão.",
+        speech: "Antes de passar: a nota sai no meu CPF e a garantia fica registrada no sistema de vocês, certo?",
+        ask: "Essa confirmação final indica:",
+        options: [
+          "Última dúvida que pode cancelar tudo se mal respondida",
+          "Sinal de fechamento avançado — ele já decidiu e só valida o processo burocrático",
+          "Que ele desconfia da loja",
+          "Pedido disfarçado de desconto"
+        ],
+        correct: 1,
+        explain: "Perguntas de nota e garantia na hora de pagar são confirmação de processo, não novas objeções de produto.",
+        consequence: "Você hesita ou responde errado. A insegurança de última hora faz ele guardar o cartão."
+      }
+    ]
   }
 ];
 
@@ -1819,6 +2383,17 @@ function originalClearedCount(){
 
 function isUnlocked(s){
   if (!s.requires) return true;
+  // Cenários que abrem após FALHAR o requisito (ex.: supervisor após falhar nas vendas)
+  if (s.requiresFail){
+    if (cleared[s.requires]) return false; // se já passou no requisito, não precisa do caminho de recuperação
+    if (!(s.requires in scores) && !cleared[s.requires]) {
+      // só libera se o jogador já tentou o cenário requisito (tem score registrado)
+      return false;
+    }
+    // tentou e não passou (score existe mas não está em cleared)
+    if (!cleared[s.requires] && (s.requires in scores)) return true;
+    return false;
+  }
   if (!cleared[s.requires]) return false;
   if (s.requiresScore && (scores[s.requires] || 0) < s.requiresScore) return false;
   return true;
@@ -1826,6 +2401,8 @@ function isUnlocked(s){
 
 function updateHUD(){
   $("doneNum").textContent = clearedCount();
+  const totalEl = $("doneTotal");
+  if (totalEl) totalEl.textContent = SCENARIOS.length;
   $("xpNum").textContent = xp;
   if (current){
     const harm = Math.round((correctCount / (runtimeQuestions.length || current.questions.length)) * 100);
@@ -2099,6 +2676,14 @@ function endScenario(){
   } else {
     save();
     GameSound.play("wrong");
+    let extraHint = "";
+    if (current.id === "vendedor"){
+      extraHint = "<p style=\"margin-top:10px;padding:10px;border-radius:10px;background:rgba(255,210,63,.12);border:1px solid rgba(255,210,63,.35);color:var(--gold);font-size:13px\">📋 Sua vaga está ameaçada. Volte ao menu e fale com o <strong>Supervisor de vendas</strong> para defender sua posição e conquistar uma segunda chance.</p>";
+    } else if (current.id === "supervisor-vendas"){
+      extraHint = "<p style=\"margin-top:10px;padding:10px;border-radius:10px;background:rgba(255,91,61,.1);border:1px solid rgba(255,91,61,.3);color:var(--orange-light);font-size:13px\">Tente a conversa com o supervisor de novo quando estiver pronto para defender sua leitura das vendas.</p>";
+    } else if (current.id === "treinador"){
+      extraHint = "<p style=\"margin-top:10px;padding:10px;border-radius:10px;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.3);color:#c4b5fd;font-size:13px\">Revise as leituras e refaça o treino para liberar a segunda rodada de vendas.</p>";
+    }
     card.innerHTML =
       "<div class=\"big\">💔</div>" +
       "<h2>" + current.loseTitle + "</h2>" +
@@ -2106,6 +2691,7 @@ function endScenario(){
       "<p>" + current.loseText + "</p>" +
       "<p>Harmonia: " + correctCount + "/" + (runtimeQuestions.length || current.questions.length) +
       " (era preciso pelo menos " + current.minCorrect + ").</p>" +
+      extraHint +
       "<div class=\"actions\">" +
         "<button class=\"btn btn-primary\" id=\"btnRetry\">Tentar de novo</button>" +
         "<button class=\"btn btn-ghost\" id=\"btnMenu\">Outros cenários</button>" +
