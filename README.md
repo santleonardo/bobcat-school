@@ -189,6 +189,7 @@ db-client.js          → decide entre Supabase (nuvem) e localStorage (offline)
 config.js             → suas chaves do Supabase + VAPID pública (edite aqui)
 api/chat.js            → função serverless (Vercel) que fala com a IA — a GEMINI_API_KEY fica aqui, como variável de ambiente, nunca neste arquivo
 api/explain-error.js   → mesma chave/modelo do chat; gera as explicações da "Trilha de Erro" (tela de fim de lição, quando o aluno não passa)
+api/wordsearch-words.js → mesma chave/modelo do chat; gera palavras novas (com mini-definição) pro Caça-Palavras a cada partida, por tema. Sem GEMINI_API_KEY, ou se a IA falhar, o jogo cai automaticamente na lista fixa de sempre.
 api/push-send.js       → envia notificações Web Push (VAPID + opcionalmente Supabase)
 api/delete-account.js  → exclui a conta do aluno (LGPD) — precisa de SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY
 .github/workflows/push-reminders.yml → GitHub Actions: chama /api/push-send a cada 15 min (lembrete automático)
