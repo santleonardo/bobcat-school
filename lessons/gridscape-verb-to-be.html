@@ -103,11 +103,16 @@
     font-size:9.5px;letter-spacing:1.5px;color:var(--ink-soft);padding:8px 13px;border-radius:99px;
     box-shadow:0 10px 30px rgba(60,40,20,.1);}
   @media (max-width:640px){
-    .gnode{width:86vw;}
     .glabel{display:none;}
   }
 </style>
 </head><body>
+
+<!-- NOTE: .gnode mantém width fixo (520px, ver NODE_W no JS) em todos os tamanhos de tela.
+     Quem adapta o tamanho visível do card à tela é o zoom da câmera (transform.scale),
+     calculado dinamicamente em computeZoomBounds(). Usar vw aqui quebraria essa conta
+     e fazia o card vazar da tela, especialmente no celular. -->
+
 
 <div class="hud" id="hud" style="top:0;left:0;right:0;">
   <div class="hud-left"><span>🐾 Bobcat</span>
@@ -177,12 +182,19 @@ var WALL_PAD = 40; // margem extra visível dentro das paredes
 // Limites de zoom — recalculados para que um card nunca fique maior que a tela.
 var ZOOM_MIN = 0.35, ZOOM_MAX = 1.6;
 var maxNodeHeight = 360;
+// Espaço reservado para HUD fixo no topo, e toolbar/badge fixos embaixo — não é área útil pro card.
+var SAFE_TOP = 78, SAFE_BOTTOM = 70, SAFE_SIDE = 24;
+function viewportSize(){
+  if(window.visualViewport) return { w: window.visualViewport.width, h: window.visualViewport.height };
+  return { w: window.innerWidth, h: window.innerHeight };
+}
 function computeZoomBounds(){
-  var vw = window.innerWidth, vh = window.innerHeight;
-  var pad = 40; // margem de segurança para não colar nas bordas
-  var maxByWidth = (vw - pad) / NODE_W;
-  var maxByHeight = (vh - pad) / maxNodeHeight;
-  ZOOM_MAX = Math.max(0.35, Math.min(1.6, maxByWidth, maxByHeight));
+  var vp = viewportSize();
+  var usableW = vp.w - SAFE_SIDE*2;
+  var usableH = vp.h - SAFE_TOP - SAFE_BOTTOM;
+  var maxByWidth = usableW / NODE_W;
+  var maxByHeight = usableH / maxNodeHeight;
+  ZOOM_MAX = Math.max(0.25, Math.min(1.6, maxByWidth, maxByHeight));
   ZOOM_MIN = Math.min(0.35, ZOOM_MAX);
   transform.scale = Math.min(Math.max(transform.scale, ZOOM_MIN), ZOOM_MAX);
 }
@@ -190,7 +202,7 @@ function computeZoomBounds(){
 function clampTransform(){
   // Trava o eixo X para que os cards nunca saiam totalmente da tela,
   // como se as paredes (.grail) fossem sólidas.
-  var vw = window.innerWidth;
+  var vw = viewportSize().w;
   var scaledLeft = WALL_LEFT * transform.scale;
   var scaledRight = WALL_RIGHT * transform.scale;
   // x que encosta a parede direita na borda direita da tela
@@ -241,7 +253,7 @@ canvasWrap.addEventListener('wheel', function(e){
 function zoom(delta, ox, oy){
   var prevScale = transform.scale;
   var newScale = Math.min(Math.max(ZOOM_MIN, prevScale + delta), ZOOM_MAX);
-  if(ox === undefined){ ox = window.innerWidth/2; oy = window.innerHeight/2; }
+  if(ox === undefined){ var vc = viewportSize(); ox = vc.w/2; oy = vc.h/2; }
   var ratio = newScale/prevScale;
   transform.x = ox - (ox - transform.x) * ratio;
   transform.y = oy - (oy - transform.y) * ratio;
@@ -256,7 +268,8 @@ function centerOnNode(i){
   var el = document.getElementById('node-'+i);
   var h = el ? el.offsetHeight : 360;
   var x = OFFSETS_X[i] || 0, y = NODE_TOPS[i] || 0;
-  var hw = window.innerWidth/2, hh = window.innerHeight/2;
+  var vc = viewportSize();
+  var hw = vc.w/2, hh = SAFE_TOP + (vc.h - SAFE_TOP - SAFE_BOTTOM)/2;
   transform.x = hw - (x + NODE_W/2) * transform.scale;
   transform.y = hh - (y + h/2) * transform.scale;
   applyTransform();
@@ -474,6 +487,9 @@ NODES.forEach(function(html, i){
   applyTransform();
 })();
 window.addEventListener('resize', function(){ computeZoomBounds(); applyTransform(); });
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize', function(){ computeZoomBounds(); applyTransform(); });
+}
 document.getElementById('node-0').classList.add('show');
 canvas.addEventListener('click', function(e){
   var btn = e.target.closest('[data-go]');
