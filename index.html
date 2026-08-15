@@ -3,197 +3,868 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Termos de Uso — Bobcat Language School</title>
+<title>Bobcat Language School</title>
+<meta name="theme-color" content="#0a0a0b">
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem('bobcat_theme');
+    if (t !== 'light' && t !== 'dark') {
+      t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    }
+    document.documentElement.setAttribute('data-theme', t);
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', t === 'light' ? '#33473B' : '#0a0a0b');
+  } catch (e) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+})();
+</script>
+
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Bobcat">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./style.css">
-<style>
-  /* Páginas legais: sempre fundo claro + texto escuro (legível em qualquer tema) */
-  body.legal-page {
-    background: #f3f2ee !important;
-    color: #1a1a1a !important;
-  }
-  .legal-wrap {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 28px 20px 60px;
-  }
-  .legal-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: #9a3412 !important;
-    font-weight: 700;
-    font-size: 13.5px;
-    text-decoration: none;
-    margin-bottom: 18px;
-  }
-  .legal-back:hover { text-decoration: underline; }
-  .legal-header {
-    background: #c2410c !important;
-    color: #ffffff !important;
-    border-radius: 16px;
-    padding: 22px 22px 20px;
-    margin-bottom: 22px;
-    box-shadow: 0 4px 14px rgba(0,0,0,.15);
-  }
-  .legal-header h1 {
-    font-family: "Fraunces", Georgia, serif;
-    font-weight: 700;
-    font-size: 22px;
-    margin: 0 0 6px;
-    color: #ffffff !important;
-  }
-  .legal-header .legal-updated {
-    font-size: 12.5px;
-    color: rgba(255,255,255,.92) !important;
-    opacity: 1;
-  }
-  .legal-card {
-    background: #ffffff !important;
-    border: 1px solid #d4d0c8 !important;
-    border-radius: 14px;
-    padding: 20px 20px 6px;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.06);
-  }
-  .legal-card h2 {
-    font-family: "Fraunces", Georgia, serif;
-    font-size: 16.5px;
-    color: #1f3d2f !important;
-    margin: 0 0 10px;
-  }
-  .legal-card h3 {
-    font-size: 13.5px;
-    color: #1a1a1a !important;
-    margin: 16px 0 6px;
-  }
-  .legal-card p,
-  .legal-card li {
-    font-size: 14px;
-    line-height: 1.65;
-    color: #1a1a1a !important;
-    margin: 0 0 12px;
-  }
-  .legal-card ul { padding-left: 20px; margin: 0 0 12px; }
-  .legal-card li { margin-bottom: 6px; }
-  .legal-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 4px 0 16px;
-    font-size: 13px;
-  }
-  .legal-table th,
-  .legal-table td {
-    border: 1px solid #d4d0c8;
-    padding: 8px 10px;
-    text-align: left;
-    color: #1a1a1a !important;
-    background: #fff !important;
-  }
-  .legal-table th {
-    background: #f3f2ee !important;
-    font-weight: 700;
-    color: #1a1a1a !important;
-  }
-  .legal-note {
-    background: #f5f5f3 !important;
-    border: 1px solid #d4d0c8 !important;
-    border-radius: 10px;
-    padding: 12px 14px;
-    font-size: 13px;
-    color: #333333 !important;
-    line-height: 1.55;
-    margin: 0 0 16px;
-  }
-  .legal-contact {
-    text-align: center;
-    font-size: 13px;
-    color: #333333 !important;
-    margin-top: 8px;
-  }
-  .legal-contact a {
-    color: #9a3412 !important;
-    font-weight: 700;
-    text-decoration: underline;
-  }
-</style>
 </head>
-<body class="legal-page">
-<div class="legal-wrap">
-  <a class="legal-back" href="./index.html">← Voltar para o app</a>
+<body>
 
-  <div class="legal-header">
-    <h1>📄 Termos de Uso</h1>
-    <div class="legal-updated">Bobcat Language School · Última atualização: agosto de 2026</div>
+<div id="app">
+
+  <div id="boot-loading" style="position:fixed; inset:0; z-index:999; background:var(--paper, #0a0a0b); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px;">
+    <img src="./icons/icon-192.png" alt="Bobcat" style="height:64px; border-radius:14px;">
+    <div style="color:var(--terracotta, #ff5b3d); font-weight:600; font-family:'Fraunces', Georgia, serif; font-size:14px;">Carregando...</div>
   </div>
 
-  <div class="legal-card">
-    <p>Estes Termos de Uso regulam o uso do app <strong>Bobcat Language School</strong> por alunos matriculados na escola. Ao usar o app, você (ou o responsável legal, no caso de aluno menor de idade) concorda com estas condições.</p>
-    <div class="legal-note">Este documento é um modelo de referência, adaptado ao que o app efetivamente faz. Não substitui a análise de um advogado — recomendamos revisão jurídica antes de tratar este texto como definitivo.</div>
+  <div class="topbar" id="topbar-home-link" role="button" tabindex="0">
+    <img src="./icons/icon-192.png" alt="Bobcat">
+    <div>
+      <div class="brand">Bobcat Language School</div>
+      <small>Aprenda inglês no seu ritmo</small>
+    </div>
   </div>
 
-  <div class="legal-card">
-    <h2>1. O que é o app</h2>
-    <p>O Bobcat Language School é um app de apoio às aulas de inglês da escola: lições interativas, acompanhamento de progresso, chat com o professor e prática de conversação com personalidades de Inteligência Artificial. Ele é disponibilizado aos alunos matriculados na escola, gratuitamente ou como parte do serviço contratado com a escola, conforme o combinado na matrícula.</p>
+  <!-- TELA: LOGIN / CADASTRO (só aparece quando o Supabase está configurado) -->
+
+  <!-- TELA: LANDING (início) -->
+  <div class="screen hidden" id="screen-landing">
+    <div class="landing">
+
+      <!-- nav -->
+      <div class="landing-nav">
+        <div class="landing-nav-brand">
+          <img src="./icons/icon-192.png" alt="Bobcat">
+          <span>Bobcat<small>Language School</small></span>
+        </div>
+        <button type="button" class="landing-nav-cta landing-cta-mirror">Começar</button>
+      </div>
+
+      <!-- hero -->
+      <div class="landing-hero">
+        <div class="landing-hero-copy">
+          <h1 class="landing-title">Inglês que você<br><span>usa de verdade.</span></h1>
+          <p class="landing-sub">Pare de estudar só a gramática. Aprenda a se apresentar, conversar, contar histórias e defender ideias — no seu ritmo, com clareza e prática real.</p>
+          <button type="button" class="btn landing-cta" id="btn-landing-start">Começar agora <span aria-hidden="true">→</span></button>
+        </div>
+        <div class="landing-hero-media">
+          <img src="https://images.unsplash.com/photo-1730973915515-e79273d90b7c?fm=jpg&q=70&w=900&auto=format&fit=crop&crop=faces" alt="Aluna sorrindo usando fones de ouvido, praticando inglês">
+        </div>
+      </div>
+
+      <div class="landing-wave" aria-hidden="true"></div>
+
+      <!-- o que você vai conseguir fazer -->
+      <div class="landing-skills">
+        <h2 class="landing-section-title">O que você vai <span>conseguir fazer</span></h2>
+        <div class="landing-skills-grid">
+          <div class="landing-skill">
+            <span class="landing-skill-n">1</span>
+            <span class="landing-skill-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+            <div class="landing-skill-title">Se apresentar</div>
+            <div class="landing-skill-desc">e conversar sobre o dia a dia.</div>
+          </div>
+          <div class="landing-skill">
+            <span class="landing-skill-n">2</span>
+            <span class="landing-skill-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5 8.5 8.5 0 0 1-4-1L3 20l1-5.5A8.38 8.38 0 0 1 3 11.5 8.5 8.5 0 0 1 12 3a8.5 8.5 0 0 1 9 8.5Z"/></svg></span>
+            <div class="landing-skill-title">Se virar<br>no dia a dia</div>
+            <div class="landing-skill-desc">em situações reais.</div>
+          </div>
+          <div class="landing-skill">
+            <span class="landing-skill-n">3</span>
+            <span class="landing-skill-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.5A2.5 2.5 0 0 1 4.5 2H12v18H4.5A2.5 2.5 0 0 0 2 22.5Z"/><path d="M22 4.5A2.5 2.5 0 0 0 19.5 2H12v18h7.5a2.5 2.5 0 0 1 2.5 2.5Z"/></svg></span>
+            <div class="landing-skill-title">Contar histórias</div>
+            <div class="landing-skill-desc">e compartilhar experiências.</div>
+          </div>
+          <div class="landing-skill">
+            <span class="landing-skill-n">4</span>
+            <span class="landing-skill-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a6 6 0 0 0-4 10.47c.55.5 1 1.3 1 2.1V16h6v-1.43c0-.8.45-1.6 1-2.1A6 6 0 0 0 12 2Z"/></svg></span>
+            <div class="landing-skill-title">Narrar sua<br>própria história</div>
+            <div class="landing-skill-desc">com detalhes.</div>
+          </div>
+          <div class="landing-skill landing-skill-wide">
+            <span class="landing-skill-n">5</span>
+            <span class="landing-skill-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3Z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></span>
+            <div class="landing-skill-title">Discutir ideias</div>
+            <div class="landing-skill-desc">e argumentar com clareza.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- lições guiadas -->
+      <div class="landing-pillars">
+        <h3 class="landing-pillars-title"><span class="landing-pillars-rule" aria-hidden="true"></span>Lições guiadas<span class="landing-pillars-rule" aria-hidden="true"></span></h3>
+        <p class="landing-pillars-sub">Passo a passo, cada uma destrava a próxima</p>
+        <div class="landing-pillars-grid">
+          <div class="landing-pillar">
+            <span class="landing-pillar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.5A2.5 2.5 0 0 1 4.5 2H12v18H4.5A2.5 2.5 0 0 0 2 22.5Z"/><path d="M22 4.5A2.5 2.5 0 0 0 19.5 2H12v18h7.5a2.5 2.5 0 0 1 2.5 2.5Z"/></svg></span>
+            <div class="landing-pillar-title">Prática com IA</div>
+            <div class="landing-pillar-sub">Converse em inglês quando quiser</div>
+          </div>
+          <div class="landing-pillar">
+            <span class="landing-pillar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 16v-4"/><path d="M12 16V8"/><path d="M17 16v-7"/></svg></span>
+            <div class="landing-pillar-title">Progresso real</div>
+            <div class="landing-pillar-sub">Acompanhe sua evolução</div>
+          </div>
+          <div class="landing-pillar">
+            <span class="landing-pillar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
+            <div class="landing-pillar-title">Foco no que importa</div>
+            <div class="landing-pillar-sub">Inglês para a vida real</div>
+          </div>
+          <div class="landing-pillar">
+            <span class="landing-pillar-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2a4.5 4.5 0 0 0-4.5 4.5v.34A3.5 3.5 0 0 0 3 10a3.5 3.5 0 0 0 1.34 6.13A4.5 4.5 0 0 0 9 21.5"/><path d="M14.5 2a4.5 4.5 0 0 1 4.5 4.5v.34A3.5 3.5 0 0 1 21 10a3.5 3.5 0 0 1-1.34 6.13A4.5 4.5 0 0 1 15 21.5"/><path d="M9.5 2a2.5 2.5 0 0 1 5 0v19.5a2.5 2.5 0 0 1-5 0Z"/></svg></span>
+            <div class="landing-pillar-title">Aprendizado leve</div>
+            <div class="landing-pillar-sub">No seu ritmo</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- cta final -->
+      <div class="landing-final">
+        <h2 class="landing-final-title">Seu futuro <span>fala inglês.</span></h2>
+        <p class="landing-final-tag">Mais conversas. Mais oportunidades. Mais você.</p>
+        <button type="button" class="btn landing-cta landing-cta-mirror">Começar <span aria-hidden="true">→</span></button>
+        <div class="landing-final-brand">
+          <img src="./icons/icon-192.png" alt="Bobcat">
+          <span>Bobcat<small>Language School</small></span>
+        </div>
+      </div>
+
+      <p class="landing-foot">Leva menos de um minuto para criar seu perfil e começar a primeira lição.</p>
+    </div>
   </div>
 
-  <div class="legal-card">
-    <h2>2. Cadastro e alunos menores de idade</h2>
-    <ul>
-      <li>O acesso ao app é feito por conta vinculada ao aluno, criada no contexto da matrícula na escola.</li>
-      <li>Alunos menores de idade só devem usar o app com conhecimento e autorização do responsável legal, obtida no momento da matrícula.</li>
-      <li>É proibido compartilhar login/senha com terceiros ou usar dados de outra pessoa para se cadastrar.</li>
-      <li>A escola pode suspender ou encerrar o acesso de uma conta em caso de uso indevido do app ou encerramento da matrícula.</li>
-    </ul>
+  <script>
+    // botões extras da landing (nav e cta final) replicam o clique do CTA principal
+    document.addEventListener('DOMContentLoaded', function () {
+      document.querySelectorAll('.landing-cta-mirror').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var main = document.getElementById('btn-landing-start');
+          if (main) main.click();
+        });
+      });
+    });
+  </script>
+
+  <div class="screen hidden" id="screen-auth">
+    <div class="auth-hero auth-hero-compact">
+      <div class="auth-hero-top">
+        <img src="./icons/icon-192.png" alt="Bobcat Language School" class="auth-hero-logo">
+        <p class="auth-eyebrow">Bobcat Language School</p>
+        <h1 class="auth-hero-title">Vamos começar.</h1>
+        <p class="auth-hero-sub">Entre na sua conta ou crie uma em menos de um minuto.</p>
+      </div>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" id="tab-login" data-mode="login">Entrar</button>
+        <button type="button" class="auth-tab" id="tab-signup" data-mode="signup">Criar conta</button>
+      </div>
+
+      <h2 class="auth-form-title" id="auth-title">Bem-vindo(a) de volta!</h2>
+
+      <label class="field-label">E-mail</label>
+      <div class="input-icon-wrap">
+        <span class="input-icon">✉️</span>
+        <input type="email" id="auth-username" placeholder="seuemail@exemplo.com" autocomplete="username">
+      </div>
+
+      <label class="field-label">Senha</label>
+      <div class="input-icon-wrap">
+        <span class="input-icon">🔒</span>
+        <input type="password" id="auth-password" placeholder="pelo menos 6 caracteres" autocomplete="current-password">
+        <button type="button" class="input-toggle" id="toggle-auth-password" aria-label="Mostrar senha">👁</button>
+      </div>
+
+      <div id="auth-signup-extra" class="hidden">
+        <label class="field-label">Confirme a senha</label>
+        <div class="input-icon-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="auth-password-confirm" placeholder="repita a senha" autocomplete="new-password">
+          <button type="button" class="input-toggle" id="toggle-auth-password-confirm" aria-label="Mostrar senha">👁</button>
+        </div>
+      </div>
+
+      <p class="auth-alert error" id="auth-error"></p>
+      <p class="auth-alert success" id="auth-success"></p>
+
+      <button class="btn" id="btn-auth-submit">Entrar</button>
+
+      <div class="auth-divider" aria-hidden="true"><span>ou</span></div>
+
+      <button type="button" class="btn-google" id="btn-auth-google">
+        <svg class="btn-google-icon" width="18" height="18" viewBox="0 0 48 48" aria-hidden="true">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+        <span id="btn-auth-google-label">Continuar com Google</span>
+      </button>
+
+      <button type="button" class="link-btn hidden" id="btn-forgot-password">Esqueci minha senha</button>
+    </div>
+
+    <p class="auth-hint">🔒 Entre com e-mail e senha ou com a conta Google. Na primeira vez o cadastro é automático.</p>
   </div>
 
-  <div class="legal-card">
-    <h2>3. Uso da prática de conversação com IA</h2>
-    <ul>
-      <li>As personalidades de IA são geradas por um modelo de linguagem (Google Gemini) e podem, ocasionalmente, cometer erros, dar informações incorretas ou responder de forma inesperada — o app é uma ferramenta de prática, não um professor humano nem uma fonte de verdade absoluta.</li>
-      <li>É proibido usar o chat com IA para enviar conteúdo ilegal, ofensivo, sexual, discriminatório ou que coloque em risco a segurança de qualquer pessoa, mesmo em tom de brincadeira ou "roleplay".</li>
-      <li>O sistema tem instruções de segurança para manter a conversa apropriada para um ambiente escolar, inclusive para crianças, mas nenhum filtro automático é 100% infalível — pais/responsáveis podem revisar o histórico de conversas do aluno quando necessário.</li>
-      <li>Mensagens de voz gravadas pelo aluno são enviadas ao provedor de IA só para gerar a resposta; veja a <a href="./privacidade.html">Política de Privacidade</a> para mais detalhes.</li>
-    </ul>
+  <!-- TELA: CRIAR/EDITAR PERFIL -->
+  <div class="screen hidden" id="screen-profile-setup">
+    <h2 class="screen-title">Vamos criar seu perfil</h2>
+
+    <label class="field-label">Como você se chama?</label>
+    <input type="text" id="input-name" placeholder="Seu nome" maxlength="40">
+
+    <label class="field-label">Escolha um avatar</label>
+    <div class="avatar-picker" id="avatar-picker">
+      <div class="avatar-option" data-avatar="🦁">🦁</div>
+      <div class="avatar-option" data-avatar="🐱">🐱</div>
+      <div class="avatar-option" data-avatar="🦉">🦉</div>
+      <div class="avatar-option" data-avatar="🐼">🐼</div>
+      <div class="avatar-option" data-avatar="🦊">🦊</div>
+      <div class="avatar-option" data-avatar="🐨">🐨</div>
+      <div class="avatar-option" data-avatar="🐸">🐸</div>
+      <div class="avatar-option" data-avatar="🦄">🦄</div>
+    </div>
+
+    <label class="field-label">Sua fase em inglês</label>
+    <select id="input-level">
+      <option value="A1">A1 — Iniciante</option>
+      <option value="A2">A2 — Básico</option>
+      <option value="B1">B1 — Intermediário</option>
+      <option value="B2">B2 — Intermediário avançado</option>
+      <option value="C1">C1 — Avançado</option>
+      <option value="C2">C2 — Proficiente</option>
+    </select>
+
+    <button class="btn" id="btn-save-profile">Começar a estudar</button>
   </div>
 
-  <div class="legal-card">
-    <h2>4. Conduta no chat com o professor</h2>
-    <p>O canal "Fale com o professor" deve ser usado para dúvidas, comunicação escolar e envio de arquivos relacionados às aulas. Conteúdo ofensivo, spam ou uso indevido do canal pode levar à advertência ou suspensão do acesso, a critério da escola.</p>
+  <!-- TELA: MENU (página inicial) -->
+  <div class="screen hidden" id="screen-menu">
+    <div id="update-banner-slot"></div>
+    <div id="install-banner-slot"></div>
+
+    <div class="hello-card">
+      <div class="emoji" id="menu-avatar">🦁</div>
+      <div>
+        <div class="greeting" id="menu-greeting">Olá!</div>
+        <div class="sub" id="menu-level-sub">Fase A1</div>
+      </div>
+    </div>
+
+    <h2 class="screen-title menu-section-title">O que você quer fazer?</h2>
+    <div class="menu-grid">
+      <button class="menu-btn" data-screen="home">
+        <span class="menu-btn-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11a2 2 0 0 1 2 2v14a1.5 1.5 0 0 0-1.5-1.5H4Z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13a2 2 0 0 0-2 2v14a1.5 1.5 0 0 1 1.5-1.5H20Z"/></svg>
+        </span>
+        <span class="menu-btn-text">
+          <span class="menu-btn-label">Lições</span>
+          <span class="menu-btn-desc">Estude passo a passo, na sua fase</span>
+        </span>
+        <span class="menu-btn-chevron" aria-hidden="true">›</span>
+      </button>
+      <button class="menu-btn" data-screen="ai-chat">
+        <span class="menu-btn-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8.5L4 19.5Z"/><path d="M8 9.5h8M8 12.5h5"/></svg>
+        </span>
+        <span class="menu-btn-text">
+          <span class="menu-btn-label">💬 Conversar</span>
+          <span class="menu-btn-desc">Pratique inglês com a IA</span>
+        </span>
+        <span class="menu-btn-chevron" aria-hidden="true">›</span>
+      </button>
+      <button class="menu-btn" data-screen="tests">
+        <span class="menu-btn-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></svg>
+        </span>
+        <span class="menu-btn-text">
+          <span class="menu-btn-label">Testes</span>
+          <span class="menu-btn-desc">Descubra sua fase no inglês</span>
+        </span>
+        <span class="menu-btn-chevron" aria-hidden="true">›</span>
+      </button>
+      <button class="menu-btn" data-screen="extra">
+        <span class="menu-btn-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H17a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2Z"/></svg>
+        </span>
+        <span class="menu-btn-text">
+          <span class="menu-btn-label">Extra</span>
+          <span class="menu-btn-desc">Materiais e gramática sem pré-requisito</span>
+        </span>
+        <span class="menu-btn-chevron" aria-hidden="true">›</span>
+      </button>
+      <button class="menu-btn" data-screen="how-it-works">
+        <span class="menu-btn-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.5 2.5 0 1 1 3.6 2.25c-.7.35-1.1.9-1.1 1.65v.4"/><circle cx="12" cy="16.7" r=".6" fill="currentColor"/></svg>
+        </span>
+        <span class="menu-btn-text">
+          <span class="menu-btn-label">Como funciona</span>
+          <span class="menu-btn-desc">Entenda o app em poucos passos</span>
+        </span>
+        <span class="menu-btn-chevron" aria-hidden="true">›</span>
+      </button>
+      <a class="menu-btn hidden" href="./bobcat-ville.html" id="btn-bobcat-ville">
+        <span class="menu-btn-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-5h4v5h4a1 1 0 0 0 1-1v-9"/><circle cx="12" cy="14" r="1.2" fill="currentColor"/></svg>
+        </span>
+        <span class="menu-btn-text">
+          <span class="menu-btn-label">Bobcat Ville</span>
+          <span class="menu-btn-desc">Explore a cidade e viva a história em inglês</span>
+        </span>
+        <span class="menu-btn-chevron" aria-hidden="true">›</span>
+      </a>
+      <button class="menu-btn" data-screen="profile-view">
+        <span class="menu-btn-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.6 4-5.5 7-5.5s5.8 1.9 7 5.5"/></svg>
+        </span>
+        <span class="menu-btn-text">
+          <span class="menu-btn-label">Perfil</span>
+          <span class="menu-btn-desc">Seu progresso e suas conquistas</span>
+        </span>
+        <span class="menu-btn-chevron" aria-hidden="true">›</span>
+      </button>
+    </div>
   </div>
 
-  <div class="legal-card">
-    <h2>5. Conteúdo das lições</h2>
-    <p>Todo o material didático (lições, textos, exercícios) disponibilizado no app pertence à Bobcat Language School ou é usado com autorização, e está protegido por direitos autorais. O aluno pode usar esse material para seus estudos pessoais, mas não pode reproduzi-lo, distribuí-lo ou publicá-lo fora do app sem autorização da escola.</p>
+  <!-- TELA: HOME -->
+  <div class="screen hidden" id="screen-home">
+    <div class="hello-card">
+      <div class="emoji" id="home-avatar">🦁</div>
+      <div>
+        <div class="greeting" id="home-greeting">Olá!</div>
+        <div class="sub" id="home-level-sub">Fase A1</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="num" id="stat-completed">0</div>
+        <div class="label">concluídas</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="stat-xp">0</div>
+        <div class="label">XP total</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="stat-streak">0</div>
+        <div class="label">🔥 streak</div>
+      </div>
+    </div>
+    <div class="stats-row" style="margin-top:10px;">
+      <div class="stat-box">
+        <div class="num" id="stat-score">—</div>
+        <div class="label">média de acertos</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="stat-achievements">0</div>
+        <div class="label">conquistas</div>
+      </div>
+    </div>
+
+    <h2 class="screen-title" style="margin-bottom:10px;">Suas lições</h2>
+    <div id="lesson-list"></div>
   </div>
 
-  <div class="legal-card">
-    <h2>6. Disponibilidade do serviço</h2>
-    <p>Fazemos o possível para manter o app disponível e funcionando, mas não garantimos operação ininterrupta ou livre de falhas — o app depende de serviços de terceiros (Supabase, Google, Vercel) que também podem ter instabilidades. Funcionalidades como notificações push podem ter suporte limitado dependendo do aparelho/navegador do aluno (veja detalhes na tela de lembretes do app).</p>
+  <!-- TELA: PERFIL (visualização/edição) -->
+  <div class="screen hidden" id="screen-profile-view">
+    <h2 class="screen-title">Meu perfil</h2>
+
+    <div class="chat-box" id="chat-box">
+      <button class="chat-toggle" id="chat-toggle">
+        <span class="chat-toggle-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H8.5L4 19.5Z"/></svg>
+          Fale com o professor
+        </span>
+        <span class="chat-toggle-icon" id="chat-toggle-icon">▾</span>
+      </button>
+      <div class="chat-panel hidden" id="chat-panel">
+        <div id="messages-notice"></div>
+        <div class="chat-thread" id="chat-thread"></div>
+        <div class="chat-input-row">
+          <div class="chat-input-main">
+            <div class="chat-file-preview hidden" id="chat-file-preview"></div>
+            <textarea id="chat-input" rows="2" placeholder="Escreva sua dúvida ou mensagem para o professor..."></textarea>
+          </div>
+          <input type="file" id="chat-file-input" class="hidden" accept=".pdf,.doc,.docx,.odt,.rtf,.txt,.xls,.xlsx,.csv,.ppt,.pptx,.jpg,.jpeg,.png">
+          <button class="btn-icon" id="btn-attach-file" type="button" title="Anexar arquivo (PDF, Word, texto, planilha, imagem...)" aria-label="Anexar arquivo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 7.5 9.5 15A3 3 0 1 1 5 10.5L13 2.5a4.5 4.5 0 1 1 6 6.7L11 17"/></svg>
+          </button>
+          <button class="btn" id="btn-send-message" title="Enviar mensagem" aria-label="Enviar mensagem">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 11.5 20.5 4 13 21.5l-2.4-7.1L3 11.5Z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hello-card" style="margin-top:24px;">
+      <div class="emoji" id="profile-avatar">🦁</div>
+      <div>
+        <div class="greeting" id="profile-name-display">Nome</div>
+        <div class="sub" id="profile-level-display">Fase A1</div>
+      </div>
+    </div>
+
+    <h2 class="screen-title" style="font-size:16px; margin:20px 0 10px 0;">Progresso do aprendizado</h2>
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="num" id="profile-stat-completed">0</div>
+        <div class="label">concluídas</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="profile-stat-xp">0</div>
+        <div class="label">XP total</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="profile-stat-streak">0</div>
+        <div class="label">🔥 streak</div>
+      </div>
+    </div>
+    <div class="stats-row" style="margin-top:10px;">
+      <div class="stat-box">
+        <div class="num" id="profile-stat-score">—</div>
+        <div class="label">média de acertos</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" id="profile-stat-total">0</div>
+        <div class="label">no catálogo</div>
+      </div>
+    </div>
+
+    <h2 class="screen-title" style="font-size:16px; margin:22px 0 10px 0;">🏅 Conquistas</h2>
+    <div id="achievements-grid" class="achievements-grid"></div>
+
+    <h2 class="screen-title" style="font-size:16px; margin:22px 0 10px 0;">Suas lições</h2>
+    <div id="profile-lesson-list"></div>
+
+
+    <div class="theme-toggle-card" id="theme-toggle-card">
+      <div class="theme-toggle-text">
+        <div class="theme-toggle-title">Aparência</div>
+        <div class="theme-toggle-sub" id="theme-toggle-label">Modo escuro — cores da landing</div>
+      </div>
+      <button type="button" class="theme-switch" id="btn-theme-toggle" role="switch" aria-checked="false" aria-label="Alternar modo claro">
+        <span class="theme-switch-knob" id="theme-switch-knob" aria-hidden="true">🌙</span>
+      </button>
+    </div>
+
+    <h2 class="screen-title" style="font-size:16px; margin:24px 0 10px 0;">Editar perfil</h2>
+    <label class="field-label">Nome</label>
+    <input type="text" id="edit-name" maxlength="40">
+
+    <label class="field-label">Avatar</label>
+    <div class="avatar-picker" id="avatar-picker-edit">
+      <div class="avatar-option" data-avatar="🦁">🦁</div>
+      <div class="avatar-option" data-avatar="🐱">🐱</div>
+      <div class="avatar-option" data-avatar="🦉">🦉</div>
+      <div class="avatar-option" data-avatar="🐼">🐼</div>
+      <div class="avatar-option" data-avatar="🦊">🦊</div>
+      <div class="avatar-option" data-avatar="🐨">🐨</div>
+      <div class="avatar-option" data-avatar="🐸">🐸</div>
+      <div class="avatar-option" data-avatar="🦄">🦄</div>
+    </div>
+
+    <label class="field-label">Fase em inglês</label>
+    <select id="edit-level">
+      <option value="A1">A1 — Iniciante</option>
+      <option value="A2">A2 — Básico</option>
+      <option value="B1">B1 — Intermediário</option>
+      <option value="B2">B2 — Intermediário avançado</option>
+      <option value="C1">C1 — Avançado</option>
+      <option value="C2">C2 — Proficiente</option>
+    </select>
+
+    <button class="btn" id="btn-update-profile">Salvar alterações</button>
+    <button class="btn secondary" id="btn-reset-progress" style="width:100%; margin-top:10px; background:var(--surface); color:var(--bad); border:1.5px solid var(--bad);">Zerar progresso das lições</button>
+    <button class="btn secondary hidden" id="btn-logout" style="width:100%; margin-top:10px;">Sair da conta</button>
+    <p id="cloud-status" style="text-align:center; font-size:11.5px; color:var(--ink-faint); margin-top:14px;"></p>
+
+    <div class="lgpd-card">
+      <h2 class="lgpd-card-title">Seus dados e privacidade</h2>
+      <p class="lgpd-card-sub">De acordo com a LGPD, você pode baixar uma cópia de tudo que guardamos sobre você, ou excluir sua conta e todos os seus dados permanentemente.</p>
+      <button type="button" class="lgpd-btn lgpd-btn-download" id="btn-download-data">⬇️ Baixar meus dados</button>
+      <button type="button" class="lgpd-btn lgpd-btn-delete" id="btn-delete-account">Excluir minha conta</button>
+    </div>
+
+    <div style="text-align:center; margin-top:16px; padding-top:14px; border-top:1px solid var(--border); font-size:12px;">
+      <a href="./privacidade.html" target="_blank" rel="noopener" style="color:var(--ink-soft); text-decoration:none; font-weight:600;">Política de Privacidade</a>
+      <span style="color:var(--ink-faint); margin:0 8px;">·</span>
+      <a href="./termos.html" target="_blank" rel="noopener" style="color:var(--ink-soft); text-decoration:none; font-weight:600;">Termos de Uso</a>
+    </div>
   </div>
 
-  <div class="legal-card">
-    <h2>7. Cancelamento e exclusão de dados</h2>
-    <p>O aluno (ou responsável) pode solicitar o encerramento da conta e a exclusão dos dados pessoais a qualquer momento, pelo e-mail de contato abaixo, conforme detalhado na <a href="./privacidade.html">Política de Privacidade</a>.</p>
+  <!-- TELA: PRATICAR CONVERSAÇÃO COM IA -->
+  <div class="screen hidden" id="screen-ai-chat">
+
+    <!-- SUB-TELA: lista de personalidades criadas -->
+    <div id="ai-chat-list-view">
+      <h2 class="screen-title bk-title" style="margin-bottom:0">
+        <span class="title-emoji" aria-hidden="true">💬</span>
+        Conversar
+      </h2>
+      <p class="bk-lead">Crie um parceiro de conversa e pratique inglês como se fosse com um amigo. ✨</p>
+      <p class="persona-form-hint" style="margin-top:-6px;margin-bottom:14px;">Você escolhe o nome, a voz (menino ou menina) e o jeito de ser. Depois é só digitar ou falar em inglês — a IA responde no personagem que você criou.</p>
+
+      <button type="button" class="ai-persona-create-btn" id="btn-ai-chat-new-persona">
+        <span class="icon-wrap emoji-big" aria-hidden="true">
+          <span class="create-bot">🤖</span>
+          <span class="create-plus" aria-hidden="true">+</span>
+        </span>
+        <span class="label">
+          <span class="title">Criar novo parceiro</span>
+          <span class="sub">Passo a passo · leva menos de 1 minuto</span>
+        </span>
+        <span class="create-chevron" aria-hidden="true">›</span>
+      </button>
+
+      <!-- Lembretes por notificação (Web Push) -->
+      <div class="push-reminders-card" id="push-reminders-card">
+        <div class="push-reminders-row">
+          <div class="push-reminders-text">
+            <div class="push-reminders-title">🔔 Lembretes</div>
+            <div class="push-reminders-sub" id="push-reminders-status">Toque no celular pra praticar.</div>
+          </div>
+          <button type="button" class="btn btn-small" id="btn-push-toggle">Ativar</button>
+        </div>
+        <button type="button" class="link-btn push-test-btn hidden" id="btn-push-test">Enviar notificação de teste</button>
+        <button type="button" class="link-btn push-config-btn hidden" id="btn-push-config">⏰ Configurar horários</button>
+
+        <div class="push-times-panel hidden" id="push-times-panel">
+          <div class="push-times-hint">Escolha um ou mais horários do dia para receber o lembrete. Sem nenhum horário aqui, usamos o padrão (8h e 18h).</div>
+          <div class="push-times-list" id="push-times-list"></div>
+          <div class="push-times-add-row">
+            <input type="time" id="push-time-input" step="900">
+            <button type="button" class="btn btn-small" id="btn-push-time-add">Adicionar</button>
+          </div>
+          <div class="push-times-actions">
+            <button type="button" class="btn btn-small" id="btn-push-times-save">Salvar horários</button>
+            <button type="button" class="link-btn" id="btn-push-times-cancel">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="ai-chat-persona-list"></div>
+    </div>
+
+    <!-- SUB-TELA: criar/editar personalidade -->
+    <div id="ai-chat-create-view" class="hidden">
+      <button type="button" class="link-btn" id="btn-ai-chat-create-back" style="margin-bottom:10px;">← Voltar</button>
+      <h2 class="screen-title"><span class="title-emoji" aria-hidden="true">✨</span> Criar parceiro de conversa</h2>
+      <div class="persona-howto-box" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.28);border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:13px;line-height:1.55;color:var(--ink-soft, #666);">
+        <strong style="display:block;color:inherit;margin-bottom:6px;font-size:13.5px;">Como funciona</strong>
+        <ol style="margin:0;padding-left:18px;">
+          <li style="margin-bottom:4px;"><b>Avatar</b> — escolha um emoji que represente o parceiro.</li>
+          <li style="margin-bottom:4px;"><b>Nome</b> — como a IA vai se apresentar (ex.: Maya, Leo).</li>
+          <li style="margin-bottom:4px;"><b>Voz</b> — menina ou menino (para a fala e o tom).</li>
+          <li style="margin-bottom:4px;"><b>Jeito</b> — descreva a personalidade <em>em inglês ou português</em> (interesses, humor, se é tímido, animado…).</li>
+          <li><b>Quiz opcional</b> — 4 perguntas rápidas preenchem o “jeito” automaticamente; você pode editar depois.</li>
+        </ol>
+        <p style="margin:10px 0 0;font-size:12.5px;">Dica: quanto mais específico o jeito (“adora futebol e faz piadas curtas”), mais natural fica a conversa.</p>
+      </div>
+
+      <div class="persona-preview">
+        <div class="persona-preview-avatar" id="persona-preview-avatar">🤖</div>
+        <div class="persona-preview-info">
+          <div class="persona-preview-name" id="persona-preview-name">Sem nome</div>
+          <div class="persona-preview-sub">assim vai aparecer na sua lista</div>
+        </div>
+      </div>
+
+      <div class="persona-form-section">
+        <label class="field-label" style="margin-top:0;">😊 1. Avatar</label>
+        <div id="persona-emoji-picker" class="persona-emoji-grid"></div>
+        <p class="persona-form-hint">Toque em um emoji — ele aparece na lista e no chat.</p>
+      </div>
+
+      <div class="persona-form-section">
+        <label class="field-label" for="input-persona-name" style="margin-top:0;">🏷️ 2. Nome</label>
+        <input type="text" id="input-persona-name" maxlength="30" placeholder="Ex.: Maya, Leo, Sofia…">
+        <p class="persona-form-hint">Use um nome simples. É assim que o parceiro vai se apresentar na conversa.</p>
+      </div>
+
+      <div class="persona-form-section">
+        <label class="field-label" style="margin-top:0;">⚧ 3. Voz (menina ou menino)</label>
+        <div id="persona-gender-picker" class="persona-gender-row"></div>
+        <p class="persona-form-hint">Define o tom da fala e como o parceiro se refere a si mesmo na conversa.</p>
+      </div>
+
+      <div class="persona-form-section">
+        <label class="field-label" for="input-persona-personality" style="margin-top:0;">🎭 4. Jeito de ser</label>
+        <textarea id="input-persona-personality" rows="4" maxlength="300" placeholder="Ex.: Friendly and curious. Loves music, asks simple questions, and encourages me when I make mistakes."></textarea>
+        <p class="persona-form-hint">Escreva quem é essa pessoa: humor, assuntos preferidos, se fala devagar ou rápido, se corrige erros… Pode ser em português ou inglês. Quanto mais detalhe, mais fiel a conversa.</p>
+      </div>
+
+      <div class="persona-form-section">
+        <label class="field-label" style="margin-top:0;">🎲 5. Quiz rápido (opcional)</label>
+        <p class="persona-form-hint" style="margin-top:0; margin-bottom:10px;">Não sabe o que escrever no “jeito”? Responda as 7 perguntas abaixo — montamos uma personalidade para você (dá para editar depois).</p>
+        <div id="mbti-quiz" class="mbti-quiz"></div>
+        <div id="mbti-result" class="mbti-result hidden"></div>
+      </div>
+
+      <button type="button" class="btn" id="btn-ai-chat-create-submit" style="width:100%;">
+        🚀 Salvar e começar a conversar
+      </button>
+    </div>
+
+
+    <!-- SUB-TELA: conversa com a personalidade escolhida -->
+    <div id="ai-chat-conversation-view" class="hidden">
+      <button type="button" class="link-btn" id="btn-ai-chat-conv-back" style="margin-bottom:10px;">← Parceiros</button>
+
+      <div class="ai-conv-header" id="ai-chat-conv-title"></div>
+
+      <label class="ai-tts-toggle">
+        <input type="checkbox" id="chk-ai-chat-tts">
+        <span class="ai-tts-toggle-track" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9v6h4l5 4V5L9 9H5Z"/><path d="M17.5 9a4.5 4.5 0 0 1 0 6"/></svg>
+        </span>
+        Ler as respostas da IA em voz alta
+      </label>
+
+      <div class="chat-box" id="ai-chat-box" style="overflow:visible;">
+        <div class="chat-panel" style="padding:0 0 12px 0;">
+          <div class="chat-thread" id="ai-chat-thread" style="max-height:52vh;"></div>
+          <div id="ai-chat-typing" class="typing-indicator hidden" aria-label="digitando">
+            <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+          </div>
+          <div id="ai-chat-recording-status" class="chat-empty hidden" style="text-align:left; padding:2px 8px; color:#B23B2E;">Gravando... toque no microfone de novo para enviar</div>
+          <div id="ai-chat-suggestions" class="ai-chat-suggestions hidden"></div>
+          <div class="chat-input-row">
+            <div class="chat-input-main">
+              <textarea id="ai-chat-input" rows="2" placeholder="Digite em inglês…"></textarea>
+            </div>
+            <button type="button" class="btn-icon" id="btn-ai-chat-mic" title="Gravar áudio" aria-label="Gravar áudio">
+              <svg class="mic-icon-idle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+              <svg class="mic-icon-recording hidden" viewBox="0 0 24 24" fill="currentColor"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>
+            </button>
+            <button class="btn" id="btn-send-ai-message" title="Enviar mensagem" aria-label="Enviar mensagem">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 11.5 20.5 4 13 21.5l-2.4-7.1L3 11.5Z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-top:10px;">
+        <button type="button" class="link-btn" id="btn-ai-chat-reset">🔄 Nova conversa</button>
+        <button type="button" class="link-btn" id="btn-ai-chat-delete-persona" style="color:var(--bad);">🗑️ Excluir</button>
+      </div>
+    </div>
+
   </div>
 
-  <div class="legal-card">
-    <h2>8. Alterações destes termos</h2>
-    <p>Estes Termos de Uso podem ser atualizados conforme o app evoluir. A data da última atualização está sempre no topo desta página. O uso continuado do app após uma atualização representa concordância com os novos termos.</p>
+  <!-- TELA: TESTES DE NIVELAMENTO -->
+  <div class="screen hidden" id="screen-tests">
+    <h2 class="screen-title">Testes de Nivelamento</h2>
+    <p style="font-size:13px; color:var(--ink-soft); margin-bottom:18px; line-height:1.5;">Descubra sua fase no inglês com o teste adaptativo. O teste muda a cada tentativa — são 3 variações diferentes!</p>
+    <div id="tests-list"></div>
   </div>
 
-  <div class="legal-card">
-    <h2>9. Foro</h2>
-    <p>Fica eleito o foro da comarca de <strong>Feira de Santana, Bahia</strong>, para dirimir eventuais controvérsias decorrentes destes Termos de Uso, com renúncia a qualquer outro, por mais privilegiado que seja.</p>
+  <!-- TELA: EXTRA (matérias extras, sem requisito de desbloqueio) -->
+  <div class="screen hidden" id="screen-extra">
+    <h2 class="screen-title">Matéria Extra</h2>
+    <p style="font-size:13px; color:var(--ink-soft); margin-bottom:18px; line-height:1.5;">Escolha um manual para ver as lições — sem pré-requisitos.</p>
+    <div id="extra-list"></div>
   </div>
 
-  <p class="legal-contact">
-    Dúvidas sobre estes termos? Escreva para<br>
-    <a href="mailto:santannaleonardo@hotmail.com">santannaleonardo@hotmail.com</a><br>
-    Bobcat Language School — Feira de Santana, Bahia
-  </p>
+  <!-- TELA: COMO FUNCIONA -->
+  <div class="screen hidden" id="screen-how-it-works">
+    <div class="howto-hero">
+      <div class="howto-hero-emoji">🦁</div>
+      <h2 class="howto-hero-title">Como funciona o Bobcat</h2>
+      <p class="howto-hero-sub">Um jeito simples de aprender inglês, no seu ritmo. Veja o que você pode fazer no app:</p>
+    </div>
+
+    <div class="howto-list">
+      <div class="howto-step howto-c1">
+        <div class="howto-step-line" aria-hidden="true"></div>
+        <div class="howto-step-icon">🎯</div>
+        <div class="howto-step-body">
+          <div class="howto-step-title">Faça os Testes</div>
+          <div class="howto-step-desc">Ganhe tempo e descubra por onde começar. Teste de nivelamento com 30 questões (A1 a C2), em 3 variações diferentes a cada tentativa. São 2 tentativas — no final você recebe sua fase estimada e o desempenho detalhado por fase.</div>
+        </div>
+      </div>
+      <div class="howto-step howto-c2">
+        <div class="howto-step-line" aria-hidden="true"></div>
+        <div class="howto-step-icon">📗</div>
+        <div class="howto-step-body">
+          <div class="howto-step-title">Mergulhe nas Lições</div>
+          <div class="howto-step-desc">Estude passo a passo, da sua fase em diante. Cada lição libera a próxima quando você concluir.</div>
+        </div>
+      </div>
+      <div class="howto-step howto-c3">
+        <div class="howto-step-line" aria-hidden="true"></div>
+        <div class="howto-step-icon">💬</div>
+        <div class="howto-step-body">
+          <div class="howto-step-title">Pratique com a IA</div>
+          <div class="howto-step-desc">Crie um parceiro (nome, avatar e jeito de ser) e converse em inglês quando quiser — como treinar com um amigo, sem pressa e sem julgamento. Use o quiz de 7 perguntas se preferir preencher a personalidade automaticamente.</div>
+        </div>
+      </div>
+      <div class="howto-step howto-c1">
+        <div class="howto-step-line" aria-hidden="true"></div>
+        <div class="howto-step-icon">📚</div>
+        <div class="howto-step-body">
+          <div class="howto-step-title">Explore o Extra</div>
+          <div class="howto-step-desc">Manuais de português (básico, prático e avançado) e materiais livres, sem pré-requisito — use quando quiser reforçar gramática, leitura ou redação.</div>
+        </div>
+      </div>
+      <div class="howto-step howto-c2">
+        <div class="howto-step-line" aria-hidden="true"></div>
+        <div class="howto-step-icon">🎮</div>
+        <div class="howto-step-body">
+          <div class="howto-step-title">Jogue e pratique</div>
+          <div class="howto-step-desc">Na área <strong>Extra → Jogos</strong> você treina de forma divertida. Cada jogo tem um objetivo diferente:</div>
+          <ul class="howto-games-list">
+            <li><strong>🔎 Caça-Palavras</strong> (PT e EN) — encontre palavras escondidas na grade por tema; em inglês, vê a tradução ao achar cada uma.</li>
+            <li><strong>🐾 Labirinto da Oração</strong> — percorra o labirinto e marque sujeito, verbo e complementos na ordem certa.</li>
+            <li><strong>📦 Empurra-Palavras</strong> (PT e EN) — empurre as caixinhas até montar a frase correta, sem cair em armadilhas de grafia.</li>
+            <li><strong>🐍 Cobrinha da Ortografia</strong> (PT e EN) — a palavra aparece errada; guie a cobrinha até a letra do erro antes de colidir.</li>
+            <li><strong>✏️ Concordância — Monta a Frase</strong> — receba uma frase desajustada e escolha as palavras certas no banco.</li>
+            <li><strong>🗣️ Interpretação — Harmonia</strong> — leia o que está por trás das falas (entrevista, vendas, moderação…) e mantenha a harmonia.</li>
+            <li><strong>📰 Gêneros em Cena</strong> — classifique gênero, tipologia e destino de cada texto, como editor de plantão.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="howto-step howto-c3">
+        <div class="howto-step-line" aria-hidden="true"></div>
+        <div class="howto-step-icon">🗺️</div>
+        <div class="howto-step-body">
+          <div class="howto-step-title">Viva o Bobcat Ville <span class="howto-soon">Em breve</span></div>
+          <div class="howto-step-desc">Explore a cidade e viva uma história em inglês, aplicando o que você aprendeu de um jeito divertido. O jogo está a caminho!</div>
+        </div>
+      </div>
+      <div class="howto-step howto-c3">
+        <div class="howto-step-line" aria-hidden="true"></div>
+        <div class="howto-step-icon">👤</div>
+        <div class="howto-step-body">
+          <div class="howto-step-title">Acompanhe seu Perfil</div>
+          <div class="howto-step-desc">Veja seu progresso, sua média de acertos e fale com o professor sempre que precisar.</div>
+        </div>
+      </div>
+      <div class="howto-step howto-c1 howto-step-last">
+        <div class="howto-step-icon">✨</div>
+        <div class="howto-step-body">
+          <div class="howto-step-title">O que você vai conseguir fazer</div>
+          <div class="howto-step-desc">A cada etapa, o inglês deixa de ser só regra e vira conversa de verdade — no seu ritmo.</div>
+          <div class="howto-semesters">
+            <div class="howto-sem-row">
+              <span class="howto-sem-n">A1</span>
+              <span class="howto-sem-lv">Primeiros passos<span class="howto-sem-detail">Se apresentar, falar da rotina e contar o que já fez.</span></span>
+            </div>
+            <div class="howto-sem-row">
+              <span class="howto-sem-n">A2</span>
+              <span class="howto-sem-lv">Dia a dia<span class="howto-sem-detail">Resolver situações do cotidiano com mais naturalidade.</span></span>
+            </div>
+            <div class="howto-sem-row">
+              <span class="howto-sem-n">B1</span>
+              <span class="howto-sem-lv">Boas histórias<span class="howto-sem-detail">Contar experiências, dar conselhos e explicar planos.</span></span>
+            </div>
+            <div class="howto-sem-row">
+              <span class="howto-sem-n">B2</span>
+              <span class="howto-sem-lv">Mais detalhes<span class="howto-sem-detail">Narrar com riqueza, imaginar hipóteses e repetir o que ouviu.</span></span>
+            </div>
+            <div class="howto-sem-row">
+              <span class="howto-sem-n">C1+</span>
+              <span class="howto-sem-lv">Domínio<span class="howto-sem-detail">Discutir ideias, argumentar e se expressar com nuance.</span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="btn howto-cta" data-screen="menu">Voltar ao menu</button>
+  </div>
+
+  <div class="bottom-nav single" id="bottom-nav" style="display:none;">
+    <button class="nav-btn active" data-screen="menu">
+      <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9.5a.5.5 0 0 0 .5.5H10v-6h4v6h3.5a.5.5 0 0 0 .5-.5V10"/></svg></span>
+      <span>Início</span>
+    </button>
+  </div>
+
+  <!-- MODAL: senha para zerar progresso -->
+  <div class="modal-overlay hidden" id="reset-password-modal">
+    <div class="modal-card">
+      <h3><svg class="modal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> Confirmar com senha</h3>
+      <p>Zerar o progresso apaga o resultado de todas as lições. Digite a senha cadastrada pelo professor para o seu perfil.</p>
+      <input type="password" id="reset-password-input" placeholder="Senha" autocomplete="off">
+      <p class="modal-error hidden" id="reset-password-error">Senha incorreta.</p>
+      <div class="modal-actions">
+        <button class="btn secondary" id="reset-password-cancel">Cancelar</button>
+        <button class="btn" id="reset-password-confirm">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: confirmar exclusão de conta (LGPD) -->
+  <div class="modal-overlay hidden" id="delete-account-modal">
+    <div class="modal-card">
+      <h3><svg class="modal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2m-9 0 1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13"/></svg> Excluir minha conta</h3>
+      <p>Isso apaga <strong>permanentemente</strong> seu perfil, progresso das lições, conversas com a IA, mensagens com o professor e notificações — não tem como desfazer. Se quiser guardar uma cópia antes, use "Baixar meus dados".</p>
+      <p>Para confirmar, digite <strong>EXCLUIR</strong> abaixo.</p>
+      <input type="text" id="delete-account-input" placeholder="Digite EXCLUIR" autocomplete="off">
+      <p class="modal-error hidden" id="delete-account-error">Digite exatamente EXCLUIR para confirmar.</p>
+      <div class="modal-actions">
+        <button class="btn secondary" id="delete-account-cancel">Cancelar</button>
+        <button class="btn" id="delete-account-confirm" style="background:linear-gradient(135deg, var(--land-red-glow), var(--land-red-2)); border:none; box-shadow:0 8px 20px rgba(225,58,38,0.35);">Excluir permanentemente</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAPA DE VOCABULÁRIO CLICÁVEL: mini-cartão de palavra do chat com a IA -->
+  <div class="vocab-card-overlay hidden" id="vocab-card-overlay">
+    <div class="vocab-card" id="vocab-card">
+      <button type="button" class="vocab-card-close" id="vocab-card-close" aria-label="Fechar">✕</button>
+      <div class="vocab-card-body" id="vocab-card-body">
+        <div class="vocab-card-loading" id="vocab-card-loading">
+          <span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>
+        </div>
+        <div class="vocab-card-content hidden" id="vocab-card-content">
+          <div class="vocab-card-head">
+            <span class="vocab-card-word" id="vocab-card-word"></span>
+            <span class="vocab-card-pos hidden" id="vocab-card-pos"></span>
+            <button type="button" class="vocab-card-listen" id="vocab-card-listen" aria-label="Ouvir pronúncia" title="Ouvir pronúncia">🔊</button>
+          </div>
+          <div class="vocab-card-pron" id="vocab-card-pron"></div>
+          <div class="vocab-card-translation" id="vocab-card-translation"></div>
+          <div class="vocab-card-examples" id="vocab-card-examples"></div>
+        </div>
+        <div class="vocab-card-error hidden" id="vocab-card-error">
+          <p id="vocab-card-error-text">Não consegui buscar essa palavra agora.</p>
+          <button type="button" class="btn secondary" id="vocab-card-retry">Tentar de novo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./config.js"></script>
+<script src="./db-client.js"></script>
+<script src="./app.js"></script>
 </body>
 </html>
