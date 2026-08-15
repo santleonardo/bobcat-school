@@ -1,7 +1,7 @@
 // /api/wordsearch-words.js
-// Função serverless da Vercel — usada pelo Caça-Palavras de Português
-// (lessons/caca-palavras-portugues.html) para gerar um banco de palavras
-// NOVO a cada partida, em vez da lista fixa de 10 palavras por tema.
+// Função serverless da Vercel — usada pelos Caça-Palavras (Português e
+// Inglês) para gerar um banco de palavras NOVO a cada partida, em vez da
+// lista fixa de palavras por tema.
 // Mesma chave/modelo dos outros endpoints de IA do projeto (GEMINI_API_KEY).
 // Se a IA falhar por qualquer motivo, o cliente cai de volta na lista fixa
 // (enviada aqui como "fallback") — o jogo nunca fica sem palavras.
@@ -32,7 +32,25 @@ function isValidGridWord(w) {
   return /^[A-ZÀ-Ú]+$/i.test(w) && w.length >= MIN_LEN && w.length <= MAX_LEN;
 }
 
-function buildSystemPrompt(count) {
+function buildSystemPrompt(count, lang) {
+  if (lang === 'en') {
+    return `Você é um dicionário/gerador de vocabulário para um jogo de caça-palavras dentro de um app de ensino de INGLÊS para estudantes brasileiros.
+
+Para cada rodada, você recebe um TEMA de vocabulário em inglês (ex: "Animais", "Verbos no Passado Irregular", "Phrasal Verbs") e uma lista de palavras em inglês "conhecidas" (que já apareceram antes e devem ser evitadas, se possível, pra variar o jogo).
+
+Gere ${count} palavras REAIS em INGLÊS relevantes para esse tema — vocabulário que um estudante brasileiro de inglês (nível básico a intermediário) deveria reconhecer (pode reaproveitar termos já conhecidos SE não houver termos novos suficientes, mas priorize novidade).
+
+Regras estritas para cada palavra:
+- APENAS uma palavra em inglês, sem espaço, sem hífen, sem apóstrofo, sem número — só letras (A-Z).
+- Entre 3 e 14 letras (fica melhor caber na grade).
+- Tem que ser uma palavra real e correta de inglês, coerente com o tema pedido (nada inventado, nada de nomes próprios).
+- Não repita a mesma palavra duas vezes na lista.
+- "definition": a tradução BEM curta da palavra para português (1 a 4 palavras, só a tradução, sem frase completa).
+
+Responda APENAS com um JSON puro, sem markdown, neste formato exato:
+{"words":[{"word":"string","definition":"string"}, ... total de ${count} itens]}`;
+  }
+
   return `Você é um dicionário/gerador de vocabulário para um jogo de caça-palavras dentro de um app de ensino de português para estudantes brasileiros do ensino médio.
 
 Para cada rodada, você recebe um TEMA de gramática, literatura ou linguística (ex: "Figuras de Linguagem", "Tempos e Modos Verbais") e uma lista de palavras "conhecidas" (que já apareceram antes e devem ser evitadas, se possível, pra variar o jogo).
@@ -64,6 +82,7 @@ module.exports = async function handler(req, res) {
 
   try {
     const body = req.body || {};
+    const lang = body.lang === 'en' ? 'en' : 'pt';
     const topicLabel = clip(body.topicLabel, MAX_FIELD);
     const topicId = clip(body.topicId, 60);
     const count = Math.min(MAX_COUNT, Math.max(4, parseInt(body.count, 10) || 10));
@@ -89,7 +108,7 @@ module.exports = async function handler(req, res) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        system_instruction: { parts: [{ text: buildSystemPrompt(count) }] },
+        system_instruction: { parts: [{ text: buildSystemPrompt(count, lang) }] },
         contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
         generationConfig: {
           temperature: 0.9,
