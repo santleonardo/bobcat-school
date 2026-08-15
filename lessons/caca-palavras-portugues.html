@@ -7,6 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="game-sound.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
 <style>
   :root{
     --orange:#ff5b3d;--orange-dark:#e13a26;--orange-light:#ff7a5c;
@@ -355,31 +358,61 @@ function stripAccents(s){
   return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase();
 }
 
-/* ─── Palavras novas geradas por IA a cada partida ───
-   O jogo mantém a lista fixa em TOPICS como tema/ícone e como
-   fallback (se a IA não responder a tempo ou o servidor não tiver
-   a IA configurada, joga normal com a lista fixa de sempre). */
-const AI_TIMEOUT_MS = 9000;
-const HISTORY_KEY_PREFIX = 'bobcat_cp_words_seen_';
+/* ─── Save do jogo: XP + histórico de palavras já vistas por tema ───
+   Mesmo mecanismo dos outros minijogos (Supabase se o aluno estiver logado,
+   com fallback automático pro localStorage — ver db-client.js). Isso faz
+   o XP do caça-palavras e o "não repita essas palavras" sincronizarem
+   entre aparelhos quando há login. */
+const GAME_ID = 'caca-palavras';
+const SAVE_KEY = 'bobcat_cp_save';
 const HISTORY_MAX = 30;
 
+let gameSave = { xp: 0, seen: {} };
+
 function getSeenWords(topicId){
-  try {
-    const raw = localStorage.getItem(HISTORY_KEY_PREFIX + topicId);
-    return raw ? JSON.parse(raw) : [];
-  } catch (e) { return []; }
+  return (gameSave.seen && gameSave.seen[topicId]) || [];
+}
+
+function saveGameState(){
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(gameSave)); } catch (e) {}
+  if (typeof saveGameProgress === 'function') {
+    saveGameProgress(GAME_ID, gameSave).catch(function (err) {
+      console.error('saveGameProgress (caça-palavras)', err);
+    });
+  }
 }
 
 function addSeenWords(topicId, words){
+  gameSave.seen = gameSave.seen || {};
+  const prev = gameSave.seen[topicId] || [];
+  const merged = [...prev, ...words];
+  gameSave.seen[topicId] = merged.slice(Math.max(0, merged.length - HISTORY_MAX));
+  saveGameState();
+}
+
+async function loadGameState(){
   try {
-    const prev = getSeenWords(topicId);
-    const merged = [...prev, ...words];
-    const trimmed = merged.slice(Math.max(0, merged.length - HISTORY_MAX));
-    localStorage.setItem(HISTORY_KEY_PREFIX + topicId, JSON.stringify(trimmed));
+    if (typeof getGameProgress === 'function') {
+      const data = await getGameProgress(GAME_ID, SAVE_KEY);
+      if (data && typeof data === 'object' && (data.xp !== undefined || data.seen)){
+        gameSave = { xp: data.xp || 0, seen: data.seen || {} };
+        return;
+      }
+    }
+  } catch (e) {
+    console.error('loadGameState cloud', e);
+  }
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (raw){
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') gameSave = { xp: parsed.xp || 0, seen: parsed.seen || {} };
+    }
   } catch (e) {}
 }
 
 async function fetchAiWords(topic){
+  const AI_TIMEOUT_MS = 9000;
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), AI_TIMEOUT_MS);
   try {
@@ -638,6 +671,8 @@ function checkSelection(path){
   state.xp += 10;
   document.getElementById('xp').textContent = state.xp;
   document.getElementById('foundCount').textContent = state.found.size;
+  gameSave.xp = state.xp;
+  saveGameState();
 
   const def = state.definitions && state.definitions[match];
   if (def) showDefToast(match, def);
@@ -662,6 +697,8 @@ function finishTopic(){
   GameSound.play('win');
   state.xp += 20;
   document.getElementById('xp').textContent = state.xp;
+  gameSave.xp = state.xp;
+  saveGameState();
   const secs = Math.floor((Date.now() - state.startTime) / 1000);
   document.getElementById('winMsg').textContent =
     `${state.words.length} palavras encontradas em ${formatTime(secs)}. +20 XP de bônus!`;
@@ -691,7 +728,14 @@ function stopTimer(){
   if (state.timerId) clearInterval(state.timerId);
 }
 
-loadTopic(0);
+async function initGame(){
+  await loadGameState();
+  state.xp = gameSave.xp || 0;
+  document.getElementById('xp').textContent = state.xp;
+  await loadTopic(0);
+}
+
+initGame();
 </script>
 </body>
 </html>
