@@ -1098,9 +1098,13 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
 .ai-persona-create-btn:active { transform: translateY(1px); }
 .ai-persona-create-btn .icon-wrap {
   flex-shrink: 0;
-  width: 52px; height: 52px;
+  width: 52px;
+  height: 52px;
   color: var(--terracotta);
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 .ai-persona-create-btn .icon-wrap svg { width: 46px; height: 46px; }
 .ai-persona-create-btn .icon-wrap.emoji-big {
@@ -1109,6 +1113,29 @@ body.on-auth-screen .auth-hint { color: var(--ink-faint); }
   background: var(--terracotta-tonal);
   border-radius: 16px;
   box-shadow: var(--clay-well);
+  position: relative;
+}
+.ai-persona-create-btn .create-bot {
+  display: block;
+  font-size: 28px;
+  line-height: 1;
+  transform: translateY(1px);
+}
+.ai-persona-create-btn .create-plus {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--terracotta, #ff5b3d);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 20px;
+  text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,.25);
+  font-family: inherit;
 }
 .ai-persona-create-btn .label { flex: 1; min-width: 0; }
 .ai-persona-create-btn .label .title { display: block; font-weight: 700; font-size: 15px; color: var(--ink); }
