@@ -20,11 +20,11 @@
   html,body{height:100%;overflow:hidden;background:var(--bg-0);}
   body{font-family:"Inter",sans-serif;color:var(--ink);}
   .hud{position:fixed;}
-  #canvasWrap{position:fixed;inset:0;cursor:grab;touch-action:none;overflow:hidden;
+  #canvasWrap{position:fixed;inset:0;cursor:default;touch-action:none;overflow:hidden;
     background:linear-gradient(180deg, var(--bg-0), var(--bg-1) 60%, var(--bg-0));}
   #canvasWrap.dragging{cursor:grabbing;}
   #canvas{position:absolute;top:0;left:0;transform-origin:0 0;z-index:1;}
-  .gnode{position:absolute;top:0;left:0;width:520px;
+  .gnode{position:absolute;top:0;left:0;width:520px;cursor:grab;touch-action:none;
     background:var(--bg-2);
     border:1px solid var(--border);border-radius:var(--radius);
     padding:22px 24px 24px;opacity:0;transform:translateY(18px) scale(.97);
@@ -33,6 +33,9 @@
   .gnode::before{content:'';position:absolute;top:0;left:24px;right:24px;height:3px;border-radius:2px;
     background:linear-gradient(90deg, transparent, var(--accent-2), var(--accent), transparent);opacity:.9;}
   .gnode.show{opacity:1;transform:translateY(0) scale(1);}
+  .gnode button,.gnode input,.gnode a{cursor:pointer;touch-action:auto;}
+  .gnode input{cursor:text;}
+  #canvasWrap.dragging .gnode{cursor:grabbing;}
   .gtag{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:2px;color:var(--ink-soft);
     text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
   .gtag>span:first-child{display:inline-flex;align-items:center;gap:9px;}
@@ -195,7 +198,10 @@ function applyTransform(){
 applyTransform();
 
 canvasWrap.addEventListener('pointerdown', function(e){
-  if(e.target.closest('.gnode') || e.target.closest('.gtoolbar')) return;
+  var nodeEl = e.target.closest('.gnode');
+  if(!nodeEl) return; // fora do card não arrasta mais
+  if(e.target.closest('.gtoolbar')) return;
+  if(e.target.closest('button, input, a, [data-go]')) return; // deixa botões/campos funcionarem normalmente
   dragging = true;
   canvasWrap.classList.add('dragging');
   canvasWrap.setPointerCapture(e.pointerId);
