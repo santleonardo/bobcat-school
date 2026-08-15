@@ -295,7 +295,7 @@ const EXTRAS = [
   {
     id: 'caca-palavras-portugues',
     group: 'Jogos',
-    name: 'Caça-Palavras — Português',
+    name: '🇧🇷 Caça-Palavras — Português',
     icon: '🔎',
     description: 'Classes gramaticais, áreas da gramática e sinais de pontuação escondidos na grade',
     url: 'lessons/caca-palavras-portugues.html'
@@ -303,7 +303,7 @@ const EXTRAS = [
   {
     id: 'caca-palavras-ingles',
     group: 'Jogos',
-    name: 'Caça-Palavras — Inglês',
+    name: '🇺🇸 Caça-Palavras — Inglês',
     icon: '🔎',
     description: 'Vocabulário de inglês (família, comida, verbos, phrasal verbs e mais) escondido na grade, com tradução ao encontrar cada palavra',
     url: 'lessons/caca-palavras-ingles.html'
@@ -311,7 +311,7 @@ const EXTRAS = [
   {
     id: 'labirinto-sintaxe',
     group: 'Jogos',
-    name: 'Labirinto da Oração',
+    name: '🇧🇷 Labirinto da Oração',
     icon: '🐾',
     description: 'Percorra o labirinto e encontre sujeito, verbo, complementos e adjuntos na ordem certa — frase e tema novos a cada rodada',
     url: 'lessons/labirinto-sintaxe.html'
@@ -319,7 +319,7 @@ const EXTRAS = [
   {
     id: 'empurra-palavras',
     group: 'Jogos',
-    name: 'Empurra-Palavras',
+    name: '🇧🇷 Empurra-Palavras',
     icon: '📦',
     description: 'Empurre as caixinhas de palavras até os lugares certos para montar a frase',
     url: 'lessons/empurra-palavras.html'
@@ -327,7 +327,7 @@ const EXTRAS = [
   {
     id: 'empurra-palavras-ingles',
     group: 'Jogos',
-    name: 'Empurra-Palavras — Inglês',
+    name: '🇬🇧 Empurra-Palavras — Inglês',
     icon: '📦',
     description: 'Empurre as caixinhas até os lugares certos para montar a frase em inglês, sem cair nas armadilhas de grafia',
     url: 'lessons/empurra-palavras-ingles.html'
@@ -335,7 +335,7 @@ const EXTRAS = [
   {
     id: 'cobrinha-ortografia',
     group: 'Jogos',
-    name: 'Cobrinha da Ortografia',
+    name: '🇧🇷 Cobrinha da Ortografia',
     icon: '🐍',
     description: 'A palavra aparece escrita errada — guie a cobrinha até comer a letra do erro antes que ela se choque',
     url: 'lessons/cobrinha-ortografia.html'
@@ -343,7 +343,7 @@ const EXTRAS = [
   {
     id: 'cobrinha-ortografia-ingles',
     group: 'Jogos',
-    name: 'Cobrinha da Ortografia — Inglês',
+    name: '🇺🇸 Cobrinha da Ortografia — Inglês',
     icon: '🐍',
     description: 'A palavra em inglês aparece escrita errada — guie a cobrinha até comer a letra do erro antes que ela se choque',
     url: 'lessons/cobrinha-ortografia-ingles.html'
@@ -351,7 +351,7 @@ const EXTRAS = [
   {
     id: 'concordancia-monta-frase',
     group: 'Jogos',
-    name: 'Concordância — Monta a Frase',
+    name: '🇧🇷 Concordância — Monta a Frase',
     icon: '✏️',
     description: 'Receba uma frase sem concordância e monte a versão correta escolhendo as palavras certas no banco',
     url: 'lessons/concordancia-monta-frase.html'
@@ -359,7 +359,7 @@ const EXTRAS = [
   {
     id: 'interpretacao-harmonia',
     group: 'Jogos',
-    name: 'Interpretação — Harmonia',
+    name: '🇧🇷 Interpretação — Harmonia',
     icon: '🗣️',
     description: 'Converse em entrevistas, coletivas e na rua: interprete o implícito, mantenha a harmonia e desvende um mistério',
     url: 'lessons/interpretacao-harmonia.html'
@@ -367,7 +367,7 @@ const EXTRAS = [
   {
     id: 'generos-em-cena',
     group: 'Jogos',
-    name: 'Gêneros em Cena',
+    name: '🇧🇷 Gêneros em Cena',
     icon: '📰',
     description: 'Classifique o gênero, a tipologia e o destino de cada texto — você é o editor de plantão',
     url: 'lessons/generos-em-cena.html'
