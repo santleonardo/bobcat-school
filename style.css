@@ -59,6 +59,7 @@ html[data-theme="dark"] {
   --terracotta-tonal: rgba(225, 58, 38, 0.18);
   --pine: #3dd68c;
   --pine-deep: #f7f1ec;
+  --pine-deep-bg: #12291d;
   --pine-tint: rgba(61, 214, 140, 0.15);
   --gold: #ffb347;
   --surface: #161312;
@@ -123,6 +124,7 @@ html[data-theme="light"] {
   --terracotta-tonal: #FDE8D8;
   --pine: #3C5645;
   --pine-deep: #202B22;
+  --pine-deep-bg: var(--pine-deep);
   --pine-tint: #DCEAD9;
   --gold: #D9A947;
   --surface: #FFFFFF;
@@ -633,7 +635,7 @@ body.on-auth-screen.on-landing-screen .topbar { display: none; }
   background:
     radial-gradient(620px 320px at 88% -12%, rgba(255, 91, 61,0.42), transparent 62%),
     radial-gradient(420px 260px at -10% 40%, rgba(201,154,61,0.16), transparent 60%),
-    linear-gradient(165deg, var(--pine-deep) 0%, var(--pine) 100%);
+    linear-gradient(165deg, var(--pine-deep-bg) 0%, var(--pine) 100%);
   padding: 44px 26px 40px;
   color: #fff;
   border-radius: 0 0 44px 44px;
@@ -2047,7 +2049,7 @@ a.menu-btn#btn-bobcat-ville .menu-btn-icon {
   padding: 17px;
   background:
     radial-gradient(360px 160px at 85% -20%, rgba(255, 91, 61,0.45), transparent 60%),
-    linear-gradient(135deg, var(--pine-deep) 0%, var(--pine) 100%);
+    linear-gradient(135deg, var(--pine-deep-bg) 0%, var(--pine) 100%);
   border-radius: var(--radius-md);
   color: #fff;
   position: relative;
