@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Verb To Be (Canvas)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson-kit.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+<style>
+  :root{
+    --bg-0:#faf6ef;--bg-1:#f3ebdd;--bg-2:#ffffff;
+    --border:rgba(60,40,20,.14);--ink:#2a1f1a;--ink-soft:rgba(42,31,26,.62);
+    --accent:#ff5b3d;--accent-2:#ffb347;--violet:#7a6ee0;
+    --ok:#1e8a55;--ok-bg:rgba(30,138,85,.1);--bad:#d9432f;--bad-bg:rgba(217,67,47,.09);--radius:22px;
+  }
+  html,body{height:100%;overflow:hidden;background:var(--bg-0);}
+  body{font-family:"Inter",sans-serif;color:var(--ink);}
+  .hud{position:fixed;}
+  #canvasWrap{position:fixed;inset:0;cursor:default;touch-action:none;overflow:hidden;
+    background:linear-gradient(180deg, var(--bg-0), var(--bg-1) 60%, var(--bg-0));}
+  #canvasWrap.dragging{cursor:grabbing;}
+  #canvas{position:absolute;top:0;left:0;transform-origin:0 0;z-index:1;}
+  .gnode{position:absolute;top:0;left:0;
+    width:min(100vw - 24px, 640px);
+    min-height:calc(100dvh - var(--safe-top, 78px) - var(--safe-bottom, 70px));
+    box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;
+    cursor:grab;touch-action:none;
+    background:var(--bg-2);
+    border:1px solid var(--border);border-radius:var(--radius);
+    padding:22px 24px 24px;opacity:0;transform:translateY(18px) scale(.97);
+    box-shadow:0 14px 34px rgba(60,40,20,.1);
+    transition:opacity .5s ease, transform .5s ease;}
+  .gnode::before{content:'';position:absolute;top:0;left:24px;right:24px;height:3px;border-radius:2px;
+    background:linear-gradient(90deg, transparent, var(--accent-2), var(--accent), transparent);opacity:.9;}
+  .gnode.show{opacity:1;transform:translateY(0) scale(1);}
+  .gnode button,.gnode input,.gnode a{cursor:pointer;touch-action:auto;}
+  .gnode input{cursor:text;}
+  #canvasWrap.dragging .gnode{cursor:grabbing;}
+  @media (max-width:640px){
+    .gnode{width:100vw;border-radius:0;border-left:none;border-right:none;}
+  }
+  .gtag{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:2px;color:var(--ink-soft);
+    text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .gtag>span:first-child{display:inline-flex;align-items:center;gap:9px;}
+  .gtag .gnum{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 35% 30%, var(--accent-2), var(--accent) 70%);
+    color:#fff;font-weight:700;font-family:"Inter",sans-serif;font-size:12px;
+    box-shadow:0 0 0 3px rgba(255,138,76,.15);flex-shrink:0;}
+  .gtitle{font-family:"Fraunces",serif;font-style:italic;font-weight:600;font-size:25px;color:var(--ink);
+    margin:0 0 12px;letter-spacing:-.01em;line-height:1.16;}
+  .gsub{font-size:13.5px;color:var(--ink-soft);margin:0 0 14px;line-height:1.55;}
+  .gcontent{font-size:14px;line-height:1.6;color:var(--ink);}
+  .gcard{border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin:10px 0;background:rgba(255,91,61,.04);}
+  .gcard b{color:var(--accent);}
+  .gexample{font-family:"JetBrains Mono",monospace;font-size:12.5px;background:#fff7ed;
+    color:#c2410c;border-left:3px solid var(--accent);border-radius:8px;
+    padding:9px 12px;margin-top:8px;display:inline-block;}
+  .gvocab{display:flex;align-items:center;justify-content:space-between;border-bottom:1px dashed var(--border);
+    padding:8px 0;font-size:14px;color:var(--ink);}
+  .gvocab:last-child{border-bottom:none;}
+  .gvocab b{color:var(--accent);}
+  .gaudio{border:1px solid var(--border);background:#fff;color:var(--ink);
+    border-radius:99px;padding:3px 11px;font-size:11px;font-weight:700;cursor:pointer;
+    font-family:"JetBrains Mono",monospace;transition:all .15s;}
+  .gaudio:hover{background:#fff1e6;border-color:var(--accent-2);}
+  .gnext{margin-top:18px;display:inline-flex;align-items:center;gap:7px;
+    background:linear-gradient(135deg, var(--accent-2), var(--accent));color:#fff;
+    border:none;padding:12px 20px;border-radius:99px;font-weight:700;font-size:13.5px;cursor:pointer;
+    font-family:"Inter",sans-serif;box-shadow:0 8px 20px rgba(255,91,61,.25);transition:transform .15s, box-shadow .15s;}
+  .gnext:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(255,91,61,.35);}
+  .gnext:disabled{opacity:.4;cursor:not-allowed;}
+  .gline{position:absolute;top:0;left:0;pointer-events:none;overflow:visible;}
+  .gq-opt{border:1.5px solid var(--border);background:#fff;color:var(--ink);
+    padding:10px 15px;margin:5px 6px 0 0;border-radius:99px;font-weight:600;
+    font-size:13.5px;cursor:pointer;font-family:"Inter",sans-serif;transition:all .15s;}
+  .gq-opt:hover{background:#fff1e6;border-color:var(--accent-2);}
+  .gq-opt.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok);}
+  .gq-opt.bad{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
+  .gfill-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:10px 0;font-size:14px;color:var(--ink);}
+  .gfill-input{border:1.5px solid var(--border);background:#fff;color:var(--ink);
+    padding:7px 10px;font-size:14px;width:90px;border-radius:8px;font-family:"JetBrains Mono",monospace;}
+  .gfill-input:focus{outline:none;border-color:var(--accent-2);}
+  .gfill-input.correct{border-color:var(--ok);background:var(--ok-bg);}
+  .gfill-input.incorrect{border-color:var(--bad);background:var(--bad-bg);}
+  .gscore{font-family:"JetBrains Mono",monospace;font-size:11px;background:#fff7ed;
+    border:1px solid var(--border);color:#c2410c;border-radius:99px;padding:3px 11px;}
+  .gtoolbar{position:fixed;bottom:16px;right:16px;background:#fff;color:var(--ink);
+    border:1px solid var(--border);
+    border-radius:99px;padding:6px;display:flex;align-items:center;gap:2px;box-shadow:0 10px 30px rgba(60,40,20,.12);z-index:20;}
+  .gtoolbar button{width:36px;height:36px;border:none;background:transparent;color:var(--ink);font-size:17px;
+    cursor:pointer;border-radius:99px;font-family:"Inter",sans-serif;transition:background .15s;}
+  .gtoolbar button:hover{background:#fff1e6;}
+  .gcapacity{position:fixed;bottom:16px;left:16px;background:#fff;color:#c2410c;
+    border:1px solid var(--border);
+    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
+    padding:7px 14px;border-radius:99px;z-index:20;box-shadow:0 10px 30px rgba(60,40,20,.12);}
+  .gback{position:fixed;top:60px;left:16px;z-index:101;background:#fff;border:1px solid var(--border);
+    font-size:12px;font-weight:600;padding:9px 15px;
+    border-radius:99px;text-decoration:none;color:var(--ink);font-family:"Inter",sans-serif;transition:all .15s;
+    box-shadow:0 10px 30px rgba(60,40,20,.1);}
+  .gback:hover{background:#fff1e6;border-color:var(--accent-2);}
+  .glabel{position:fixed;top:60px;right:16px;z-index:101;background:#fff;border:1px solid var(--border);
+    font-family:"JetBrains Mono",monospace;
+    font-size:9.5px;letter-spacing:1.5px;color:var(--ink-soft);padding:8px 13px;border-radius:99px;
+    box-shadow:0 10px 30px rgba(60,40,20,.1);}
+  @media (max-width:640px){
+    .glabel{display:none;}
+  }
+</style>
+</head><body>
+
+<!-- NOTE: cada .gnode agora ocupa a tela inteira (responsivo via CSS, sem zoom de câmera).
+     NODE_W no JS é apenas a largura REAL medida do card (offsetWidth) após o render,
+     usada só para centralizar horizontalmente e desenhar a linha pontilhada entre nós.
+     O arraste do aluno move a câmera SOMENTE no eixo Y (para cima/baixo); o eixo X
+     é sempre recalculado para manter o card centralizado, então não existe mais
+     arraste lateral nem risco de o aluno "perder" conteúdo pros lados. -->
+
+
+<div class="hud" id="hud" style="top:0;left:0;right:0;">
+  <div class="hud-left"><span>🐾 Bobcat</span>
+    <div class="xp-track"><div class="xp-fill" id="xpBar"></div></div>
+    <span id="xpLabel" style="font-weight:700;color:var(--orange-dark)">0 XP</span>
+  </div>
+  <div class="hud-right">
+    <span class="pill" id="levelPill">⭐ Nível 1</span>
+    <span class="pill" id="starsPill">🏆 0 estrelas</span>
+  </div>
+</div>
+
+<a class="gback" href="../index.html">← Voltar ao app</a>
+<span class="glabel">EXTRA · MAPA DA LIÇÃO · VERB TO BE</span>
+
+<div id="canvasWrap">
+  <div id="canvas">
+    <svg class="gline" id="lines" width="1200" height="12000">
+      <defs>
+        <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffd166"/>
+          <stop offset="100%" stop-color="#ff8a4c"/>
+        </linearGradient>
+        <filter id="lineGlow" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+    </svg>
+    <!-- nodes injected by JS -->
+  </div>
+</div>
+
+<div class="gcapacity" id="capacityBadge">CAPACIDADE: 1/10 NÓS</div>
+<div class="gtoolbar">
+  <button type="button" id="recenter" aria-label="Voltar ao card atual">⤾</button>
+</div>
+
+<script src="lesson-kit.js"></script>
+<script>
+const LESSON_ID = "extra-gridscape-verb-to-be";
+const TOTAL_Q = 21; // 8 quiz + 5 fill + 4 leitura (V/F) + 4 diálogo
+var SCORE = { correct: 0, total: TOTAL_Q };
+var qCorrect = 0, fillCorrect = 0, tfCorrect = 0, dialogCorrect = 0;
+function norm(s){ return (s||'').toString().trim().toLowerCase().replace(/[.!?]/g,''); }
+function addXP(n){ if(window.BobcatLesson) BobcatLesson.addXP(n); }
+
+// ── Layout dos nós: cada card ocupa a tela inteira, empilhados na vertical ──
+// (o aluno só arrasta pra cima/baixo — não existe mais variação nem arraste horizontal)
+const GAP_Y = 90;
+var NODE_W = 520; // medido de verdade (offsetWidth) depois que os cards são renderizados
+var NODE_TOPS = []; // calculado após medir a altura real de cada nó
+var revealed = 1; // quantos nós já apareceram
+
+var canvasWrap = document.getElementById('canvasWrap');
+var canvas = document.getElementById('canvas');
+var transform = { x: 0, y: 220 };
+var dragging = false, dragStart = { y:0, ty:0 };
+
+var maxNodeHeight = 360;
+// Espaço reservado para HUD fixo no topo, e toolbar/badge fixos embaixo — não é área útil pro card.
+var SAFE_TOP = 78, SAFE_BOTTOM = 70;
+document.documentElement.style.setProperty('--safe-top', SAFE_TOP+'px');
+document.documentElement.style.setProperty('--safe-bottom', SAFE_BOTTOM+'px');
+function viewportSize(){
+  if(window.visualViewport) return { w: window.visualViewport.width, h: window.visualViewport.height };
+  return { w: window.innerWidth, h: window.innerHeight };
+}
+// Mede a largura real do card (definida via CSS responsivo) e mantém tudo centralizado no eixo X.
+function computeLayout(){
+  var sample = document.getElementById('node-0');
+  if(sample) NODE_W = sample.offsetWidth;
+  transform.x = (viewportSize().w - NODE_W) / 2;
+}
+
+function clampTransform(){
+  // Trava o eixo Y para que o aluno não arraste além do primeiro/último card,
+  // como se houvesse um teto e um chão invisíveis na "trilha" vertical.
+  var vc = viewportSize();
+  var contentTop = NODE_TOPS[0] || 0;
+  var lastIdx = NODE_TOPS.length - 1;
+  var lastEl = document.getElementById('node-'+lastIdx);
+  var contentBottom = (NODE_TOPS[lastIdx] || 0) + (lastEl ? lastEl.offsetHeight : maxNodeHeight);
+  // y que encosta o topo do primeiro card no topo seguro da tela
+  var maxY = SAFE_TOP - contentTop;
+  // y que encosta o fundo do último card no fundo seguro da tela
+  var minY = (vc.h - SAFE_BOTTOM) - contentBottom;
+  if(minY > maxY){
+    transform.y = Math.max(maxY, Math.min(minY, transform.y));
+  } else {
+    transform.y = Math.max(minY, Math.min(maxY, transform.y));
+  }
+}
+
+function applyTransform(){
+  clampTransform();
+  canvas.style.transform = 'translate('+transform.x+'px,'+transform.y+'px)';
+}
+applyTransform();
+
+canvasWrap.addEventListener('pointerdown', function(e){
+  var nodeEl = e.target.closest('.gnode');
+  if(!nodeEl) return; // fora do card não arrasta mais
+  if(e.target.closest('.gtoolbar')) return;
+  if(e.target.closest('button, input, a, [data-go]')) return; // deixa botões/campos funcionarem normalmente
+  dragging = true;
+  canvasWrap.classList.add('dragging');
+  canvasWrap.setPointerCapture(e.pointerId);
+  dragStart = { y:e.clientY, ty:transform.y };
+});
+canvasWrap.addEventListener('pointermove', function(e){
+  if(!dragging) return;
+  transform.y = dragStart.ty + (e.clientY - dragStart.y); // só o eixo Y se move
+  applyTransform();
+});
+function stopDrag(){ dragging = false; canvasWrap.classList.remove('dragging'); }
+canvasWrap.addEventListener('pointerup', stopDrag);
+canvasWrap.addEventListener('pointerleave', stopDrag);
+canvasWrap.addEventListener('wheel', function(e){
+  e.preventDefault();
+  transform.y -= e.deltaY; applyTransform(); // scroll do mouse também só move pra cima/baixo
+}, { passive:false });
+
+document.getElementById('recenter').addEventListener('click', function(){ centerOnNode(revealed-1); });
+
+function centerOnNode(i){
+  var el = document.getElementById('node-'+i);
+  var h = el ? el.offsetHeight : 360;
+  var y = NODE_TOPS[i] || 0;
+  var vc = viewportSize();
+  var hh = SAFE_TOP + (vc.h - SAFE_TOP - SAFE_BOTTOM)/2;
+  transform.y = hh - (y + h/2);
+  applyTransform();
+}
+
+function drawLine(i){
+  var svg = document.getElementById('lines');
+  var elA = document.getElementById('node-'+i), elB = document.getElementById('node-'+(i+1));
+  var x1 = NODE_W/2, y1 = NODE_TOPS[i] + (elA ? elA.offsetHeight : 0);
+  var x2 = NODE_W/2, y2 = NODE_TOPS[i+1] || 0;
+  var midY = (y1+y2)/2;
+  var d = 'M'+x1+','+y1+' C '+x1+','+midY+' '+x2+','+midY+' '+x2+','+y2;
+  var glow = document.createElementNS('http://www.w3.org/2000/svg','path');
+  glow.setAttribute('d', d);
+  glow.setAttribute('stroke', 'url(#lineGrad)');
+  glow.setAttribute('stroke-width', '7');
+  glow.setAttribute('fill', 'none');
+  glow.setAttribute('opacity', '.35');
+  glow.setAttribute('filter', 'url(#lineGlow)');
+  svg.appendChild(glow);
+  var path = document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d', d);
+  path.setAttribute('stroke', 'url(#lineGrad)');
+  path.setAttribute('stroke-width', '2.5');
+  path.setAttribute('fill', 'none');
+  path.setAttribute('stroke-linecap', 'round');
+  path.setAttribute('stroke-dasharray', '1 10');
+  svg.appendChild(path);
+  [[x1,y1],[x2,y2]].forEach(function(p){
+    var star = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    star.setAttribute('cx', p[0]); star.setAttribute('cy', p[1]); star.setAttribute('r', '3.5');
+    star.setAttribute('fill', '#ffd166'); star.setAttribute('opacity', '.9');
+    svg.appendChild(star);
+  });
+}
+
+function revealNext(){
+  if(revealed >= NODES.length) return;
+  var idx = revealed;
+  var el = document.getElementById('node-'+idx);
+  drawLine(idx-1);
+  requestAnimationFrame(function(){ el.classList.add('show'); });
+  revealed++;
+  document.getElementById('capacityBadge').textContent = 'CAPACIDADE: '+revealed+'/'+NODES.length+' NÓS';
+  setTimeout(function(){ centerOnNode(idx); }, 60);
+}
+
+// ── Conteúdo dos nós (extraído da Lição 1 — Verb To Be) ──
+var QUIZ = [
+  {prompt:"I ___ a teacher.", options:["am","is","are"], answer:0},
+  {prompt:"She ___ from Japan.", options:["am","is","are"], answer:1},
+  {prompt:"They ___ my friends.", options:["am","is","are"], answer:2},
+  {prompt:"___ you a student?", options:["Am","Is","Are"], answer:2},
+  {prompt:"He ___ not at home.", options:["am","is","are"], answer:1},
+  {prompt:"We ___ happy.", options:["am","is","are"], answer:2},
+  {prompt:"___ she your sister?", options:["Am","Is","Are"], answer:1},
+  {prompt:"I ___ not Brazilian.", options:["am","is","are"], answer:0}
+];
+var FILL = [
+  {s:"I ___ Brazilian.", a:"am"},
+  {s:"She ___ a doctor.", a:"is"},
+  {s:"They ___ students.", a:"are"},
+  {s:"___ you ready?", a:"Are"},
+  {s:"He ___ not here.", a:"is"}
+];
+var TF = [
+  {prompt:"Marina is Brazilian.", ans:true},
+  {prompt:"Chris is a doctor.", ans:false},
+  {prompt:"Marina and Chris are classmates.", ans:true},
+  {prompt:"The classmates are boring.", ans:false}
+];
+var DIALOG = [
+  {s:"Hi! ___ you Paula?", a:"Are"},
+  {s:"No, I ___ not Paula.", a:"am"},
+  {s:"___ Paula your sister?", a:"Is"},
+  {s:"Yes, she ___ my sister.", a:"is"}
+];
+
+var NODES = [
+  // Nó 0 — Início
+  '<div class="gtag"><span><span class="gnum">1</span> INTRO</span><span>OBJETIVOS</span></div>'+
+  '<h2 class="gtitle">Verb To Be</h2>'+
+  '<p class="gsub">am, is, are — afirmativas, negativas e perguntas.</p>'+
+  '<div class="gcard">🎯 Ao final você usa <b>am / is / are</b>, forma negativas e faz perguntas simples.</div>'+
+  '<div class="gcard">Diálogo — At the Cafe<br>'+
+  '<span style="display:block;margin-top:6px">"Hi! I am Anna. Are you a student?" '+
+  '<button class="gaudio" data-speak="Hi! I am Anna. Are you a student?">🔊</button></span>'+
+  '<span style="display:block;margin-top:6px">"Yes, I am. I am from Brazil." '+
+  '<button class="gaudio" data-speak="Yes, I am. I am from Brazil.">🔊</button></span></div>'+
+  '<button type="button" class="gnext" data-go>Ver a gramática →</button>',
+
+  // Nó 1 — Gramática
+  '<div class="gtag"><span><span class="gnum">2</span> GRAMÁTICA</span><span>ESTRUTURA</span></div>'+
+  '<h2 class="gtitle">Afirmativa · Negativa · Pergunta</h2>'+
+  '<div class="gcard"><b>Afirmativa</b> — I am / You are / He-She-It is / We-They are.'+
+  '<div class="gexample">I am a student.</div></div>'+
+  '<div class="gcard"><b>Negativa</b> — am/is/are + not.'+
+  '<div class="gexample">He isn\'t at home.</div></div>'+
+  '<div class="gcard"><b>Pergunta</b> — Am/Is/Are + sujeito?'+
+  '<div class="gexample">Are you ready?</div></div>'+
+  '<button type="button" class="gnext" data-go>Ver as contrações →</button>',
+
+  // Nó 2 — Contrações
+  '<div class="gtag"><span><span class="gnum">3</span> CONTRAÇÕES</span><span>SHORT FORMS</span></div>'+
+  '<h2 class="gtitle">Contrações do Verb To Be</h2>'+
+  '<p class="gsub">No dia a dia, quase sempre usamos a forma contraída em vez da forma completa.</p>'+
+  '<div class="gvocab"><span><b>I\'m</b> — I am</span><button class="gaudio" data-speak="I am hungry.">🔊</button></div>'+
+  '<div class="gvocab"><span><b>you\'re</b> — you are</span><button class="gaudio" data-speak="You are welcome.">🔊</button></div>'+
+  '<div class="gvocab"><span><b>he\'s / she\'s</b> — he/she is</span><button class="gaudio" data-speak="She is my sister.">🔊</button></div>'+
+  '<div class="gvocab"><span><b>it\'s</b> — it is</span><button class="gaudio" data-speak="It is raining.">🔊</button></div>'+
+  '<div class="gvocab"><span><b>we\'re / they\'re</b> — we/they are</span><button class="gaudio" data-speak="They are at school.">🔊</button></div>'+
+  '<div class="gcard">Exemplo — <div class="gexample">I\'m hungry. She\'s my sister. They\'re at school.</div></div>'+
+  '<button type="button" class="gnext" data-go>Ver perguntas com Wh- →</button>',
+
+  // Nó 3 — Perguntas com Wh-
+  '<div class="gtag"><span><span class="gnum">4</span> PERGUNTAS WH-</span><span>QUESTION WORDS</span></div>'+
+  '<h2 class="gtitle">What, Where, Who + to be</h2>'+
+  '<p class="gsub">Combine uma palavra interrogativa com am/is/are para perguntar mais coisas.</p>'+
+  '<div class="gcard"><b>What</b> — pergunta o quê/qual.'+
+  '<div class="gexample">What is your name?</div></div>'+
+  '<div class="gcard"><b>Where</b> — pergunta o lugar.'+
+  '<div class="gexample">Where are you from?</div></div>'+
+  '<div class="gcard"><b>Who</b> — pergunta a pessoa.'+
+  '<div class="gexample">Who is that?</div></div>'+
+  '<span style="display:block;margin-top:4px">'+
+  '<button class="gaudio" data-speak="What is your name? Where are you from? Who is that?">🔊 Ouvir as três</button></span>'+
+  '<button type="button" class="gnext" data-go>Ver o vocabulário →</button>',
+
+  // Nó 4 — Vocabulário
+  '<div class="gtag"><span><span class="gnum">5</span> VOCABULÁRIO</span><span>ÁUDIO</span></div>'+
+  '<h2 class="gtitle">Palavras-chave</h2>'+
+  '<div class="gvocab"><span><b>am</b> — eu sou/estou</span><button class="gaudio" data-speak="am">🔊</button></div>'+
+  '<div class="gvocab"><span><b>is</b> — ele/ela é</span><button class="gaudio" data-speak="is">🔊</button></div>'+
+  '<div class="gvocab"><span><b>are</b> — você/nós/eles</span><button class="gaudio" data-speak="are">🔊</button></div>'+
+  '<div class="gvocab"><span><b>isn\'t</b> — is not</span><button class="gaudio" data-speak="isn\'t">🔊</button></div>'+
+  '<div class="gvocab"><span><b>aren\'t</b> — are not</span><button class="gaudio" data-speak="aren\'t">🔊</button></div>'+
+  '<button type="button" class="gnext" data-go>Ler o texto →</button>',
+
+  // Nó 5 — Leitura + Verdadeiro ou Falso
+  '<div class="gtag"><span><span class="gnum">6</span> LEITURA</span><span class="gscore" id="tfScore">0/4</span></div>'+
+  '<h2 class="gtitle">Leia e responda: Verdadeiro ou Falso</h2>'+
+  '<div class="gcard">My name is Marina. I am Brazilian and I am from Salvador. My best friend is Chris. '+
+  'He is American, and he is a teacher. We are classmates in an English course. My classmates aren\'t boring — they are funny! '+
+  '<button class="gaudio" data-speak="My name is Marina. I am Brazilian and I am from Salvador. My best friend is Chris. He is American, and he is a teacher. We are classmates in an English course.">🔊</button></div>'+
+  '<div id="tfGame"></div>'+
+  '<button type="button" class="gnext" id="btnTfNext">Próxima frase →</button>'+
+  '<div id="tfDone" style="display:none;margin-top:14px">'+
+  '<button type="button" class="gnext" data-go>Ir para o quiz →</button></div>',
+
+  // Nó 6 — Quiz
+  '<div class="gtag"><span><span class="gnum">7</span> QUIZ RELÂMPAGO</span><span class="gscore" id="quizScore">0/8</span></div>'+
+  '<h2 class="gtitle">Escolha a forma certa</h2>'+
+  '<div id="quizGame"></div>'+
+  '<button type="button" class="gnext" id="btnQuizNext">Próxima pergunta →</button>'+
+  '<div id="quizDone" style="display:none;margin-top:14px">'+
+  '<button type="button" class="gnext" data-go>Ir para completar frases →</button></div>',
+
+  // Nó 7 — Fill
+  '<div class="gtag"><span><span class="gnum">8</span> COMPLETE AS LACUNAS</span><span class="gscore" id="sFill">0/5</span></div>'+
+  '<h2 class="gtitle">Escreva am, is ou are</h2>'+
+  '<div id="fillBox"></div>'+
+  '<button type="button" class="gnext" onclick="checkFill()">Verificar</button>'+
+  '<div id="fillDone" style="display:none;margin-top:14px">'+
+  '<button type="button" class="gnext" data-go>Praticar diálogo →</button></div>',
+
+  // Nó 8 — Diálogo
+  '<div class="gtag"><span><span class="gnum">9</span> DIÁLOGO</span><span class="gscore" id="sDialog">0/4</span></div>'+
+  '<h2 class="gtitle">Complete o diálogo</h2>'+
+  '<p class="gsub">Escreva am, is ou are nas lacunas.</p>'+
+  '<div id="dialogBox"></div>'+
+  '<button type="button" class="gnext" onclick="checkDialog()">Verificar diálogo</button>'+
+  '<div id="dialogDone" style="display:none;margin-top:14px">'+
+  '<button type="button" class="gnext" data-go>Finalizar lição →</button></div>',
+
+  // Nó 9 — Finalizar
+  '<div class="gtag"><span><span class="gnum">10</span> REVISÃO FINAL</span><span>🏁</span></div>'+
+  '<h2 class="gtitle">Você concluiu o mapa!</h2>'+
+  '<div class="gcard">I am / You are / He is · Contrações: I\'m / she\'s / they\'re · Wh-: What is…? Where are…? · '+
+  'Negativa: isn\'t / aren\'t · Pergunta: Are you…?</div>'+
+  '<button type="button" class="gnext" id="btnFinish">🏁 Finalizar Lição</button>'+
+  '<p id="finishMsg" style="display:none;margin-top:12px;font-weight:700;"></p>'+
+  '<div style="margin-top:14px"><a href="../index.html" style="font-weight:700;font-size:13px;color:#16130f">← Voltar para Extra</a></div>'
+];
+
+NODES.forEach(function(html, i){
+  var node = document.createElement('div');
+  node.className = 'gnode';
+  node.id = 'node-'+i;
+  node.style.left = '0px'; // sem variação horizontal — todos os cards ficam na mesma coluna
+  node.innerHTML = html;
+  canvas.appendChild(node);
+});
+// Empilha os nós verticalmente para baixo, usando a altura real de cada um
+(function(){
+  computeLayout(); // mede a largura real do card antes de posicionar tudo
+  var cumY = 0;
+  NODES.forEach(function(_, i){
+    var node = document.getElementById('node-'+i);
+    NODE_TOPS[i] = cumY;
+    node.style.top = cumY + 'px';
+    maxNodeHeight = Math.max(maxNodeHeight, node.offsetHeight);
+    cumY += node.offsetHeight + GAP_Y;
+  });
+  applyTransform();
+})();
+window.addEventListener('resize', function(){ computeLayout(); applyTransform(); });
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize', function(){ computeLayout(); applyTransform(); });
+}
+document.getElementById('node-0').classList.add('show');
+canvas.addEventListener('click', function(e){
+  var btn = e.target.closest('[data-go]');
+  if(btn) revealNext();
+});
+setTimeout(function(){ centerOnNode(0); }, 30);
+
+// ── Quiz ──
+var qi = 0, qAnswered = false;
+function renderQuiz(){
+  var box = document.getElementById('quizGame');
+  if(!box) return;
+  if(qi >= QUIZ.length){
+    box.innerHTML = '<p style="font-weight:700;color:var(--ok,#1e6b40)">Quiz completo! '+qCorrect+'/'+QUIZ.length+' acertos.</p>';
+    document.getElementById('btnQuizNext').style.display='none';
+    document.getElementById('quizDone').style.display='block';
+    return;
+  }
+  qAnswered = false;
+  var q = QUIZ[qi];
+  var opts = q.options.map(function(o,i){
+    return '<button type="button" class="gq-opt" data-i="'+i+'">'+o+'</button>';
+  }).join('');
+  box.innerHTML = '<p style="font-weight:700;font-size:15px;margin:0 0 8px">'+(qi+1)+'. '+q.prompt+'</p><div>'+opts+'</div>';
+  box.querySelectorAll('button[data-i]').forEach(function(b){
+    b.addEventListener('click', function(){
+      if(qAnswered) return; qAnswered = true;
+      var ok = +b.dataset.i === q.answer;
+      if(ok){ qCorrect++; addXP(15); b.classList.add('ok'); }
+      else { b.classList.add('bad'); }
+      document.getElementById('quizScore').textContent = qCorrect+'/'+QUIZ.length;
+      SCORE.correct = qCorrect + fillCorrect + tfCorrect + dialogCorrect;
+    });
+  });
+}
+document.getElementById('btnQuizNext') && document.getElementById('btnQuizNext').addEventListener('click', function(){
+  if(!qAnswered && qi < QUIZ.length) return;
+  qi++; renderQuiz();
+});
+renderQuiz();
+
+// ── Leitura: Verdadeiro ou Falso ──
+var tfi = 0, tfAnswered = false;
+function renderTF(){
+  var box = document.getElementById('tfGame');
+  if(!box) return;
+  if(tfi >= TF.length){
+    box.innerHTML = '<p style="font-weight:700;color:var(--ok,#1e6b40)">Leitura concluída! '+tfCorrect+'/'+TF.length+' acertos.</p>';
+    document.getElementById('btnTfNext').style.display='none';
+    document.getElementById('tfDone').style.display='block';
+    return;
+  }
+  tfAnswered = false;
+  var q = TF[tfi];
+  box.innerHTML = '<p style="font-weight:700;font-size:15px;margin:0 0 8px">'+(tfi+1)+'. '+q.prompt+'</p>'+
+    '<div><button type="button" class="gq-opt" data-v="true">Verdadeiro</button>'+
+    '<button type="button" class="gq-opt" data-v="false">Falso</button></div>';
+  box.querySelectorAll('button[data-v]').forEach(function(b){
+    b.addEventListener('click', function(){
+      if(tfAnswered) return; tfAnswered = true;
+      var chosen = b.dataset.v === 'true';
+      var ok = chosen === q.ans;
+      if(ok){ tfCorrect++; addXP(10); b.classList.add('ok'); }
+      else { b.classList.add('bad'); }
+      document.getElementById('tfScore').textContent = tfCorrect+'/'+TF.length;
+      SCORE.correct = qCorrect + fillCorrect + tfCorrect + dialogCorrect;
+    });
+  });
+}
+document.getElementById('btnTfNext') && document.getElementById('btnTfNext').addEventListener('click', function(){
+  if(!tfAnswered && tfi < TF.length) return;
+  tfi++; renderTF();
+});
+renderTF();
+
+// ── Fill ──
+(function(){
+  var el = document.getElementById('fillBox');
+  if(!el) return;
+  FILL.forEach(function(item,i){
+    var p = item.s.split('___');
+    var row = document.createElement('div');
+    row.className = 'gfill-row';
+    row.innerHTML = '<span>'+p[0]+'</span><input class="gfill-input" id="gfill_'+i+'"><span>'+(p[1]||'')+'</span>';
+    el.appendChild(row);
+  });
+})();
+function checkFill(){
+  fillCorrect = 0;
+  FILL.forEach(function(item,i){
+    var inp = document.getElementById('gfill_'+i);
+    var ok = norm(inp.value) === norm(item.a);
+    inp.className = 'gfill-input '+(ok?'correct':'incorrect');
+    if(ok) fillCorrect++;
+  });
+  document.getElementById('sFill').textContent = fillCorrect+'/'+FILL.length;
+  addXP(fillCorrect*12);
+  SCORE.correct = qCorrect + fillCorrect + tfCorrect + dialogCorrect;
+  document.getElementById('fillDone').style.display = 'block';
+}
+
+// ── Diálogo ──
+(function(){
+  var el = document.getElementById('dialogBox');
+  if(!el) return;
+  DIALOG.forEach(function(item,i){
+    var p = item.s.split('___');
+    var row = document.createElement('div');
+    row.className = 'gfill-row';
+    row.innerHTML = '<span>'+p[0]+'</span><input class="gfill-input" id="gdialog_'+i+'"><span>'+(p[1]||'')+'</span>';
+    el.appendChild(row);
+  });
+})();
+function checkDialog(){
+  dialogCorrect = 0;
+  DIALOG.forEach(function(item,i){
+    var inp = document.getElementById('gdialog_'+i);
+    var ok = norm(inp.value) === norm(item.a);
+    inp.className = 'gfill-input '+(ok?'correct':'incorrect');
+    if(ok) dialogCorrect++;
+  });
+  document.getElementById('sDialog').textContent = dialogCorrect+'/'+DIALOG.length;
+  addXP(dialogCorrect*12);
+  SCORE.correct = qCorrect + fillCorrect + tfCorrect + dialogCorrect;
+  document.getElementById('dialogDone').style.display = 'block';
+  if(SCORE.correct >= Math.floor(TOTAL_Q*0.8) && window.BobcatLesson) BobcatLesson.fireConfetti();
+}
+
+document.getElementById('btnFinish').addEventListener('click', async function(){
+  SCORE.correct = qCorrect + fillCorrect + tfCorrect + dialogCorrect;
+  SCORE.total = TOTAL_Q;
+  var msg = document.getElementById('finishMsg');
+  if(window.BobcatLesson && typeof BobcatLesson.finishLesson === 'function'){
+    var ok = await BobcatLesson.finishLesson(SCORE.correct, SCORE.total, 'correct');
+    if(msg){
+      msg.style.display = 'block';
+      var pct = Math.round((SCORE.correct/SCORE.total)*100);
+      msg.style.color = ok ? '#1e6b40' : '#c0392b';
+      msg.textContent = ok ? ('🎉 Lição concluída ('+pct+'%)! Progresso salvo.') :
+        ('📌 '+SCORE.correct+'/'+SCORE.total+' ('+pct+'%). Precisa de pelo menos 85%.');
+    }
+  }
+});
+
+// Recalcula os limites de zoom já com o conteúdo interativo (quiz/lacunas/diálogo) inserido,
+// pois alguns cards crescem depois da primeira medição.
+(function(){
+  maxNodeHeight = 0;
+  NODES.forEach(function(_, i){
+    var node = document.getElementById('node-'+i);
+    if(node) maxNodeHeight = Math.max(maxNodeHeight, node.offsetHeight);
+  });
+  computeLayout();
+  applyTransform();
+})();
+
+if(window.BobcatLesson) BobcatLesson.init({ lessonId: LESSON_ID, totalQuestions: TOTAL_Q });
+</script>
+</body></html>
