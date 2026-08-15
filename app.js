@@ -301,6 +301,14 @@ const EXTRAS = [
     url: 'lessons/caca-palavras-portugues.html'
   },
   {
+    id: 'caca-palavras-ingles',
+    group: 'Jogos',
+    name: 'Caça-Palavras — Inglês',
+    icon: '🔎',
+    description: 'Vocabulário de inglês (família, comida, verbos, phrasal verbs e mais) escondido na grade, com tradução ao encontrar cada palavra',
+    url: 'lessons/caca-palavras-ingles.html'
+  },
+  {
     id: 'labirinto-sintaxe',
     group: 'Jogos',
     name: 'Labirinto da Oração',
