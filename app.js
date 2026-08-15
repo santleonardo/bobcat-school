@@ -798,8 +798,6 @@ function setAuthMode(mode) {
   document.getElementById('btn-forgot-password').classList.toggle('hidden', mode !== 'login');
   const gLabel = document.getElementById('btn-auth-google-label');
   if (gLabel) gLabel.textContent = mode === 'login' ? 'Continuar com Google' : 'Criar conta com Google';
-  const aLabel = document.getElementById('btn-auth-apple-label');
-  if (aLabel) aLabel.textContent = mode === 'login' ? 'Continuar com Apple' : 'Criar conta com Apple';
   document.getElementById('auth-error').classList.remove('show');
   document.getElementById('auth-success').classList.remove('show');
   // Nota: o aviso "info" (ex.: "faça login para acessar as lições") não é
@@ -905,18 +903,24 @@ function setupAuthScreen() {
   function wireOAuthButton(btnId, signFn, providerLabel) {
     const btn = document.getElementById(btnId);
     if (!btn) return;
+    if (typeof signFn !== 'function') {
+      // db-client desatualizado no deploy — esconde o botão em vez de quebrar o boot
+      btn.style.display = 'none';
+      console.warn('OAuth ' + providerLabel + ': função ausente no db-client.js. Faça deploy da versão atualizada.');
+      return;
+    }
     btn.addEventListener('click', async () => {
       showAuthError('');
       showAuthSuccess('');
-      if (!isUsingCloud()) {
+      if (typeof isUsingCloud === 'function' && !isUsingCloud()) {
         showAuthError('Login com ' + providerLabel + ' exige a nuvem (Supabase) configurada.');
         return;
       }
       btn.disabled = true;
       try {
         const result = await signFn();
-        if (!result.ok) {
-          showAuthError(result.message || ('Não foi possível entrar com ' + providerLabel + '.'));
+        if (!result || !result.ok) {
+          showAuthError((result && result.message) || ('Não foi possível entrar com ' + providerLabel + '.'));
           btn.disabled = false;
         }
         // Se ok, o navegador redireciona — não reabilita o botão
@@ -926,8 +930,8 @@ function setupAuthScreen() {
       }
     });
   }
-  wireOAuthButton('btn-auth-google', signInWithGoogle, 'Google');
-  wireOAuthButton('btn-auth-apple', signInWithApple, 'Apple');
+  const _signGoogle = (typeof signInWithGoogle === 'function') ? signInWithGoogle : (typeof window !== 'undefined' && window.signInWithGoogle) || null;
+  wireOAuthButton('btn-auth-google', _signGoogle, 'Google');
 
   document.getElementById('btn-forgot-password').addEventListener('click', async () => {
     const email = document.getElementById('auth-username').value.trim();

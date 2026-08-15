@@ -769,6 +769,8 @@ body.on-auth-screen.on-landing-screen .topbar { display: none; }
   color: #e8eaed;
   border-color: rgba(255,255,255,.14);
 }
+
+
 [data-theme="dark"] .btn-google:hover {
   background: #333338;
   border-color: rgba(255,255,255,.22);

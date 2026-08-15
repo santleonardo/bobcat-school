@@ -313,39 +313,45 @@ async function signOutStudent() {
 }
 
 /**
- * Login / cadastro com Google (OAuth).
- * Redireciona para o Google e volta ao app; a sessão é lida em initDataLayer / getSession.
+ * Login / cadastro OAuth (Google, Apple, etc.).
+ * Redireciona ao provedor e volta ao app; a sessão é lida em initDataLayer / getSession.
+ * @param {'google'} provider
  */
-async function signInWithGoogle() {
+async function signInWithOAuthProvider(provider) {
+  const labels = { google: 'Google' };
+  const label = labels[provider] || provider;
   if (!useSupabase || !supabaseClient) {
-    return { ok: false, message: 'Login com Google só está disponível com a conta na nuvem configurada.' };
+    return { ok: false, message: 'Login com ' + label + ' só está disponível com a conta na nuvem configurada.' };
   }
-  // URL de retorno: mesma origem do app (precisa estar em Authentication → URL Configuration no Supabase)
-  let redirectTo = window.location.origin + window.location.pathname;
-  if (redirectTo.endsWith('/')) redirectTo = redirectTo.slice(0, -1) || window.location.origin;
-  // Preferir index.html explícito se estivermos na raiz sem arquivo
-  if (!/\.html?$/i.test(redirectTo)) {
-    redirectTo = window.location.origin + (window.location.pathname.replace(/\/?$/, '/') + 'index.html').replace(/\/+/g, '/');
-    // fallback simples
-    redirectTo = window.location.origin + '/';
+  if (provider !== 'google') {
+    return { ok: false, message: 'Provedor de login não suportado.' };
+  }
+  const options = {
+    redirectTo: window.location.origin + '/'
+  };
+  if (provider === 'google') {
+    options.queryParams = { access_type: 'offline', prompt: 'select_account' };
   }
   try {
     const { data, error } = await supabaseClient.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: window.location.origin + '/',
-        queryParams: {
-          access_type: 'offline',
-          prompt: 'select_account'
-        }
-      }
+      provider: provider,
+      options: options
     });
-    if (error) return { ok: false, message: error.message || 'Não foi possível iniciar o login com Google.' };
-    // Em sucesso o navegador redireciona; se não redirecionar, informa
+    if (error) return { ok: false, message: error.message || ('Não foi possível iniciar o login com ' + label + '.') };
     return { ok: true, redirected: true, url: data && data.url };
   } catch (e) {
-    return { ok: false, message: (e && e.message) || 'Falha ao conectar com o Google.' };
+    return { ok: false, message: (e && e.message) || ('Falha ao conectar com ' + label + '.') };
   }
+}
+
+async function signInWithGoogle() {
+  return signInWithOAuthProvider('google');
+}
+
+
+if (typeof window !== 'undefined') {
+  window.signInWithOAuthProvider = signInWithOAuthProvider;
+  window.signInWithGoogle = signInWithGoogle;
 }
 
 /** Dados úteis do usuário OAuth (Google) para pré-preencher o perfil. */
@@ -361,9 +367,17 @@ async function getAuthUserHints() {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (!user) return {};
     const meta = user.user_metadata || {};
+    let name = meta.full_name || meta.name || meta.preferred_username || '';
+    // Apple às vezes envia name como { firstName, lastName } na primeira autorização
+    if (!name && meta.name && typeof meta.name === 'object') {
+      name = [meta.name.firstName, meta.name.lastName].filter(Boolean).join(' ');
+    }
+    if (!name && meta.given_name) {
+      name = [meta.given_name, meta.family_name].filter(Boolean).join(' ');
+    }
     return {
       email: user.email || '',
-      name: meta.full_name || meta.name || meta.preferred_username || '',
+      name: typeof name === 'string' ? name : '',
       avatarUrl: meta.avatar_url || meta.picture || ''
     };
   } catch (e) {
