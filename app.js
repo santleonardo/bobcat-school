@@ -798,6 +798,8 @@ function setAuthMode(mode) {
   document.getElementById('btn-forgot-password').classList.toggle('hidden', mode !== 'login');
   const gLabel = document.getElementById('btn-auth-google-label');
   if (gLabel) gLabel.textContent = mode === 'login' ? 'Continuar com Google' : 'Criar conta com Google';
+  const aLabel = document.getElementById('btn-auth-apple-label');
+  if (aLabel) aLabel.textContent = mode === 'login' ? 'Continuar com Apple' : 'Criar conta com Apple';
   document.getElementById('auth-error').classList.remove('show');
   document.getElementById('auth-success').classList.remove('show');
   // Nota: o aviso "info" (ex.: "faça login para acessar as lições") não é
@@ -900,30 +902,32 @@ function setupAuthScreen() {
   });
 
 
-  const btnGoogle = document.getElementById('btn-auth-google');
-  if (btnGoogle) {
-    btnGoogle.addEventListener('click', async () => {
+  function wireOAuthButton(btnId, signFn, providerLabel) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.addEventListener('click', async () => {
       showAuthError('');
       showAuthSuccess('');
       if (!isUsingCloud()) {
-        showAuthError('Login com Google exige a nuvem (Supabase) configurada.');
+        showAuthError('Login com ' + providerLabel + ' exige a nuvem (Supabase) configurada.');
         return;
       }
-      btnGoogle.disabled = true;
-      const prev = btnGoogle.innerHTML;
+      btn.disabled = true;
       try {
-        const result = await signInWithGoogle();
+        const result = await signFn();
         if (!result.ok) {
-          showAuthError(result.message || 'Não foi possível entrar com Google.');
-          btnGoogle.disabled = false;
+          showAuthError(result.message || ('Não foi possível entrar com ' + providerLabel + '.'));
+          btn.disabled = false;
         }
-        // Se ok, o navegador redireciona para o Google — não reabilita o botão
+        // Se ok, o navegador redireciona — não reabilita o botão
       } catch (e) {
-        showAuthError((e && e.message) || 'Falha ao abrir o Google.');
-        btnGoogle.disabled = false;
+        showAuthError((e && e.message) || ('Falha ao abrir o ' + providerLabel + '.'));
+        btn.disabled = false;
       }
     });
   }
+  wireOAuthButton('btn-auth-google', signInWithGoogle, 'Google');
+  wireOAuthButton('btn-auth-apple', signInWithApple, 'Apple');
 
   document.getElementById('btn-forgot-password').addEventListener('click', async () => {
     const email = document.getElementById('auth-username').value.trim();
@@ -2550,29 +2554,63 @@ const PERSONA_EMOJIS = [
 let personaEmojiSelected = PERSONA_EMOJIS[0];
 let personaGenderSelected = 'female'; // 'female' | 'male' — obrigatório escolher um dos dois
 
-// ---------- Quiz MBTI (gera a personalidade a partir de 4 perguntas) ----------
-// Não é um teste psicológico de verdade — é só um jeito divertido e guiado de
-// o aluno chegar numa personalidade variada para a IA, baseado nas 4 letras
-// clássicas do MBTI (E/I, S/N, T/F, J/P). O texto de cada tipo já vem pronto
-// para o prompt da IA (em inglês, dentro do limite de 300 caracteres).
+// ---------- Quiz de personalidade (gera o "jeito" do parceiro) ----------
+// 4 eixos no estilo MBTI (E/I, S/N, T/F, J/P) + 3 perguntas de sabor
+// (assunto, ritmo, como reagir a erros) para deixar a IA mais específica.
+// Não é teste psicológico — é um guia divertido para montar o prompt.
 const MBTI_QUESTIONS = [
-  { key: 'EI', text: 'Você prefere…', options: [
+  { key: 'EI', text: '1. Você prefere…', options: [
       { letter: 'E', label: '🗣️ Falar e conhecer gente' },
       { letter: 'I', label: '🤫 Pensar em silêncio' }
     ] },
-  { key: 'SN', text: 'Você repara mais em…', options: [
+  { key: 'SN', text: '2. Você repara mais em…', options: [
       { letter: 'S', label: '🔎 Fatos e detalhes' },
       { letter: 'N', label: '💡 Ideias novas' }
     ] },
-  { key: 'TF', text: 'Na hora de decidir…', options: [
+  { key: 'TF', text: '3. Na hora de decidir…', options: [
       { letter: 'T', label: '🧠 Lógica' },
       { letter: 'F', label: '❤️ Sentimentos' }
     ] },
-  { key: 'JP', text: 'No dia a dia…', options: [
+  { key: 'JP', text: '4. No dia a dia…', options: [
       { letter: 'J', label: '📅 Plano e rotina' },
-      { letter: 'P', label: '🎲 Surpresa' }
+      { letter: 'P', label: '🎲 Surpresa e improvisar' }
+    ] },
+  { key: 'TOPIC', text: '5. Do que gosta de conversar?', options: [
+      { letter: 'A', label: '🎬 Filmes, séries e música' },
+      { letter: 'B', label: '⚽ Esportes e jogos' },
+      { letter: 'C', label: '🌍 Viagens e cultura' },
+      { letter: 'D', label: '📚 Estudos e curiosidades' }
+    ] },
+  { key: 'PACE', text: '6. No chat, o ritmo ideal é…', options: [
+      { letter: 'S', label: '🐢 Calmo, frases curtas e claras' },
+      { letter: 'M', label: '🙂 Natural, como um amigo' },
+      { letter: 'F', label: '⚡ Rápido, animado e com energia' }
+    ] },
+  { key: 'FEED', text: '7. Quando alguém erra o inglês…', options: [
+      { letter: 'G', label: '🌟 Só incentiva, sem corrigir' },
+      { letter: 'B', label: '✏️ Corrige com carinho e explica' },
+      { letter: 'D', label: '🎯 Corrige só o essencial e segue' }
     ] }
 ];
+
+const QUIZ_FLAVOR = {
+  TOPIC: {
+    A: 'Loves chatting about movies, series, and music.',
+    B: 'Enjoys talking about sports, games, and competition.',
+    C: 'Likes travel stories, food, and different cultures.',
+    D: 'Curious about school topics, facts, and how things work.'
+  },
+  PACE: {
+    S: 'Speaks calmly in short, clear sentences so the learner can follow.',
+    M: 'Keeps a natural, friendly pace, like chatting with a buddy.',
+    F: 'Replies with energy and quick, lively turns.'
+  },
+  FEED: {
+    G: 'Encourages a lot and rarely corrects mistakes.',
+    B: 'Gently corrects English mistakes and explains briefly.',
+    D: 'Fixes only important errors, then keeps the conversation going.'
+  }
+};
 
 const MBTI_TYPES = {
   INTJ: { emoji: '🦉', name: 'Estrategista Calculista', description: 'Gosta de planejar com calma e pensar em soluções espertas antes de agir.', personality: "You are a calm, strategic thinker who loves big ideas, plans, and clever solutions. A bit reserved at first, but curious and sharp once a topic interests you, you enjoy discussing goals and how things work." },
@@ -2593,7 +2631,7 @@ const MBTI_TYPES = {
   ESFP: { emoji: '🎤', name: 'Alma da Festa', description: 'Animado(a) e espontâneo(a), adora ser o centro das atenções e se divertir.', personality: "You are a cheerful, spontaneous, and fun person who loves being the center of attention. Warm and playful, you enjoy talking about parties, music, friends, and making everyday moments feel special." }
 };
 
-let mbtiAnswers = {}; // {EI:'E', SN:'S', TF:'T', JP:'J'} — vai enchendo conforme o aluno responde
+let mbtiAnswers = {}; // eixos MBTI + TOPIC/PACE/FEED — vai enchendo conforme o aluno responde
 
 function renderMbtiQuiz() {
   const el = document.getElementById('mbti-quiz');
@@ -2617,27 +2655,40 @@ function renderMbtiQuiz() {
 
 function applyMbtiResultIfComplete() {
   const resultEl = document.getElementById('mbti-result');
-  const keys = ['EI', 'SN', 'TF', 'JP'];
-  if (!keys.every(k => mbtiAnswers[k])) {
+  const mbtiKeys = ['EI', 'SN', 'TF', 'JP'];
+  const flavorKeys = ['TOPIC', 'PACE', 'FEED'];
+  const allKeys = mbtiKeys.concat(flavorKeys);
+  if (!allKeys.every(k => mbtiAnswers[k])) {
     if (resultEl) resultEl.classList.add('hidden');
     return;
   }
-  const type = keys.map(k => mbtiAnswers[k]).join('');
+  const type = mbtiKeys.map(k => mbtiAnswers[k]).join('');
   const info = MBTI_TYPES[type];
   if (!info || !resultEl) return;
 
+  const flavorParts = flavorKeys.map(k => {
+    const letter = mbtiAnswers[k];
+    return (QUIZ_FLAVOR[k] && QUIZ_FLAVOR[k][letter]) || '';
+  }).filter(Boolean);
+  let personality = info.personality;
+  if (flavorParts.length) {
+    personality = (personality.replace(/\.?\s*$/, '') + ' ' + flavorParts.join(' ')).trim();
+    if (personality.length > 300) personality = personality.slice(0, 297) + '...';
+  }
+
   const textarea = document.getElementById('input-persona-personality');
-  if (textarea) textarea.value = info.personality;
+  if (textarea) textarea.value = personality;
   aiChatUpdatePersonaPreview();
 
+  const topicLabel = ({A:'filmes e música',B:'esportes e jogos',C:'viagens e cultura',D:'estudos'}[mbtiAnswers.TOPIC] || '');
   resultEl.classList.remove('hidden');
   resultEl.innerHTML = `
     <div class="mbti-result-header">
       <span class="mbti-result-emoji">${info.emoji}</span>
       <strong>${aiChatEscapeHtml(info.name)}</strong>
     </div>
-    <p class="mbti-result-desc">${aiChatEscapeHtml(info.description)}</p>
-    <p class="persona-form-hint" style="margin-top:6px;">Pronto! O campo <strong>Jeito de ser</strong> foi preenchido com esse perfil. Leia e ajuste se quiser (interesses, tom de voz, se corrige erros…). Depois toque em <strong>Salvar e começar a conversar</strong>. <button type="button" class="link-btn" id="btn-mbti-redo">Refazer o quiz</button></p>
+    <p class="mbti-result-desc">${aiChatEscapeHtml(info.description)}${topicLabel ? ' · Gosta de ' + topicLabel + '.' : ''}</p>
+    <p class="persona-form-hint" style="margin-top:6px;">Pronto! O campo <strong>Jeito de ser</strong> foi preenchido com o perfil + assuntos, ritmo e jeito de corrigir. Ajuste se quiser e toque em <strong>Salvar e começar a conversar</strong>. <button type="button" class="link-btn" id="btn-mbti-redo">Refazer o quiz</button></p>
   `;
   const redoBtn = document.getElementById('btn-mbti-redo');
   if (redoBtn) {
@@ -3149,7 +3200,7 @@ async function renderAiChatPersonaList() {
     list.innerHTML = `<div class="bk-empty">
       <div class="bk-empty-emoji" aria-hidden="true">🤖 🐱 🦸 🦄</div>
       <div class="bk-empty-title">Você ainda não tem parceiros</div>
-      <p class="bk-empty-sub">Toque em <strong>Criar novo parceiro</strong> acima. Escolha avatar, nome, voz e o jeito de ser — ou use o quiz de 4 perguntas. Depois é só praticar inglês na conversa!</p>
+      <p class="bk-empty-sub">Toque em <strong>Criar novo parceiro</strong> acima. Escolha avatar, nome, voz e o jeito de ser — ou use o quiz de 7 perguntas. Depois é só praticar inglês na conversa!</p>
     </div>`;
     return;
   }
