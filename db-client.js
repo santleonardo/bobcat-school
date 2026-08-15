@@ -312,6 +312,65 @@ async function signOutStudent() {
   currentUserId = null;
 }
 
+/**
+ * Login / cadastro com Google (OAuth).
+ * Redireciona para o Google e volta ao app; a sessão é lida em initDataLayer / getSession.
+ */
+async function signInWithGoogle() {
+  if (!useSupabase || !supabaseClient) {
+    return { ok: false, message: 'Login com Google só está disponível com a conta na nuvem configurada.' };
+  }
+  // URL de retorno: mesma origem do app (precisa estar em Authentication → URL Configuration no Supabase)
+  let redirectTo = window.location.origin + window.location.pathname;
+  if (redirectTo.endsWith('/')) redirectTo = redirectTo.slice(0, -1) || window.location.origin;
+  // Preferir index.html explícito se estivermos na raiz sem arquivo
+  if (!/\.html?$/i.test(redirectTo)) {
+    redirectTo = window.location.origin + (window.location.pathname.replace(/\/?$/, '/') + 'index.html').replace(/\/+/g, '/');
+    // fallback simples
+    redirectTo = window.location.origin + '/';
+  }
+  try {
+    const { data, error } = await supabaseClient.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.origin + '/',
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'select_account'
+        }
+      }
+    });
+    if (error) return { ok: false, message: error.message || 'Não foi possível iniciar o login com Google.' };
+    // Em sucesso o navegador redireciona; se não redirecionar, informa
+    return { ok: true, redirected: true, url: data && data.url };
+  } catch (e) {
+    return { ok: false, message: (e && e.message) || 'Falha ao conectar com o Google.' };
+  }
+}
+
+/** Dados úteis do usuário OAuth (Google) para pré-preencher o perfil. */
+function getOAuthProfileHints() {
+  if (!useSupabase || !supabaseClient) return null;
+  // session sincronizada após OAuth — getUser is async; use cached from last getSession if any
+  return null;
+}
+
+async function getAuthUserHints() {
+  if (!useSupabase || !supabaseClient) return {};
+  try {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (!user) return {};
+    const meta = user.user_metadata || {};
+    return {
+      email: user.email || '',
+      name: meta.full_name || meta.name || meta.preferred_username || '',
+      avatarUrl: meta.avatar_url || meta.picture || ''
+    };
+  } catch (e) {
+    return {};
+  }
+}
+
 // ---------- Perfil ----------
 
 async function getProfile() {

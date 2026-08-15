@@ -21,3 +21,14 @@ window.APP_CONFIG = {
   // Depois cole a pública aqui e a privada + pública nas env vars da Vercel.
   vapidPublicKey: 'BPzNxMpNXIKyzKG7x2HYgq2dYBvDudKLPNWW4zfjvTV6tpY6MxGtzRyyGHE4UGz9KGWO_RfGS7Dbqm206K5BOmU'
 };
+
+// ---------- Login com Google (OAuth) ----------
+// 1. Google Cloud Console → APIs & Services → Credentials → OAuth 2.0 Client (Web)
+// 2. Authorized redirect URIs:
+//      https://SEU-PROJETO.supabase.co/auth/v1/callback
+// 3. Supabase → Authentication → Providers → Google → ON
+//    cole Client ID e Client Secret do Google
+// 4. Supabase → Authentication → URL Configuration → Redirect URLs:
+//      https://seu-dominio.vercel.app/
+//      http://localhost:3000/   (dev)
+// 5. Site URL = URL principal do app

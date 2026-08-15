@@ -796,6 +796,8 @@ function setAuthMode(mode) {
   document.getElementById('auth-title').textContent = mode === 'login' ? 'Bem-vindo(a) de volta!' : 'Crie sua conta gratuita';
   document.getElementById('btn-auth-submit').textContent = mode === 'login' ? 'Entrar' : 'Criar conta';
   document.getElementById('btn-forgot-password').classList.toggle('hidden', mode !== 'login');
+  const gLabel = document.getElementById('btn-auth-google-label');
+  if (gLabel) gLabel.textContent = mode === 'login' ? 'Continuar com Google' : 'Criar conta com Google';
   document.getElementById('auth-error').classList.remove('show');
   document.getElementById('auth-success').classList.remove('show');
   // Nota: o aviso "info" (ex.: "faça login para acessar as lições") não é
@@ -897,6 +899,32 @@ function setupAuthScreen() {
     }
   });
 
+
+  const btnGoogle = document.getElementById('btn-auth-google');
+  if (btnGoogle) {
+    btnGoogle.addEventListener('click', async () => {
+      showAuthError('');
+      showAuthSuccess('');
+      if (!isUsingCloud()) {
+        showAuthError('Login com Google exige a nuvem (Supabase) configurada.');
+        return;
+      }
+      btnGoogle.disabled = true;
+      const prev = btnGoogle.innerHTML;
+      try {
+        const result = await signInWithGoogle();
+        if (!result.ok) {
+          showAuthError(result.message || 'Não foi possível entrar com Google.');
+          btnGoogle.disabled = false;
+        }
+        // Se ok, o navegador redireciona para o Google — não reabilita o botão
+      } catch (e) {
+        showAuthError((e && e.message) || 'Falha ao abrir o Google.');
+        btnGoogle.disabled = false;
+      }
+    });
+  }
+
   document.getElementById('btn-forgot-password').addEventListener('click', async () => {
     const email = document.getElementById('auth-username').value.trim();
     showAuthError('');
@@ -940,9 +968,14 @@ async function afterAuthSuccess() {
     }
     await enterApp();
   } else {
-    // Perfil novo (primeiro login/cadastro): completa o cadastro primeiro.
-    // A lição pendente continua guardada e será retomada depois que o
-    // perfil for salvo (ver setupProfileScreen).
+    // Perfil novo (primeiro login/cadastro, inclusive Google): completa o cadastro.
+    try {
+      if (typeof getAuthUserHints === 'function') {
+        const hints = await getAuthUserHints();
+        const nameEl = document.getElementById('input-name');
+        if (nameEl && hints.name && !nameEl.value.trim()) nameEl.value = hints.name;
+      }
+    } catch (e) { /* ignore */ }
     showScreen('profile-setup');
   }
 }
@@ -1920,6 +1953,11 @@ async function boot() {
     history.replaceState(null, '', window.location.pathname);
   }
 
+  // Limpa tokens do OAuth na URL (Supabase coloca #access_token=... após Google)
+  if (window.location.hash && /access_token|error|provider/.test(window.location.hash)) {
+    try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch (e) {}
+  }
+
   // Landing first for visitors without session; returning students go straight in.
   if (isUsingCloud() && !isLoggedIn()) {
     if (cameFromLessonGuard) {
@@ -1933,6 +1971,16 @@ async function boot() {
     const profile = await getProfile();
     if (profile) {
       await enterApp();
+    } else if (isUsingCloud() && isLoggedIn()) {
+      // Logado (ex.: voltou do Google) mas ainda sem perfil no app
+      try {
+        if (typeof getAuthUserHints === 'function') {
+          const hints = await getAuthUserHints();
+          const nameEl = document.getElementById('input-name');
+          if (nameEl && hints.name && !nameEl.value.trim()) nameEl.value = hints.name;
+        }
+      } catch (e) { /* ignore */ }
+      showScreen('profile-setup');
     } else {
       showScreen('landing');
     }
