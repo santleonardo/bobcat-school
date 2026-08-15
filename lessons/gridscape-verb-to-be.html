@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — Verb To Be (Canvas)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson-kit.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+<style>
+  html,body{height:100%;overflow:hidden;background:#F8F9F3;}
+  body{font-family:"Inter",sans-serif;}
+  .hud{position:fixed;}
+  #canvasWrap{position:fixed;inset:0;cursor:grab;touch-action:none;
+    background-image:radial-gradient(#d8d5c9 1.5px, transparent 1.5px);background-size:22px 22px;}
+  #canvasWrap.dragging{cursor:grabbing;}
+  #canvas{position:absolute;top:0;left:0;transform-origin:0 0;}
+  .gnode{position:absolute;top:0;left:0;width:520px;background:#fff;border:2.5px solid #16130f;
+    box-shadow:7px 7px 0 #16130f;padding:20px 22px 22px;opacity:0;transform:translateY(14px) scale(.97);
+    transition:opacity .35s ease, transform .35s ease;}
+  .gnode.show{opacity:1;transform:translateY(0) scale(1);}
+  .gtag{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:1.5px;color:#8a8578;
+    text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+  .gtag .gnum{background:#16130f;color:#fff;border-radius:99px;padding:2px 9px;}
+  .gtitle{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:22px;color:#16130f;margin:0 0 12px;letter-spacing:-.01em;}
+  .gsub{font-size:13.5px;color:#5c584d;margin:0 0 14px;line-height:1.5;}
+  .gcontent{font-size:14px;line-height:1.6;color:#26231d;}
+  .gcard{border:1.5px solid #16130f;padding:12px 14px;margin:10px 0;background:#FFFDF6;}
+  .gcard b{color:var(--orange-dark,#c9391f);}
+  .gexample{font-family:"JetBrains Mono",monospace;font-size:13px;background:#16130f;color:#F8F9F3;
+    padding:8px 11px;margin-top:6px;display:inline-block;}
+  .gvocab{display:flex;align-items:center;justify-content:space-between;border-bottom:1px dashed #d8d5c9;padding:7px 0;font-size:14px;}
+  .gvocab:last-child{border-bottom:none;}
+  .gaudio{border:1.5px solid #16130f;background:#fff;border-radius:99px;padding:2px 10px;font-size:11px;
+    font-weight:700;cursor:pointer;font-family:"JetBrains Mono",monospace;}
+  .gaudio:hover{background:#FFF2CC;}
+  .gnext{margin-top:16px;display:inline-flex;align-items:center;gap:6px;background:#16130f;color:#fff;
+    border:none;padding:11px 18px;font-weight:700;font-size:13.5px;cursor:pointer;font-family:"Space Grotesk",sans-serif;}
+  .gnext:hover{background:#2a251d;}
+  .gnext:disabled{opacity:.4;cursor:not-allowed;}
+  .gline{position:absolute;top:0;left:0;pointer-events:none;overflow:visible;}
+  .gq-opt{border:2px solid #16130f;background:#fff;padding:9px 14px;margin:5px 6px 0 0;font-weight:700;
+    font-size:13.5px;cursor:pointer;font-family:"Inter",sans-serif;}
+  .gq-opt:hover{background:#FFF2CC;}
+  .gq-opt.ok{background:var(--ok,#3dd68c);border-color:#1e6b40;color:#0b2e1c;}
+  .gq-opt.bad{background:var(--bad,#ff5b3d);border-color:#8a2211;color:#fff;}
+  .gfill-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:9px 0;font-size:14px;}
+  .gfill-input{border:2px solid #16130f;padding:6px 9px;font-size:14px;width:90px;font-family:"JetBrains Mono",monospace;}
+  .gfill-input.correct{border-color:var(--ok,#3dd68c);background:#e6faf1;}
+  .gfill-input.incorrect{border-color:var(--bad,#ff5b3d);background:#ffece7;}
+  .gscore{font-family:"JetBrains Mono",monospace;font-size:11px;background:#16130f;color:#fff;
+    border-radius:99px;padding:3px 10px;}
+  .gtoolbar{position:fixed;bottom:16px;right:16px;background:#16130f;color:#fff;border-radius:14px;
+    padding:6px;display:flex;align-items:center;gap:2px;box-shadow:0 8px 20px rgba(0,0,0,.25);z-index:20;}
+  .gtoolbar button{width:36px;height:36px;border:none;background:transparent;color:#fff;font-size:17px;
+    cursor:pointer;border-radius:9px;font-family:"Space Grotesk",sans-serif;}
+  .gtoolbar button:hover{background:rgba(255,255,255,.14);}
+  .gcapacity{position:fixed;bottom:16px;left:16px;background:#16130f;color:#fff;font-family:"JetBrains Mono",monospace;
+    font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:6px 13px;border-radius:99px;z-index:20;}
+  .gback{position:fixed;top:60px;left:16px;z-index:101;background:#fff;border:2px solid #16130f;
+    box-shadow:3px 3px 0 #16130f;font-size:12px;font-weight:700;padding:8px 13px;text-decoration:none;color:#16130f;
+    font-family:"Space Grotesk",sans-serif;}
+  .gback:hover{background:#FFF2CC;}
+  .glabel{position:fixed;top:60px;right:16px;z-index:101;background:#fff;border:2px solid #16130f;
+    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:1px;padding:7px 12px;
+    box-shadow:3px 3px 0 #16130f;}
+  @media (max-width:640px){
+    .gnode{width:86vw;}
+    .glabel{display:none;}
+  }
+</style>
+</head><body>
+
+<div class="hud" id="hud" style="top:0;left:0;right:0;">
+  <div class="hud-left"><span>🐾 Bobcat</span>
+    <div class="xp-track"><div class="xp-fill" id="xpBar"></div></div>
+    <span id="xpLabel" style="font-weight:700;color:var(--orange-dark)">0 XP</span>
+  </div>
+  <div class="hud-right">
+    <span class="pill" id="levelPill">⭐ Nível 1</span>
+    <span class="pill" id="starsPill">🏆 0 estrelas</span>
+  </div>
+</div>
+
+<a class="gback" href="../index.html">← Voltar ao app</a>
+<span class="glabel">EXTRA · CANVAS · VERB TO BE</span>
+
+<div id="canvasWrap">
+  <div id="canvas">
+    <svg class="gline" id="lines" width="4000" height="1200"></svg>
+    <!-- nodes injected by JS -->
+  </div>
+</div>
+
+<div class="gcapacity" id="capacityBadge">CAPACIDADE: 1/6 NÓS</div>
+<div class="gtoolbar">
+  <button type="button" id="zoomOut" aria-label="Diminuir zoom">−</button>
+  <button type="button" id="zoomIn" aria-label="Aumentar zoom">+</button>
+  <button type="button" id="recenter" aria-label="Centralizar">⤾</button>
+</div>
+
+<script src="lesson-kit.js"></script>
+<script>
+const LESSON_ID = "extra-gridscape-verb-to-be";
+const TOTAL_Q = 13; // 8 quiz + 5 fill, igual à lição original
+var SCORE = { correct: 0, total: TOTAL_Q };
+var qCorrect = 0, fillCorrect = 0;
+function norm(s){ return (s||'').toString().trim().toLowerCase().replace(/[.!?]/g,''); }
+function addXP(n){ if(window.BobcatLesson) BobcatLesson.addXP(n); }
+
+// ── Layout dos nós: cadeia horizontal com leve variação vertical ──
+const NODE_W = 520, GAP_X = 190, STEP_X = NODE_W + GAP_X;
+const OFFSETS_Y = [0, -40, 55, -30, 45, 0];
+var revealed = 1; // quantos nós já apareceram
+
+var canvasWrap = document.getElementById('canvasWrap');
+var canvas = document.getElementById('canvas');
+var transform = { x: 90, y: 220, scale: window.innerWidth < 768 ? 0.55 : 0.8 };
+var dragging = false, dragStart = { x:0, y:0, tx:0, ty:0 };
+
+function applyTransform(){
+  canvas.style.transform = 'translate('+transform.x+'px,'+transform.y+'px) scale('+transform.scale+')';
+}
+applyTransform();
+
+canvasWrap.addEventListener('pointerdown', function(e){
+  if(e.target.closest('.gnode') || e.target.closest('.gtoolbar')) return;
+  dragging = true;
+  canvasWrap.classList.add('dragging');
+  canvasWrap.setPointerCapture(e.pointerId);
+  dragStart = { x:e.clientX, y:e.clientY, tx:transform.x, ty:transform.y };
+});
+canvasWrap.addEventListener('pointermove', function(e){
+  if(!dragging) return;
+  transform.x = dragStart.tx + (e.clientX - dragStart.x);
+  transform.y = dragStart.ty + (e.clientY - dragStart.y);
+  applyTransform();
+});
+function stopDrag(){ dragging = false; canvasWrap.classList.remove('dragging'); }
+canvasWrap.addEventListener('pointerup', stopDrag);
+canvasWrap.addEventListener('pointerleave', stopDrag);
+canvasWrap.addEventListener('wheel', function(e){
+  if(e.ctrlKey || e.metaKey){
+    e.preventDefault();
+    zoom(-e.deltaY * 0.0015, e.clientX, e.clientY);
+  } else {
+    transform.x -= e.deltaX; transform.y -= e.deltaY; applyTransform();
+  }
+}, { passive:false });
+
+function zoom(delta, ox, oy){
+  var prevScale = transform.scale;
+  var newScale = Math.min(Math.max(0.35, prevScale + delta), 1.6);
+  if(ox === undefined){ ox = window.innerWidth/2; oy = window.innerHeight/2; }
+  var ratio = newScale/prevScale;
+  transform.x = ox - (ox - transform.x) * ratio;
+  transform.y = oy - (oy - transform.y) * ratio;
+  transform.scale = newScale;
+  applyTransform();
+}
+document.getElementById('zoomIn').addEventListener('click', function(){ zoom(0.15); });
+document.getElementById('zoomOut').addEventListener('click', function(){ zoom(-0.15); });
+document.getElementById('recenter').addEventListener('click', function(){ centerOnNode(revealed-1); });
+
+function centerOnNode(i){
+  var x = i * STEP_X, y = OFFSETS_Y[i] || 0;
+  var hw = window.innerWidth/2, hh = window.innerHeight/2;
+  transform.x = hw - (x + NODE_W/2) * transform.scale;
+  transform.y = hh - (y + 180) * transform.scale;
+  applyTransform();
+}
+
+function drawLine(i){
+  var svg = document.getElementById('lines');
+  var x1 = i*STEP_X + NODE_W, y1 = (OFFSETS_Y[i]||0) + 160;
+  var x2 = (i+1)*STEP_X, y2 = (OFFSETS_Y[i+1]||0) + 160;
+  var midX = (x1+x2)/2;
+  var path = document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d', 'M'+x1+','+y1+' C '+midX+','+y1+' '+midX+','+y2+' '+x2+','+y2);
+  path.setAttribute('stroke', '#16130f');
+  path.setAttribute('stroke-width', '2');
+  path.setAttribute('fill', 'none');
+  path.setAttribute('stroke-dasharray', '5 4');
+  svg.appendChild(path);
+}
+
+function revealNext(){
+  if(revealed >= NODES.length) return;
+  var idx = revealed;
+  var el = document.getElementById('node-'+idx);
+  drawLine(idx-1);
+  requestAnimationFrame(function(){ el.classList.add('show'); });
+  revealed++;
+  document.getElementById('capacityBadge').textContent = 'CAPACIDADE: '+revealed+'/6 NÓS';
+  setTimeout(function(){ centerOnNode(idx); }, 60);
+}
+
+// ── Conteúdo dos nós (extraído da Lição 1 — Verb To Be) ──
+var QUIZ = [
+  {prompt:"I ___ a teacher.", options:["am","is","are"], answer:0},
+  {prompt:"She ___ from Japan.", options:["am","is","are"], answer:1},
+  {prompt:"They ___ my friends.", options:["am","is","are"], answer:2},
+  {prompt:"___ you a student?", options:["Am","Is","Are"], answer:2},
+  {prompt:"He ___ not at home.", options:["am","is","are"], answer:1},
+  {prompt:"We ___ happy.", options:["am","is","are"], answer:2},
+  {prompt:"___ she your sister?", options:["Am","Is","Are"], answer:1},
+  {prompt:"I ___ not Brazilian.", options:["am","is","are"], answer:0}
+];
+var FILL = [
+  {s:"I ___ Brazilian.", a:"am"},
+  {s:"She ___ a doctor.", a:"is"},
+  {s:"They ___ students.", a:"are"},
+  {s:"___ you ready?", a:"Are"},
+  {s:"He ___ not here.", a:"is"}
+];
+
+var NODES = [
+  // Nó 0 — Início
+  '<div class="gtag"><span><span class="gnum">1</span> INTRO</span><span>OBJETIVOS</span></div>'+
+  '<h2 class="gtitle">Verb To Be</h2>'+
+  '<p class="gsub">am, is, are — afirmativas, negativas e perguntas.</p>'+
+  '<div class="gcard">🎯 Ao final você usa <b>am / is / are</b>, forma negativas e faz perguntas simples.</div>'+
+  '<div class="gcard">Diálogo — At the Cafe<br>'+
+  '<span style="display:block;margin-top:6px">"Hi! I am Anna. Are you a student?" '+
+  '<button class="gaudio" data-speak="Hi! I am Anna. Are you a student?">🔊</button></span>'+
+  '<span style="display:block;margin-top:6px">"Yes, I am. I am from Brazil." '+
+  '<button class="gaudio" data-speak="Yes, I am. I am from Brazil.">🔊</button></span></div>'+
+  '<button type="button" class="gnext" data-go>Ver a gramática →</button>',
+
+  // Nó 1 — Gramática
+  '<div class="gtag"><span><span class="gnum">2</span> GRAMÁTICA</span><span>ESTRUTURA</span></div>'+
+  '<h2 class="gtitle">Afirmativa · Negativa · Pergunta</h2>'+
+  '<div class="gcard"><b>Afirmativa</b> — I am / You are / He-She-It is / We-They are.'+
+  '<div class="gexample">I am a student.</div></div>'+
+  '<div class="gcard"><b>Negativa</b> — am/is/are + not.'+
+  '<div class="gexample">He isn\'t at home.</div></div>'+
+  '<div class="gcard"><b>Pergunta</b> — Am/Is/Are + sujeito?'+
+  '<div class="gexample">Are you ready?</div></div>'+
+  '<button type="button" class="gnext" data-go>Ver o vocabulário →</button>',
+
+  // Nó 2 — Vocabulário
+  '<div class="gtag"><span><span class="gnum">3</span> VOCABULÁRIO</span><span>ÁUDIO</span></div>'+
+  '<h2 class="gtitle">Palavras-chave</h2>'+
+  '<div class="gvocab"><span><b>am</b> — eu sou/estou</span><button class="gaudio" data-speak="am">🔊</button></div>'+
+  '<div class="gvocab"><span><b>is</b> — ele/ela é</span><button class="gaudio" data-speak="is">🔊</button></div>'+
+  '<div class="gvocab"><span><b>are</b> — você/nós/eles</span><button class="gaudio" data-speak="are">🔊</button></div>'+
+  '<div class="gvocab"><span><b>isn\'t</b> — is not</span><button class="gaudio" data-speak="isn\'t">🔊</button></div>'+
+  '<div class="gvocab"><span><b>aren\'t</b> — are not</span><button class="gaudio" data-speak="aren\'t">🔊</button></div>'+
+  '<button type="button" class="gnext" data-go>Ir para o quiz →</button>',
+
+  // Nó 3 — Quiz
+  '<div class="gtag"><span><span class="gnum">4</span> QUIZ RELÂMPAGO</span><span class="gscore" id="quizScore">0/8</span></div>'+
+  '<h2 class="gtitle">Escolha a forma certa</h2>'+
+  '<div id="quizGame"></div>'+
+  '<button type="button" class="gnext" id="btnQuizNext">Próxima pergunta →</button>'+
+  '<div id="quizDone" style="display:none;margin-top:14px">'+
+  '<button type="button" class="gnext" data-go>Ir para completar frases →</button></div>',
+
+  // Nó 4 — Fill
+  '<div class="gtag"><span><span class="gnum">5</span> COMPLETE AS LACUNAS</span><span class="gscore" id="sFill">0/5</span></div>'+
+  '<h2 class="gtitle">Escreva am, is ou are</h2>'+
+  '<div id="fillBox"></div>'+
+  '<button type="button" class="gnext" onclick="checkFill()">Verificar</button>'+
+  '<div id="fillDone" style="display:none;margin-top:14px">'+
+  '<button type="button" class="gnext" data-go>Finalizar lição →</button></div>',
+
+  // Nó 5 — Finalizar
+  '<div class="gtag"><span><span class="gnum">6</span> REVISÃO FINAL</span><span>🏁</span></div>'+
+  '<h2 class="gtitle">Você concluiu o mapa!</h2>'+
+  '<div class="gcard">I am / You are / He is · Negativa: isn\'t / aren\'t · Pergunta: Are you…?</div>'+
+  '<button type="button" class="gnext" id="btnFinish">🏁 Finalizar Lição</button>'+
+  '<p id="finishMsg" style="display:none;margin-top:12px;font-weight:700;"></p>'+
+  '<div style="margin-top:14px"><a href="../index.html" style="font-weight:700;font-size:13px;color:#16130f">← Voltar para Extra</a></div>'
+];
+
+NODES.forEach(function(html, i){
+  var node = document.createElement('div');
+  node.className = 'gnode';
+  node.id = 'node-'+i;
+  node.style.left = (i*STEP_X)+'px';
+  node.style.top = (OFFSETS_Y[i]||0)+'px';
+  node.innerHTML = html;
+  canvas.appendChild(node);
+});
+document.getElementById('node-0').classList.add('show');
+canvas.addEventListener('click', function(e){
+  var btn = e.target.closest('[data-go]');
+  if(btn) revealNext();
+});
+setTimeout(function(){ centerOnNode(0); }, 30);
+
+// ── Quiz ──
+var qi = 0, qAnswered = false;
+function renderQuiz(){
+  var box = document.getElementById('quizGame');
+  if(!box) return;
+  if(qi >= QUIZ.length){
+    box.innerHTML = '<p style="font-weight:700;color:var(--ok,#1e6b40)">Quiz completo! '+qCorrect+'/'+QUIZ.length+' acertos.</p>';
+    document.getElementById('btnQuizNext').style.display='none';
+    document.getElementById('quizDone').style.display='block';
+    return;
+  }
+  qAnswered = false;
+  var q = QUIZ[qi];
+  var opts = q.options.map(function(o,i){
+    return '<button type="button" class="gq-opt" data-i="'+i+'">'+o+'</button>';
+  }).join('');
+  box.innerHTML = '<p style="font-weight:700;font-size:15px;margin:0 0 8px">'+(qi+1)+'. '+q.prompt+'</p><div>'+opts+'</div>';
+  box.querySelectorAll('button[data-i]').forEach(function(b){
+    b.addEventListener('click', function(){
+      if(qAnswered) return; qAnswered = true;
+      var ok = +b.dataset.i === q.answer;
+      if(ok){ qCorrect++; addXP(15); b.classList.add('ok'); }
+      else { b.classList.add('bad'); }
+      document.getElementById('quizScore').textContent = qCorrect+'/'+QUIZ.length;
+      SCORE.correct = qCorrect + fillCorrect;
+    });
+  });
+}
+document.getElementById('btnQuizNext') && document.getElementById('btnQuizNext').addEventListener('click', function(){
+  if(!qAnswered && qi < QUIZ.length) return;
+  qi++; renderQuiz();
+});
+renderQuiz();
+
+// ── Fill ──
+(function(){
+  var el = document.getElementById('fillBox');
+  if(!el) return;
+  FILL.forEach(function(item,i){
+    var p = item.s.split('___');
+    var row = document.createElement('div');
+    row.className = 'gfill-row';
+    row.innerHTML = '<span>'+p[0]+'</span><input class="gfill-input" id="gfill_'+i+'"><span>'+(p[1]||'')+'</span>';
+    el.appendChild(row);
+  });
+})();
+function checkFill(){
+  fillCorrect = 0;
+  FILL.forEach(function(item,i){
+    var inp = document.getElementById('gfill_'+i);
+    var ok = norm(inp.value) === norm(item.a);
+    inp.className = 'gfill-input '+(ok?'correct':'incorrect');
+    if(ok) fillCorrect++;
+  });
+  document.getElementById('sFill').textContent = fillCorrect+'/'+FILL.length;
+  addXP(fillCorrect*12);
+  SCORE.correct = qCorrect + fillCorrect;
+  document.getElementById('fillDone').style.display = 'block';
+  if(SCORE.correct >= Math.floor(TOTAL_Q*0.8) && window.BobcatLesson) BobcatLesson.fireConfetti();
+}
+
+document.getElementById('btnFinish').addEventListener('click', async function(){
+  SCORE.correct = qCorrect + fillCorrect;
+  SCORE.total = TOTAL_Q;
+  var msg = document.getElementById('finishMsg');
+  if(window.BobcatLesson && typeof BobcatLesson.finishLesson === 'function'){
+    var ok = await BobcatLesson.finishLesson(SCORE.correct, SCORE.total, 'correct');
+    if(msg){
+      msg.style.display = 'block';
+      var pct = Math.round((SCORE.correct/SCORE.total)*100);
+      msg.style.color = ok ? '#1e6b40' : '#c0392b';
+      msg.textContent = ok ? ('🎉 Lição concluída ('+pct+'%)! Progresso salvo.') :
+        ('📌 '+SCORE.correct+'/'+SCORE.total+' ('+pct+'%). Precisa de pelo menos 85%.');
+    }
+  }
+});
+
+if(window.BobcatLesson) BobcatLesson.init({ lessonId: LESSON_ID, totalQuestions: TOTAL_Q });
+</script>
+</body></html>
