@@ -75,20 +75,150 @@
   }
 
   // ─── TTS ────────────────────────────────────────────────
-  function speak(btn, text) {
+  // Web Speech API: carrega vozes de forma confiável e permite
+  // variar gênero (female/male) e idioma (en-US / pt-BR) nas lições.
+  var TTS_FEMALE_HINTS = ['female', 'zira', 'samantha', 'victoria', 'karen', 'moira', 'tessa', 'fiona', 'susan', 'amy', 'salli', 'joanna', 'google us english', 'microsoft zira', 'luciana', 'maria', 'helena', 'fernanda'];
+  var TTS_MALE_HINTS = ['male', 'david', 'alex', 'daniel', 'fred', 'thomas', 'oliver', 'james', 'george', 'matthew', 'guy', 'microsoft david', 'microsoft mark', 'google uk english male', 'ricardo', 'felipe'];
+  var _ttsVoices = [];
+  var _ttsVoicesReady = false;
+
+  function _ttsRefreshVoices() {
+    if (!('speechSynthesis' in window)) return;
+    try {
+      _ttsVoices = window.speechSynthesis.getVoices() || [];
+      if (_ttsVoices.length) _ttsVoicesReady = true;
+    } catch (e) { /* ignore */ }
+  }
+
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    _ttsRefreshVoices();
+    try {
+      window.speechSynthesis.onvoiceschanged = function () {
+        _ttsRefreshVoices();
+      };
+    } catch (e) { /* ignore */ }
+    // Alguns navegadores só liberam vozes após um tick
+    setTimeout(_ttsRefreshVoices, 250);
+    setTimeout(_ttsRefreshVoices, 1000);
+  }
+
+  function _ttsPickVoice(lang, gender) {
+    if (!_ttsVoices.length) _ttsRefreshVoices();
+    var voices = _ttsVoices;
+    if (!voices.length) return null;
+
+    var langPrefix = (lang || 'en-US').toLowerCase().slice(0, 2); // 'en' | 'pt'
+    var langMatch = voices.filter(function (v) {
+      return (v.lang || '').toLowerCase().indexOf(langPrefix) === 0;
+    });
+    var pool = langMatch.length ? langMatch : voices;
+
+    if (gender === 'male' || gender === 'female') {
+      var hints = gender === 'male' ? TTS_MALE_HINTS : TTS_FEMALE_HINTS;
+      var match = pool.find(function (v) {
+        var name = (v.name || '').toLowerCase();
+        return hints.some(function (h) { return name.indexOf(h) !== -1; });
+      });
+      if (match) return match;
+      // Fallback: algumas plataformas expõem v.gender
+      match = pool.find(function (v) {
+        return (v.gender || '').toLowerCase() === gender;
+      });
+      if (match) return match;
+    }
+    return pool[0] || voices[0] || null;
+  }
+
+  /**
+   * speak(btn, text)
+   * speak(btn, text, gender)           // 'female' | 'male'
+   * speak(btn, text, { gender, lang, rate, pitch })
+   *
+   * Também lê data-gender / data-lang do botão se existirem.
+   * Em diálogos, use: speak(this, 'Hi!', 'female') ou data-gender="female".
+   */
+  function speak(btn, text, opts) {
+    if (!text || typeof text !== 'string') return;
     if (!('speechSynthesis' in window)) {
       alert('Seu navegador não suporta síntese de voz. Use Chrome ou Edge.');
       return;
     }
-    window.speechSynthesis.cancel();
-    var u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-US';
-    u.rate = 0.92;
-    u.pitch = 1;
-    if (btn) btn.classList.add('playing');
-    u.onend = function () { if (btn) btn.classList.remove('playing'); };
-    u.onerror = function () { if (btn) btn.classList.remove('playing'); };
-    window.speechSynthesis.speak(u);
+
+    var gender = null;
+    var lang = 'en-US';
+    var rate = 0.92;
+    var pitch = 1;
+
+    if (typeof opts === 'string') {
+      gender = opts; // atalho: speak(btn, text, 'male')
+    } else if (opts && typeof opts === 'object') {
+      if (opts.gender) gender = opts.gender;
+      if (opts.lang) lang = opts.lang;
+      if (opts.rate != null) rate = opts.rate;
+      if (opts.pitch != null) pitch = opts.pitch;
+    }
+
+    // Preferências no próprio botão (data-gender / data-lang)
+    if (btn && btn.getAttribute) {
+      if (!gender && btn.getAttribute('data-gender')) gender = btn.getAttribute('data-gender');
+      if (btn.getAttribute('data-lang')) lang = btn.getAttribute('data-lang');
+    }
+
+    // Heurística de personagem em diálogos (Anna/Maria → female, Tom/John → male)
+    if (!gender && btn) {
+      var bubble = btn.closest && btn.closest('.bubble');
+      if (bubble) {
+        var whoEl = bubble.querySelector('.who');
+        var who = (whoEl ? whoEl.textContent : '') + ' ' + (bubble.className || '');
+        who = who.toLowerCase();
+        if (/\b(anna|maria|sara|lucy|emma|sofia|she|her|female|girl)\b/.test(who) || bubble.classList.contains('anna')) {
+          gender = 'female';
+        } else if (/\b(tom|john|paul|mike|david|he|him|male|boy)\b/.test(who) || bubble.classList.contains('tom')) {
+          gender = 'male';
+        }
+      }
+    }
+
+    try {
+      window.speechSynthesis.cancel();
+    } catch (e) { /* ignore */ }
+
+    // Chrome bug: após cancel(), às vezes precisa de um micro-delay
+    var doSpeak = function () {
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = lang;
+      u.rate = rate;
+      u.pitch = pitch;
+
+      var voice = _ttsPickVoice(lang, gender);
+      if (voice) {
+        u.voice = voice;
+        // Alinha lang com a voz escolhida quando possível
+        if (voice.lang) u.lang = voice.lang;
+      }
+
+      if (btn) btn.classList.add('playing');
+      u.onend = function () { if (btn) btn.classList.remove('playing'); };
+      u.onerror = function () { if (btn) btn.classList.remove('playing'); };
+
+      try {
+        // iOS / alguns Chromium: resume se a síntese estiver pausada
+        if (window.speechSynthesis.paused) {
+          try { window.speechSynthesis.resume(); } catch (e2) { /* ignore */ }
+        }
+        window.speechSynthesis.speak(u);
+      } catch (e) {
+        if (btn) btn.classList.remove('playing');
+      }
+    };
+
+    // Pequeno atraso ajuda após cancel() e dá tempo das vozes carregarem na 1ª vez
+    if (!_ttsVoicesReady) {
+      _ttsRefreshVoices();
+      setTimeout(doSpeak, 80);
+    } else {
+      setTimeout(doSpeak, 30);
+    }
   }
 
   // ─── Scroll reveal ──────────────────────────────────────
@@ -407,14 +537,7 @@
 
   function vocabCardSpeakCurrent() {
     if (!vocabCardCurrentWord) return;
-    if (!('speechSynthesis' in window)) return;
-    try {
-      window.speechSynthesis.cancel();
-      var utter = new SpeechSynthesisUtterance(vocabCardCurrentWord);
-      utter.lang = 'en-US';
-      utter.rate = 0.9;
-      window.speechSynthesis.speak(utter);
-    } catch (e) { /* optional */ }
+    speak(null, vocabCardCurrentWord, { gender: 'female', rate: 0.9 });
   }
 
   function setupVocabCard() {

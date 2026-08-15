@@ -9,13 +9,24 @@ def esc(s):
     return (s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
             .replace('"', '&quot;'))
 
+def _js_str(s):
+    """Escape for use inside a single-quoted JS string in an HTML attribute."""
+    return (s.replace('\\', '\\\\')
+             .replace("'", "\\'")
+             .replace('\n', ' ')
+             .replace('\r', ''))
+
 def dialogue_html(lines):
     parts = []
     for who, name, text in lines:
+        gender = 'female' if who in ('anna', 'maria', 'sara', 'lucy', 'emma', 'sofia') else (
+            'male' if who in ('tom', 'john', 'paul', 'mike', 'david') else None)
+        gender_arg = f", '{gender}'" if gender else ''
+        gender_attr = gender or ''
         parts.append(f'''  <div class="bubble-row reveal">
     <span class="miniav {who}">{name[0]}</span>
     <div class="bubble {who}"><span class="who">{esc(name)}</span>{esc(text)}
-      <button class="audio-btn" onclick="speak(this,{json.dumps(text)})">🔊</button>
+      <button class="audio-btn" data-gender="{gender_attr}" onclick="speak(this,'{_js_str(text)}'{gender_arg})">🔊</button>
     </div>
   </div>''')
     return '\n'.join(parts)
@@ -23,7 +34,8 @@ def dialogue_html(lines):
 def vocab_table(rows):
     trs = []
     for en, pt, ex in rows:
-        trs.append(f'<tr><td>{esc(en)} <button class="audio-btn" onclick="speak(this,{json.dumps(en.split("/")[0].strip())})">🔊</button></td><td>{esc(pt)}</td><td>{esc(ex)}</td></tr>')
+        word = en.split('/')[0].strip()
+        trs.append(f'<tr><td>{esc(en)} <button class="audio-btn" onclick="speak(this,\'{_js_str(word)}\')">🔊</button></td><td>{esc(pt)}</td><td>{esc(ex)}</td></tr>')
     return '<table class="lesson-table reveal"><thead><tr><th>English</th><th>Português</th><th>Exemplo</th></tr></thead><tbody>\n' + '\n'.join(trs) + '\n</tbody></table>'
 
 def grammar_html(blocks):
@@ -162,7 +174,7 @@ def build(L):
   </div>
   <div class="card reveal" style="text-align:center;font-size:17px;font-weight:700;line-height:1.5">
     {esc(L['twister'])}
-    <div style="margin-top:10px"><button class="audio-btn btn" onclick="speak(this,{json.dumps(L['twister'])})">🔊 Ouvir</button></div>
+    <div style="margin-top:10px"><button class="audio-btn btn" onclick="speak(this,'{_js_str(L['twister'])}')">🔊 Ouvir</button></div>
   </div>
 </section>
 
