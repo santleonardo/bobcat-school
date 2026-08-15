@@ -341,6 +341,14 @@ const EXTRAS = [
     url: 'lessons/cobrinha-ortografia.html'
   },
   {
+    id: 'cobrinha-ortografia-ingles',
+    group: 'Jogos',
+    name: 'Cobrinha da Ortografia — Inglês',
+    icon: '🐍',
+    description: 'A palavra em inglês aparece escrita errada — guie a cobrinha até comer a letra do erro antes que ela se choque',
+    url: 'lessons/cobrinha-ortografia-ingles.html'
+  },
+  {
     id: 'concordancia-monta-frase',
     group: 'Jogos',
     name: 'Concordância — Monta a Frase',
