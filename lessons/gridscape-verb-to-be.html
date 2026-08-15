@@ -22,27 +22,27 @@
   .hud{position:fixed;}
   #canvasWrap{position:fixed;inset:0;cursor:grab;touch-action:none;overflow:hidden;
     background-image:
-      radial-gradient(rgba(255,255,255,.9) 1px, transparent 1.4px),
-      radial-gradient(rgba(255,225,180,.55) 1px, transparent 1.4px),
-      radial-gradient(ellipse 900px 600px at 18% 8%, rgba(139,123,255,.16), transparent 60%),
-      radial-gradient(ellipse 760px 520px at 84% 28%, rgba(255,138,76,.14), transparent 60%),
+      radial-gradient(rgba(255,255,255,.45) 1px, transparent 1.4px),
+      radial-gradient(rgba(255,225,180,.28) 1px, transparent 1.4px),
+      radial-gradient(ellipse 900px 600px at 18% 8%, rgba(139,123,255,.09), transparent 60%),
+      radial-gradient(ellipse 760px 520px at 84% 28%, rgba(255,138,76,.08), transparent 60%),
       linear-gradient(180deg, var(--bg-0), var(--bg-1) 55%, var(--bg-2));
-    background-size:46px 46px, 91px 91px, auto, auto, auto;
+    background-size:60px 60px, 120px 120px, auto, auto, auto;
     background-position:0 0, 55px 90px, 0 0, 0 0, 0 0;
     background-repeat:repeat, repeat, no-repeat, no-repeat, no-repeat;}
   #canvasWrap::before{content:'';position:fixed;inset:-10%;pointer-events:none;z-index:0;
     background:
-      radial-gradient(circle 420px at 20% 15%, rgba(139,123,255,.14), transparent 70%),
-      radial-gradient(circle 380px at 85% 75%, rgba(255,138,76,.12), transparent 70%);
+      radial-gradient(circle 420px at 20% 15%, rgba(139,123,255,.08), transparent 70%),
+      radial-gradient(circle 380px at 85% 75%, rgba(255,138,76,.07), transparent 70%);
     animation:driftGlow 22s ease-in-out infinite alternate;}
   @keyframes driftGlow{0%{transform:translate(0,0) scale(1);}100%{transform:translate(2%,3%) scale(1.06);}}
   #canvasWrap.dragging{cursor:grabbing;}
   #canvas{position:absolute;top:0;left:0;transform-origin:0 0;z-index:1;}
   .gnode{position:absolute;top:0;left:0;width:520px;
-    background:linear-gradient(180deg, rgba(32,24,38,.86), rgba(18,13,22,.88));
+    background:linear-gradient(180deg, rgba(22,16,26,.97), rgba(13,9,16,.98));
     border:1px solid var(--border);border-radius:var(--radius);
     padding:22px 24px 24px;opacity:0;transform:translateY(18px) scale(.97);
-    box-shadow:0 24px 60px rgba(0,0,0,.5);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    box-shadow:0 24px 60px rgba(0,0,0,.6);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
     transition:opacity .5s ease, transform .5s ease;}
   .gnode::before{content:'';position:absolute;top:0;left:24px;right:24px;height:2px;border-radius:2px;
     background:linear-gradient(90deg, transparent, var(--accent-2), var(--accent), transparent);opacity:.85;}
@@ -78,6 +78,11 @@
   .gnext:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(255,138,76,.42);}
   .gnext:disabled{opacity:.4;cursor:not-allowed;}
   .gline{position:absolute;top:0;left:0;pointer-events:none;overflow:visible;}
+  .grail{position:absolute;top:-60px;width:2px;pointer-events:none;z-index:0;
+    background:linear-gradient(180deg, transparent, rgba(255,209,102,.32) 6%, rgba(255,138,76,.22) 50%, rgba(255,209,102,.32) 94%, transparent);
+    box-shadow:0 0 24px rgba(255,138,76,.22), 0 0 60px rgba(139,123,255,.12);}
+  .grail::before{content:'';position:absolute;inset:0;
+    background:repeating-linear-gradient(180deg, rgba(255,225,180,.55) 0 2px, transparent 2px 26px);opacity:.5;}
   .gq-opt{border:1.5px solid var(--border);background:rgba(255,255,255,.04);color:var(--ink);
     padding:10px 15px;margin:5px 6px 0 0;border-radius:99px;font-weight:600;
     font-size:13.5px;cursor:pointer;font-family:"Inter",sans-serif;transition:all .15s;}
@@ -92,21 +97,21 @@
   .gfill-input.incorrect{border-color:var(--bad);background:rgba(255,95,109,.1);}
   .gscore{font-family:"JetBrains Mono",monospace;font-size:11px;background:rgba(255,255,255,.06);
     border:1px solid var(--border);color:var(--accent-2);border-radius:99px;padding:3px 11px;}
-  .gtoolbar{position:fixed;bottom:16px;right:16px;background:rgba(20,14,24,.72);color:var(--ink);
+  .gtoolbar{position:fixed;bottom:16px;right:16px;background:rgba(14,10,17,.9);color:var(--ink);
     border:1px solid var(--border);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
     border-radius:99px;padding:6px;display:flex;align-items:center;gap:2px;box-shadow:0 10px 30px rgba(0,0,0,.4);z-index:20;}
   .gtoolbar button{width:36px;height:36px;border:none;background:transparent;color:var(--ink);font-size:17px;
     cursor:pointer;border-radius:99px;font-family:"Inter",sans-serif;transition:background .15s;}
   .gtoolbar button:hover{background:rgba(255,209,102,.14);}
-  .gcapacity{position:fixed;bottom:16px;left:16px;background:rgba(20,14,24,.72);color:var(--accent-2);
+  .gcapacity{position:fixed;bottom:16px;left:16px;background:rgba(14,10,17,.9);color:var(--accent-2);
     border:1px solid var(--border);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
     font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
     padding:7px 14px;border-radius:99px;z-index:20;}
-  .gback{position:fixed;top:60px;left:16px;z-index:101;background:rgba(20,14,24,.72);border:1px solid var(--border);
+  .gback{position:fixed;top:60px;left:16px;z-index:101;background:rgba(14,10,17,.9);border:1px solid var(--border);
     backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-size:12px;font-weight:600;padding:9px 15px;
     border-radius:99px;text-decoration:none;color:var(--ink);font-family:"Inter",sans-serif;transition:all .15s;}
   .gback:hover{background:rgba(255,209,102,.14);border-color:var(--accent-2);}
-  .glabel{position:fixed;top:60px;right:16px;z-index:101;background:rgba(20,14,24,.72);border:1px solid var(--border);
+  .glabel{position:fixed;top:60px;right:16px;z-index:101;background:rgba(14,10,17,.9);border:1px solid var(--border);
     backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-family:"JetBrains Mono",monospace;
     font-size:9.5px;letter-spacing:1.5px;color:var(--ink-soft);padding:8px 13px;border-radius:99px;}
   @media (max-width:640px){
@@ -144,6 +149,8 @@
         </filter>
       </defs>
     </svg>
+    <div class="grail" id="grailLeft"></div>
+    <div class="grail" id="grailRight"></div>
     <!-- nodes injected by JS -->
   </div>
 </div>
@@ -425,6 +432,14 @@ NODES.forEach(function(html, i){
     node.style.top = cumY + 'px';
     cumY += node.offsetHeight + GAP_Y;
   });
+  // Barreiras laterais: emolduram a amplitude horizontal máxima que os cards ocupam
+  var minX = Math.min.apply(null, OFFSETS_X), maxX = Math.max.apply(null, OFFSETS_X);
+  var railMargin = 90;
+  var railHeight = cumY + 160;
+  var grailLeft = document.getElementById('grailLeft');
+  var grailRight = document.getElementById('grailRight');
+  if(grailLeft){ grailLeft.style.left = (minX - railMargin) + 'px'; grailLeft.style.height = railHeight + 'px'; }
+  if(grailRight){ grailRight.style.left = (NODE_W + maxX + railMargin) + 'px'; grailRight.style.height = railHeight + 'px'; }
 })();
 document.getElementById('node-0').classList.add('show');
 canvas.addEventListener('click', function(e){
