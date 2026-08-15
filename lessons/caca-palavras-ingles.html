@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Word Search — English</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Poppins:wght@700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="game-sound.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<style>
+  :root{
+    --orange:#ff5b3d;--orange-dark:#e13a26;--orange-light:#ff7a5c;
+    --purple:#8b5cf6;--purple-dark:#6d28d9;--blue:#4da3ff;--pink:#ff4d94;--teal:#2dd9b9;
+    --cream:#1e1730;--cream-2:#241b3d;--cream-3:#0c0720;
+    --ink:#f7f1ec;--ink-soft:rgba(247,241,236,0.72);
+    --ok:#3dd68c;--ok-bg:rgba(61,214,140,0.18);
+    --border:rgba(255,255,255,0.14);--gold:#ffd23f;
+    --shadow:0 8px 26px rgba(0,0,0,0.45);
+    --radius:18px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:"Inter",sans-serif;color:var(--ink);min-height:100vh;
+    line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:40px;
+    background:
+      radial-gradient(circle at 10% 6%, rgba(139,92,246,.38), transparent 42%),
+      radial-gradient(circle at 90% 12%, rgba(45,217,185,.28), transparent 45%),
+      radial-gradient(circle at 50% 105%, rgba(255,91,61,.28), transparent 55%),
+      var(--cream-3);
+    background-attachment:fixed;
+  }
+  h1,h2,h3,.serif{font-family:"Fredoka","Poppins",sans-serif;letter-spacing:-.01em}
+
+  /* HUD */
+  .hud{position:sticky;top:0;z-index:100;background:rgba(12,7,32,.88);backdrop-filter:blur(12px);
+    padding:12px 16px;border-bottom:1px solid var(--border);box-shadow:0 2px 0 rgba(139,92,246,.3);
+    display:flex;align-items:center;gap:12px;justify-content:space-between;flex-wrap:wrap}
+  .hud-title{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15.5px;font-family:"Fredoka",sans-serif}
+  .hud-title .icon{font-size:22px;display:inline-block;animation:wiggle 3s ease-in-out infinite}
+  @keyframes wiggle{0%,100%{transform:rotate(0)}50%{transform:rotate(-10deg)}}
+  .hud-back{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;
+    border-radius:10px;background:var(--cream);border:1px solid var(--border);color:var(--ink);
+    font-size:17px;text-decoration:none;flex-shrink:0;transition:all .15s}
+  .hud-back:active{background:var(--purple);transform:scale(.92)}
+  .hud-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .pill{display:inline-flex;align-items:center;gap:5px;background:var(--cream);border:1px solid var(--border);
+    border-radius:99px;padding:5px 12px;font-size:13px;font-weight:700;color:var(--orange-light);
+    box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  .pill.time{color:var(--gold);border-color:rgba(255,210,63,.4)}
+  .pill.xp{color:var(--ok);border-color:rgba(61,214,140,.4)}
+  .pill.sound-toggle{cursor:pointer;font-family:inherit;font-size:14px;padding:5px 10px}
+
+  .wrap{max-width:920px;margin:0 auto;padding:16px 16px 0}
+
+  .board-area{display:grid;grid-template-columns:1fr;gap:14px}
+
+  /* Grid */
+  .board-card{background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
+    border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);display:flex;justify-content:center;width:100%}
+  #grid{display:grid;user-select:none;touch-action:none;gap:3px}
+  .cell{display:flex;align-items:center;justify-content:center;font-weight:700;
+    font-family:"Poppins",sans-serif;border-radius:6px;background:var(--cream-2);
+    color:var(--ink-soft);cursor:pointer;transition:background .1s,color .1s,transform .12s;position:relative}
+  .cell.selecting{background:linear-gradient(135deg,var(--orange-light),var(--pink));color:#1c1614;transform:scale(1.06)}
+  .cell.found{background:linear-gradient(135deg,var(--ok),#26b06c);color:#0a0a0b;
+    animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+  .cell.found-alt{background:linear-gradient(135deg,var(--gold),#ffb347);color:#0a0a0b;
+    animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes popIn{0%{transform:scale(.7)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
+
+  /* Word list panel */
+  .panel{background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
+    border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow);height:fit-content}
+  .panel h3{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);margin-bottom:6px;font-weight:700}
+  .panel-top{margin-bottom:14px}
+  .topic-name{display:flex;align-items:center;gap:6px;font-size:15.5px;font-weight:700;margin-bottom:2px;color:var(--gold)}
+  .topic-name .ic{font-size:18px}
+  #wordlist{list-style:none;display:flex;flex-wrap:wrap;gap:5px}
+  #wordlist li{font-size:11.5px;font-weight:700;color:var(--ink-soft);padding:4px 9px;
+    border-radius:99px;background:var(--cream-2);transition:all .2s;border:1.5px solid transparent}
+  #wordlist li.done{color:var(--ok);text-decoration:line-through;background:var(--ok-bg);border-color:var(--ok)}
+
+  @keyframes rainbow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .win-banner{display:none;text-align:center;margin-top:20px;padding:24px 20px;border-radius:var(--radius);
+    background:linear-gradient(120deg,var(--pink),var(--purple),var(--blue),var(--teal),var(--gold),var(--orange));
+    background-size:300% 300%;box-shadow:0 12px 34px rgba(139,92,246,.45)}
+  .win-banner.show{display:block;animation:popIn .4s cubic-bezier(.34,1.56,.64,1),rainbow 7s ease infinite .4s}
+  .win-banner h2{font-size:24px;margin-bottom:6px;text-shadow:0 2px 8px rgba(0,0,0,.3)}
+  .win-banner p{font-size:13.5px;color:rgba(255,255,255,.95);margin-bottom:14px}
+  .btn{background:#fff;color:var(--orange-dark);border:none;padding:12px 24px;border-radius:12px;
+    font-size:14.5px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.25);
+    transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
+  .btn:hover{transform:translateY(-2px) scale(1.03)}
+  .btn:active{transform:scale(.93)}
+
+  .hint{text-align:center;font-size:12.5px;color:var(--ink-soft);margin-top:14px}
+
+  /* Como jogar (topo) */
+  .howto{background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
+    border-radius:var(--radius);padding:12px 16px;margin-bottom:14px;box-shadow:var(--shadow)}
+  .howto-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .howto-head .ic{font-size:16px}
+  .howto-head h3{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--gold);flex:1;font-family:"Inter",sans-serif;font-weight:800}
+  .howto-close{background:none;border:none;color:var(--ink-soft);font-size:17px;cursor:pointer;padding:2px 6px;line-height:1}
+  .howto-close:hover{color:var(--ink)}
+  .howto ol{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
+  .howto li{font-size:12px;color:var(--ink-soft);line-height:1.45}
+  .howto li b{color:var(--ink)}
+
+  /* Badge de IA + estado de carregamento */
+  .ai-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:800;
+    text-transform:uppercase;letter-spacing:.04em;color:var(--purple);background:rgba(139,92,246,.16);
+    border:1px solid rgba(139,92,246,.4);border-radius:99px;padding:3px 9px;margin-left:6px;vertical-align:middle}
+  .ai-badge.loading{color:var(--gold);background:rgba(255,210,63,.14);border-color:rgba(255,210,63,.4);
+    animation:pulseBadge 1.1s ease-in-out infinite}
+  @keyframes pulseBadge{0%,100%{opacity:1}50%{opacity:.5}}
+  #wordlist li.loading-word{opacity:.35}
+
+  /* Toast de definição (aparece quando você acha uma palavra) */
+  .def-toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(140%);
+    max-width:min(92vw,420px);background:linear-gradient(160deg,var(--cream),var(--cream-2));
+    border:1px solid var(--purple);border-radius:14px;padding:11px 16px;box-shadow:0 10px 30px rgba(0,0,0,.5);
+    z-index:200;transition:transform .28s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+  .def-toast.show{transform:translateX(-50%) translateY(0)}
+  .def-toast .dt-word{font-family:"Fredoka",sans-serif;font-weight:700;color:var(--gold);font-size:13.5px;margin-bottom:2px}
+  .def-toast .dt-def{font-size:12.5px;color:var(--ink-soft);line-height:1.4}
+</style>
+</head>
+<body>
+
+<div class="hud">
+  <div class="hud-title"><a class="hud-back" href="../index.html" title="Voltar ao app" aria-label="Voltar ao app">←</a> 🔎 Caça-Palavras — Inglês</div>
+  <div class="hud-right">
+    <span class="pill time">⏱️ <span id="timer">0:00</span></span>
+    <span class="pill">🎯 <span id="foundCount">0</span>/<span id="totalCount">0</span></span>
+    <span class="pill xp">⭐ <span id="xp">0</span> XP</span>
+    <button class="pill" id="howtoReopenBtn" style="display:none" title="Mostrar como jogar">❓ Como jogar</button>
+    <button class="pill sound-toggle" data-sound-toggle title="Desativar sons">🔊</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="howto" id="howtoCard">
+    <div class="howto-head">
+      <span class="ic">💡</span>
+      <h3>Como jogar</h3>
+      <button class="howto-close" id="howtoClose" aria-label="Esconder instruções">✕</button>
+    </div>
+    <ol>
+      <li><b>Objetivo:</b> encontre todas as palavras da lista escondidas na grade antes de trocar de tema.</li>
+      <li><b>Como selecionar:</b> toque numa letra e arraste até a última letra da palavra — funciona na horizontal, vertical e diagonal, em qualquer direção (inclusive de trás pra frente).</li>
+      <li>A lista acima risca automaticamente cada palavra assim que você a encontra.</li>
+    </ol>
+  </div>
+
+  <div class="panel panel-top">
+    <div class="topic-name" id="topicName"></div>
+    <h3>Encontre as palavras</h3>
+    <ul id="wordlist"></ul>
+  </div>
+
+  <div class="board-area">
+    <div class="board-card"><div id="grid"></div></div>
+  </div>
+
+  <div class="win-banner" id="winBanner">
+    <h2>🎉 Você encontrou todas!</h2>
+    <p id="winMsg"></p>
+    <button class="btn" id="nextTopicBtn">Próximo tema →</button>
+  </div>
+
+  <p class="hint">Toque em "❓ Como jogar" a qualquer momento para ver as instruções de novo.</p>
+</div>
+
+<div class="def-toast" id="defToast">
+  <div class="dt-word" id="defToastWord"></div>
+  <div class="dt-def" id="defToastText"></div>
+</div>
+
+<script>
+(function () {
+  var KEY = 'bobcat_howto_dismissed_caca_palavras_en';
+  var card = document.getElementById('howtoCard');
+  var closeBtn = document.getElementById('howtoClose');
+  var reopenBtn = document.getElementById('howtoReopenBtn');
+  function hide() { card.style.display = 'none'; reopenBtn.style.display = 'inline-flex'; }
+  function show() { card.style.display = 'block'; reopenBtn.style.display = 'none'; }
+  var dismissed = false;
+  try { dismissed = localStorage.getItem(KEY) === '1'; } catch (e) {}
+  if (dismissed) hide(); else show();
+  closeBtn.addEventListener('click', function () {
+    hide();
+    try { localStorage.setItem(KEY, '1'); } catch (e) {}
+  });
+  reopenBtn.addEventListener('click', function () {
+    show();
+    try { localStorage.removeItem(KEY); } catch (e) {}
+  });
+})();
+</script>
+
+<script>
+/* ─── Bancos de palavras — vocabulário de inglês, ligado às trilhas do app (licao-*.html) ─── */
+const TOPICS = [
+  {
+    id: 'greetings',
+    icon: '👋',
+    label: 'Greetings & Introductions',
+    words: ['HELLO','GOODBYE','MORNING','AFTERNOON','EVENING','NIGHT','PLEASE','THANKS','SORRY','WELCOME']
+  },
+  {
+    id: 'family',
+    icon: '👪',
+    label: 'Family Members',
+    words: ['MOTHER','FATHER','SISTER','BROTHER','DAUGHTER','SON','GRANDMA','GRANDPA','COUSIN','FAMILY']
+  },
+  {
+    id: 'colors',
+    icon: '🎨',
+    label: 'Colors',
+    words: ['RED','BLUE','GREEN','YELLOW','ORANGE','PURPLE','BLACK','WHITE','BROWN','PINK']
+  },
+  {
+    id: 'numbers',
+    icon: '🔢',
+    label: 'Numbers',
+    words: ['ONE','TWO','THREE','FOUR','FIVE','SIX','SEVEN','EIGHT','NINE','TEN']
+  },
+  {
+    id: 'days',
+    icon: '📅',
+    label: 'Days & Months',
+    words: ['MONDAY','TUESDAY','FRIDAY','SUNDAY','JANUARY','MARCH','JUNE','AUGUST','WEEK','MONTH']
+  },
+  {
+    id: 'food',
+    icon: '🍎',
+    label: 'Food & Drinks',
+    words: ['BREAD','CHEESE','CHICKEN','RICE','SALAD','JUICE','COFFEE','WATER','APPLE','BANANA']
+  },
+  {
+    id: 'clothes',
+    icon: '👕',
+    label: 'Clothes',
+    words: ['SHIRT','PANTS','DRESS','SHOES','JACKET','HAT','SOCKS','SKIRT','GLOVES','BELT']
+  },
+  {
+    id: 'house',
+    icon: '🏠',
+    label: 'House & Furniture',
+    words: ['KITCHEN','BEDROOM','BATHROOM','TABLE','CHAIR','WINDOW','DOOR','SOFA','GARDEN','ROOF']
+  },
+  {
+    id: 'jobs',
+    icon: '💼',
+    label: 'Jobs & Professions',
+    words: ['TEACHER','DOCTOR','NURSE','LAWYER','ENGINEER','WAITER','DRIVER','FARMER','ARTIST','WRITER']
+  },
+  {
+    id: 'body',
+    icon: '🖐️',
+    label: 'Body Parts',
+    words: ['HEAD','ARM','HAND','LEG','FOOT','EYE','EAR','NOSE','MOUTH','SHOULDER']
+  },
+  {
+    id: 'weather',
+    icon: '⛅',
+    label: 'Weather',
+    words: ['SUNNY','RAINY','CLOUDY','WINDY','STORM','SNOW','HOT','COLD','FOG','WARM']
+  },
+  {
+    id: 'animals',
+    icon: '🐾',
+    label: 'Animals',
+    words: ['DOG','CAT','HORSE','RABBIT','ELEPHANT','MONKEY','TIGER','SNAKE','SHEEP','BIRD']
+  },
+  {
+    id: 'daily',
+    icon: '⏰',
+    label: 'Daily Routine (verbs)',
+    words: ['WAKE','SLEEP','EAT','DRINK','STUDY','WORK','WALK','READ','WATCH','CLEAN']
+  },
+  {
+    id: 'continuous',
+    icon: '🏃',
+    label: 'Present Continuous Actions',
+    words: ['RUNNING','SWIMMING','COOKING','DANCING','WRITING','PLAYING','DRIVING','SINGING','JUMPING','TALKING']
+  },
+  {
+    id: 'irregular',
+    icon: '🕰️',
+    label: 'Simple Past Irregular Verbs',
+    words: ['WENT','SAW','ATE','DRANK','CAME','TOOK','MADE','GAVE','KNEW','WROTE']
+  },
+  {
+    id: 'modals',
+    icon: '🧠',
+    label: 'Modal Verbs',
+    words: ['CAN','COULD','SHOULD','MUST','MIGHT','WILL','WOULD','MAY','SHALL','OUGHT']
+  },
+  {
+    id: 'phrasal',
+    icon: '🔗',
+    label: 'Phrasal Verbs',
+    words: ['GIVEUP','LOOKFOR','TURNOFF','GETUP','COMEBACK','FINDOUT','SITDOWN','STANDUP','TAKEOFF','PUTAWAY']
+  },
+  {
+    id: 'adjectives',
+    icon: '✨',
+    label: 'Common Adjectives',
+    words: ['HAPPY','SAD','BUSY','TIRED','EASY','DIFFICULT','CHEAP','EXPENSIVE','STRONG','WEAK']
+  },
+  {
+    id: 'prepositions',
+    icon: '📍',
+    label: 'Prepositions of Place',
+    words: ['ABOVE','BELOW','BESIDE','BETWEEN','INSIDE','OUTSIDE','BEHIND','UNDER','NEAR','ACROSS']
+  },
+  {
+    id: 'questions',
+    icon: '❓',
+    label: 'Question Words',
+    words: ['WHAT','WHERE','WHEN','WHO','WHY','HOW','WHICH','WHOSE','WHOM','WHATEVER']
+  },
+  {
+    id: 'travel',
+    icon: '✈️',
+    label: 'Travel & Survival English',
+    words: ['AIRPORT','TICKET','PASSPORT','LUGGAGE','HOTEL','TAXI','STATION','DIRECTIONS','MAP','JOURNEY']
+  },
+  {
+    id: 'school',
+    icon: '🏫',
+    label: 'School & Classroom',
+    words: ['TEACHER','STUDENT','CLASSROOM','PENCIL','NOTEBOOK','HOMEWORK','LESSON','EXAM','LIBRARY','BOARD']
+  },
+  {
+    id: 'technology',
+    icon: '💻',
+    label: 'Technology',
+    words: ['COMPUTER','INTERNET','PHONE','SCREEN','KEYBOARD','PASSWORD','SOFTWARE','WEBSITE','DOWNLOAD','BATTERY']
+  },
+  {
+    id: 'shopping',
+    icon: '🛒',
+    label: 'Shopping & Money',
+    words: ['MONEY','PRICE','DISCOUNT','RECEIPT','CASHIER','WALLET','CREDIT','CHANGE','STORE','MARKET']
+  },
+  {
+    id: 'emotions',
+    icon: '😊',
+    label: 'Feelings & Emotions',
+    words: ['EXCITED','NERVOUS','PROUD','SCARED','BORED','CONFUSED','GRATEFUL','ANXIOUS','CALM','CURIOUS']
+  }
+];
+
+const DIRS = [
+  {dr:0,dc:1},{dr:0,dc:-1},{dr:1,dc:0},{dr:-1,dc:0},
+  {dr:1,dc:1},{dr:1,dc:-1},{dr:-1,dc:1},{dr:-1,dc:-1}
+];
+const FILLER = 'ABCDEFGHIJLMNOPQRSTUVXZ';
+
+let state = { size:0, cells:[], words:[], found:new Set(), topicIndex:0, xp:0, startTime:null, timerId:null, definitions:{}, loadToken:0 };
+
+function stripAccents(s){
+  return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase();
+}
+
+/* ─── Save do jogo: XP + histórico de palavras já vistas por tema ───
+   Mesmo mecanismo dos outros minijogos (Supabase se o aluno estiver logado,
+   com fallback automático pro localStorage — ver db-client.js). Isso faz
+   o XP do caça-palavras e o "não repita essas palavras" sincronizarem
+   entre aparelhos quando há login. */
+const GAME_ID = 'caca-palavras-ingles';
+const SAVE_KEY = 'bobcat_cp_en_save';
+const HISTORY_MAX = 30;
+
+let gameSave = { xp: 0, seen: {} };
+
+function getSeenWords(topicId){
+  return (gameSave.seen && gameSave.seen[topicId]) || [];
+}
+
+function saveGameState(){
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(gameSave)); } catch (e) {}
+  if (typeof saveGameProgress === 'function') {
+    saveGameProgress(GAME_ID, gameSave).catch(function (err) {
+      console.error('saveGameProgress (caça-palavras)', err);
+    });
+  }
+}
+
+function addSeenWords(topicId, words){
+  gameSave.seen = gameSave.seen || {};
+  const prev = gameSave.seen[topicId] || [];
+  const merged = [...prev, ...words];
+  gameSave.seen[topicId] = merged.slice(Math.max(0, merged.length - HISTORY_MAX));
+  saveGameState();
+}
+
+async function loadGameState(){
+  try {
+    if (typeof getGameProgress === 'function') {
+      const data = await getGameProgress(GAME_ID, SAVE_KEY);
+      if (data && typeof data === 'object' && (data.xp !== undefined || data.seen)){
+        gameSave = { xp: data.xp || 0, seen: data.seen || {} };
+        return;
+      }
+    }
+  } catch (e) {
+    console.error('loadGameState cloud', e);
+  }
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (raw){
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object') gameSave = { xp: parsed.xp || 0, seen: parsed.seen || {} };
+    }
+  } catch (e) {}
+}
+
+async function fetchAiWords(topic){
+  const AI_TIMEOUT_MS = 9000;
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), AI_TIMEOUT_MS);
+  try {
+    const resp = await fetch('/api/wordsearch-words', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        topicId: topic.id,
+        topicLabel: topic.label,
+        lang: 'en',
+        count: topic.words.length,
+        avoid: getSeenWords(topic.id),
+        fallback: topic.words
+      }),
+      signal: ctrl.signal
+    });
+    clearTimeout(t);
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    if (!data || !Array.isArray(data.words) || !data.words.length) return null;
+    return data.words; // [{word, display, definition}]
+  } catch (e) {
+    clearTimeout(t);
+    return null;
+  }
+}
+
+function renderTopicName(loading){
+  const topic = TOPICS[state.topicIndex];
+  const el = document.getElementById('topicName');
+  const badge = loading
+    ? '<span class="ai-badge loading">🤖 gerando…</span>'
+    : '<span class="ai-badge">🤖 IA</span>';
+  el.innerHTML = `<span class="ic">${topic.icon}</span> ${topic.label} ${badge}`;
+}
+
+function makeGrid(size){
+  return Array.from({length:size}, () => Array(size).fill(null));
+}
+
+function tryPlaceWord(grid, size, word){
+  const attempts = 200;
+  for (let a = 0; a < attempts; a++){
+    const dir = DIRS[Math.floor(Math.random()*DIRS.length)];
+    const maxR = dir.dr === 1 ? size - word.length : dir.dr === -1 ? size - 1 : size - 1;
+    const startR = Math.floor(Math.random()*size);
+    const startC = Math.floor(Math.random()*size);
+    let r = startR, c = startC, ok = true;
+    const coords = [];
+    for (let i = 0; i < word.length; i++){
+      if (r < 0 || r >= size || c < 0 || c >= size){ ok = false; break; }
+      const existing = grid[r][c];
+      if (existing !== null && existing !== word[i]){ ok = false; break; }
+      coords.push([r,c]);
+      r += dir.dr; c += dir.dc;
+    }
+    if (ok){
+      coords.forEach(([rr,cc], i) => { grid[rr][cc] = word[i]; });
+      return coords;
+    }
+  }
+  return null;
+}
+
+function buildBoardFromWords(words){
+  const size = Math.max(12, Math.min(15, Math.max(...words.map(w=>w.length)) + 2));
+  let grid, placements, tries = 0;
+
+  do {
+    grid = makeGrid(size);
+    placements = {};
+    let allPlaced = true;
+    // longest words first = easier to fit
+    [...words].sort((a,b)=>b.length-a.length).forEach(w => {
+      const coords = tryPlaceWord(grid, size, w);
+      if (coords) placements[w] = coords; else allPlaced = false;
+    });
+    tries++;
+    if (allPlaced || tries > 6) break;
+  } while (true);
+
+  for (let r = 0; r < size; r++){
+    for (let c = 0; c < size; c++){
+      if (grid[r][c] === null){
+        grid[r][c] = FILLER[Math.floor(Math.random()*FILLER.length)];
+      }
+    }
+  }
+
+  return { size, grid, placements };
+}
+
+function applyBoard(size, grid, placements, definitions){
+  state.size = size;
+  state.cells = grid;
+  state.placements = placements;
+  state.words = Object.keys(placements);
+  state.found = new Set();
+  state.definitions = definitions || {};
+
+  renderGrid();
+  renderWordList();
+  document.getElementById('winBanner').classList.remove('show');
+  document.getElementById('totalCount').textContent = state.words.length;
+  document.getElementById('foundCount').textContent = '0';
+  resetTimer();
+}
+
+async function loadTopic(index){
+  state.topicIndex = index;
+  const topic = TOPICS[index];
+  const myToken = ++state.loadToken;
+
+  // 1) Mostra o tabuleiro na hora com a lista fixa, pra não deixar o
+  //    aluno esperando parado — a IA troca as palavras por baixo assim
+  //    que responder (ou fica com essas mesmas, se a IA não responder).
+  const fallbackWords = topic.words.map(stripAccents);
+  const { size, grid, placements } = buildBoardFromWords(fallbackWords);
+  renderTopicName(true);
+  applyBoard(size, grid, placements, {});
+
+  // 2) Busca palavras novas na IA (com histórico de palavras já vistas
+  //    nesse tema, pra variar bastante partida após partida).
+  const aiWords = await fetchAiWords(topic);
+  if (myToken !== state.loadToken) return; // trocou de tema enquanto esperava
+
+  if (aiWords && aiWords.length){
+    const words = aiWords.map(w => w.word);
+    const definitions = {};
+    aiWords.forEach(w => { if (w.definition) definitions[w.word] = w.definition; });
+    const board = buildBoardFromWords(words);
+    renderTopicName(false);
+    applyBoard(board.size, board.grid, board.placements, definitions);
+    addSeenWords(topic.id, words);
+  } else {
+    // IA indisponível: fica com a lista fixa já carregada, só tira o "gerando…"
+    renderTopicName(false);
+    const el = document.getElementById('topicName');
+    el.querySelector('.ai-badge')?.remove();
+  }
+}
+
+function renderGrid(){
+  const el = document.getElementById('grid');
+  el.style.gridTemplateColumns = `repeat(${state.size}, minmax(20px, 32px))`;
+  el.style.gridTemplateRows = `repeat(${state.size}, minmax(20px, 32px))`;
+  el.innerHTML = '';
+  for (let r = 0; r < state.size; r++){
+    for (let c = 0; c < state.size; c++){
+      const d = document.createElement('div');
+      d.className = 'cell';
+      d.textContent = state.cells[r][c];
+      d.dataset.r = r; d.dataset.c = c;
+      el.appendChild(d);
+    }
+  }
+  attachSelection(el);
+}
+
+function renderWordList(){
+  const ul = document.getElementById('wordlist');
+  ul.innerHTML = '';
+  state.words.forEach(w => {
+    const li = document.createElement('li');
+    li.textContent = w;
+    li.dataset.word = w;
+    ul.appendChild(li);
+  });
+}
+
+/* ─── Seleção (mouse + touch) ─── */
+function attachSelection(gridEl){
+  let selecting = false, path = [];
+
+  function cellAt(x, y){
+    const el = document.elementFromPoint(x, y);
+    return el && el.classList.contains('cell') ? el : null;
+  }
+
+  function clearSelectingClass(){
+    gridEl.querySelectorAll('.cell.selecting').forEach(c => c.classList.remove('selecting'));
+  }
+
+  function pathBetween(startCell, endCell){
+    const r0 = +startCell.dataset.r, c0 = +startCell.dataset.c;
+    const r1 = +endCell.dataset.r, c1 = +endCell.dataset.c;
+    const dr = Math.sign(r1 - r0), dc = Math.sign(c1 - c0);
+    const steps = Math.max(Math.abs(r1-r0), Math.abs(c1-c0));
+    if (dr !== 0 && dc !== 0 && Math.abs(r1-r0) !== Math.abs(c1-c0)) return null;
+    const cells = [];
+    for (let i = 0; i <= steps; i++){
+      const r = r0 + dr*i, c = c0 + dc*i;
+      const cell = gridEl.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`);
+      if (!cell) return null;
+      cells.push(cell);
+    }
+    return cells;
+  }
+
+  let startCell = null;
+
+  function begin(x, y){
+    const cell = cellAt(x, y);
+    if (!cell) return;
+    startCell = cell;
+    selecting = true;
+    path = [cell];
+    clearSelectingClass();
+    cell.classList.add('selecting');
+  }
+
+  function move(x, y){
+    if (!selecting || !startCell) return;
+    const cell = cellAt(x, y);
+    if (!cell) return;
+    const p = pathBetween(startCell, cell);
+    if (!p) return;
+    clearSelectingClass();
+    p.forEach(c => c.classList.add('selecting'));
+    path = p;
+  }
+
+  function end(){
+    if (!selecting) return;
+    selecting = false;
+    checkSelection(path);
+    clearSelectingClass();
+    startCell = null;
+  }
+
+  gridEl.addEventListener('mousedown', e => begin(e.clientX, e.clientY));
+  gridEl.addEventListener('mousemove', e => move(e.clientX, e.clientY));
+  window.addEventListener('mouseup', end);
+
+  gridEl.addEventListener('touchstart', e => { const t = e.touches[0]; begin(t.clientX, t.clientY); }, {passive:true});
+  gridEl.addEventListener('touchmove', e => { const t = e.touches[0]; move(t.clientX, t.clientY); e.preventDefault(); }, {passive:false});
+  gridEl.addEventListener('touchend', end);
+}
+
+function checkSelection(path){
+  if (path.length < 2) return;
+  const forward = path.map(c => c.textContent).join('');
+  const backward = [...path].reverse().map(c => c.textContent).join('');
+  const match = state.words.find(w => (w === forward || w === backward) && !state.found.has(w));
+  if (!match){
+    if (path.length >= 3) GameSound.play('wrong');
+    return;
+  }
+  GameSound.play('correct');
+
+  state.found.add(match);
+  const altStyle = state.found.size % 2 === 0;
+  path.forEach(c => c.classList.add(altStyle ? 'found-alt' : 'found'));
+  const li = document.querySelector(`#wordlist li[data-word="${match}"]`);
+  if (li) li.classList.add('done');
+
+  state.xp += 10;
+  document.getElementById('xp').textContent = state.xp;
+  document.getElementById('foundCount').textContent = state.found.size;
+  gameSave.xp = state.xp;
+  saveGameState();
+
+  const def = state.definitions && state.definitions[match];
+  if (def) showDefToast(match, def);
+
+  if (state.found.size === state.words.length){
+    finishTopic();
+  }
+}
+
+let defToastTimer = null;
+function showDefToast(word, def){
+  const box = document.getElementById('defToast');
+  document.getElementById('defToastWord').textContent = word;
+  document.getElementById('defToastText').textContent = def;
+  box.classList.add('show');
+  clearTimeout(defToastTimer);
+  defToastTimer = setTimeout(() => box.classList.remove('show'), 2600);
+}
+
+function finishTopic(){
+  stopTimer();
+  GameSound.play('win');
+  state.xp += 20;
+  document.getElementById('xp').textContent = state.xp;
+  gameSave.xp = state.xp;
+  saveGameState();
+  const secs = Math.floor((Date.now() - state.startTime) / 1000);
+  document.getElementById('winMsg').textContent =
+    `${state.words.length} palavras encontradas em ${formatTime(secs)}. +20 XP de bônus!`;
+  document.getElementById('winBanner').classList.add('show');
+}
+
+document.getElementById('nextTopicBtn').onclick = () => {
+  GameSound.play('click');
+  loadTopic((state.topicIndex + 1) % TOPICS.length);
+};
+
+/* ─── Timer ─── */
+function formatTime(s){
+  const m = Math.floor(s/60), r = s%60;
+  return `${m}:${r.toString().padStart(2,'0')}`;
+}
+function resetTimer(){
+  stopTimer();
+  state.startTime = Date.now();
+  document.getElementById('timer').textContent = '0:00';
+  state.timerId = setInterval(() => {
+    const secs = Math.floor((Date.now() - state.startTime) / 1000);
+    document.getElementById('timer').textContent = formatTime(secs);
+  }, 1000);
+}
+function stopTimer(){
+  if (state.timerId) clearInterval(state.timerId);
+}
+
+async function initGame(){
+  await loadGameState();
+  state.xp = gameSave.xp || 0;
+  document.getElementById('xp').textContent = state.xp;
+  await loadTopic(0);
+}
+
+initGame();
+</script>
+</body>
+</html>
