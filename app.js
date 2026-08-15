@@ -28,6 +28,14 @@ function langFlagHTML(code) {
 
 const EXTRAS = [
   {
+    id: 'gridscape-verb-to-be',
+    group: 'Laboratório — Lições em Canvas',
+    name: 'Verb To Be — Mapa Interativo',
+    icon: '🗺️',
+    description: 'A Lição 1 em formato de canvas: arraste, dê zoom e vá revelando os nós até o fim',
+    url: 'lessons/gridscape-verb-to-be.html'
+  },
+  {
     id: 'manual-portugues-basico',
     group: 'Manual Básico — Classes Gramaticais',
     name: 'Capa — Manual Básico',
@@ -1490,6 +1498,11 @@ async function renderExtras() {
   const progress = await getProgress();
 
   const GROUP_META = {
+    'Laboratório — Lições em Canvas': {
+      icon: '🗺️',
+      short: 'Lições em Canvas',
+      blurb: 'Versões experimentais das lições em formato de mapa/canvas: arraste, dê zoom e vá revelando os nós.'
+    },
     'Manual Básico — Classes Gramaticais': {
       icon: '🔤',
       short: 'Manual Básico',
@@ -1517,6 +1530,7 @@ async function renderExtras() {
     }
   };
   const GROUP_ORDER = [
+    'Laboratório — Lições em Canvas',
     'Manual Básico — Classes Gramaticais',
     'Manual Prático — Língua Portuguesa',
     'Manual Avançado — Língua Portuguesa',
