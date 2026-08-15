@@ -514,13 +514,14 @@
         <span class="title-emoji" aria-hidden="true">💬</span>
         Conversar
       </h2>
-      <p class="bk-lead">Crie um parceiro e fale inglês. ✨</p>
+      <p class="bk-lead">Crie um parceiro de conversa e pratique inglês como se fosse com um amigo. ✨</p>
+      <p class="persona-form-hint" style="margin-top:-6px;margin-bottom:14px;">Você escolhe o nome, a voz (menino ou menina) e o jeito de ser. Depois é só digitar ou falar em inglês — a IA responde no personagem que você criou.</p>
 
       <button type="button" class="ai-persona-create-btn" id="btn-ai-chat-new-persona">
         <span class="icon-wrap emoji-big" aria-hidden="true">➕🤖</span>
         <span class="label">
-          <span class="title">Novo parceiro</span>
-          <span class="sub">Avatar · nome · jeito</span>
+          <span class="title">Criar novo parceiro</span>
+          <span class="sub">Passo a passo · leva menos de 1 minuto</span>
         </span>
         <span class="create-chevron" aria-hidden="true">›</span>
       </button>
@@ -557,46 +558,60 @@
     <!-- SUB-TELA: criar/editar personalidade -->
     <div id="ai-chat-create-view" class="hidden">
       <button type="button" class="link-btn" id="btn-ai-chat-create-back" style="margin-bottom:10px;">← Voltar</button>
-      <h2 class="screen-title"><span class="title-emoji" aria-hidden="true">✨</span> Novo parceiro</h2>
+      <h2 class="screen-title"><span class="title-emoji" aria-hidden="true">✨</span> Criar parceiro de conversa</h2>
+      <div class="persona-howto-box" style="background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.28);border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:13px;line-height:1.55;color:var(--ink-soft, #666);">
+        <strong style="display:block;color:inherit;margin-bottom:6px;font-size:13.5px;">Como funciona</strong>
+        <ol style="margin:0;padding-left:18px;">
+          <li style="margin-bottom:4px;"><b>Avatar</b> — escolha um emoji que represente o parceiro.</li>
+          <li style="margin-bottom:4px;"><b>Nome</b> — como a IA vai se apresentar (ex.: Maya, Leo).</li>
+          <li style="margin-bottom:4px;"><b>Voz</b> — menina ou menino (para a fala e o tom).</li>
+          <li style="margin-bottom:4px;"><b>Jeito</b> — descreva a personalidade <em>em inglês ou português</em> (interesses, humor, se é tímido, animado…).</li>
+          <li><b>Quiz opcional</b> — 4 perguntas rápidas preenchem o “jeito” automaticamente; você pode editar depois.</li>
+        </ol>
+        <p style="margin:10px 0 0;font-size:12.5px;">Dica: quanto mais específico o jeito (“adora futebol e faz piadas curtas”), mais natural fica a conversa.</p>
+      </div>
 
       <div class="persona-preview">
         <div class="persona-preview-avatar" id="persona-preview-avatar">🤖</div>
         <div class="persona-preview-info">
           <div class="persona-preview-name" id="persona-preview-name">Sem nome</div>
-          <div class="persona-preview-sub">prévia na lista</div>
+          <div class="persona-preview-sub">assim vai aparecer na sua lista</div>
         </div>
       </div>
 
       <div class="persona-form-section">
-        <label class="field-label" style="margin-top:0;">😊 Avatar</label>
+        <label class="field-label" style="margin-top:0;">😊 1. Avatar</label>
         <div id="persona-emoji-picker" class="persona-emoji-grid"></div>
+        <p class="persona-form-hint">Toque em um emoji — ele aparece na lista e no chat.</p>
       </div>
 
       <div class="persona-form-section">
-        <label class="field-label" for="input-persona-name" style="margin-top:0;">🏷️ Nome</label>
-        <input type="text" id="input-persona-name" maxlength="30" placeholder="Ex: Max, Sofia, Luna…">
+        <label class="field-label" for="input-persona-name" style="margin-top:0;">🏷️ 2. Nome</label>
+        <input type="text" id="input-persona-name" maxlength="30" placeholder="Ex.: Maya, Leo, Sofia…">
+        <p class="persona-form-hint">Use um nome simples. É assim que o parceiro vai se apresentar na conversa.</p>
       </div>
 
       <div class="persona-form-section">
-        <label class="field-label" style="margin-top:0;">⚧ Voz</label>
+        <label class="field-label" style="margin-top:0;">⚧ 3. Voz (menina ou menino)</label>
         <div id="persona-gender-picker" class="persona-gender-row"></div>
+        <p class="persona-form-hint">Define o tom da fala e como o parceiro se refere a si mesmo na conversa.</p>
       </div>
 
       <div class="persona-form-section">
-        <label class="field-label" for="input-persona-personality" style="margin-top:0;">🎭 Jeito</label>
-        <textarea id="input-persona-personality" rows="3" maxlength="300" placeholder="Ex: animada, adora espaço e piadas…"></textarea>
-        <p class="persona-form-hint">Mais detalhes = conversa mais fiel.</p>
+        <label class="field-label" for="input-persona-personality" style="margin-top:0;">🎭 4. Jeito de ser</label>
+        <textarea id="input-persona-personality" rows="4" maxlength="300" placeholder="Ex.: Friendly and curious. Loves music, asks simple questions, and encourages me when I make mistakes."></textarea>
+        <p class="persona-form-hint">Escreva quem é essa pessoa: humor, assuntos preferidos, se fala devagar ou rápido, se corrige erros… Pode ser em português ou inglês. Quanto mais detalhe, mais fiel a conversa.</p>
       </div>
 
       <div class="persona-form-section">
-        <label class="field-label" style="margin-top:0;">🎲 Quiz rápido</label>
-        <p class="persona-form-hint" style="margin-top:0; margin-bottom:10px;">4 perguntas → a gente preenche o jeito.</p>
+        <label class="field-label" style="margin-top:0;">🎲 5. Quiz rápido (opcional)</label>
+        <p class="persona-form-hint" style="margin-top:0; margin-bottom:10px;">Não sabe o que escrever no “jeito”? Responda as 4 perguntas abaixo — montamos uma personalidade para você (dá para editar depois).</p>
         <div id="mbti-quiz" class="mbti-quiz"></div>
         <div id="mbti-result" class="mbti-result hidden"></div>
       </div>
 
       <button type="button" class="btn" id="btn-ai-chat-create-submit" style="width:100%;">
-        🚀 Criar e conversar
+        🚀 Salvar e começar a conversar
       </button>
     </div>
 
@@ -689,7 +704,7 @@
         <div class="howto-step-icon">💬</div>
         <div class="howto-step-body">
           <div class="howto-step-title">Pratique com a IA</div>
-          <div class="howto-step-desc">Converse em inglês a qualquer hora com personalidades de IA. Como treinar com um amigo, sem pressa e sem julgamento.</div>
+          <div class="howto-step-desc">Crie um parceiro (nome, avatar e jeito de ser) e converse em inglês quando quiser — como treinar com um amigo, sem pressa e sem julgamento. Use o quiz de 4 perguntas se preferir preencher a personalidade automaticamente.</div>
         </div>
       </div>
       <div class="howto-step howto-c1">

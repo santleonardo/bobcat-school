@@ -2589,7 +2589,7 @@ function applyMbtiResultIfComplete() {
       <strong>${aiChatEscapeHtml(info.name)}</strong>
     </div>
     <p class="mbti-result-desc">${aiChatEscapeHtml(info.description)}</p>
-    <p class="persona-form-hint" style="margin-top:6px;">Preenchemos a personalidade com esse jeito de ser — pode editar o texto acima à vontade. <button type="button" class="link-btn" id="btn-mbti-redo">Refazer o quiz</button></p>
+    <p class="persona-form-hint" style="margin-top:6px;">Pronto! O campo <strong>Jeito de ser</strong> foi preenchido com esse perfil. Leia e ajuste se quiser (interesses, tom de voz, se corrige erros…). Depois toque em <strong>Salvar e começar a conversar</strong>. <button type="button" class="link-btn" id="btn-mbti-redo">Refazer o quiz</button></p>
   `;
   const redoBtn = document.getElementById('btn-mbti-redo');
   if (redoBtn) {
@@ -3100,8 +3100,8 @@ async function renderAiChatPersonaList() {
   if (personas.length === 0) {
     list.innerHTML = `<div class="bk-empty">
       <div class="bk-empty-emoji" aria-hidden="true">🤖 🐱 🦸 🦄</div>
-      <div class="bk-empty-title">Nenhum parceiro ainda</div>
-      <p class="bk-empty-sub">Toque em <strong>Novo parceiro</strong> e comece a conversar! 🎉</p>
+      <div class="bk-empty-title">Você ainda não tem parceiros</div>
+      <p class="bk-empty-sub">Toque em <strong>Criar novo parceiro</strong> acima. Escolha avatar, nome, voz e o jeito de ser — ou use o quiz de 4 perguntas. Depois é só praticar inglês na conversa!</p>
     </div>`;
     return;
   }
