@@ -90,12 +90,12 @@
 
 <div id="canvasWrap">
   <div id="canvas">
-    <svg class="gline" id="lines" width="4000" height="1200"></svg>
+    <svg class="gline" id="lines" width="1200" height="4000"></svg>
     <!-- nodes injected by JS -->
   </div>
 </div>
 
-<div class="gcapacity" id="capacityBadge">CAPACIDADE: 1/6 NÓS</div>
+<div class="gcapacity" id="capacityBadge">CAPACIDADE: 1/10 NÓS</div>
 <div class="gtoolbar">
   <button type="button" id="zoomOut" aria-label="Diminuir zoom">−</button>
   <button type="button" id="zoomIn" aria-label="Aumentar zoom">+</button>
@@ -105,15 +105,16 @@
 <script src="lesson-kit.js"></script>
 <script>
 const LESSON_ID = "extra-gridscape-verb-to-be";
-const TOTAL_Q = 13; // 8 quiz + 5 fill, igual à lição original
+const TOTAL_Q = 21; // 8 quiz + 5 fill + 4 leitura (V/F) + 4 diálogo
 var SCORE = { correct: 0, total: TOTAL_Q };
-var qCorrect = 0, fillCorrect = 0;
+var qCorrect = 0, fillCorrect = 0, tfCorrect = 0, dialogCorrect = 0;
 function norm(s){ return (s||'').toString().trim().toLowerCase().replace(/[.!?]/g,''); }
 function addXP(n){ if(window.BobcatLesson) BobcatLesson.addXP(n); }
 
-// ── Layout dos nós: cadeia horizontal com leve variação vertical ──
-const NODE_W = 520, GAP_X = 190, STEP_X = NODE_W + GAP_X;
-const OFFSETS_Y = [0, -40, 55, -30, 45, 0];
+// ── Layout dos nós: cadeia vertical (para baixo) com leve variação horizontal ──
+const NODE_W = 520, GAP_Y = 90;
+const OFFSETS_X = [0, 40, -55, 30, -45, 60, -35, 45, -50, 0];
+var NODE_TOPS = []; // calculado após medir a altura real de cada nó
 var revealed = 1; // quantos nós já apareceram
 
 var canvasWrap = document.getElementById('canvasWrap');
@@ -166,20 +167,23 @@ document.getElementById('zoomOut').addEventListener('click', function(){ zoom(-0
 document.getElementById('recenter').addEventListener('click', function(){ centerOnNode(revealed-1); });
 
 function centerOnNode(i){
-  var x = i * STEP_X, y = OFFSETS_Y[i] || 0;
+  var el = document.getElementById('node-'+i);
+  var h = el ? el.offsetHeight : 360;
+  var x = OFFSETS_X[i] || 0, y = NODE_TOPS[i] || 0;
   var hw = window.innerWidth/2, hh = window.innerHeight/2;
   transform.x = hw - (x + NODE_W/2) * transform.scale;
-  transform.y = hh - (y + 180) * transform.scale;
+  transform.y = hh - (y + h/2) * transform.scale;
   applyTransform();
 }
 
 function drawLine(i){
   var svg = document.getElementById('lines');
-  var x1 = i*STEP_X + NODE_W, y1 = (OFFSETS_Y[i]||0) + 160;
-  var x2 = (i+1)*STEP_X, y2 = (OFFSETS_Y[i+1]||0) + 160;
-  var midX = (x1+x2)/2;
+  var elA = document.getElementById('node-'+i), elB = document.getElementById('node-'+(i+1));
+  var x1 = (OFFSETS_X[i]||0) + NODE_W/2, y1 = NODE_TOPS[i] + (elA ? elA.offsetHeight : 0);
+  var x2 = (OFFSETS_X[i+1]||0) + NODE_W/2, y2 = NODE_TOPS[i+1] || 0;
+  var midY = (y1+y2)/2;
   var path = document.createElementNS('http://www.w3.org/2000/svg','path');
-  path.setAttribute('d', 'M'+x1+','+y1+' C '+midX+','+y1+' '+midX+','+y2+' '+x2+','+y2);
+  path.setAttribute('d', 'M'+x1+','+y1+' C '+x1+','+midY+' '+x2+','+midY+' '+x2+','+y2);
   path.setAttribute('stroke', '#16130f');
   path.setAttribute('stroke-width', '2');
   path.setAttribute('fill', 'none');
@@ -194,7 +198,7 @@ function revealNext(){
   drawLine(idx-1);
   requestAnimationFrame(function(){ el.classList.add('show'); });
   revealed++;
-  document.getElementById('capacityBadge').textContent = 'CAPACIDADE: '+revealed+'/6 NÓS';
+  document.getElementById('capacityBadge').textContent = 'CAPACIDADE: '+revealed+'/'+NODES.length+' NÓS';
   setTimeout(function(){ centerOnNode(idx); }, 60);
 }
 
@@ -215,6 +219,18 @@ var FILL = [
   {s:"They ___ students.", a:"are"},
   {s:"___ you ready?", a:"Are"},
   {s:"He ___ not here.", a:"is"}
+];
+var TF = [
+  {prompt:"Marina is Brazilian.", ans:true},
+  {prompt:"Chris is a doctor.", ans:false},
+  {prompt:"Marina and Chris are classmates.", ans:true},
+  {prompt:"The classmates are boring.", ans:false}
+];
+var DIALOG = [
+  {s:"Hi! ___ you Paula?", a:"Are"},
+  {s:"No, I ___ not Paula.", a:"am"},
+  {s:"___ Paula your sister?", a:"Is"},
+  {s:"Yes, she ___ my sister.", a:"is"}
 ];
 
 var NODES = [
@@ -239,38 +255,85 @@ var NODES = [
   '<div class="gexample">He isn\'t at home.</div></div>'+
   '<div class="gcard"><b>Pergunta</b> — Am/Is/Are + sujeito?'+
   '<div class="gexample">Are you ready?</div></div>'+
+  '<button type="button" class="gnext" data-go>Ver as contrações →</button>',
+
+  // Nó 2 — Contrações
+  '<div class="gtag"><span><span class="gnum">3</span> CONTRAÇÕES</span><span>SHORT FORMS</span></div>'+
+  '<h2 class="gtitle">Contrações do Verb To Be</h2>'+
+  '<p class="gsub">No dia a dia, quase sempre usamos a forma contraída em vez da forma completa.</p>'+
+  '<div class="gvocab"><span><b>I\'m</b> — I am</span><button class="gaudio" data-speak="I am hungry.">🔊</button></div>'+
+  '<div class="gvocab"><span><b>you\'re</b> — you are</span><button class="gaudio" data-speak="You are welcome.">🔊</button></div>'+
+  '<div class="gvocab"><span><b>he\'s / she\'s</b> — he/she is</span><button class="gaudio" data-speak="She is my sister.">🔊</button></div>'+
+  '<div class="gvocab"><span><b>it\'s</b> — it is</span><button class="gaudio" data-speak="It is raining.">🔊</button></div>'+
+  '<div class="gvocab"><span><b>we\'re / they\'re</b> — we/they are</span><button class="gaudio" data-speak="They are at school.">🔊</button></div>'+
+  '<div class="gcard">Exemplo — <div class="gexample">I\'m hungry. She\'s my sister. They\'re at school.</div></div>'+
+  '<button type="button" class="gnext" data-go>Ver perguntas com Wh- →</button>',
+
+  // Nó 3 — Perguntas com Wh-
+  '<div class="gtag"><span><span class="gnum">4</span> PERGUNTAS WH-</span><span>QUESTION WORDS</span></div>'+
+  '<h2 class="gtitle">What, Where, Who + to be</h2>'+
+  '<p class="gsub">Combine uma palavra interrogativa com am/is/are para perguntar mais coisas.</p>'+
+  '<div class="gcard"><b>What</b> — pergunta o quê/qual.'+
+  '<div class="gexample">What is your name?</div></div>'+
+  '<div class="gcard"><b>Where</b> — pergunta o lugar.'+
+  '<div class="gexample">Where are you from?</div></div>'+
+  '<div class="gcard"><b>Who</b> — pergunta a pessoa.'+
+  '<div class="gexample">Who is that?</div></div>'+
+  '<span style="display:block;margin-top:4px">'+
+  '<button class="gaudio" data-speak="What is your name? Where are you from? Who is that?">🔊 Ouvir as três</button></span>'+
   '<button type="button" class="gnext" data-go>Ver o vocabulário →</button>',
 
-  // Nó 2 — Vocabulário
-  '<div class="gtag"><span><span class="gnum">3</span> VOCABULÁRIO</span><span>ÁUDIO</span></div>'+
+  // Nó 4 — Vocabulário
+  '<div class="gtag"><span><span class="gnum">5</span> VOCABULÁRIO</span><span>ÁUDIO</span></div>'+
   '<h2 class="gtitle">Palavras-chave</h2>'+
   '<div class="gvocab"><span><b>am</b> — eu sou/estou</span><button class="gaudio" data-speak="am">🔊</button></div>'+
   '<div class="gvocab"><span><b>is</b> — ele/ela é</span><button class="gaudio" data-speak="is">🔊</button></div>'+
   '<div class="gvocab"><span><b>are</b> — você/nós/eles</span><button class="gaudio" data-speak="are">🔊</button></div>'+
   '<div class="gvocab"><span><b>isn\'t</b> — is not</span><button class="gaudio" data-speak="isn\'t">🔊</button></div>'+
   '<div class="gvocab"><span><b>aren\'t</b> — are not</span><button class="gaudio" data-speak="aren\'t">🔊</button></div>'+
-  '<button type="button" class="gnext" data-go>Ir para o quiz →</button>',
+  '<button type="button" class="gnext" data-go>Ler o texto →</button>',
 
-  // Nó 3 — Quiz
-  '<div class="gtag"><span><span class="gnum">4</span> QUIZ RELÂMPAGO</span><span class="gscore" id="quizScore">0/8</span></div>'+
+  // Nó 5 — Leitura + Verdadeiro ou Falso
+  '<div class="gtag"><span><span class="gnum">6</span> LEITURA</span><span class="gscore" id="tfScore">0/4</span></div>'+
+  '<h2 class="gtitle">Leia e responda: Verdadeiro ou Falso</h2>'+
+  '<div class="gcard">My name is Marina. I am Brazilian and I am from Salvador. My best friend is Chris. '+
+  'He is American, and he is a teacher. We are classmates in an English course. My classmates aren\'t boring — they are funny! '+
+  '<button class="gaudio" data-speak="My name is Marina. I am Brazilian and I am from Salvador. My best friend is Chris. He is American, and he is a teacher. We are classmates in an English course.">🔊</button></div>'+
+  '<div id="tfGame"></div>'+
+  '<button type="button" class="gnext" id="btnTfNext">Próxima frase →</button>'+
+  '<div id="tfDone" style="display:none;margin-top:14px">'+
+  '<button type="button" class="gnext" data-go>Ir para o quiz →</button></div>',
+
+  // Nó 6 — Quiz
+  '<div class="gtag"><span><span class="gnum">7</span> QUIZ RELÂMPAGO</span><span class="gscore" id="quizScore">0/8</span></div>'+
   '<h2 class="gtitle">Escolha a forma certa</h2>'+
   '<div id="quizGame"></div>'+
   '<button type="button" class="gnext" id="btnQuizNext">Próxima pergunta →</button>'+
   '<div id="quizDone" style="display:none;margin-top:14px">'+
   '<button type="button" class="gnext" data-go>Ir para completar frases →</button></div>',
 
-  // Nó 4 — Fill
-  '<div class="gtag"><span><span class="gnum">5</span> COMPLETE AS LACUNAS</span><span class="gscore" id="sFill">0/5</span></div>'+
+  // Nó 7 — Fill
+  '<div class="gtag"><span><span class="gnum">8</span> COMPLETE AS LACUNAS</span><span class="gscore" id="sFill">0/5</span></div>'+
   '<h2 class="gtitle">Escreva am, is ou are</h2>'+
   '<div id="fillBox"></div>'+
   '<button type="button" class="gnext" onclick="checkFill()">Verificar</button>'+
   '<div id="fillDone" style="display:none;margin-top:14px">'+
+  '<button type="button" class="gnext" data-go>Praticar diálogo →</button></div>',
+
+  // Nó 8 — Diálogo
+  '<div class="gtag"><span><span class="gnum">9</span> DIÁLOGO</span><span class="gscore" id="sDialog">0/4</span></div>'+
+  '<h2 class="gtitle">Complete o diálogo</h2>'+
+  '<p class="gsub">Escreva am, is ou are nas lacunas.</p>'+
+  '<div id="dialogBox"></div>'+
+  '<button type="button" class="gnext" onclick="checkDialog()">Verificar diálogo</button>'+
+  '<div id="dialogDone" style="display:none;margin-top:14px">'+
   '<button type="button" class="gnext" data-go>Finalizar lição →</button></div>',
 
-  // Nó 5 — Finalizar
-  '<div class="gtag"><span><span class="gnum">6</span> REVISÃO FINAL</span><span>🏁</span></div>'+
+  // Nó 9 — Finalizar
+  '<div class="gtag"><span><span class="gnum">10</span> REVISÃO FINAL</span><span>🏁</span></div>'+
   '<h2 class="gtitle">Você concluiu o mapa!</h2>'+
-  '<div class="gcard">I am / You are / He is · Negativa: isn\'t / aren\'t · Pergunta: Are you…?</div>'+
+  '<div class="gcard">I am / You are / He is · Contrações: I\'m / she\'s / they\'re · Wh-: What is…? Where are…? · '+
+  'Negativa: isn\'t / aren\'t · Pergunta: Are you…?</div>'+
   '<button type="button" class="gnext" id="btnFinish">🏁 Finalizar Lição</button>'+
   '<p id="finishMsg" style="display:none;margin-top:12px;font-weight:700;"></p>'+
   '<div style="margin-top:14px"><a href="../index.html" style="font-weight:700;font-size:13px;color:#16130f">← Voltar para Extra</a></div>'
@@ -280,11 +343,20 @@ NODES.forEach(function(html, i){
   var node = document.createElement('div');
   node.className = 'gnode';
   node.id = 'node-'+i;
-  node.style.left = (i*STEP_X)+'px';
-  node.style.top = (OFFSETS_Y[i]||0)+'px';
+  node.style.left = (OFFSETS_X[i]||0)+'px';
   node.innerHTML = html;
   canvas.appendChild(node);
 });
+// Empilha os nós verticalmente para baixo, usando a altura real de cada um
+(function(){
+  var cumY = 0;
+  NODES.forEach(function(_, i){
+    var node = document.getElementById('node-'+i);
+    NODE_TOPS[i] = cumY;
+    node.style.top = cumY + 'px';
+    cumY += node.offsetHeight + GAP_Y;
+  });
+})();
 document.getElementById('node-0').classList.add('show');
 canvas.addEventListener('click', function(e){
   var btn = e.target.closest('[data-go]');
@@ -316,7 +388,7 @@ function renderQuiz(){
       if(ok){ qCorrect++; addXP(15); b.classList.add('ok'); }
       else { b.classList.add('bad'); }
       document.getElementById('quizScore').textContent = qCorrect+'/'+QUIZ.length;
-      SCORE.correct = qCorrect + fillCorrect;
+      SCORE.correct = qCorrect + fillCorrect + tfCorrect + dialogCorrect;
     });
   });
 }
@@ -325,6 +397,40 @@ document.getElementById('btnQuizNext') && document.getElementById('btnQuizNext')
   qi++; renderQuiz();
 });
 renderQuiz();
+
+// ── Leitura: Verdadeiro ou Falso ──
+var tfi = 0, tfAnswered = false;
+function renderTF(){
+  var box = document.getElementById('tfGame');
+  if(!box) return;
+  if(tfi >= TF.length){
+    box.innerHTML = '<p style="font-weight:700;color:var(--ok,#1e6b40)">Leitura concluída! '+tfCorrect+'/'+TF.length+' acertos.</p>';
+    document.getElementById('btnTfNext').style.display='none';
+    document.getElementById('tfDone').style.display='block';
+    return;
+  }
+  tfAnswered = false;
+  var q = TF[tfi];
+  box.innerHTML = '<p style="font-weight:700;font-size:15px;margin:0 0 8px">'+(tfi+1)+'. '+q.prompt+'</p>'+
+    '<div><button type="button" class="gq-opt" data-v="true">Verdadeiro</button>'+
+    '<button type="button" class="gq-opt" data-v="false">Falso</button></div>';
+  box.querySelectorAll('button[data-v]').forEach(function(b){
+    b.addEventListener('click', function(){
+      if(tfAnswered) return; tfAnswered = true;
+      var chosen = b.dataset.v === 'true';
+      var ok = chosen === q.ans;
+      if(ok){ tfCorrect++; addXP(10); b.classList.add('ok'); }
+      else { b.classList.add('bad'); }
+      document.getElementById('tfScore').textContent = tfCorrect+'/'+TF.length;
+      SCORE.correct = qCorrect + fillCorrect + tfCorrect + dialogCorrect;
+    });
+  });
+}
+document.getElementById('btnTfNext') && document.getElementById('btnTfNext').addEventListener('click', function(){
+  if(!tfAnswered && tfi < TF.length) return;
+  tfi++; renderTF();
+});
+renderTF();
 
 // ── Fill ──
 (function(){
@@ -348,13 +454,39 @@ function checkFill(){
   });
   document.getElementById('sFill').textContent = fillCorrect+'/'+FILL.length;
   addXP(fillCorrect*12);
-  SCORE.correct = qCorrect + fillCorrect;
+  SCORE.correct = qCorrect + fillCorrect + tfCorrect + dialogCorrect;
   document.getElementById('fillDone').style.display = 'block';
+}
+
+// ── Diálogo ──
+(function(){
+  var el = document.getElementById('dialogBox');
+  if(!el) return;
+  DIALOG.forEach(function(item,i){
+    var p = item.s.split('___');
+    var row = document.createElement('div');
+    row.className = 'gfill-row';
+    row.innerHTML = '<span>'+p[0]+'</span><input class="gfill-input" id="gdialog_'+i+'"><span>'+(p[1]||'')+'</span>';
+    el.appendChild(row);
+  });
+})();
+function checkDialog(){
+  dialogCorrect = 0;
+  DIALOG.forEach(function(item,i){
+    var inp = document.getElementById('gdialog_'+i);
+    var ok = norm(inp.value) === norm(item.a);
+    inp.className = 'gfill-input '+(ok?'correct':'incorrect');
+    if(ok) dialogCorrect++;
+  });
+  document.getElementById('sDialog').textContent = dialogCorrect+'/'+DIALOG.length;
+  addXP(dialogCorrect*12);
+  SCORE.correct = qCorrect + fillCorrect + tfCorrect + dialogCorrect;
+  document.getElementById('dialogDone').style.display = 'block';
   if(SCORE.correct >= Math.floor(TOTAL_Q*0.8) && window.BobcatLesson) BobcatLesson.fireConfetti();
 }
 
 document.getElementById('btnFinish').addEventListener('click', async function(){
-  SCORE.correct = qCorrect + fillCorrect;
+  SCORE.correct = qCorrect + fillCorrect + tfCorrect + dialogCorrect;
   SCORE.total = TOTAL_Q;
   var msg = document.getElementById('finishMsg');
   if(window.BobcatLesson && typeof BobcatLesson.finishLesson === 'function'){
