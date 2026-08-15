@@ -325,6 +325,14 @@ const EXTRAS = [
     url: 'lessons/empurra-palavras.html'
   },
   {
+    id: 'empurra-palavras-ingles',
+    group: 'Jogos',
+    name: 'Empurra-Palavras — Inglês',
+    icon: '📦',
+    description: 'Empurre as caixinhas até os lugares certos para montar a frase em inglês, sem cair nas armadilhas de grafia',
+    url: 'lessons/empurra-palavras-ingles.html'
+  },
+  {
     id: 'cobrinha-ortografia',
     group: 'Jogos',
     name: 'Cobrinha da Ortografia',
