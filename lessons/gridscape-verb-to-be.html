@@ -24,7 +24,11 @@
     background:linear-gradient(180deg, var(--bg-0), var(--bg-1) 60%, var(--bg-0));}
   #canvasWrap.dragging{cursor:grabbing;}
   #canvas{position:absolute;top:0;left:0;transform-origin:0 0;z-index:1;}
-  .gnode{position:absolute;top:0;left:0;width:520px;cursor:grab;touch-action:none;
+  .gnode{position:absolute;top:0;left:0;
+    width:min(100vw - 24px, 640px);
+    min-height:calc(100dvh - var(--safe-top, 78px) - var(--safe-bottom, 70px));
+    box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;
+    cursor:grab;touch-action:none;
     background:var(--bg-2);
     border:1px solid var(--border);border-radius:var(--radius);
     padding:22px 24px 24px;opacity:0;transform:translateY(18px) scale(.97);
@@ -36,6 +40,9 @@
   .gnode button,.gnode input,.gnode a{cursor:pointer;touch-action:auto;}
   .gnode input{cursor:text;}
   #canvasWrap.dragging .gnode{cursor:grabbing;}
+  @media (max-width:640px){
+    .gnode{width:100vw;border-radius:0;border-left:none;border-right:none;}
+  }
   .gtag{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:2px;color:var(--ink-soft);
     text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
   .gtag>span:first-child{display:inline-flex;align-items:center;gap:9px;}
@@ -67,8 +74,6 @@
   .gnext:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(255,91,61,.35);}
   .gnext:disabled{opacity:.4;cursor:not-allowed;}
   .gline{position:absolute;top:0;left:0;pointer-events:none;overflow:visible;}
-  .grail{position:absolute;top:-60px;width:2px;pointer-events:none;z-index:0;
-    background:repeating-linear-gradient(180deg, var(--border) 0 8px, transparent 8px 18px);}
   .gq-opt{border:1.5px solid var(--border);background:#fff;color:var(--ink);
     padding:10px 15px;margin:5px 6px 0 0;border-radius:99px;font-weight:600;
     font-size:13.5px;cursor:pointer;font-family:"Inter",sans-serif;transition:all .15s;}
@@ -108,10 +113,12 @@
 </style>
 </head><body>
 
-<!-- NOTE: .gnode mantém width fixo (520px, ver NODE_W no JS) em todos os tamanhos de tela.
-     Quem adapta o tamanho visível do card à tela é o zoom da câmera (transform.scale),
-     calculado dinamicamente em computeZoomBounds(). Usar vw aqui quebraria essa conta
-     e fazia o card vazar da tela, especialmente no celular. -->
+<!-- NOTE: cada .gnode agora ocupa a tela inteira (responsivo via CSS, sem zoom de câmera).
+     NODE_W no JS é apenas a largura REAL medida do card (offsetWidth) após o render,
+     usada só para centralizar horizontalmente e desenhar a linha pontilhada entre nós.
+     O arraste do aluno move a câmera SOMENTE no eixo Y (para cima/baixo); o eixo X
+     é sempre recalculado para manter o card centralizado, então não existe mais
+     arraste lateral nem risco de o aluno "perder" conteúdo pros lados. -->
 
 
 <div class="hud" id="hud" style="top:0;left:0;right:0;">
@@ -130,7 +137,7 @@
 
 <div id="canvasWrap">
   <div id="canvas">
-    <svg class="gline" id="lines" width="1200" height="4000">
+    <svg class="gline" id="lines" width="1200" height="12000">
       <defs>
         <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#ffd166"/>
@@ -142,17 +149,13 @@
         </filter>
       </defs>
     </svg>
-    <div class="grail" id="grailLeft"></div>
-    <div class="grail" id="grailRight"></div>
     <!-- nodes injected by JS -->
   </div>
 </div>
 
 <div class="gcapacity" id="capacityBadge">CAPACIDADE: 1/10 NÓS</div>
 <div class="gtoolbar">
-  <button type="button" id="zoomOut" aria-label="Diminuir zoom">−</button>
-  <button type="button" id="zoomIn" aria-label="Aumentar zoom">+</button>
-  <button type="button" id="recenter" aria-label="Centralizar">⤾</button>
+  <button type="button" id="recenter" aria-label="Voltar ao card atual">⤾</button>
 </div>
 
 <script src="lesson-kit.js"></script>
@@ -164,61 +167,56 @@ var qCorrect = 0, fillCorrect = 0, tfCorrect = 0, dialogCorrect = 0;
 function norm(s){ return (s||'').toString().trim().toLowerCase().replace(/[.!?]/g,''); }
 function addXP(n){ if(window.BobcatLesson) BobcatLesson.addXP(n); }
 
-// ── Layout dos nós: cadeia vertical (para baixo) com leve variação horizontal ──
-const NODE_W = 520, GAP_Y = 90;
-const OFFSETS_X = [0, 40, -55, 30, -45, 60, -35, 45, -50, 0];
+// ── Layout dos nós: cada card ocupa a tela inteira, empilhados na vertical ──
+// (o aluno só arrasta pra cima/baixo — não existe mais variação nem arraste horizontal)
+const GAP_Y = 90;
+var NODE_W = 520; // medido de verdade (offsetWidth) depois que os cards são renderizados
 var NODE_TOPS = []; // calculado após medir a altura real de cada nó
 var revealed = 1; // quantos nós já apareceram
 
 var canvasWrap = document.getElementById('canvasWrap');
 var canvas = document.getElementById('canvas');
-var transform = { x: 90, y: 220, scale: window.innerWidth < 768 ? 0.55 : 0.8 };
-var dragging = false, dragStart = { x:0, y:0, tx:0, ty:0 };
+var transform = { x: 0, y: 220 };
+var dragging = false, dragStart = { y:0, ty:0 };
 
-// Paredes laterais (em coordenadas do conteúdo) — preenchidas depois que os nós são medidos.
-var WALL_LEFT = 0, WALL_RIGHT = 0;
-var WALL_PAD = 40; // margem extra visível dentro das paredes
-
-// Limites de zoom — recalculados para que um card nunca fique maior que a tela.
-var ZOOM_MIN = 0.35, ZOOM_MAX = 1.6;
 var maxNodeHeight = 360;
 // Espaço reservado para HUD fixo no topo, e toolbar/badge fixos embaixo — não é área útil pro card.
-var SAFE_TOP = 78, SAFE_BOTTOM = 70, SAFE_SIDE = 24;
+var SAFE_TOP = 78, SAFE_BOTTOM = 70;
+document.documentElement.style.setProperty('--safe-top', SAFE_TOP+'px');
+document.documentElement.style.setProperty('--safe-bottom', SAFE_BOTTOM+'px');
 function viewportSize(){
   if(window.visualViewport) return { w: window.visualViewport.width, h: window.visualViewport.height };
   return { w: window.innerWidth, h: window.innerHeight };
 }
-function computeZoomBounds(){
-  var vp = viewportSize();
-  var usableW = vp.w - SAFE_SIDE*2;
-  var usableH = vp.h - SAFE_TOP - SAFE_BOTTOM;
-  var maxByWidth = usableW / NODE_W;
-  var maxByHeight = usableH / maxNodeHeight;
-  ZOOM_MAX = Math.max(0.25, Math.min(1.6, maxByWidth, maxByHeight));
-  ZOOM_MIN = Math.min(0.35, ZOOM_MAX);
-  transform.scale = Math.min(Math.max(transform.scale, ZOOM_MIN), ZOOM_MAX);
+// Mede a largura real do card (definida via CSS responsivo) e mantém tudo centralizado no eixo X.
+function computeLayout(){
+  var sample = document.getElementById('node-0');
+  if(sample) NODE_W = sample.offsetWidth;
+  transform.x = (viewportSize().w - NODE_W) / 2;
 }
 
 function clampTransform(){
-  // Trava o eixo X para que os cards nunca saiam totalmente da tela,
-  // como se as paredes (.grail) fossem sólidas.
-  var vw = viewportSize().w;
-  var scaledLeft = WALL_LEFT * transform.scale;
-  var scaledRight = WALL_RIGHT * transform.scale;
-  // x que encosta a parede direita na borda direita da tela
-  var minX = vw - scaledRight - WALL_PAD;
-  // x que encosta a parede esquerda na borda esquerda da tela
-  var maxX = -scaledLeft + WALL_PAD;
-  if(minX > maxX){ // conteúdo mais estreito que a tela: apenas trava nos limites
-    transform.x = Math.max(maxX, Math.min(minX, transform.x));
+  // Trava o eixo Y para que o aluno não arraste além do primeiro/último card,
+  // como se houvesse um teto e um chão invisíveis na "trilha" vertical.
+  var vc = viewportSize();
+  var contentTop = NODE_TOPS[0] || 0;
+  var lastIdx = NODE_TOPS.length - 1;
+  var lastEl = document.getElementById('node-'+lastIdx);
+  var contentBottom = (NODE_TOPS[lastIdx] || 0) + (lastEl ? lastEl.offsetHeight : maxNodeHeight);
+  // y que encosta o topo do primeiro card no topo seguro da tela
+  var maxY = SAFE_TOP - contentTop;
+  // y que encosta o fundo do último card no fundo seguro da tela
+  var minY = (vc.h - SAFE_BOTTOM) - contentBottom;
+  if(minY > maxY){
+    transform.y = Math.max(maxY, Math.min(minY, transform.y));
   } else {
-    transform.x = Math.max(minX, Math.min(maxX, transform.x));
+    transform.y = Math.max(minY, Math.min(maxY, transform.y));
   }
 }
 
 function applyTransform(){
   clampTransform();
-  canvas.style.transform = 'translate('+transform.x+'px,'+transform.y+'px) scale('+transform.scale+')';
+  canvas.style.transform = 'translate('+transform.x+'px,'+transform.y+'px)';
 }
 applyTransform();
 
@@ -230,56 +228,38 @@ canvasWrap.addEventListener('pointerdown', function(e){
   dragging = true;
   canvasWrap.classList.add('dragging');
   canvasWrap.setPointerCapture(e.pointerId);
-  dragStart = { x:e.clientX, y:e.clientY, tx:transform.x, ty:transform.y };
+  dragStart = { y:e.clientY, ty:transform.y };
 });
 canvasWrap.addEventListener('pointermove', function(e){
   if(!dragging) return;
-  transform.x = dragStart.tx + (e.clientX - dragStart.x);
-  transform.y = dragStart.ty + (e.clientY - dragStart.y);
+  transform.y = dragStart.ty + (e.clientY - dragStart.y); // só o eixo Y se move
   applyTransform();
 });
 function stopDrag(){ dragging = false; canvasWrap.classList.remove('dragging'); }
 canvasWrap.addEventListener('pointerup', stopDrag);
 canvasWrap.addEventListener('pointerleave', stopDrag);
 canvasWrap.addEventListener('wheel', function(e){
-  if(e.ctrlKey || e.metaKey){
-    e.preventDefault();
-    zoom(-e.deltaY * 0.0015, e.clientX, e.clientY);
-  } else {
-    transform.x -= e.deltaX; transform.y -= e.deltaY; applyTransform();
-  }
+  e.preventDefault();
+  transform.y -= e.deltaY; applyTransform(); // scroll do mouse também só move pra cima/baixo
 }, { passive:false });
 
-function zoom(delta, ox, oy){
-  var prevScale = transform.scale;
-  var newScale = Math.min(Math.max(ZOOM_MIN, prevScale + delta), ZOOM_MAX);
-  if(ox === undefined){ var vc = viewportSize(); ox = vc.w/2; oy = vc.h/2; }
-  var ratio = newScale/prevScale;
-  transform.x = ox - (ox - transform.x) * ratio;
-  transform.y = oy - (oy - transform.y) * ratio;
-  transform.scale = newScale;
-  applyTransform();
-}
-document.getElementById('zoomIn').addEventListener('click', function(){ zoom(0.15); });
-document.getElementById('zoomOut').addEventListener('click', function(){ zoom(-0.15); });
 document.getElementById('recenter').addEventListener('click', function(){ centerOnNode(revealed-1); });
 
 function centerOnNode(i){
   var el = document.getElementById('node-'+i);
   var h = el ? el.offsetHeight : 360;
-  var x = OFFSETS_X[i] || 0, y = NODE_TOPS[i] || 0;
+  var y = NODE_TOPS[i] || 0;
   var vc = viewportSize();
-  var hw = vc.w/2, hh = SAFE_TOP + (vc.h - SAFE_TOP - SAFE_BOTTOM)/2;
-  transform.x = hw - (x + NODE_W/2) * transform.scale;
-  transform.y = hh - (y + h/2) * transform.scale;
+  var hh = SAFE_TOP + (vc.h - SAFE_TOP - SAFE_BOTTOM)/2;
+  transform.y = hh - (y + h/2);
   applyTransform();
 }
 
 function drawLine(i){
   var svg = document.getElementById('lines');
   var elA = document.getElementById('node-'+i), elB = document.getElementById('node-'+(i+1));
-  var x1 = (OFFSETS_X[i]||0) + NODE_W/2, y1 = NODE_TOPS[i] + (elA ? elA.offsetHeight : 0);
-  var x2 = (OFFSETS_X[i+1]||0) + NODE_W/2, y2 = NODE_TOPS[i+1] || 0;
+  var x1 = NODE_W/2, y1 = NODE_TOPS[i] + (elA ? elA.offsetHeight : 0);
+  var x2 = NODE_W/2, y2 = NODE_TOPS[i+1] || 0;
   var midY = (y1+y2)/2;
   var d = 'M'+x1+','+y1+' C '+x1+','+midY+' '+x2+','+midY+' '+x2+','+y2;
   var glow = document.createElementNS('http://www.w3.org/2000/svg','path');
@@ -458,12 +438,13 @@ NODES.forEach(function(html, i){
   var node = document.createElement('div');
   node.className = 'gnode';
   node.id = 'node-'+i;
-  node.style.left = (OFFSETS_X[i]||0)+'px';
+  node.style.left = '0px'; // sem variação horizontal — todos os cards ficam na mesma coluna
   node.innerHTML = html;
   canvas.appendChild(node);
 });
 // Empilha os nós verticalmente para baixo, usando a altura real de cada um
 (function(){
+  computeLayout(); // mede a largura real do card antes de posicionar tudo
   var cumY = 0;
   NODES.forEach(function(_, i){
     var node = document.getElementById('node-'+i);
@@ -472,23 +453,11 @@ NODES.forEach(function(html, i){
     maxNodeHeight = Math.max(maxNodeHeight, node.offsetHeight);
     cumY += node.offsetHeight + GAP_Y;
   });
-  // Barreiras laterais: emolduram a amplitude horizontal máxima que os cards ocupam
-  var minX = Math.min.apply(null, OFFSETS_X), maxX = Math.max.apply(null, OFFSETS_X);
-  var railMargin = 90;
-  var railHeight = cumY + 160;
-  var grailLeft = document.getElementById('grailLeft');
-  var grailRight = document.getElementById('grailRight');
-  if(grailLeft){ grailLeft.style.left = (minX - railMargin) + 'px'; grailLeft.style.height = railHeight + 'px'; }
-  if(grailRight){ grailRight.style.left = (NODE_W + maxX + railMargin) + 'px'; grailRight.style.height = railHeight + 'px'; }
-  // As paredes de trava usam a mesma posição das paredes visuais (.grail)
-  WALL_LEFT = minX - railMargin;
-  WALL_RIGHT = NODE_W + maxX + railMargin;
-  computeZoomBounds();
   applyTransform();
 })();
-window.addEventListener('resize', function(){ computeZoomBounds(); applyTransform(); });
+window.addEventListener('resize', function(){ computeLayout(); applyTransform(); });
 if(window.visualViewport){
-  window.visualViewport.addEventListener('resize', function(){ computeZoomBounds(); applyTransform(); });
+  window.visualViewport.addEventListener('resize', function(){ computeLayout(); applyTransform(); });
 }
 document.getElementById('node-0').classList.add('show');
 canvas.addEventListener('click', function(e){
@@ -642,7 +611,7 @@ document.getElementById('btnFinish').addEventListener('click', async function(){
     var node = document.getElementById('node-'+i);
     if(node) maxNodeHeight = Math.max(maxNodeHeight, node.offsetHeight);
   });
-  computeZoomBounds();
+  computeLayout();
   applyTransform();
 })();
 
