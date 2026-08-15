@@ -107,6 +107,24 @@
   .howto ol{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
   .howto li{font-size:12px;color:var(--ink-soft);line-height:1.45}
   .howto li b{color:var(--ink)}
+
+  /* Badge de IA + estado de carregamento */
+  .ai-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:800;
+    text-transform:uppercase;letter-spacing:.04em;color:var(--purple);background:rgba(139,92,246,.16);
+    border:1px solid rgba(139,92,246,.4);border-radius:99px;padding:3px 9px;margin-left:6px;vertical-align:middle}
+  .ai-badge.loading{color:var(--gold);background:rgba(255,210,63,.14);border-color:rgba(255,210,63,.4);
+    animation:pulseBadge 1.1s ease-in-out infinite}
+  @keyframes pulseBadge{0%,100%{opacity:1}50%{opacity:.5}}
+  #wordlist li.loading-word{opacity:.35}
+
+  /* Toast de definição (aparece quando você acha uma palavra) */
+  .def-toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(140%);
+    max-width:min(92vw,420px);background:linear-gradient(160deg,var(--cream),var(--cream-2));
+    border:1px solid var(--purple);border-radius:14px;padding:11px 16px;box-shadow:0 10px 30px rgba(0,0,0,.5);
+    z-index:200;transition:transform .28s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+  .def-toast.show{transform:translateX(-50%) translateY(0)}
+  .def-toast .dt-word{font-family:"Fredoka",sans-serif;font-weight:700;color:var(--gold);font-size:13.5px;margin-bottom:2px}
+  .def-toast .dt-def{font-size:12.5px;color:var(--ink-soft);line-height:1.4}
 </style>
 </head>
 <body>
@@ -153,6 +171,11 @@
   </div>
 
   <p class="hint">Toque em "❓ Como jogar" a qualquer momento para ver as instruções de novo.</p>
+</div>
+
+<div class="def-toast" id="defToast">
+  <div class="dt-word" id="defToastWord"></div>
+  <div class="dt-def" id="defToastText"></div>
 </div>
 
 <script>
@@ -326,16 +349,70 @@ const DIRS = [
 ];
 const FILLER = 'ABCDEFGHIJLMNOPQRSTUVXZ';
 
-let state = { size:0, cells:[], words:[], found:new Set(), topicIndex:0, xp:0, startTime:null, timerId:null };
+let state = { size:0, cells:[], words:[], found:new Set(), topicIndex:0, xp:0, startTime:null, timerId:null, definitions:{}, loadToken:0 };
 
 function stripAccents(s){
   return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase();
 }
 
-function renderTopicName(){
+/* ─── Palavras novas geradas por IA a cada partida ───
+   O jogo mantém a lista fixa em TOPICS como tema/ícone e como
+   fallback (se a IA não responder a tempo ou o servidor não tiver
+   a IA configurada, joga normal com a lista fixa de sempre). */
+const AI_TIMEOUT_MS = 9000;
+const HISTORY_KEY_PREFIX = 'bobcat_cp_words_seen_';
+const HISTORY_MAX = 30;
+
+function getSeenWords(topicId){
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY_PREFIX + topicId);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) { return []; }
+}
+
+function addSeenWords(topicId, words){
+  try {
+    const prev = getSeenWords(topicId);
+    const merged = [...prev, ...words];
+    const trimmed = merged.slice(Math.max(0, merged.length - HISTORY_MAX));
+    localStorage.setItem(HISTORY_KEY_PREFIX + topicId, JSON.stringify(trimmed));
+  } catch (e) {}
+}
+
+async function fetchAiWords(topic){
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), AI_TIMEOUT_MS);
+  try {
+    const resp = await fetch('/api/wordsearch-words', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        topicId: topic.id,
+        topicLabel: topic.label,
+        count: topic.words.length,
+        avoid: getSeenWords(topic.id),
+        fallback: topic.words
+      }),
+      signal: ctrl.signal
+    });
+    clearTimeout(t);
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    if (!data || !Array.isArray(data.words) || !data.words.length) return null;
+    return data.words; // [{word, display, definition}]
+  } catch (e) {
+    clearTimeout(t);
+    return null;
+  }
+}
+
+function renderTopicName(loading){
   const topic = TOPICS[state.topicIndex];
   const el = document.getElementById('topicName');
-  el.innerHTML = `<span class="ic">${topic.icon}</span> ${topic.label}`;
+  const badge = loading
+    ? '<span class="ai-badge loading">🤖 gerando…</span>'
+    : '<span class="ai-badge">🤖 IA</span>';
+  el.innerHTML = `<span class="ic">${topic.icon}</span> ${topic.label} ${badge}`;
 }
 
 function makeGrid(size){
@@ -366,10 +443,7 @@ function tryPlaceWord(grid, size, word){
   return null;
 }
 
-function loadTopic(index){
-  state.topicIndex = index;
-  const topic = TOPICS[index];
-  const words = topic.words.map(stripAccents);
+function buildBoardFromWords(words){
   const size = Math.max(12, Math.min(15, Math.max(...words.map(w=>w.length)) + 2));
   let grid, placements, tries = 0;
 
@@ -394,19 +468,57 @@ function loadTopic(index){
     }
   }
 
+  return { size, grid, placements };
+}
+
+function applyBoard(size, grid, placements, definitions){
   state.size = size;
   state.cells = grid;
   state.placements = placements;
   state.words = Object.keys(placements);
   state.found = new Set();
+  state.definitions = definitions || {};
 
-  renderTopicName();
   renderGrid();
   renderWordList();
   document.getElementById('winBanner').classList.remove('show');
   document.getElementById('totalCount').textContent = state.words.length;
   document.getElementById('foundCount').textContent = '0';
   resetTimer();
+}
+
+async function loadTopic(index){
+  state.topicIndex = index;
+  const topic = TOPICS[index];
+  const myToken = ++state.loadToken;
+
+  // 1) Mostra o tabuleiro na hora com a lista fixa, pra não deixar o
+  //    aluno esperando parado — a IA troca as palavras por baixo assim
+  //    que responder (ou fica com essas mesmas, se a IA não responder).
+  const fallbackWords = topic.words.map(stripAccents);
+  const { size, grid, placements } = buildBoardFromWords(fallbackWords);
+  renderTopicName(true);
+  applyBoard(size, grid, placements, {});
+
+  // 2) Busca palavras novas na IA (com histórico de palavras já vistas
+  //    nesse tema, pra variar bastante partida após partida).
+  const aiWords = await fetchAiWords(topic);
+  if (myToken !== state.loadToken) return; // trocou de tema enquanto esperava
+
+  if (aiWords && aiWords.length){
+    const words = aiWords.map(w => w.word);
+    const definitions = {};
+    aiWords.forEach(w => { if (w.definition) definitions[w.word] = w.definition; });
+    const board = buildBoardFromWords(words);
+    renderTopicName(false);
+    applyBoard(board.size, board.grid, board.placements, definitions);
+    addSeenWords(topic.id, words);
+  } else {
+    // IA indisponível: fica com a lista fixa já carregada, só tira o "gerando…"
+    renderTopicName(false);
+    const el = document.getElementById('topicName');
+    el.querySelector('.ai-badge')?.remove();
+  }
 }
 
 function renderGrid(){
@@ -527,9 +639,22 @@ function checkSelection(path){
   document.getElementById('xp').textContent = state.xp;
   document.getElementById('foundCount').textContent = state.found.size;
 
+  const def = state.definitions && state.definitions[match];
+  if (def) showDefToast(match, def);
+
   if (state.found.size === state.words.length){
     finishTopic();
   }
+}
+
+let defToastTimer = null;
+function showDefToast(word, def){
+  const box = document.getElementById('defToast');
+  document.getElementById('defToastWord').textContent = word;
+  document.getElementById('defToastText').textContent = def;
+  box.classList.add('show');
+  clearTimeout(defToastTimer);
+  defToastTimer = setTimeout(() => box.classList.remove('show'), 2600);
 }
 
 function finishTopic(){
