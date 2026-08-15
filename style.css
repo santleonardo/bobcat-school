@@ -835,39 +835,55 @@ body.on-auth-screen.on-landing-screen .topbar { display: none; }
 }
 .auth-card .btn:hover { background: linear-gradient(135deg, var(--terracotta-deep), var(--terracotta-deep)); }
 
-.auth-hint { font-size: 12.5px; color: var(--ink-soft); text-align: center; margin-top: 18px; padding: 0 24px; line-height: 1.5; }
+.auth-hint {
+  font-size: 13px;
+  color: #e8e4df;
+  text-align: center;
+  margin-top: 18px;
+  padding: 0 24px;
+  line-height: 1.5;
+  text-shadow: 0 1px 2px rgba(0,0,0,.4);
+}
 
 .auth-legal {
   margin: 16px 0 0;
-  padding: 12px 12px;
+  padding: 14px 14px;
   text-align: center;
-  font-size: 12.5px;
-  line-height: 1.55;
-  color: var(--ink);
-  background: var(--cream-2, rgba(0,0,0,.04));
-  border: 1px solid var(--border, rgba(0,0,0,.1));
+  font-size: 13px;
+  line-height: 1.6;
+  font-weight: 500;
+  /* Sempre painel claro + texto escuro — legível em qualquer tema */
+  color: #1a1a1a !important;
+  background: #ffffff !important;
+  border: 1.5px solid #d0d0d0 !important;
   border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.12);
 }
 .auth-legal a {
-  color: var(--terracotta, #e13a26);
-  font-weight: 700;
+  color: #b91c1c !important;
+  font-weight: 800 !important;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 .auth-legal a:hover {
-  color: var(--terracotta-deep, #c6281a);
+  color: #7f1d1d !important;
   opacity: 1;
 }
-[data-theme="dark"] .auth-legal {
-  color: var(--ink);
-  background: rgba(255,255,255,.06);
-  border-color: rgba(255,255,255,.12);
+[data-theme="dark"] .auth-legal,
+[data-theme="light"] .auth-legal {
+  color: #1a1a1a !important;
+  background: #ffffff !important;
+  border-color: #d0d0d0 !important;
 }
-[data-theme="dark"] .auth-legal a {
-  color: #ff8a70;
+[data-theme="dark"] .auth-legal a,
+[data-theme="light"] .auth-legal a {
+  color: #b91c1c !important;
 }
 
-body.on-auth-screen .auth-hint { color: var(--ink-soft); }
+body.on-auth-screen .auth-hint {
+  color: #e8e4df;
+  text-shadow: 0 1px 2px rgba(0,0,0,.35);
+}
 .link-btn {
   display: block;
   width: 100%;
