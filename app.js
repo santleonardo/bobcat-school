@@ -2755,11 +2755,22 @@ function aiChatWrapVocab(text) {
 // o navegador nem sempre expõe o gênero, então usamos nomes comuns de vozes femininas/masculinas).
 const TTS_FEMALE_HINTS = ['female', 'zira', 'samantha', 'victoria', 'karen', 'moira', 'tessa', 'fiona', 'susan', 'amy', 'salli', 'joanna'];
 const TTS_MALE_HINTS = ['male', 'david', 'alex', 'daniel', 'fred', 'thomas', 'oliver', 'james', 'george', 'matthew', 'guy'];
+let _aiChatVoicesCache = [];
+function _aiChatRefreshVoices() {
+  if (!('speechSynthesis' in window)) return;
+  try { _aiChatVoicesCache = window.speechSynthesis.getVoices() || []; } catch (e) { /* ignore */ }
+}
+if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+  _aiChatRefreshVoices();
+  try { window.speechSynthesis.onvoiceschanged = _aiChatRefreshVoices; } catch (e) { /* ignore */ }
+  setTimeout(_aiChatRefreshVoices, 300);
+}
 
 function aiChatPickVoice(gender) {
   if (!('speechSynthesis' in window)) return null;
-  const voices = window.speechSynthesis.getVoices().filter(v => /^en/i.test(v.lang));
-  if (voices.length === 0) return null;
+  if (!_aiChatVoicesCache.length) _aiChatRefreshVoices();
+  const voices = _aiChatVoicesCache.filter(v => /^en/i.test(v.lang));
+  if (voices.length === 0) return _aiChatVoicesCache[0] || null;
   const hints = gender === 'male' ? TTS_MALE_HINTS : TTS_FEMALE_HINTS;
   const match = voices.find(v => hints.some(h => v.name.toLowerCase().includes(h)));
   return match || voices[0];
@@ -2777,8 +2788,17 @@ function aiChatSpeak(text, gender) {
     utter.lang = 'en-US';
     utter.rate = 0.95;
     const voice = aiChatPickVoice(gender || 'female');
-    if (voice) utter.voice = voice;
-    window.speechSynthesis.speak(utter);
+    if (voice) {
+      utter.voice = voice;
+      if (voice.lang) utter.lang = voice.lang;
+    }
+    if (window.speechSynthesis.paused) {
+      try { window.speechSynthesis.resume(); } catch (e2) { /* ignore */ }
+    }
+    // micro-delay após cancel() evita bug do Chrome em que a fala some
+    setTimeout(function () {
+      try { window.speechSynthesis.speak(utter); } catch (e3) { /* ignore */ }
+    }, 30);
   } catch (e) { /* TTS não é essencial — falha silenciosa */ }
 }
 
