@@ -253,7 +253,8 @@ Gridscape.init({
       });
       document.getElementById('sFill').textContent = fillCorrect+'/'+FILL.length;
       addXP(fillCorrect*12);
-      SCORE.correct = qCorrect + fillCorrect;
+      if (typeof syncPracticalScore === "function") syncPracticalScore();
+      else SCORE.correct = qCorrect + fillCorrect;
       document.getElementById('fillDone').style.display = 'block';
       if(SCORE.correct >= Math.floor(TOTAL_Q*0.8) && window.BobcatLesson) BobcatLesson.fireConfetti();
       api.remeasure();
@@ -301,7 +302,8 @@ Gridscape.init({
     Gridscape.mountScramble('scrambleGame', PRACTICAL.scramble, {scoreId:'scrambleScore', xp:18, remeasure:api.remeasure, onDone:function(c){scrambleCorrect=c;syncPracticalScore();showDone('scrambleDone');}});
 
     document.getElementById('btnFinish').addEventListener('click', async function(){
-      SCORE.correct = qCorrect + fillCorrect;
+      if (typeof syncPracticalScore === "function") syncPracticalScore();
+      else SCORE.correct = qCorrect + fillCorrect + (typeof tfCorrect!=="undefined"?tfCorrect:0) + (typeof matchCorrect!=="undefined"?matchCorrect:0) + (typeof orderCorrect!=="undefined"?orderCorrect:0) + (typeof speakCorrect!=="undefined"?speakCorrect:0) + (typeof scrambleCorrect!=="undefined"?scrambleCorrect:0);
       SCORE.total = TOTAL_Q;
       var msg = document.getElementById('finishMsg');
       if(window.BobcatLesson && typeof BobcatLesson.finishLesson === 'function'){

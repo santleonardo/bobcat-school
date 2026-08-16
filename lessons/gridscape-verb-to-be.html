@@ -159,11 +159,12 @@
 </div>
 
 <script src="lesson-kit.js"></script>
+<script src="gridscape-kit.js"></script>
 <script>
 const LESSON_ID = "verb-to-be";
 const TOTAL_Q = 36; // 8 quiz + 5 fill + 4 leitura (V/F) + 4 diálogo
 var SCORE = { correct: 0, total: TOTAL_Q };
-var qCorrect = 0, fillCorrect = 0, tfCorrect = 0, dialogCorrect = 0;
+var qCorrect = 0, fillCorrect = 0, tfCorrect = 0, dialogCorrect = 0, matchCorrect = 0, orderCorrect = 0, speakCorrect = 0, scrambleCorrect = 0;
 function norm(s){ return (s||'').toString().trim().toLowerCase().replace(/[.!?]/g,''); }
 function addXP(n){ if(window.BobcatLesson) BobcatLesson.addXP(n); }
 
@@ -607,7 +608,7 @@ function checkDialog(){
 }
 
 
-    var matchCorrect=0, orderCorrect=0, speakCorrect=0, scrambleCorrect=0;
+    matchCorrect=0; orderCorrect=0; speakCorrect=0; scrambleCorrect=0;
     function showDone(id){ var el=document.getElementById(id); if(el) el.style.display='block'; }
     Gridscape.mountMatch('matchGame', [
       {left:'am', right:'eu sou/estou'},
@@ -633,7 +634,7 @@ function checkDialog(){
     });
 
 document.getElementById('btnFinish').addEventListener('click', async function(){
-  SCORE.correct = qCorrect + fillCorrect + tfCorrect + dialogCorrect;
+  SCORE.correct = qCorrect + fillCorrect + tfCorrect + dialogCorrect + matchCorrect + orderCorrect + speakCorrect + scrambleCorrect;
   SCORE.total = TOTAL_Q;
   var msg = document.getElementById('finishMsg');
   if(window.BobcatLesson && typeof BobcatLesson.finishLesson === 'function'){
