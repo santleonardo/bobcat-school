@@ -292,14 +292,6 @@ const EXTRAS = [
     url: 'lessons/pa-redacao-dissertativa.html'
   },
   {
-    id: 'licao-2-interativa',
-    group: 'Outros',
-    name: 'Lição 2 — Visual Interativo (mesmo conteúdo)',
-    icon: '🎮',
-    description: 'Mesmo conteúdo da Lição 2 oficial, no formato Genially/jogos (progresso compartilhado)',
-    url: 'lessons/licao-2-interativa.html'
-  },
-  {
     id: 'caca-palavras-portugues',
     group: 'Jogos',
     flag: 'br',

@@ -201,7 +201,7 @@ teacher.html         → painel do professor (só funciona com Supabase configur
 package.json          → dependência web-push (Vercel instala no deploy)
 icons/               → ícones do app
 lessons/
-  verb-to-be.html    → lição interativa "Verb To Be"
+  gridscape-*.html   → lições do curso de inglês em mapa Canvas
 ```
 
 ## Currículo completo (5 semestres)
@@ -341,7 +341,7 @@ Tem dois jeitos de adicionar lição: **pelo painel do professor** (mais simples
 
 Só funciona com o Supabase configurado (a lição fica guardada no banco, já que o app é um site estático e não tem como criar arquivo novo sozinho).
 
-1. Monte o arquivo `.html` da lição do jeito de sempre: duplique `lessons/verb-to-be.html` (ou `lessons/saudacoes-apresentacoes.html`, que já tem áudio embutido) e troque o conteúdo, mantendo:
+1. Monte o arquivo `.html` da lição do jeito de sempre: duplique um `lessons/gridscape-*.html` existente (mapa Canvas com áudio e exercícios) e troque o conteúdo, mantendo:
    - a linha `const LESSON_ID = '...'` com um id novo e único (o mesmo que você vai usar no campo "ID" do painel);
    - as três tags `<script src="../config.js">`, `<script src="../db-client.js">` e o `<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">` no `<head>`;
    - a função `finishLesson()` (ajuste a contagem de `total` para o número de questões da nova lição).
@@ -356,7 +356,7 @@ A lição é aberta pelo endereço `lessons/custom.html?id=SEU-ID`, uma página 
 
 ### Direto nos arquivos do projeto (o jeito "clássico")
 
-1. Duplique `lessons/verb-to-be.html` (ou `lessons/saudacoes-apresentacoes.html`, que já tem áudio embutido), troque o conteúdo pela nova lição, mas mantenha:
+1. Duplique um `lessons/gridscape-*.html` existente (mapa Canvas com áudio e exercícios), troque o conteúdo pela nova lição, mas mantenha:
    - a linha `const LESSON_ID = '...'` com um id novo e único;
    - as três tags `<script src="../config.js">`, `<script src="../db-client.js">` e o `<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">` no `<head>`;
    - a função `finishLesson()` (ajuste a contagem de `total` para o número de questões da nova lição).
@@ -374,7 +374,7 @@ Fluxo recomendado para pegar uma apostila em PDF (como a de "Saudações e Apres
 
 ### Áudio (pronúncia) sem precisar hospedar arquivos de som
 
-A lição `saudacoes-apresentacoes.html` já usa a **Web Speech API** do navegador (`speechSynthesis`), que faz o próprio navegador "falar" o texto em inglês — não precisa gravar, subir nem hospedar nenhum arquivo `.mp3`. Função pronta (`speak(btn, texto)`) e um botão `🔊 ouvir` já ficam ao lado de cada palavra/frase do vocabulário e do diálogo. Para reaproveitar em outra lição, basta chamar `speak(this, 'texto em inglês')` no `onclick` de um botão com a classe `audio-btn`.
+As lições Canvas (`gridscape-*.html`) já usam a **Web Speech API** do navegador (`speechSynthesis`), que faz o próprio navegador "falar" o texto em inglês — não precisa gravar, subir nem hospedar nenhum arquivo `.mp3`. Função pronta (`speak(btn, texto)`) e um botão `🔊 ouvir` já ficam ao lado de cada palavra/frase do vocabulário e do diálogo. Para reaproveitar em outra lição, basta chamar `speak(this, 'texto em inglês')` no `onclick` de um botão com a classe `audio-btn`.
    - Vantagem: funciona offline, sem custo, sem hospedagem.
    - Limitação: a voz depende do navegador/aparelho do aluno (qualidade varia, mas é totalmente aceitável para prática de pronúncia).
 
@@ -423,14 +423,15 @@ Também é preciso rodar a nova tabela do `schema.sql` (`student_reset_passwords
 
 ---
 
-## Design interativo das lições (estilo Genially)
+## Design das lições de inglês (Canvas / mapa vertical)
 
-A **Lição 2** usa o novo visual interativo (HUD com XP, cartões viráveis, jogos de memória/quiz, áudio TTS, confetti).
+O curso de inglês (A1–B1) usa o visual **Gridscape**: cards empilhados, arraste vertical, áudio TTS, quiz, lacunas e exercícios práticos (V/F, combinar, ordenar diálogo, prática oral, montar frase).
 
 ### Arquivos compartilhados
 
-- `lessons/lesson-kit.js` — HUD/XP, `speak()`, reveal on scroll, flip cards, e **ponte de progresso** com `db-client.js` (`handleLessonFinish`).
-- Inclua nos HTML de lição (nessa ordem):
+- `lessons/lesson-kit.js` — HUD/XP, `speak()` (TTS com gênero), confetti, ponte de progresso (`finishLesson`)
+- `lessons/gridscape-kit.js` / `gridscape-kit.css` — motor do mapa (nós, câmera, exercícios práticos)
+- Inclua nos HTML de lição Canvas (nessa ordem):
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -438,6 +439,7 @@ A **Lição 2** usa o novo visual interativo (HUD com XP, cartões viráveis, jo
 <script src="../db-client.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
 <script src="lesson-kit.js"></script>
+<script src="gridscape-kit.js"></script>
 ```
 
 ```js
