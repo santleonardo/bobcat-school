@@ -32,8 +32,16 @@ const EXTRAS = [
     group: 'Laboratório — Lições em Canvas',
     name: 'Verb To Be — Mapa Interativo',
     icon: '🗺️',
-    description: 'A Lição 1 em formato de canvas: arraste, dê zoom e vá revelando os nós até o fim',
+    description: 'Lição 1 em mapa vertical: deslize para cima/baixo e vá revelando os nós até o fim',
     url: 'lessons/gridscape-verb-to-be.html'
+  },
+  {
+    id: 'gridscape-saudacoes',
+    group: 'Laboratório — Lições em Canvas',
+    name: 'Saudações — Mapa Interativo',
+    icon: '👋',
+    description: 'Hello, Nice to meet you e How are you? em formato de mapa com áudio (vozes feminina e masculina)',
+    url: 'lessons/gridscape-saudacoes.html'
   },
   {
     id: 'manual-portugues-basico',
@@ -1501,7 +1509,7 @@ async function renderExtras() {
     'Laboratório — Lições em Canvas': {
       icon: '🗺️',
       short: 'Lições em Canvas',
-      blurb: 'Versões experimentais das lições em formato de mapa/canvas: arraste, dê zoom e vá revelando os nós.'
+      blurb: 'Versões experimentais das lições de inglês em formato de mapa vertical: deslize, revele os nós e pratique com áudio.'
     },
     'Manual Básico — Classes Gramaticais': {
       icon: '🔤',
