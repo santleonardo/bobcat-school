@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bobcat Language School — DO/DOES, TO e FOR (Canvas)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="lesson-kit.css">
+<link rel="stylesheet" href="gridscape-kit.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../config.js"></script>
+<script src="../db-client.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+</head><body>
+<div class="hud" id="hud" style="top:0;left:0;right:0;">
+  <div class="hud-left"><span>🐾 Bobcat</span>
+    <div class="xp-track"><div class="xp-fill" id="xpBar"></div></div>
+    <span id="xpLabel" style="font-weight:700;color:var(--orange-dark)">0 XP</span>
+  </div>
+  <div class="hud-right">
+    <span class="pill" id="levelPill">⭐ Nível 1</span>
+    <span class="pill" id="starsPill">🏆 0 estrelas</span>
+  </div>
+</div>
+<a class="gback" href="../index.html">← Voltar ao app</a>
+<span class="glabel">EXTRA · MAPA · DO / DOES</span>
+<div id="canvasWrap"><div id="canvas">
+<svg class="gline" id="lines" width="1200" height="12000">
+  <defs>
+    <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffd166"/><stop offset="100%" stop-color="#ff8a4c"/>
+    </linearGradient>
+    <filter id="lineGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+</svg>
+</div></div>
+<div class="gcapacity" id="capacityBadge">CAPACIDADE: 1/8 NÓS</div>
+<div class="gtoolbar"><button type="button" id="recenter" aria-label="Recentrar">⤾</button></div>
+<script src="lesson-kit.js"></script>
+<script src="gridscape-kit.js"></script>
+<script>
+const LESSON_ID = "extra-gridscape-do-does";
+const TOTAL_Q = 13;
+var SCORE = { correct: 0, total: TOTAL_Q };
+var qCorrect = 0, fillCorrect = 0;
+var norm = Gridscape.norm, addXP = Gridscape.addXP;
+var QUIZ = [{"prompt": "___ you like pizza?", "options": ["Do", "Does", "Are"], "answer": 0}, {"prompt": "___ she work here?", "options": ["Do", "Does", "Is"], "answer": 1}, {"prompt": "I go ___ school.", "options": ["to", "for", "at"], "answer": 0}, {"prompt": "This is ___ my mom.", "options": ["to", "for", "at"], "answer": 1}, {"prompt": "We waited ___ an hour.", "options": ["to", "for", "at"], "answer": 1}, {"prompt": "He studies ___ pass the test.", "options": ["to", "for", "at"], "answer": 0}, {"prompt": "___ they play soccer?", "options": ["Do", "Does", "Are"], "answer": 0}, {"prompt": "She comes ___ the office.", "options": ["to", "for", "in"], "answer": 0}];
+var FILL = [{"s": "___ you live in Brazil?", "a": "Do"}, {"s": "___ your mother cook?", "a": "Does"}, {"s": "I go ___ school.", "a": "to"}, {"s": "This present is ___ my sister.", "a": "for"}, {"s": "She studies ___ learn English.", "a": "to"}];
+var NODES = ["<div class=\"gtag\"><span><span class=\"gnum\">1</span> INTRO</span><span>OBJETIVOS</span></div><h2 class=\"gtitle\">Do / Does · To e For</h2><p class=\"gsub\">Perguntas com Do/Does e uso de to e for</p><div class=\"gcard\">🎯 Estude a estrutura, ouça os exemplos e complete os exercícios no mapa.</div><div class=\"gcard\">Diálogo<br><span style=\"display:block;margin-top:6px\"><b>Tom:</b> Do you study English every day? <button class=\"gaudio\" data-speak=\"Do you study English every day?\" data-gender=\"male\">🔊</button></span><span style=\"display:block;margin-top:6px\"><b>Anna:</b> Yes, I do. I study to travel. <button class=\"gaudio\" data-speak=\"Yes, I do. I study to travel.\" data-gender=\"female\">🔊</button></span><span style=\"display:block;margin-top:6px\"><b>Tom:</b> Does your sister study too? <button class=\"gaudio\" data-speak=\"Does your sister study too?\" data-gender=\"male\">🔊</button></span><span style=\"display:block;margin-top:6px\"><b>Anna:</b> Yes. This book is for her. <button class=\"gaudio\" data-speak=\"Yes. This book is for her.\" data-gender=\"female\">🔊</button></span></div><button type=\"button\" class=\"gnext\" data-go>Continuar →</button>", "<div class=\"gtag\"><span><span class=\"gnum\">2</span> GRAMÁTICA</span><span>DO / DOES</span></div><h2 class=\"gtitle\">Estrutura</h2><div class=\"gcard\"><b>Do / Does</b> — Perguntas no presente</div><div class=\"gcard\"><b>To</b> — Direção e infinitivo</div><div class=\"gcard\"><b>For</b> — Benefício e duração</div><button type=\"button\" class=\"gnext\" data-go>Ver vocabulário →</button>", "<div class=\"gtag\"><span><span class=\"gnum\">3</span> VOCABULÁRIO</span><span>ÁUDIO</span></div><h2 class=\"gtitle\">Palavras-chave</h2><div class=\"gvocab\"><span><b>do / does</b> — auxiliar</span><button class=\"gaudio\" data-speak=\"do\">🔊</button></div><div class=\"gvocab\"><span><b>to</b> — para / a</span><button class=\"gaudio\" data-speak=\"to\">🔊</button></div><div class=\"gvocab\"><span><b>for</b> — para / por</span><button class=\"gaudio\" data-speak=\"for\">🔊</button></div><div class=\"gvocab\"><span><b>every day</b> — todo dia</span><button class=\"gaudio\" data-speak=\"every day\">🔊</button></div><div class=\"gvocab\"><span><b>Yes, I do</b> — Sim</span><button class=\"gaudio\" data-speak=\"Yes, I do\">🔊</button></div><div class=\"gvocab\"><span><b>No, she doesn&#x27;t</b> — Não</span><button class=\"gaudio\" data-speak=\"No, she doesn&#x27;t\">🔊</button></div><button type=\"button\" class=\"gnext\" data-go>Ouvir diálogo →</button>", "<div class=\"gtag\"><span><span class=\"gnum\">4</span> DIÁLOGO</span><span>LISTENING</span></div><h2 class=\"gtitle\">Listening &amp; Speaking</h2><p class=\"gsub\">Toque em 🔊 para ouvir. Vozes variam por personagem.</p><div class=\"gcard\"><span style=\"display:block;margin:6px 0\"><b>Tom:</b> Do you study English every day? <button class=\"gaudio\" data-speak=\"Do you study English every day?\" data-gender=\"male\">🔊</button></span><span style=\"display:block;margin:6px 0\"><b>Anna:</b> Yes, I do. I study to travel. <button class=\"gaudio\" data-speak=\"Yes, I do. I study to travel.\" data-gender=\"female\">🔊</button></span><span style=\"display:block;margin:6px 0\"><b>Tom:</b> Does your sister study too? <button class=\"gaudio\" data-speak=\"Does your sister study too?\" data-gender=\"male\">🔊</button></span><span style=\"display:block;margin:6px 0\"><b>Anna:</b> Yes. This book is for her. <button class=\"gaudio\" data-speak=\"Yes. This book is for her.\" data-gender=\"female\">🔊</button></span></div><button type=\"button\" class=\"gnext\" data-go>Próximo →</button>", "<div class=\"gtag\"><span><span class=\"gnum\">5</span> DICA</span><span>TIP</span></div><h2 class=\"gtitle\">Dica de estudo</h2><div class=\"gcard\">Ouça cada exemplo em voz alta, repita e depois faça o quiz sem olhar.</div><button type=\"button\" class=\"gnext\" data-go>Ir para o quiz →</button>", "<div class=\"gtag\"><span><span class=\"gnum\">6</span> QUIZ RELÂMPAGO</span><span class=\"gscore\" id=\"quizScore\">0/8</span></div><h2 class=\"gtitle\">Escolha a forma certa</h2><div id=\"quizGame\"></div><button type=\"button\" class=\"gnext\" id=\"btnQuizNext\">Próxima pergunta →</button><div id=\"quizDone\" style=\"display:none;margin-top:14px\"><button type=\"button\" class=\"gnext\" data-go>Completar frases →</button></div>", "<div class=\"gtag\"><span><span class=\"gnum\">7</span> COMPLETE AS LACUNAS</span><span class=\"gscore\" id=\"sFill\">0/5</span></div><h2 class=\"gtitle\">Escreva a resposta</h2><div id=\"fillBox\"></div><button type=\"button\" class=\"gnext\" onclick=\"checkFill()\">Verificar</button><div id=\"fillDone\" style=\"display:none;margin-top:14px\"><button type=\"button\" class=\"gnext\" data-go>Finalizar →</button></div>", "<div class=\"gtag\"><span><span class=\"gnum\">8</span> REVISÃO FINAL</span><span>🏁</span></div><h2 class=\"gtitle\">Você concluiu o mapa!</h2><div class=\"gcard\">Do / Does · To e For — continue praticando no app e no chat com IA.</div><button type=\"button\" class=\"gnext\" id=\"btnFinish\">🏁 Finalizar Lição</button><p id=\"finishMsg\" style=\"display:none;margin-top:12px;font-weight:700;\"></p><div style=\"margin-top:14px\"><a href=\"../index.html\" style=\"font-weight:700;font-size:13px;color:#16130f\">← Voltar para Extra</a></div>"];
+
+Gridscape.init({
+  lessonId: LESSON_ID,
+  totalQuestions: TOTAL_Q,
+  nodes: NODES,
+  onReady: function (api) {
+    var qi = 0, qAnswered = false;
+    function renderQuiz(){
+      var box = document.getElementById('quizGame');
+      if(!box) return;
+      if(qi >= QUIZ.length){
+        box.innerHTML = '<p style="font-weight:700;color:var(--ok,#1e6b40)">Quiz completo! '+qCorrect+'/'+QUIZ.length+' acertos.</p>';
+        document.getElementById('btnQuizNext').style.display='none';
+        document.getElementById('quizDone').style.display='block';
+        api.remeasure(); return;
+      }
+      qAnswered = false;
+      var q = QUIZ[qi];
+      var opts = q.options.map(function(o,i){
+        return '<button type="button" class="gq-opt" data-i="'+i+'">'+o+'</button>';
+      }).join('');
+      box.innerHTML = '<p style="font-weight:700;font-size:15px;margin:0 0 8px">'+(qi+1)+'. '+q.prompt+'</p><div>'+opts+'</div>';
+      box.querySelectorAll('button[data-i]').forEach(function(b){
+        b.addEventListener('click', function(){
+          if(qAnswered) return; qAnswered = true;
+          var ok = +b.dataset.i === q.answer;
+          if(ok){ qCorrect++; addXP(15); b.classList.add('ok'); }
+          else { b.classList.add('bad'); }
+          document.getElementById('quizScore').textContent = qCorrect+'/'+QUIZ.length;
+          SCORE.correct = qCorrect + fillCorrect;
+        });
+      });
+      api.remeasure();
+    }
+    var btnQ = document.getElementById('btnQuizNext');
+    if(btnQ) btnQ.addEventListener('click', function(){
+      if(!qAnswered && qi < QUIZ.length) return;
+      qi++; renderQuiz();
+    });
+    renderQuiz();
+
+    (function(){
+      var el = document.getElementById('fillBox');
+      if(!el) return;
+      FILL.forEach(function(item,i){
+        var p = item.s.split('___');
+        var row = document.createElement('div');
+        row.className = 'gfill-row';
+        row.innerHTML = '<span>'+p[0]+'</span><input class="gfill-input" id="gfill_'+i+'"><span>'+(p[1]||'')+'</span>';
+        el.appendChild(row);
+      });
+    })();
+
+    window.checkFill = function(){
+      fillCorrect = 0;
+      FILL.forEach(function(item,i){
+        var inp = document.getElementById('gfill_'+i);
+        var ok = norm(inp.value) === norm(item.a);
+        inp.className = 'gfill-input '+(ok?'correct':'incorrect');
+        if(ok) fillCorrect++;
+      });
+      document.getElementById('sFill').textContent = fillCorrect+'/'+FILL.length;
+      addXP(fillCorrect*12);
+      SCORE.correct = qCorrect + fillCorrect;
+      document.getElementById('fillDone').style.display = 'block';
+      if(SCORE.correct >= Math.floor(TOTAL_Q*0.8) && window.BobcatLesson) BobcatLesson.fireConfetti();
+      api.remeasure();
+    };
+
+    var btnF = document.getElementById('btnFinish');
+    if(btnF) btnF.addEventListener('click', async function(){
+      SCORE.correct = qCorrect + fillCorrect;
+      SCORE.total = TOTAL_Q;
+      var msg = document.getElementById('finishMsg');
+      if(window.BobcatLesson && typeof BobcatLesson.finishLesson === 'function'){
+        var ok = await BobcatLesson.finishLesson(SCORE.correct, SCORE.total, 'correct');
+        if(msg){
+          msg.style.display = 'block';
+          var pct = Math.round((SCORE.correct/SCORE.total)*100);
+          msg.style.color = ok ? '#1e6b40' : '#c0392b';
+          msg.textContent = ok ? ('🎉 Lição concluída ('+pct+'%)! Progresso salvo.') :
+            ('📌 '+SCORE.correct+'/'+SCORE.total+' ('+pct+'%). Precisa de pelo menos 85%.');
+        }
+      }
+    });
+  }
+});
+</script>
+</body></html>
