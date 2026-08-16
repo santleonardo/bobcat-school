@@ -53,7 +53,7 @@
 <script src="gridscape-kit.js"></script>
 <script>
 const LESSON_ID = "extra-gridscape-saudacoes";
-const TOTAL_Q = 13; // 8 quiz + 5 fill
+const TOTAL_Q = 29; // quiz+fill+práticos
 var SCORE = { correct: 0, total: TOTAL_Q };
 var qCorrect = 0, fillCorrect = 0;
 var norm = Gridscape.norm;
@@ -154,6 +154,33 @@ var NODES = [
   '<button type="button" class="gnext" data-go>Finalizar →</button></div>',
 
   // 7 — Finish
+  
+  // P1 TF
+  '<div class="gtag"><span><span class="gnum">P1</span> VERDADEIRO / FALSO</span><span class="gscore" id="tfScore">0/4</span></div>'+
+  '<h2 class="gtitle">Leia e decida</h2><div id="tfGame"></div>'+
+  '<div id="tfDone" style="display:none;margin-top:12px"><button type="button" class="gnext" data-go>Próximo →</button></div>',
+
+  // P2 Match
+  '<div class="gtag"><span><span class="gnum">P2</span> COMBINAR</span><span class="gscore" id="matchScore">0/6</span></div>'+
+  '<h2 class="gtitle">Combine os pares</h2><div id="matchGame"></div>'+
+  '<div id="matchDone" style="display:none;margin-top:12px"><button type="button" class="gnext" data-go>Próximo →</button></div>',
+
+  // P3 Order
+  '<div class="gtag"><span><span class="gnum">P3</span> ORDENAR DIÁLOGO</span><span class="gscore" id="orderScore">0/1</span></div>'+
+  '<h2 class="gtitle">Monte o diálogo</h2><div id="orderGame"></div>'+
+  '<div id="orderDone" style="display:none;margin-top:12px"><button type="button" class="gnext" data-go>Prática oral →</button></div>',
+
+  // P4 Speak
+  '<div class="gtag"><span><span class="gnum">P4</span> PRÁTICA ORAL</span><span class="gscore" id="speakScore">0/4</span></div>'+
+  '<h2 class="gtitle">Fale em voz alta</h2><div id="speakGame"></div>'+
+  '<div id="speakDone" style="display:none;margin-top:12px"><button type="button" class="gnext" data-go>Montar frase →</button></div>',
+
+  // P5 Scramble
+  '<div class="gtag"><span><span class="gnum">P5</span> MONTAR FRASE</span><span class="gscore" id="scrambleScore">0/1</span></div>'+
+  '<h2 class="gtitle">Organize as palavras</h2><div id="scrambleGame"></div>'+
+  '<div id="scrambleDone" style="display:none;margin-top:12px"><button type="button" class="gnext" data-go>Finalizar →</button></div>',
+
+
   '<div class="gtag"><span><span class="gnum">8</span> REVISÃO FINAL</span><span>🏁</span></div>'+
   '<h2 class="gtitle">Você concluiu o mapa!</h2>'+
   '<div class="gcard">Hello / Hi · Good morning / evening · My name is… / I\'m… · Nice to meet you · How are you? → I\'m fine, thanks.</div>'+
@@ -231,6 +258,47 @@ Gridscape.init({
       if(SCORE.correct >= Math.floor(TOTAL_Q*0.8) && window.BobcatLesson) BobcatLesson.fireConfetti();
       api.remeasure();
     };
+
+    
+    var PRACTICAL = {
+      tf: [
+        {prompt:'Anna says "Good morning!"', ans:true},
+        {prompt:'"Nice to meet you" means "Prazer em conhecer".', ans:true},
+        {prompt:'We say "Good evening" only at 6am.', ans:false},
+        {prompt:'"How are you?" is a common greeting.', ans:true}
+      ],
+      match: [
+        {left:'Hello / Hi', right:'Oi'},
+        {left:'Good morning', right:'Bom dia'},
+        {left:'Good evening', right:'Boa noite (chegada)'},
+        {left:'Nice to meet you', right:'Prazer em conhecer'},
+        {left:'How are you?', right:'Como vai?'},
+        {left:"I'm fine", right:'Estou bem'}
+      ],
+      order: [
+        'Good morning! My name is Anna. Nice to meet you.',
+        "Hi, Anna! I'm Tom. Nice to meet you too.",
+        'How are you today?',
+        "I'm fine, thanks. And you?"
+      ],
+      speak: [
+        'Good morning! My name is Anna. Nice to meet you.',
+        "Hi, Anna! I'm Tom. Nice to meet you too.",
+        'How are you today?',
+        "I'm fine, thanks. And you?"
+      ],
+      scramble: 'Nice to meet you'
+    };
+    var tfCorrect=0,matchCorrect=0,orderCorrect=0,speakCorrect=0,scrambleCorrect=0;
+    function syncPracticalScore(){
+      SCORE.correct = qCorrect + fillCorrect + tfCorrect + matchCorrect + orderCorrect + speakCorrect + scrambleCorrect;
+    }
+    function showDone(id){ var el=document.getElementById(id); if(el) el.style.display='block'; api.remeasure(); }
+    Gridscape.mountTrueFalse('tfGame', PRACTICAL.tf, {scoreId:'tfScore', xp:10, remeasure:api.remeasure, onDone:function(c){tfCorrect=c;syncPracticalScore();showDone('tfDone');}});
+    Gridscape.mountMatch('matchGame', PRACTICAL.match, {scoreId:'matchScore', xp:12, remeasure:api.remeasure, onDone:function(c){matchCorrect=c;syncPracticalScore();showDone('matchDone');}});
+    Gridscape.mountOrder('orderGame', PRACTICAL.order, {scoreId:'orderScore', xp:20, remeasure:api.remeasure, onDone:function(c){orderCorrect=c;syncPracticalScore();showDone('orderDone');}});
+    Gridscape.mountSpeakChecklist('speakGame', PRACTICAL.speak, {scoreId:'speakScore', xp:8, remeasure:api.remeasure, onDone:function(c){speakCorrect=c;syncPracticalScore();showDone('speakDone');}});
+    Gridscape.mountScramble('scrambleGame', PRACTICAL.scramble, {scoreId:'scrambleScore', xp:18, remeasure:api.remeasure, onDone:function(c){scrambleCorrect=c;syncPracticalScore();showDone('scrambleDone');}});
 
     document.getElementById('btnFinish').addEventListener('click', async function(){
       SCORE.correct = qCorrect + fillCorrect;

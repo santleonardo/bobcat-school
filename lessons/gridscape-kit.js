@@ -272,6 +272,344 @@
     if (window.BobcatLesson) BobcatLesson.addXP(n);
   }
 
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  /**
+   * True/False interativo.
+   * items: [{ prompt, ans: true|false }]
+   * opts: { scoreId, onDone, xp }
+   */
+  function mountTrueFalse(boxId, items, opts) {
+    opts = opts || {};
+    var box = document.getElementById(boxId);
+    if (!box || !items || !items.length) return { correct: 0, total: 0 };
+    var i = 0, correct = 0, answered = false;
+    var total = items.length;
+
+    function render() {
+      if (i >= total) {
+        box.innerHTML = '<p style="font-weight:700;color:var(--ok,#1e6b40)">Verdadeiro/Falso: ' + correct + '/' + total + ' acertos.</p>';
+        if (opts.scoreId) {
+          var el = document.getElementById(opts.scoreId);
+          if (el) el.textContent = correct + '/' + total;
+        }
+        if (typeof opts.onDone === 'function') opts.onDone(correct, total);
+        if (typeof opts.remeasure === 'function') opts.remeasure();
+        return;
+      }
+      answered = false;
+      var q = items[i];
+      box.innerHTML =
+        '<p style="font-weight:700;font-size:15px;margin:0 0 8px">' + (i + 1) + '. ' + q.prompt + '</p>' +
+        '<div>' +
+        '<button type="button" class="gtf-opt" data-v="true">Verdadeiro</button>' +
+        '<button type="button" class="gtf-opt" data-v="false">Falso</button>' +
+        '</div>' +
+        '<button type="button" class="gnext" id="' + boxId + '_next" style="margin-top:12px">Próxima →</button>';
+      box.querySelectorAll('.gtf-opt').forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (answered) return;
+          answered = true;
+          var chosen = b.getAttribute('data-v') === 'true';
+          var ok = chosen === !!q.ans;
+          if (ok) { correct++; addXP(opts.xp || 10); b.classList.add('ok'); }
+          else { b.classList.add('bad'); }
+          if (opts.scoreId) {
+            var el = document.getElementById(opts.scoreId);
+            if (el) el.textContent = correct + '/' + total;
+          }
+        });
+      });
+      var next = document.getElementById(boxId + '_next');
+      if (next) next.addEventListener('click', function () {
+        if (!answered && i < total) return;
+        i++;
+        render();
+      });
+      if (typeof opts.remeasure === 'function') opts.remeasure();
+    }
+    render();
+    return {
+      getCorrect: function () { return correct; },
+      getTotal: function () { return total; }
+    };
+  }
+
+  /**
+   * Matching pairs (left-right).
+   * pairs: [{ left, right }]
+   */
+  function mountMatch(boxId, pairs, opts) {
+    opts = opts || {};
+    var box = document.getElementById(boxId);
+    if (!box || !pairs || !pairs.length) return { correct: 0, total: 0 };
+    var total = pairs.length;
+    var correct = 0;
+    var lefts = pairs.map(function (p, idx) { return { t: p.left, i: idx }; });
+    var rights = shuffle(pairs.map(function (p, idx) { return { t: p.right, i: idx }; }));
+    var selectedLeft = null;
+    var matched = {};
+
+    function render() {
+      var leftHtml = lefts.map(function (L) {
+        var cls = matched[L.i] ? 'gmatch-item ok' : 'gmatch-item';
+        if (selectedLeft === L.i) cls += ' selected';
+        return '<button type="button" class="' + cls + '" data-side="L" data-i="' + L.i + '"' + (matched[L.i] ? ' disabled' : '') + '>' + L.t + '</button>';
+      }).join('');
+      var rightHtml = rights.map(function (R) {
+        var cls = matched[R.i] ? 'gmatch-item ok' : 'gmatch-item';
+        return '<button type="button" class="' + cls + '" data-side="R" data-i="' + R.i + '"' + (matched[R.i] ? ' disabled' : '') + '>' + R.t + '</button>';
+      }).join('');
+      box.innerHTML =
+        '<p class="gpractice-hint">Toque num item da esquerda e depois o correspondente à direita.</p>' +
+        '<div class="gmatch-grid"><div class="gmatch-col">' + leftHtml + '</div><div class="gmatch-col">' + rightHtml + '</div></div>' +
+        '<span class="gscore" id="' + boxId + '_score">' + correct + '/' + total + '</span>';
+
+      box.querySelectorAll('.gmatch-item').forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (b.disabled) return;
+          var side = b.getAttribute('data-side');
+          var idx = +b.getAttribute('data-i');
+          if (side === 'L') {
+            selectedLeft = idx;
+            render();
+            return;
+          }
+          if (selectedLeft === null) return;
+          if (selectedLeft === idx) {
+            matched[idx] = true;
+            correct++;
+            addXP(opts.xp || 12);
+            selectedLeft = null;
+            if (opts.scoreId) {
+              var el = document.getElementById(opts.scoreId);
+              if (el) el.textContent = correct + '/' + total;
+            }
+            if (correct >= total && typeof opts.onDone === 'function') opts.onDone(correct, total);
+          } else {
+            b.classList.add('bad');
+            setTimeout(function () { selectedLeft = null; render(); }, 450);
+            return;
+          }
+          render();
+        });
+      });
+      if (typeof opts.remeasure === 'function') opts.remeasure();
+    }
+    render();
+    return {
+      getCorrect: function () { return correct; },
+      getTotal: function () { return total; }
+    };
+  }
+
+  /**
+   * Order dialogue / sentences.
+   * lines: string[]
+   */
+  function mountOrder(boxId, lines, opts) {
+    opts = opts || {};
+    var box = document.getElementById(boxId);
+    if (!box || !lines || lines.length < 2) return { correct: 0, total: 0 };
+    var total = 1; // one exercise
+    var correct = 0;
+    var order = shuffle(lines.map(function (_, i) { return i; }));
+    var picked = [];
+
+    function label(n) {
+      return n >= 0 ? String(n + 1) : '·';
+    }
+
+    function render() {
+      var html = '<p class="gpractice-hint">Toque nas falas na ordem correta do diálogo.</p><div class="gorder-list">';
+      order.forEach(function (idx) {
+        var pos = picked.indexOf(idx);
+        html += '<button type="button" class="gorder-item' + (pos >= 0 ? ' selected' : '') + '" data-i="' + idx + '">' +
+          '<span class="gord-num">' + label(pos) + '</span><span>' + lines[idx] + '</span></button>';
+      });
+      html += '</div>';
+      html += '<button type="button" class="gnext" id="' + boxId + '_check">Verificar ordem</button>';
+      html += ' <button type="button" class="gnext" id="' + boxId + '_reset" style="background:#fff;color:var(--ink);border:1px solid var(--border);box-shadow:none">Reiniciar</button>';
+      html += '<div id="' + boxId + '_msg" style="margin-top:10px;font-weight:700"></div>';
+      box.innerHTML = html;
+
+      box.querySelectorAll('.gorder-item').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var idx = +b.getAttribute('data-i');
+          var pos = picked.indexOf(idx);
+          if (pos >= 0) picked.splice(pos, 1);
+          else picked.push(idx);
+          render();
+        });
+      });
+      var chk = document.getElementById(boxId + '_check');
+      if (chk) chk.addEventListener('click', function () {
+        var ok = picked.length === lines.length && picked.every(function (v, i) { return v === i; });
+        var msg = document.getElementById(boxId + '_msg');
+        if (ok) {
+          correct = 1;
+          addXP(opts.xp || 20);
+          if (msg) { msg.style.color = 'var(--ok,#1e6b40)'; msg.textContent = '✓ Ordem correta!'; }
+          if (opts.scoreId) {
+            var el = document.getElementById(opts.scoreId);
+            if (el) el.textContent = '1/1';
+          }
+          if (typeof opts.onDone === 'function') opts.onDone(1, 1);
+        } else {
+          if (msg) { msg.style.color = 'var(--bad,#d9432f)'; msg.textContent = 'Ainda não — tente de novo.'; }
+        }
+        if (typeof opts.remeasure === 'function') opts.remeasure();
+      });
+      var rst = document.getElementById(boxId + '_reset');
+      if (rst) rst.addEventListener('click', function () {
+        picked = [];
+        order = shuffle(lines.map(function (_, i) { return i; }));
+        render();
+      });
+      if (typeof opts.remeasure === 'function') opts.remeasure();
+    }
+    render();
+    return {
+      getCorrect: function () { return correct; },
+      getTotal: function () { return total; }
+    };
+  }
+
+  /**
+   * Speaking checklist — aluno marca o que praticou em voz alta.
+   * prompts: string[]
+   */
+  function mountSpeakChecklist(boxId, prompts, opts) {
+    opts = opts || {};
+    var box = document.getElementById(boxId);
+    if (!box || !prompts || !prompts.length) return { correct: 0, total: 0 };
+    var total = prompts.length;
+    var done = {};
+    var correct = 0;
+
+    function render() {
+      var html = '<p class="gpractice-hint">Fale em voz alta cada item e toque para marcar. Use 🔊 para ouvir o modelo.</p><div class="gspeak-list">';
+      prompts.forEach(function (p, i) {
+        var isDone = !!done[i];
+        html += '<div class="gspeak-item' + (isDone ? ' done' : '') + '" data-i="' + i + '">' +
+          '<span class="gcheck">' + (isDone ? '✓' : '') + '</span>' +
+          '<span class="gspeak-text">' + p +
+          ' <button type="button" class="gaudio" data-speak="' + p.replace(/"/g, '&quot;') + '">🔊</button></span></div>';
+      });
+      html += '</div><span class="gscore" id="' + boxId + '_score">' + correct + '/' + total + '</span>';
+      box.innerHTML = html;
+      box.querySelectorAll('.gspeak-item').forEach(function (row) {
+        row.addEventListener('click', function (e) {
+          if (e.target.closest('.gaudio')) return;
+          var idx = +row.getAttribute('data-i');
+          if (done[idx]) return;
+          done[idx] = true;
+          correct++;
+          addXP(opts.xp || 8);
+          if (opts.scoreId) {
+            var el = document.getElementById(opts.scoreId);
+            if (el) el.textContent = correct + '/' + total;
+          }
+          if (correct >= total && typeof opts.onDone === 'function') opts.onDone(correct, total);
+          render();
+        });
+      });
+      if (typeof opts.remeasure === 'function') opts.remeasure();
+    }
+    render();
+    return {
+      getCorrect: function () { return correct; },
+      getTotal: function () { return total; }
+    };
+  }
+
+  /**
+   * Sentence scramble — montar frase na ordem certa.
+   * sentence: string (words separated by space)
+   */
+  function mountScramble(boxId, sentence, opts) {
+    opts = opts || {};
+    var box = document.getElementById(boxId);
+    if (!box || !sentence) return { correct: 0, total: 0 };
+    var words = sentence.replace(/[.!?]/g, '').split(/\s+/).filter(Boolean);
+    var total = 1;
+    var correct = 0;
+    var bank = shuffle(words.map(function (w, i) { return { w: w, i: i }; }));
+    var answer = [];
+
+    function render() {
+      var bankHtml = bank.map(function (item, bi) {
+        return '<button type="button" class="gscramble-word" data-bi="' + bi + '">' + item.w + '</button>';
+      }).join('');
+      var ansHtml = answer.map(function (item, ai) {
+        return '<button type="button" class="gscramble-word selected" data-ai="' + ai + '">' + item.w + '</button>';
+      }).join('');
+      box.innerHTML =
+        '<p class="gpractice-hint">Monte a frase na ordem correta.</p>' +
+        '<div class="gscramble-answer" id="' + boxId + '_ans">' + (ansHtml || '<span style="color:var(--ink-soft);font-size:12px">Toque nas palavras abaixo…</span>') + '</div>' +
+        '<div class="gscramble-bank">' + bankHtml + '</div>' +
+        '<button type="button" class="gnext" id="' + boxId + '_check">Verificar</button>' +
+        ' <button type="button" class="gnext" id="' + boxId + '_reset" style="background:#fff;color:var(--ink);border:1px solid var(--border);box-shadow:none">Limpar</button>' +
+        '<div id="' + boxId + '_msg" style="margin-top:10px;font-weight:700"></div>';
+
+      box.querySelectorAll('[data-bi]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var bi = +b.getAttribute('data-bi');
+          answer.push(bank[bi]);
+          bank.splice(bi, 1);
+          render();
+        });
+      });
+      box.querySelectorAll('[data-ai]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var ai = +b.getAttribute('data-ai');
+          bank.push(answer[ai]);
+          answer.splice(ai, 1);
+          render();
+        });
+      });
+      var chk = document.getElementById(boxId + '_check');
+      if (chk) chk.addEventListener('click', function () {
+        var built = answer.map(function (x) { return x.w; }).join(' ');
+        var target = words.join(' ');
+        var ok = norm(built) === norm(target);
+        var msg = document.getElementById(boxId + '_msg');
+        if (ok) {
+          correct = 1;
+          addXP(opts.xp || 18);
+          if (msg) { msg.style.color = 'var(--ok,#1e6b40)'; msg.textContent = '✓ Frase correta!'; }
+          if (opts.scoreId) {
+            var el = document.getElementById(opts.scoreId);
+            if (el) el.textContent = '1/1';
+          }
+          if (typeof opts.onDone === 'function') opts.onDone(1, 1);
+        } else {
+          if (msg) { msg.style.color = 'var(--bad,#d9432f)'; msg.textContent = 'Ainda não — tente de novo.'; }
+        }
+        if (typeof opts.remeasure === 'function') opts.remeasure();
+      });
+      var rst = document.getElementById(boxId + '_reset');
+      if (rst) rst.addEventListener('click', function () {
+        bank = shuffle(words.map(function (w, i) { return { w: w, i: i }; }));
+        answer = [];
+        render();
+      });
+      if (typeof opts.remeasure === 'function') opts.remeasure();
+    }
+    render();
+    return {
+      getCorrect: function () { return correct; },
+      getTotal: function () { return total; }
+    };
+  }
+
   global.Gridscape = {
     init: init,
     revealNext: revealNext,
@@ -279,6 +617,12 @@
     remeasure: remeasure,
     norm: norm,
     addXP: addXP,
+    shuffle: shuffle,
+    mountTrueFalse: mountTrueFalse,
+    mountMatch: mountMatch,
+    mountOrder: mountOrder,
+    mountSpeakChecklist: mountSpeakChecklist,
+    mountScramble: mountScramble,
     GAP_Y: GAP_Y
   };
 })(typeof window !== 'undefined' ? window : this);
