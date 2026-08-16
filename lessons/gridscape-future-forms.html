@@ -134,7 +134,7 @@ Gridscape.init({
 
     
     // ── Practical exercises ──
-    var PRACTICAL = {"tf": [{"prompt": "This lesson is about Future Forms.", "ans": true}, {"prompt": "English has no verb \"to be\".", "ans": false}], "match": [{"left": "will see", "right": "correct form"}, {"left": "am seeing", "right": "distractor"}, {"left": "I'll carry that!", "right": "correct form"}, {"left": "I am going to carry that next week.", "right": "distractor"}], "order": [], "speak": ["will see", "I'll carry that!", "I'll study law."], "scramble": "will see"};
+    var PRACTICAL = {"tf": [{"prompt": "Correct: \"Arranjo: \"I am seeing my dentist at 3.\"\"", "ans": true}, {"prompt": "Correct: \"Arranjo: \"I see my dentist at 3.\"\"", "ans": false}, {"prompt": "Correct: \"Oferta espontânea: → I'll carry that!\"", "ans": true}, {"prompt": "Correct: \"Oferta espontânea: → I am going to carry that next week.\"", "ans": false}, {"prompt": "Correct: \"Plano já decidido: → I'm going to study law.\"", "ans": true}], "match": [{"left": "Arranjo: \"I … my dentist at 3.\"", "right": "am seeing"}, {"left": "Oferta espontânea:", "right": "I'll carry that!"}, {"left": "Plano já decidido:", "right": "I'm going to study law."}, {"left": "Previsão com evidência:", "right": "It's going to rain — look at the sky!"}], "order": [], "speak": ["Arranjo: \"I am seeing my dentist at 3.\"", "I'll carry that!", "I'm going to study law.", "It's going to rain — look at the sky!"], "scramble": "Arranjo: \"I am seeing my dentist at 3\""};
     var tfCorrect = 0, matchCorrect = 0, orderCorrect = 0, speakCorrect = 0, scrambleCorrect = 0;
     var tfTotal = (PRACTICAL.tf||[]).length;
     var matchTotal = (PRACTICAL.match||[]).length;

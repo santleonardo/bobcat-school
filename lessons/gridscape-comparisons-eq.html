@@ -134,7 +134,7 @@ Gridscape.init({
 
     
     // ── Practical exercises ──
-    var PRACTICAL = {"tf": [{"prompt": "This lesson is about Comparisons & Equality.", "ans": true}, {"prompt": "English has no verb \"to be\".", "ans": false}], "match": [{"left": "as big as", "right": "correct form"}, {"left": "bigger as", "right": "distractor"}, {"left": "the better", "right": "correct form"}, {"left": "the best", "right": "distractor"}], "order": [], "speak": ["as big as", "the better", "than"], "scramble": "as big as"};
+    var PRACTICAL = {"tf": [{"prompt": "Correct: \"My house is as big as yours.\"", "ans": true}, {"prompt": "Correct: \"My house is bigger as yours.\"", "ans": false}, {"prompt": "Correct: \"This is the best book I have ever read.\"", "ans": true}, {"prompt": "Correct: \"This is better book I have ever read.\"", "ans": false}, {"prompt": "Correct: \"He is not as old as he looks.\"", "ans": true}], "match": [{"left": "My house is … yours.", "right": "as big as"}, {"left": "This is … book I have ever read.", "right": "the best"}, {"left": "He is not as old … he looks.", "right": "as"}, {"left": "São Paulo is … than Recife.", "right": "bigger"}], "order": ["My house is as big as yours.", "This is the best book I have ever read.", "He is not as old as he looks.", "São Paulo is bigger than Recife."], "speak": ["My house is as big as yours.", "This is the best book I have ever read.", "He is not as old as he looks.", "São Paulo is bigger than Recife."], "scramble": "My house is as big as yours"};
     var tfCorrect = 0, matchCorrect = 0, orderCorrect = 0, speakCorrect = 0, scrambleCorrect = 0;
     var tfTotal = (PRACTICAL.tf||[]).length;
     var matchTotal = (PRACTICAL.match||[]).length;

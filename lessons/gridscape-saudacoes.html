@@ -261,35 +261,7 @@ Gridscape.init({
     };
 
     
-    var PRACTICAL = {
-      tf: [
-        {prompt:'Anna says "Good morning!"', ans:true},
-        {prompt:'"Nice to meet you" means "Prazer em conhecer".', ans:true},
-        {prompt:'We say "Good evening" only at 6am.', ans:false},
-        {prompt:'"How are you?" is a common greeting.', ans:true}
-      ],
-      match: [
-        {left:'Hello / Hi', right:'Oi'},
-        {left:'Good morning', right:'Bom dia'},
-        {left:'Good evening', right:'Boa noite (chegada)'},
-        {left:'Nice to meet you', right:'Prazer em conhecer'},
-        {left:'How are you?', right:'Como vai?'},
-        {left:"I'm fine", right:'Estou bem'}
-      ],
-      order: [
-        'Good morning! My name is Anna. Nice to meet you.',
-        "Hi, Anna! I'm Tom. Nice to meet you too.",
-        'How are you today?',
-        "I'm fine, thanks. And you?"
-      ],
-      speak: [
-        'Good morning! My name is Anna. Nice to meet you.',
-        "Hi, Anna! I'm Tom. Nice to meet you too.",
-        'How are you today?',
-        "I'm fine, thanks. And you?"
-      ],
-      scramble: 'Nice to meet you'
-    };
+    var PRACTICAL = {"tf": [{"prompt": "Anna says: \"Good morning! My name is Anna. Nice to meet you.\"", "ans": true}, {"prompt": "Tom says: \"Hi, Anna! I\\'m Tom. Nice to meet you too.\"", "ans": true}, {"prompt": "Anna says: \"Good morning! My name is Anna. Nice to meet you.\"", "ans": true}], "match": [{"left": "Hello / Hi", "right": "Oi"}, {"left": "Good morning", "right": "Bom dia"}, {"left": "Good evening", "right": "Boa noite (chegada)"}, {"left": "Nice to meet you", "right": "Prazer em conhecer"}, {"left": "How are you?", "right": "Como vai?"}, {"left": "I\\'m fine", "right": "Estou bem"}], "order": ["Good morning! My name is Anna. Nice to meet you.", "Hi, Anna! I\\'m Tom. Nice to meet you too.", "Good morning! My name is Anna. Nice to meet you.", "Hi, Anna! I\\'m Tom. Nice to meet you too."], "speak": ["Good morning! My name is Anna. Nice to meet you.", "Hi, Anna! I\\'m Tom. Nice to meet you too.", "Good morning! My name is Anna. Nice to meet you.", "Hi, Anna! I\\'m Tom. Nice to meet you too."], "scramble": "Good morning My name is Anna Nice to meet you"};
     var tfCorrect=0,matchCorrect=0,orderCorrect=0,speakCorrect=0,scrambleCorrect=0;
     function syncPracticalScore(){
       SCORE.correct = qCorrect + fillCorrect + tfCorrect + matchCorrect + orderCorrect + speakCorrect + scrambleCorrect;

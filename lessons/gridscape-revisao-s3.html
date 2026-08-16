@@ -134,7 +134,7 @@ Gridscape.init({
 
     
     // ── Practical exercises ──
-    var PRACTICAL = {"tf": [{"prompt": "This lesson is about Grande Revisão A2 → B1.", "ans": true}, {"prompt": "English has no verb \"to be\".", "ans": false}], "match": [{"left": "will", "right": "correct form"}, {"left": "would", "right": "distractor"}, {"left": "bigger", "right": "correct form"}, {"left": "biggest", "right": "distractor"}], "order": [], "speak": ["will", "bigger", "than"], "scramble": "will melt"};
+    var PRACTICAL = {"tf": [{"prompt": "Correct: \"If it rains, we will cancel the picnic.\"", "ans": true}, {"prompt": "Correct: \"If it rains, we would cancel the picnic.\"", "ans": false}, {"prompt": "Correct: \"Brazil is bigger than Portugal.\"", "ans": true}, {"prompt": "Correct: \"Brazil is biggest than Portugal.\"", "ans": false}, {"prompt": "Correct: \"She is as tall as her sister.\"", "ans": true}], "match": [{"left": "If it rains, we … cancel the picnic.", "right": "will"}, {"left": "Brazil is … than Portugal.", "right": "bigger"}, {"left": "She is as tall … her sister.", "right": "as"}, {"left": "If you heat ice, it ….", "right": "melts"}], "order": ["If it rains, we will cancel the picnic.", "Brazil is bigger than Portugal.", "She is as tall as her sister.", "If you heat ice, it melts."], "speak": ["If it rains, we will cancel the picnic.", "Brazil is bigger than Portugal.", "She is as tall as her sister.", "If you heat ice, it melts."], "scramble": "If it rains, we will cancel the picnic"};
     var tfCorrect = 0, matchCorrect = 0, orderCorrect = 0, speakCorrect = 0, scrambleCorrect = 0;
     var tfTotal = (PRACTICAL.tf||[]).length;
     var matchTotal = (PRACTICAL.match||[]).length;

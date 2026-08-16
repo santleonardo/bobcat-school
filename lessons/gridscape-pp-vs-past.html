@@ -134,7 +134,7 @@ Gridscape.init({
 
     
     // ── Practical exercises ──
-    var PRACTICAL = {"tf": [{"prompt": "This lesson is about Present Perfect × Simple Past.", "ans": true}, {"prompt": "English has no verb \"to be\".", "ans": false}], "match": [{"left": "have visited", "right": "correct form"}, {"left": "visited", "right": "distractor"}, {"left": "Did", "right": "correct form"}, {"left": "Have", "right": "distractor"}], "order": [], "speak": ["have visited", "Did", "for"], "scramble": "have visited"};
+    var PRACTICAL = {"tf": [{"prompt": "Correct: \"I visited Paris last summer.\"", "ans": true}, {"prompt": "Correct: \"I visit Paris last summer.\"", "ans": false}, {"prompt": "Correct: \"Have you ever tried feijoada?\"", "ans": true}, {"prompt": "Correct: \"Do you ever tried feijoada?\"", "ans": false}, {"prompt": "Correct: \"She has lived here since 2018.\"", "ans": true}], "match": [{"left": "I … Paris last summer.", "right": "visited"}, {"left": "… you ever tried feijoada?", "right": "Have"}, {"left": "She has lived here … 2018.", "right": "since"}, {"left": "They … the project two days ago.", "right": "finished"}], "order": ["I visited Paris last summer.", "Have you ever tried feijoada?", "She has lived here since 2018.", "They finished the project two days ago."], "speak": ["I visited Paris last summer.", "Have you ever tried feijoada?", "She has lived here since 2018.", "They finished the project two days ago."], "scramble": "I visited Paris last summer"};
     var tfCorrect = 0, matchCorrect = 0, orderCorrect = 0, speakCorrect = 0, scrambleCorrect = 0;
     var tfTotal = (PRACTICAL.tf||[]).length;
     var matchTotal = (PRACTICAL.match||[]).length;

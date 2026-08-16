@@ -268,6 +268,19 @@
     return (s || '').toString().trim().toLowerCase().replace(/[.!?]/g, '');
   }
 
+  function decodeHtml(s) {
+    if (s == null) return '';
+    var str = String(s);
+    if (str.indexOf('&') === -1) return str;
+    try {
+      var ta = document.createElement('textarea');
+      ta.innerHTML = str;
+      return ta.value;
+    } catch (e) {
+      return str.replace(/&#x27;|&apos;|&#39;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    }
+  }
+
   function addXP(n) {
     if (window.BobcatLesson) BobcatLesson.addXP(n);
   }
@@ -307,7 +320,7 @@
       answered = false;
       var q = items[i];
       box.innerHTML =
-        '<p style="font-weight:700;font-size:15px;margin:0 0 8px">' + (i + 1) + '. ' + q.prompt + '</p>' +
+        '<p style="font-weight:700;font-size:15px;margin:0 0 8px">' + (i + 1) + '. ' + decodeHtml(q.prompt) + '</p>' +
         '<div>' +
         '<button type="button" class="gtf-opt" data-v="true">Verdadeiro</button>' +
         '<button type="button" class="gtf-opt" data-v="false">Falso</button>' +
@@ -361,16 +374,17 @@
       var leftHtml = lefts.map(function (L) {
         var cls = matched[L.i] ? 'gmatch-item ok' : 'gmatch-item';
         if (selectedLeft === L.i) cls += ' selected';
-        return '<button type="button" class="' + cls + '" data-side="L" data-i="' + L.i + '"' + (matched[L.i] ? ' disabled' : '') + '>' + L.t + '</button>';
+        return '<button type="button" class="' + cls + '" data-side="L" data-i="' + L.i + '"' + (matched[L.i] ? ' disabled' : '') + '>' + decodeHtml(L.t) + '</button>';
       }).join('');
       var rightHtml = rights.map(function (R) {
         var cls = matched[R.i] ? 'gmatch-item ok' : 'gmatch-item';
-        return '<button type="button" class="' + cls + '" data-side="R" data-i="' + R.i + '"' + (matched[R.i] ? ' disabled' : '') + '>' + R.t + '</button>';
+        return '<button type="button" class="' + cls + '" data-side="R" data-i="' + R.i + '"' + (matched[R.i] ? ' disabled' : '') + '>' + decodeHtml(R.t) + '</button>';
       }).join('');
       box.innerHTML =
         '<p class="gpractice-hint">Toque num item da esquerda e depois o correspondente à direita.</p>' +
         '<div class="gmatch-grid"><div class="gmatch-col">' + leftHtml + '</div><div class="gmatch-col">' + rightHtml + '</div></div>' +
-        '<span class="gscore" id="' + boxId + '_score">' + correct + '/' + total + '</span>';
+        '<span class="gscore" id="' + boxId + '_score">' + correct + '/' + total + '</span>' +
+        (correct >= total ? '' : '<div style="margin-top:10px"><button type="button" class="gnext" id="' + boxId + '_skip" style="background:#fff;color:var(--ink);border:1px solid var(--border);box-shadow:none">Continuar mesmo assim →</button></div>');
 
       box.querySelectorAll('.gmatch-item').forEach(function (b) {
         b.addEventListener('click', function () {
@@ -401,6 +415,12 @@
           render();
         });
       });
+      var skipBtn = document.getElementById(boxId + '_skip');
+      if (skipBtn) {
+        skipBtn.addEventListener('click', function () {
+          if (typeof opts.onDone === 'function') opts.onDone(correct, total);
+        });
+      }
       if (typeof opts.remeasure === 'function') opts.remeasure();
     }
     render();
