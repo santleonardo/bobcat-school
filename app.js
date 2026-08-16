@@ -27,21 +27,165 @@ function langFlagHTML(code) {
 }
 
 const EXTRAS = [
-  {
+    {
     id: 'gridscape-verb-to-be',
     group: 'Laboratório — Lições em Canvas',
-    name: 'Verb To Be — Mapa Interativo',
-    icon: '🗺️',
-    description: 'Lição 1 em mapa vertical: deslize para cima/baixo e vá revelando os nós até o fim',
-    url: 'lessons/gridscape-verb-to-be.html'
+    name: "Verb To Be — Mapa Interativo",
+    icon: "\ud83d\uddfa\ufe0f",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-verb-to-be.html"
   },
   {
     id: 'gridscape-saudacoes',
     group: 'Laboratório — Lições em Canvas',
-    name: 'Saudações — Mapa Interativo',
-    icon: '👋',
-    description: 'Hello, Nice to meet you e How are you? em formato de mapa com áudio (vozes feminina e masculina)',
-    url: 'lessons/gridscape-saudacoes.html'
+    name: "Saudações — Mapa Interativo",
+    icon: "\ud83d\udc4b",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-saudacoes.html"
+  },
+  {
+    id: 'gridscape-preposicoes',
+    group: 'Laboratório — Lições em Canvas',
+    name: "Preposições — Mapa",
+    icon: "\ud83d\udccd",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-preposicoes.html"
+  },
+  {
+    id: 'gridscape-posse',
+    group: 'Laboratório — Lições em Canvas',
+    name: "Posse (Possessivos) — Mapa",
+    icon: "\ud83d\udc5c",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-posse.html"
+  },
+  {
+    id: 'gridscape-simple-present',
+    group: 'Laboratório — Lições em Canvas',
+    name: "Simple Present — Mapa",
+    icon: "\u23f0",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-simple-present.html"
+  },
+  {
+    id: 'gridscape-do-does',
+    group: 'Laboratório — Lições em Canvas',
+    name: "DO/DOES, TO e FOR — Mapa",
+    icon: "\ud83d\udd27",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-do-does.html"
+  },
+  {
+    id: 'gridscape-perguntas-sp',
+    group: 'Laboratório — Lições em Canvas',
+    name: "Perguntas no Simple Present — Mapa",
+    icon: "\u2754",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-perguntas-sp.html"
+  },
+  {
+    id: 'gridscape-can-cant',
+    group: 'Laboratório — Lições em Canvas',
+    name: "Can / Can't — Mapa",
+    icon: "\ud83d\udcaa",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-can-cant.html"
+  },
+  {
+    id: 'gridscape-there-is',
+    group: 'Laboratório — Lições em Canvas',
+    name: "There Is / There Are — Mapa",
+    icon: "\ud83c\udfe0",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-there-is.html"
+  },
+  {
+    id: 'gridscape-here-there',
+    group: 'Laboratório — Lições em Canvas',
+    name: "Here & There — Mapa",
+    icon: "\ud83d\udccc",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-here-there.html"
+  },
+  {
+    id: 'gridscape-was-were',
+    group: 'Laboratório — Lições em Canvas',
+    name: "To Be no Passado (was/were) — Mapa",
+    icon: "\u23ea",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-was-were.html"
+  },
+  {
+    id: 'gridscape-past-regular',
+    group: 'Laboratório — Lições em Canvas',
+    name: "Simple Past: Regulares — Mapa",
+    icon: "\ud83d\udcdc",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-past-regular.html"
+  },
+  {
+    id: 'gridscape-past-irregular',
+    group: 'Laboratório — Lições em Canvas',
+    name: "Simple Past: Irregulares — Mapa",
+    icon: "\u26a1",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-past-irregular.html"
+  },
+  {
+    id: 'gridscape-going-to',
+    group: 'Laboratório — Lições em Canvas',
+    name: "Futuro com Going To — Mapa",
+    icon: "\ud83d\ude80",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-going-to.html"
+  },
+  {
+    id: 'gridscape-will',
+    group: 'Laboratório — Lições em Canvas',
+    name: "Futuro com Will — Mapa",
+    icon: "\ud83d\udd2e",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-will.html"
+  },
+  {
+    id: 'gridscape-pronouns',
+    group: 'Laboratório — Lições em Canvas',
+    name: "Pronomes Objeto e Possessivos — Mapa",
+    icon: "\ud83d\udc64",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-pronouns.html"
+  },
+  {
+    id: 'gridscape-present-continuous',
+    group: 'Laboratório — Lições em Canvas',
+    name: "Present Continuous — Mapa",
+    icon: "\ud83c\udfc3",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-present-continuous.html"
+  },
+  {
+    id: 'gridscape-countable',
+    group: 'Laboratório — Lições em Canvas',
+    name: "Contáveis e Incontáveis — Mapa",
+    icon: "\ud83c\udf4e",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-countable.html"
+  },
+  {
+    id: 'gridscape-comparatives',
+    group: 'Laboratório — Lições em Canvas',
+    name: "Comparativos e Superlativos — Mapa",
+    icon: "\ud83d\udcca",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-comparatives.html"
+  },
+  {
+    id: 'gridscape-modals',
+    group: 'Laboratório — Lições em Canvas',
+    name: "Modal Verbs — Mapa",
+    icon: "\ud83c\udfaf",
+    description: 'Versão em mapa vertical com áudio e exercícios interativos',
+    url: "lessons/gridscape-modals.html"
   },
   {
     id: 'manual-portugues-basico',
