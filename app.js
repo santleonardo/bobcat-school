@@ -27,326 +27,6 @@ function langFlagHTML(code) {
 }
 
 const EXTRAS = [
-      {
-    id: 'gridscape-can-cant',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Can Cant — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-can-cant.html'
-  },
-  {
-    id: 'gridscape-comparatives',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Comparatives — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-comparatives.html'
-  },
-  {
-    id: 'gridscape-comparisons-eq',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Comparisons & Equality — Mapa",
-    icon: "\u2194\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-comparisons-eq.html'
-  },
-  {
-    id: 'gridscape-conditionals',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Zero & First Conditional — Mapa",
-    icon: "\ud83d\udd00",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-conditionals.html'
-  },
-  {
-    id: 'gridscape-countable',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Countable — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-countable.html'
-  },
-  {
-    id: 'gridscape-do-does',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Do Does — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-do-does.html'
-  },
-  {
-    id: 'gridscape-future-forms',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Future Forms (Will × Going To) — Mapa",
-    icon: "\ud83d\uddd3\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-future-forms.html'
-  },
-  {
-    id: 'gridscape-going-to',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Going To — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-going-to.html'
-  },
-  {
-    id: 'gridscape-here-there',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Here There — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-here-there.html'
-  },
-  {
-    id: 'gridscape-modals-advice',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Advice, Obligation & Permission — Mapa",
-    icon: "\ud83d\udccb",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-modals-advice.html'
-  },
-  {
-    id: 'gridscape-modals',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Modals — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-modals.html'
-  },
-  {
-    id: 'gridscape-past-continuous',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Past Continuous — Mapa",
-    icon: "\u23f3",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-past-continuous.html'
-  },
-  {
-    id: 'gridscape-past-irregular',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Past Irregular — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-past-irregular.html'
-  },
-  {
-    id: 'gridscape-past-mix',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Simple Past × Past Continuous — Mapa",
-    icon: "\ud83d\udd00",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-past-mix.html'
-  },
-  {
-    id: 'gridscape-past-regular',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Past Regular — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-past-regular.html'
-  },
-  {
-    id: 'gridscape-perguntas-artigos',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Perguntas e Artigos — Mapa",
-    icon: "\u2753",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-perguntas-artigos.html'
-  },
-  {
-    id: 'gridscape-perguntas-sp',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Perguntas Sp — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-perguntas-sp.html'
-  },
-  {
-    id: 'gridscape-phrasal-verbs',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Phrasal Verbs — Mapa",
-    icon: "\ud83d\udd17",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-phrasal-verbs.html'
-  },
-  {
-    id: 'gridscape-posse',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Posse — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-posse.html'
-  },
-  {
-    id: 'gridscape-pp-already',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Already, Yet, Just — Mapa",
-    icon: "\u23f1\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-pp-already.html'
-  },
-  {
-    id: 'gridscape-pp-experiences',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Present Perfect: Experiences — Mapa",
-    icon: "\ud83c\udf0d",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-pp-experiences.html'
-  },
-  {
-    id: 'gridscape-pp-vs-past',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Present Perfect × Simple Past — Mapa",
-    icon: "\u2696\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-pp-vs-past.html'
-  },
-  {
-    id: 'gridscape-preposicoes',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Preposicoes — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-preposicoes.html'
-  },
-  {
-    id: 'gridscape-present-continuous',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Present Continuous — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-present-continuous.html'
-  },
-  {
-    id: 'gridscape-present-perfect',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Present Perfect — Mapa",
-    icon: "\u2728",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-present-perfect.html'
-  },
-  {
-    id: 'gridscape-pronouns',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Pronouns — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-pronouns.html'
-  },
-  {
-    id: 'gridscape-quantities-choices',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Quantidades e Escolhas — Mapa",
-    icon: "\ud83d\udd22",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-quantities-choices.html'
-  },
-  {
-    id: 'gridscape-quantities-time',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Quantidade, Distância e Tempo — Mapa",
-    icon: "\ud83d\udccf",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-quantities-time.html'
-  },
-  {
-    id: 'gridscape-revisao-a1',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Revisão A1 Completa — Mapa",
-    icon: "\ud83c\udf93",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-revisao-a1.html'
-  },
-  {
-    id: 'gridscape-revisao-perguntas',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Revisão: Perguntas — Mapa",
-    icon: "\ud83d\udd04",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-revisao-perguntas.html'
-  },
-  {
-    id: 'gridscape-revisao-s2',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Revisão Semestre 2 — Mapa",
-    icon: "\ud83d\udcda",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-revisao-s2.html'
-  },
-  {
-    id: 'gridscape-revisao-s3',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Grande Revisão A2 → B1 — Mapa",
-    icon: "\ud83c\udfc6",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-revisao-s3.html'
-  },
-  {
-    id: 'gridscape-saudacoes',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Saudações — Mapa Interativo",
-    icon: "\ud83d\udc4b",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-saudacoes.html'
-  },
-  {
-    id: 'gridscape-simple-present',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Simple Present — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-simple-present.html'
-  },
-  {
-    id: 'gridscape-survival',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Survival English — Mapa",
-    icon: "\ud83e\uddf3",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-survival.html'
-  },
-  {
-    id: 'gridscape-talking-past',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Falando Sobre o Passado — Mapa",
-    icon: "\ud83d\udde3\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-talking-past.html'
-  },
-  {
-    id: 'gridscape-there-is',
-    group: 'Laboratório — Lições em Canvas',
-    name: "There Is — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-there-is.html'
-  },
-  {
-    id: 'gridscape-verb-to-be',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Verb To Be — Mapa Interativo",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-verb-to-be.html'
-  },
-  {
-    id: 'gridscape-was-were',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Was Were — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-was-were.html'
-  },
-  {
-    id: 'gridscape-will',
-    group: 'Laboratório — Lições em Canvas',
-    name: "Will — Mapa",
-    icon: "\ud83d\uddfa\ufe0f",
-    description: 'Versão em mapa vertical com áudio e exercícios interativos',
-    url: 'lessons/gridscape-will.html'
-  },
   {
     id: 'manual-portugues-basico',
     group: 'Manual Básico — Classes Gramaticais',
@@ -728,8 +408,8 @@ const LESSONS = [
     level: "A1",
     icon: "📘",
     description: "am, is, are — afirmativas, negativas e perguntas",
-    url: "lessons/verb-to-be.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-verb-to-be.html",
+    totalQuestions: 36
   },
   {
     id: "saudacoes-apresentacoes",
@@ -737,8 +417,8 @@ const LESSONS = [
     level: "A1",
     icon: "👋",
     description: "Greetings, introductions e diálogos com áudio",
-    url: "lessons/saudacoes-apresentacoes.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-saudacoes.html",
+    totalQuestions: 29
   },
   {
     id: "licao-2-perguntas-artigos",
@@ -746,8 +426,8 @@ const LESSONS = [
     level: "A1",
     icon: "❓",
     description: "Wh- words, artigos a/an/the — base para perguntar sobre pessoas e coisas",
-    url: "lessons/licao-2-perguntas-artigos.html",
-    totalQuestions: 20
+    url: "lessons/gridscape-perguntas-artigos.html",
+    totalQuestions: 26
   },
   {
     id: "licao-3-revisao-perguntas",
@@ -755,8 +435,8 @@ const LESSONS = [
     level: "A1",
     icon: "🔁",
     description: "Revisão de To Be, saudações e Wh- questions com prática de diálogos",
-    url: "lessons/licao-3-revisao-perguntas.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-revisao-perguntas.html",
+    totalQuestions: 30
   },
   {
     id: "licao-4-preposicoes",
@@ -764,8 +444,8 @@ const LESSONS = [
     level: "A1",
     icon: "📍",
     description: "Preposições de lugar e companhia para localizar pessoas e coisas",
-    url: "lessons/licao-4-preposicoes.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-preposicoes.html",
+    totalQuestions: 30
   },
   {
     id: "licao-5-posse",
@@ -773,8 +453,8 @@ const LESSONS = [
     level: "A1",
     icon: "🎒",
     description: "Possessivos, 's e whose — falar de pertences e pessoas",
-    url: "lessons/licao-5-posse.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-posse.html",
+    totalQuestions: 28
   },
   {
     id: "licao-12-simple-present-daily-life",
@@ -782,8 +462,8 @@ const LESSONS = [
     level: "A1",
     icon: "🗓️",
     description: "Simple Present, advérbios de frequência e a rotina diária",
-    url: "lessons/licao-12-simple-present-daily-life.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-simple-present.html",
+    totalQuestions: 28
   },
   {
     id: "licao-10-do-does-to-for",
@@ -791,8 +471,8 @@ const LESSONS = [
     level: "A1",
     icon: "🔧",
     description: "Verbos essenciais, perguntas com DO/DOES e o uso de TO e FOR",
-    url: "lessons/licao-10-do-does-to-for.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-do-does.html",
+    totalQuestions: 30
   },
   {
     id: "licao-13-perguntas-simple-present",
@@ -800,8 +480,8 @@ const LESSONS = [
     level: "A1",
     icon: "🗣️",
     description: "Perguntas e negativas com Do/Does — perguntar sobre pessoas e rotina",
-    url: "lessons/licao-13-perguntas-simple-present.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-perguntas-sp.html",
+    totalQuestions: 30
   },
   {
     id: "licao-15-can-cant",
@@ -809,8 +489,8 @@ const LESSONS = [
     level: "A1",
     icon: "🙌",
     description: "Habilidade, permissão e pedidos do dia a dia com can/can't",
-    url: "lessons/licao-15-can-cant.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-can-cant.html",
+    totalQuestions: 28
   },
   {
     id: "licao-14-there-is-there-are",
@@ -818,8 +498,8 @@ const LESSONS = [
     level: "A1",
     icon: "🏠",
     description: "Descrevendo lugares e objetos com There is/There are",
-    url: "lessons/licao-14-there-is-there-are.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-there-is.html",
+    totalQuestions: 28
   },
   {
     id: "licao-6-here-there",
@@ -827,8 +507,8 @@ const LESSONS = [
     level: "A1",
     icon: "📌",
     description: "Localização, posição e phrasal verbs básicos de movimento",
-    url: "lessons/licao-6-here-there.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-here-there.html",
+    totalQuestions: 30
   },
   {
     id: "licao-8-to-be-passado",
@@ -836,8 +516,8 @@ const LESSONS = [
     level: "A1",
     icon: "⏳",
     description: "Was e were — como era, onde estava, quem estava",
-    url: "lessons/licao-8-to-be-passado.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-was-were.html",
+    totalQuestions: 28
   },
   {
     id: "licao-21-simple-past-regular",
@@ -845,8 +525,8 @@ const LESSONS = [
     level: "A1",
     icon: "⏮️",
     description: "Passado de ação com verbos regulares (-ed) e expressões de tempo",
-    url: "lessons/licao-21-simple-past-regular.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-past-regular.html",
+    totalQuestions: 30
   },
   {
     id: "licao-22-simple-past-irregular",
@@ -854,8 +534,8 @@ const LESSONS = [
     level: "A1",
     icon: "📖",
     description: "Verbos irregulares mais comuns no Simple Past",
-    url: "lessons/licao-22-simple-past-irregular.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-past-irregular.html",
+    totalQuestions: 30
   },
   {
     id: "licao-24-future-going-to",
@@ -863,8 +543,8 @@ const LESSONS = [
     level: "A1",
     icon: "🎯",
     description: "Planos e intenções futuras com going to",
-    url: "lessons/licao-24-future-going-to.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-going-to.html",
+    totalQuestions: 30
   },
   {
     id: "licao-25-future-will",
@@ -872,8 +552,8 @@ const LESSONS = [
     level: "A1",
     icon: "🔮",
     description: "Previsões, decisões espontâneas e promessas com will",
-    url: "lessons/licao-25-future-will.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-will.html",
+    totalQuestions: 30
   },
   {
     id: "licao-9-revisao-completa",
@@ -881,8 +561,8 @@ const LESSONS = [
     level: "A1",
     icon: "📚",
     description: "Projeto final do Semestre 1: se apresentar, perguntar sobre pessoas, rotina, ontem e planos",
-    url: "lessons/licao-9-revisao-completa.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-revisao-a1.html",
+    totalQuestions: 30
   },
   {
     id: "licao-11-object-possessive-pronouns",
@@ -890,8 +570,8 @@ const LESSONS = [
     level: "A2",
     icon: "👥",
     description: "Object pronouns, possessives e mais verbos essenciais",
-    url: "lessons/licao-11-object-possessive-pronouns.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-pronouns.html",
+    totalQuestions: 29
   },
   {
     id: "licao-16-present-continuous",
@@ -899,8 +579,8 @@ const LESSONS = [
     level: "A2",
     icon: "🏃",
     description: "Ações em andamento e situações temporárias",
-    url: "lessons/licao-16-present-continuous.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-present-continuous.html",
+    totalQuestions: 30
   },
   {
     id: "licao-17-countable-uncountable",
@@ -908,8 +588,8 @@ const LESSONS = [
     level: "A2",
     icon: "🍎",
     description: "Countable/uncountable, some, any, much e many",
-    url: "lessons/licao-17-countable-uncountable.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-countable.html",
+    totalQuestions: 28
   },
   {
     id: "licao-18-quantities-choices",
@@ -917,8 +597,8 @@ const LESSONS = [
     level: "A2",
     icon: "🛒",
     description: "Expressando quantidades e fazendo escolhas em inglês",
-    url: "lessons/licao-18-quantities-choices.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-quantities-choices.html",
+    totalQuestions: 28
   },
   {
     id: "licao-19-quantities-distance-time",
@@ -926,8 +606,8 @@ const LESSONS = [
     level: "A2",
     icon: "📏",
     description: "How much/many/long/far e perguntas de medida",
-    url: "lessons/licao-19-quantities-distance-time.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-quantities-time.html",
+    totalQuestions: 30
   },
   {
     id: "licao-20-survival-english",
@@ -935,8 +615,8 @@ const LESSONS = [
     level: "A2",
     icon: "🌍",
     description: "Inglês de sobrevivência para situações reais do dia a dia",
-    url: "lessons/licao-20-survival-english.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-survival.html",
+    totalQuestions: 30
   },
   {
     id: "licao-23-talking-about-the-past",
@@ -944,8 +624,8 @@ const LESSONS = [
     level: "A2",
     icon: "🕰️",
     description: "Perguntas, negativas e expressões de tempo no passado (consolidação)",
-    url: "lessons/licao-23-talking-about-the-past.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-talking-past.html",
+    totalQuestions: 30
   },
   {
     id: "licao-26-comparatives-superlatives",
@@ -953,8 +633,8 @@ const LESSONS = [
     level: "A2",
     icon: "⚖️",
     description: "Comparando pessoas e coisas em inglês (fase A2)",
-    url: "lessons/licao-26-comparatives-superlatives.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-comparatives.html",
+    totalQuestions: 30
   },
   {
     id: "licao-28-modal-verbs",
@@ -962,8 +642,8 @@ const LESSONS = [
     level: "A2",
     icon: "🔑",
     description: "Could, must, should e outros modais além de can",
-    url: "lessons/licao-28-modal-verbs.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-modals.html",
+    totalQuestions: 28
   },
   {
     id: "licao-29-phrasal-verbs",
@@ -971,8 +651,8 @@ const LESSONS = [
     level: "A2",
     icon: "🧩",
     description: "Phrasal verbs mais usados no inglês do dia a dia",
-    url: "lessons/licao-29-phrasal-verbs.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-phrasal-verbs.html",
+    totalQuestions: 29
   },
   {
     id: "licao-30-revisao-semestre-2",
@@ -980,8 +660,8 @@ const LESSONS = [
     level: "A2",
     icon: "🎓",
     description: "Revisão completa do Semestre 2 (A2) e consolidação",
-    url: "lessons/licao-30-revisao-semestre-2.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-revisao-s2.html",
+    totalQuestions: 26
   },
   {
     id: "licao-31-past-continuous",
@@ -989,8 +669,8 @@ const LESSONS = [
     level: "B1",
     icon: "⏳",
     description: "Ações em progresso no passado: was/were + verbo-ing",
-    url: "lessons/licao-31-past-continuous.html",
-    totalQuestions: 13
+    url: "lessons/gridscape-past-continuous.html",
+    totalQuestions: 30
   },
   {
     id: "licao-32-simple-past-past-continuous",
@@ -998,8 +678,8 @@ const LESSONS = [
     level: "B1",
     icon: "🔀",
     description: "Ações simultâneas e interrompidas ao contar histórias",
-    url: "lessons/licao-32-simple-past-past-continuous.html",
-    totalQuestions: 12
+    url: "lessons/gridscape-past-mix.html",
+    totalQuestions: 21
   },
   {
     id: "licao-27-present-perfect",
@@ -1007,8 +687,8 @@ const LESSONS = [
     level: "B1",
     icon: "✅",
     description: "Have/has + particípio — primeira abordagem ao Present Perfect",
-    url: "lessons/licao-27-present-perfect.html",
-    totalQuestions: 12
+    url: "lessons/gridscape-present-perfect.html",
+    totalQuestions: 21
   },
   {
     id: "licao-33-present-perfect-experiences",
@@ -1016,8 +696,8 @@ const LESSONS = [
     level: "B1",
     icon: "🌍",
     description: "Experiências de vida com ever, never, before",
-    url: "lessons/licao-33-present-perfect-experiences.html",
-    totalQuestions: 12
+    url: "lessons/gridscape-pp-experiences.html",
+    totalQuestions: 18
   },
   {
     id: "licao-34-present-perfect-simple-past",
@@ -1025,8 +705,8 @@ const LESSONS = [
     level: "B1",
     icon: "⚖️",
     description: "Quando usar cada tempo: since, for, last, ago",
-    url: "lessons/licao-34-present-perfect-simple-past.html",
-    totalQuestions: 12
+    url: "lessons/gridscape-pp-vs-past.html",
+    totalQuestions: 18
   },
   {
     id: "licao-35-present-perfect-already-yet-just",
@@ -1034,8 +714,8 @@ const LESSONS = [
     level: "B1",
     icon: "✅",
     description: "Already, yet, just, still, recently e lately",
-    url: "lessons/licao-35-present-perfect-already-yet-just.html",
-    totalQuestions: 12
+    url: "lessons/gridscape-pp-already.html",
+    totalQuestions: 19
   },
   {
     id: "licao-36-future-will-going-to",
@@ -1043,8 +723,8 @@ const LESSONS = [
     level: "B1",
     icon: "🔮",
     description: "Decisões espontâneas, planos e compromissos marcados",
-    url: "lessons/licao-36-future-will-going-to.html",
-    totalQuestions: 12
+    url: "lessons/gridscape-future-forms.html",
+    totalQuestions: 18
   },
   {
     id: "licao-37-modal-verbs-advice-obligation",
@@ -1052,8 +732,8 @@ const LESSONS = [
     level: "B1",
     icon: "🔑",
     description: "Should, must, have to, can, may e might em contexto real",
-    url: "lessons/licao-37-modal-verbs-advice-obligation.html",
-    totalQuestions: 12
+    url: "lessons/gridscape-modals-advice.html",
+    totalQuestions: 18
   },
   {
     id: "licao-38-comparatives-superlatives-equality",
@@ -1061,8 +741,8 @@ const LESSONS = [
     level: "B1",
     icon: "📊",
     description: "Bigger, the best, as...as — fase B1",
-    url: "lessons/licao-38-comparatives-superlatives-equality.html",
-    totalQuestions: 12
+    url: "lessons/gridscape-comparisons-eq.html",
+    totalQuestions: 18
   },
   {
     id: "licao-39-conditionals-zero-first",
@@ -1070,8 +750,8 @@ const LESSONS = [
     level: "B1",
     icon: "🔀",
     description: "Fatos gerais e possibilidades reais com if/unless",
-    url: "lessons/licao-39-conditionals-zero-first.html",
-    totalQuestions: 12
+    url: "lessons/gridscape-conditionals.html",
+    totalQuestions: 19
   },
   {
     id: "licao-40-revisao-semestre-3",
@@ -1079,8 +759,8 @@ const LESSONS = [
     level: "B1",
     icon: "🎓",
     description: "Revisão completa do Semestre 3 e projeto final B1",
-    url: "lessons/licao-40-revisao-semestre-3.html",
-    totalQuestions: 12
+    url: "lessons/gridscape-revisao-s3.html",
+    totalQuestions: 18
   }
 ];
 
@@ -1810,11 +1490,6 @@ async function renderExtras() {
   const progress = await getProgress();
 
   const GROUP_META = {
-    'Laboratório — Lições em Canvas': {
-      icon: '🗺️',
-      short: 'Lições em Canvas',
-      blurb: 'Versões experimentais das lições de inglês em formato de mapa vertical: deslize, revele os nós e pratique com áudio.'
-    },
     'Manual Básico — Classes Gramaticais': {
       icon: '🔤',
       short: 'Manual Básico',
