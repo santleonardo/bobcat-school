@@ -10,7 +10,7 @@
  *   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
  *   <script src="lesson-kit.js"></script>
  *   <script>
- *     BobcatLesson.init({ lessonId: 'licao-2-perguntas-artigos', totalQuestions: 14 });
+ *     BobcatLesson.init({ lessonId: 'licao-3-perguntas-artigos', totalQuestions: 14 });
  *   </script>
  */
 

@@ -338,7 +338,7 @@ add(2, file='saudacoes-apresentacoes.html', id='saudacoes-apresentacoes', level=
     review=['Hello / Good morning','My name is…','Nice to meet you'],
     homework='Grave 30s: cumprimento + nome + How are you?')
 
-add(4, file='licao-3-revisao-perguntas.html', id='licao-3-revisao-perguntas', level='A1', title='Revisão: Quem é Você? O Que é Isso?',
+add(4, file='licao-4-revisao-perguntas.html', id='licao-4-revisao-perguntas', level='A1', title='Revisão: Quem é Você? O Que é Isso?',
     lede='To Be, saudações e Wh- questions', hero=H3,
     objs=[('🔁','Revisar','To Be + saudações'),('❓','Wh-','Who, What, Where'),('🗣️','Praticar','Diálogos')],
     warmup='Diga 3 perguntas em inglês de cabeça.',
@@ -355,7 +355,7 @@ add(4, file='licao-3-revisao-perguntas.html', id='licao-3-revisao-perguntas', le
     review=['What / Who / Where','To Be','Cumprimentar + perguntar'],
     homework='Minidiálogo com 6 falas: saudação + to be + 3 Wh-.')
 
-add(5, file='licao-4-preposicoes.html', id='licao-4-preposicoes', level='A1', title='Preposições: Onde? Com Quem? Como?',
+add(5, file='licao-5-preposicoes.html', id='licao-5-preposicoes', level='A1', title='Preposições: Onde? Com Quem? Como?',
     lede='Preposições de lugar e companhia', hero=H4,
     objs=[('📍','Lugar','in, on, at, under…'),('👥','Companhia','with, without'),('🗺️','Localizar','Descrever onde as coisas estão')],
     warmup='Onde está seu celular agora? Tente dizer em inglês.',
@@ -372,7 +372,7 @@ add(5, file='licao-4-preposicoes.html', id='licao-4-preposicoes', level='A1', ti
     review=['in / on / at','under / next to','with'],
     homework='Liste 10 objetos da sua casa e diga onde estão.')
 
-add(6, file='licao-5-posse.html', id='licao-5-posse', level='A1', title='Posse: De Quem É?',
+add(6, file='licao-6-posse.html', id='licao-6-posse', level='A1', title='Posse: De Quem É?',
     lede="Possessivos, 's e whose", hero=H5,
     objs=[('🎒',"Possessivos",'my, your, his, her…'),(" ’s","Genitive",'Anna\'s bag'),('❓','Whose','Whose is this?')],
     warmup='Pegue um objeto e diga: "This is my…"',
@@ -389,7 +389,7 @@ add(6, file='licao-5-posse.html', id='licao-5-posse', level='A1', title='Posse: 
     review=['my/your/his/her','Nome + \'s','Whose…?'],
     homework='Escreva 10 frases de posse sobre objetos da sua família.')
 
-add(7, file='licao-12-simple-present-daily-life.html', id='licao-12-simple-present-daily-life', level='A1', title='Simple Present: Rotina e Hábitos',
+add(7, file='licao-7-simple-present-daily-life.html', id='licao-7-simple-present-daily-life', level='A1', title='Simple Present: Rotina e Hábitos',
     lede='Rotina diária no presente simples', hero=H1,
     objs=[('🗓️','Rotina','I work / She works'),('⏰','Hábitos','always, usually, sometimes'),('🗣️','Falar do dia','Descrever seu dia')],
     warmup='Que horas você acorda? Tente dizer em inglês.',
@@ -406,7 +406,7 @@ add(7, file='licao-12-simple-present-daily-life.html', id='licao-12-simple-prese
     review=['I work / She works','always / usually / sometimes','Do/Does para perguntar'],
     homework='Escreva sua rotina em 8 frases no Simple Present.')
 
-add(8, file='licao-10-do-does-to-for.html', id='licao-10-do-does-to-for', level='A1', title='Do / Does · To e For',
+add(8, file='licao-8-do-does-to-for.html', id='licao-8-do-does-to-for', level='A1', title='Do / Does · To e For',
     lede='Perguntas com Do/Does e uso de to e for', hero=H2,
     objs=[('❓','Do / Does','Perguntas no presente'),('➡️','To','Direção e infinitivo'),('🎁','For','Benefício e duração')],
     warmup='Como você pergunta "Você gosta de café?" em inglês?',
@@ -423,7 +423,7 @@ add(8, file='licao-10-do-does-to-for.html', id='licao-10-do-does-to-for', level=
     review=['Do vs Does','to = direção/propósito','for = benefício/duração'],
     homework='10 frases: 5 Do/Does e 5 com to/for.')
 
-add(9, file='licao-13-perguntas-simple-present.html', id='licao-13-perguntas-simple-present', level='A1', title='Perguntas no Simple Present',
+add(9, file='licao-9-perguntas-simple-present.html', id='licao-9-perguntas-simple-present', level='A1', title='Perguntas no Simple Present',
     lede='Wh- questions no presente simples', hero=H3,
     objs=[('❓','Wh- + do/does','What do you…?'),('🗣️','Perguntar','Sobre hábitos'),('💬','Responder','Respostas curtas e longas')],
     warmup='Pergunte mentalmente: What do you do on Sundays?',
@@ -440,7 +440,7 @@ add(9, file='licao-13-perguntas-simple-present.html', id='licao-13-perguntas-sim
     review=['What do you…?','Where does she…?','Yes, I do / No, he doesn\'t'],
     homework='Escreva 8 perguntas sobre a rotina de um amigo.')
 
-add(10, file='licao-15-can-cant.html', id='licao-15-can-cant', level='A1', title="Can / Can't",
+add(10, file='licao-10-can-cant.html', id='licao-10-can-cant', level='A1', title="Can / Can't",
     lede='Habilidade e possibilidade com can', hero=H4,
     objs=[('💪','Habilidade','I can swim'),('🚫',"Can't",'I can\'t drive'),('❓','Perguntar','Can you…?')],
     warmup='O que você sabe fazer bem? E o que ainda não consegue?',
@@ -457,7 +457,7 @@ add(10, file='licao-15-can-cant.html', id='licao-15-can-cant', level='A1', title
     review=['I can / She can','I can\'t','Can you…?'],
     homework='Tabela: 10 habilidades suas com can/can\'t.')
 
-add(11, file='licao-14-there-is-there-are.html', id='licao-14-there-is-there-are', level='A1', title='There Is / There Are',
+add(11, file='licao-11-there-is-there-are.html', id='licao-11-there-is-there-are', level='A1', title='There Is / There Are',
     lede='Existência de coisas no espaço', hero=H5,
     objs=[('1️⃣','There is','Singular'),('🔢','There are','Plural'),('❓','Perguntas','Is there…? Are there…?')],
     warmup='Olhe a sala: o que tem nela? There is… There are…',
@@ -474,7 +474,7 @@ add(11, file='licao-14-there-is-there-are.html', id='licao-14-there-is-there-are
     review=['There is + singular','There are + plural','Is there / Are there'],
     homework='Descreva seu quarto em 8 frases com there is/are.')
 
-add(12, file='licao-6-here-there.html', id='licao-6-here-there', level='A1', title='Aqui e Ali: Localização',
+add(12, file='licao-12-here-there.html', id='licao-12-here-there', level='A1', title='Aqui e Ali: Localização',
     lede='here, there, this, that, these, those', hero=H1,
     objs=[('👆','Here / This','Perto de mim'),('👇','There / That','Longe'),('📦','These / Those','Plurais')],
     warmup='Aponte para algo perto e algo longe. This… That…',
@@ -491,7 +491,7 @@ add(12, file='licao-6-here-there.html', id='licao-6-here-there', level='A1', tit
     review=['this/these = perto','that/those = longe','here / there'],
     homework='Tire 4 fotos e legende com this/that/these/those.')
 
-add(13, file='licao-8-to-be-passado.html', id='licao-8-to-be-passado', level='A1', title='To Be no Passado (was/were)',
+add(13, file='licao-13-to-be-passado.html', id='licao-13-to-be-passado', level='A1', title='To Be no Passado (was/were)',
     lede='was e were — passado do to be', hero=H2,
     objs=[('⏪','Was','I/he/she/it was'),('⏪','Were','you/we/they were'),('❓','Perguntas','Were you…?')],
     warmup='Onde você estava ontem às 20h?',
@@ -508,7 +508,7 @@ add(13, file='licao-8-to-be-passado.html', id='licao-8-to-be-passado', level='A1
     review=['I was / You were','wasn\'t / weren\'t','Were you…?'],
     homework='8 frases sobre ontem com was/were.')
 
-add(14, file='licao-21-simple-past-regular.html', id='licao-21-simple-past-regular', level='A2', title='Simple Past: Verbos Regulares',
+add(14, file='licao-14-simple-past-regular.html', id='licao-14-simple-past-regular', level='A2', title='Simple Past: Verbos Regulares',
     lede='Passado com verbos regulares (-ed)', hero=H3,
     objs=[('📅','-ed','worked, played, studied'),('🚫','Negativa','did not + base'),('❓','Pergunta','Did you…?')],
     warmup='O que você fez ontem? Use um verbo em português e pense no inglês.',
@@ -525,7 +525,7 @@ add(14, file='licao-21-simple-past-regular.html', id='licao-21-simple-past-regul
     review=['verb + ed','didn\'t + base','Did you…?'],
     homework='Diário de ontem: 10 verbos regulares no passado.')
 
-add(15, file='licao-22-simple-past-irregular.html', id='licao-22-simple-past-irregular', level='A2', title='Simple Past: Verbos Irregulares',
+add(15, file='licao-15-simple-past-irregular.html', id='licao-15-simple-past-irregular', level='A2', title='Simple Past: Verbos Irregulares',
     lede='went, had, saw, ate…', hero=H4,
     objs=[('🔀','Irregulares','went, saw, had…'),('🧠','Memória','Formas mais comuns'),('🗣️','Narrar','Contar o passado')],
     warmup='Como se diz "eu fui" e "eu vi" em inglês?',
@@ -542,7 +542,7 @@ add(15, file='licao-22-simple-past-irregular.html', id='licao-22-simple-past-irr
     review=['went/saw/had/ate','didn\'t + base','Did you go?'],
     homework='Lista de 15 irregulares com uma frase cada.')
 
-add(16, file='licao-24-future-going-to.html', id='licao-24-future-going-to', level='A2', title='Futuro com Going To',
+add(16, file='licao-16-future-going-to.html', id='licao-16-future-going-to', level='A2', title='Futuro com Going To',
     lede='Planos e intenções com be going to', hero=H5,
     objs=[('📌','Planos','I am going to travel'),('🔮','Evidência','Look! It\'s going to rain'),('❓','Perguntar','Are you going to…?')],
     warmup='O que você vai fazer no próximo fim de semana?',
@@ -559,7 +559,7 @@ add(16, file='licao-24-future-going-to.html', id='licao-24-future-going-to', lev
     review=['am/is/are going to + verb','planos e previsões','Are you going to…?'],
     homework='Agenda da semana em 8 frases com going to.')
 
-add(17, file='licao-25-future-will.html', id='licao-25-future-will', level='A2', title='Futuro com Will',
+add(17, file='licao-17-future-will.html', id='licao-17-future-will', level='A2', title='Futuro com Will',
     lede='Decisões na hora, promessas e previsões', hero=H1,
     objs=[('⚡','Will','I will help'),('🤝','Promessas','I will call you'),('🔮','Previsões','It will be sunny')],
     warmup='Alguém pede ajuda. Como você oferece em inglês?',
@@ -576,7 +576,7 @@ add(17, file='licao-25-future-will.html', id='licao-25-future-will', level='A2',
     review=['will + base','won\'t','Will you…?'],
     homework='5 promessas e 5 previsões com will.')
 
-add(18, file='licao-9-revisao-completa.html', id='licao-9-revisao-completa', level='A1', title='Revisão A1: Conversação Básica',
+add(18, file='licao-18-revisao-completa.html', id='licao-18-revisao-completa', level='A1', title='Revisão A1: Conversação Básica',
     lede='Integração de to be, Wh-, can, present e preposições', hero=H2,
     objs=[('🎓','Integrar','Tudo do A1 básico'),('💬','Conversar','Diálogo fluido'),('✅','Checar','Pontos fracos')],
     warmup='Em 30 segundos, apresente-se e fale um hábito seu.',
@@ -593,7 +593,7 @@ add(18, file='licao-9-revisao-completa.html', id='licao-9-revisao-completa', lev
     review=['to be','do/does + can','there is + preposições'],
     homework='Texto de 12 linhas sobre você integrando a lição.')
 
-add(19, file='licao-11-object-possessive-pronouns.html', id='licao-11-object-possessive-pronouns', level='A2', title='Pronomes Objeto e Possessivos',
+add(19, file='licao-19-object-possessive-pronouns.html', id='licao-19-object-possessive-pronouns', level='A2', title='Pronomes Objeto e Possessivos',
     lede='me, him, her, us… e mine, yours…', hero=H3,
     objs=[('👤','Objeto','me, him, her, us, them'),('📦','Possessivos','mine, yours, his, hers'),('🔄','Trocar','Suj. → obj. → poss.')],
     warmup='Complete: "Give ___ the book. It is ___."',
@@ -610,7 +610,7 @@ add(19, file='licao-11-object-possessive-pronouns.html', id='licao-11-object-pos
     review=['me/him/her/us/them','mine/yours/his/hers','Give me…'],
     homework='10 frases misturando objeto e possessivo.')
 
-add(20, file='licao-16-present-continuous.html', id='licao-16-present-continuous', level='A2', title='Present Continuous',
+add(20, file='licao-20-present-continuous.html', id='licao-20-present-continuous', level='A2', title='Present Continuous',
     lede='Ações em andamento agora', hero=H4,
     objs=[('🏃','Agora','I am working'),('📸','Descrever','O que está acontecendo'),('🔄','vs Present','Hábito ≠ agora')],
     warmup='O que você está fazendo neste exato momento?',
@@ -627,7 +627,7 @@ add(20, file='licao-16-present-continuous.html', id='licao-16-present-continuous
     review=['am/is/are + -ing','agora / temporário','Are you…-ing?'],
     homework='5 fotos: legenda em Present Continuous.')
 
-add(21, file='licao-17-countable-uncountable.html', id='licao-17-countable-uncountable', level='A2', title='Contáveis e Incontáveis',
+add(21, file='licao-21-countable-uncountable.html', id='licao-21-countable-uncountable', level='A2', title='Contáveis e Incontáveis',
     lede='some, any, much, many, a/an', hero=H5,
     objs=[('🍎','Countable','apples, books'),('💧','Uncountable','water, rice'),('🛒','Quantificar','some/any/much/many')],
     warmup='Dá para contar "água"? E "garrafas de água"?',
@@ -644,7 +644,7 @@ add(21, file='licao-17-countable-uncountable.html', id='licao-17-countable-uncou
     review=['many + contável','much + incontável','some / any'],
     homework='Classifique 20 palavras da cozinha em contável/incontável.')
 
-add(22, file='licao-18-quantities-choices.html', id='licao-18-quantities-choices', level='A2', title='Quantidades e Escolhas',
+add(22, file='licao-22-quantities-choices.html', id='licao-22-quantities-choices', level='A2', title='Quantidades e Escolhas',
     lede='a few, a little, too much, enough…', hero=H1,
     objs=[('🔢','Quantidades','a few / a little'),('⚖️','Excesso','too much / too many'),('✅','Suficiente','enough')],
     warmup='Você tem tempo suficiente hoje? Enough time?',
@@ -661,7 +661,7 @@ add(22, file='licao-18-quantities-choices.html', id='licao-18-quantities-choices
     review=['a few / a little','too much / too many','enough'],
     homework='6 pedidos educados em um café imaginário.')
 
-add(23, file='licao-19-quantities-distance-time.html', id='licao-19-quantities-distance-time', level='A2', title='Quantidade, Distância e Tempo',
+add(23, file='licao-23-quantities-distance-time.html', id='licao-23-quantities-distance-time', level='A2', title='Quantidade, Distância e Tempo',
     lede='How much / many / long / far', hero=H2,
     objs=[('⏱️','How long','Quanto tempo'),('📏','How far','Que distância'),('💰','How much','Quanto custa')],
     warmup='Quanto tempo você leva até o trabalho/escola?',
@@ -678,7 +678,7 @@ add(23, file='licao-19-quantities-distance-time.html', id='licao-19-quantities-d
     review=['How far / How long','How much / How many','It takes…'],
     homework='Pesquise 3 lugares e anote far/long/much.')
 
-add(24, file='licao-20-survival-english.html', id='licao-20-survival-english', level='A2', title='Survival English',
+add(24, file='licao-24-survival-english.html', id='licao-24-survival-english', level='A2', title='Survival English',
     lede='Frases para se virar em situações reais', hero=H3,
     objs=[('✈️','Viagem','airport, hotel'),('🍽️','Restaurante','pedir e pagar'),('🆘','Ajuda','I need help')],
     warmup='Você se perdeu na rua. O que diria em inglês?',
@@ -695,7 +695,7 @@ add(24, file='licao-20-survival-english.html', id='licao-20-survival-english', l
     review=['Could you…?','How do I get to…?','I would like…'],
     homework='Roteiro de viagem com 10 frases survival.')
 
-add(25, file='licao-23-talking-about-the-past.html', id='licao-23-talking-about-the-past', level='A2', title='Falando Sobre o Passado',
+add(25, file='licao-25-talking-about-the-past.html', id='licao-25-talking-about-the-past', level='A2', title='Falando Sobre o Passado',
     lede='Consolidar passado: perguntas, negativas e tempo', hero=H4,
     objs=[('🕰️','Passado','was/were + past'),('❓','Perguntar','Did you…? When…?'),('🧵','Narrar','Contar histórias curtas')],
     warmup='Resuma ontem em 3 frases em inglês.',
@@ -729,7 +729,7 @@ add(26, file='licao-26-comparatives-superlatives.html', id='licao-26-comparative
     review=['-er than / more… than','the -est / the most','as… as'],
     homework='Compare sua cidade com outra em 8 frases.')
 
-add(27, file='licao-28-modal-verbs.html', id='licao-28-modal-verbs', level='A2', title='Verbos Modais (introdução)',
+add(27, file='licao-27-modal-verbs.html', id='licao-27-modal-verbs', level='A2', title='Verbos Modais (introdução)',
     lede='could, must, should, may…', hero=H1,
     objs=[('🔑','Modais','must, should, could'),('💡','Conselho','You should…'),('⚠️','Obrigação','You must…')],
     warmup='Que conselho você daria a alguém com sono na aula?',
@@ -746,7 +746,7 @@ add(27, file='licao-28-modal-verbs.html', id='licao-28-modal-verbs', level='A2',
     review=['should = conselho','must / mustn\'t','Could you…?'],
     homework='Cartaz de regras da casa com modais.')
 
-add(28, file='licao-29-phrasal-verbs.html', id='licao-29-phrasal-verbs', level='A2', title='Phrasal Verbs Essenciais',
+add(28, file='licao-28-phrasal-verbs.html', id='licao-28-phrasal-verbs', level='A2', title='Phrasal Verbs Essenciais',
     lede='get up, look for, turn on, give up…', hero=H2,
     objs=[('🧩','Partículas','up, on, off, for'),('🗣️','Dia a dia','Os 12 essenciais'),('🔁','Praticar','Em contexto')],
     warmup='Como se diz "acordar" e "procurar" em inglês informal?',
@@ -763,7 +763,7 @@ add(28, file='licao-29-phrasal-verbs.html', id='licao-29-phrasal-verbs', level='
     review=['get up / look for','turn on/off','give up / pick up'],
     homework='Diário com 12 phrasals diferentes.')
 
-add(29, file='licao-30-revisao-semestre-2.html', id='licao-30-revisao-semestre-2', level='A2', title='Revisão Geral do Semestre 2',
+add(29, file='licao-29-revisao-semestre-2.html', id='licao-29-revisao-semestre-2', level='A2', title='Revisão Geral do Semestre 2',
     lede='Passado, futuro, quantidades, modais e phrasals', hero=H3,
     objs=[('🎓','Revisar','Blocos do semestre'),('🔗','Integrar','Textos e diálogos'),('✅','Consolidar','Antes de avançar')],
     warmup='Liste 5 tópicos que você estudou neste semestre.',
@@ -780,7 +780,7 @@ add(29, file='licao-30-revisao-semestre-2.html', id='licao-30-revisao-semestre-2
     review=['past + future','much/many + there is','should + phrasals'],
     homework='Texto de 15 linhas usando pelo menos 8 estruturas do semestre.')
 
-add(30, file='licao-31-past-continuous.html', id='licao-31-past-continuous', level='A2', title='Past Continuous',
+add(30, file='licao-30-past-continuous.html', id='licao-30-past-continuous', level='A2', title='Past Continuous',
     lede='was/were + -ing — ações em progresso no passado', hero=H4,
     objs=[('🎬','Em progresso','I was reading'),('⚡','Interrupção','when + past simple'),('🖼️','Cena','Descrever atmosferas')],
     warmup='O que você estava fazendo ontem às 21h?',
