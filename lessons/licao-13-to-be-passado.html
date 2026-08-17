@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bobcat Language School — Lição 2 — Saudações e Apresentações</title>
+<title>Bobcat Language School — Lição 13 — To Be no Passado (was/were)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -9,7 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
 </head><body>
 <div class="hud" id="hud">
-  <div class="hud-left"><span>🐾 Bobcat</span>
+  <div class="hud-left">🐾 Bobcat
     <div class="xp-track"><div class="xp-fill" id="xpBar"></div></div>
     <span id="xpLabel" style="font-weight:700;color:var(--orange-dark)">0 XP</span>
   </div>
@@ -22,8 +22,8 @@
   <div class="wrap hero-inner">
     <a class="back-link" href="../index.html" style="color:#fff;opacity:.9">← Voltar ao app</a>
     <span class="badge">🐾 Bobcat · A1</span>
-    <h1>Saudações e Apresentações</h1>
-    <p class="lede">Greetings, introductions e diálogos</p>
+    <h1>To Be no Passado (was/were)</h1>
+    <p class="lede">was e were — passado do to be</p>
     <div class="hero-cta"><a href="#objetivos" class="btn">Começar →</a></div>
   </div>
 </header>
@@ -33,43 +33,43 @@
   <div class="section-head reveal"><span class="sec-num">1</span>
     <div><h2 class="sec-title">🎯 Objetivos da Lição</h2><p class="sec-sub">Ao final desta lição você será capaz de:</p></div>
   </div>
-  <div class="grid-3 reveal"><div class="card obj-card"><span class="ic">👋</span><h3>Saudações</h3><p>Hello, Good morning…</p></div><div class="card obj-card"><span class="ic">🤝</span><h3>Apresentações</h3><p>Nice to meet you</p></div><div class="card obj-card"><span class="ic">💬</span><h3>Diálogos</h3><p>Cumprimentar e se apresentar</p></div></div>
+  <div class="grid-3 reveal"><div class="card obj-card"><span class="ic">⏪</span><h3>Was</h3><p>I/he/she/it was</p></div><div class="card obj-card"><span class="ic">⏪</span><h3>Were</h3><p>you/we/they were</p></div><div class="card obj-card"><span class="ic">❓</span><h3>Perguntas</h3><p>Were you…?</p></div></div>
 </section>
 
 <section class="section" id="warmup">
   <div class="section-head reveal"><span class="sec-num">2</span>
     <div><h2 class="sec-title">🔥 Warm-Up</h2><p class="sec-sub">Ative o cérebro antes de estudar.</p></div>
   </div>
-  <div class="card reveal callout" style="font-size:15px;line-height:1.55">Liste 3 formas de dizer &quot;oi&quot; em inglês.</div>
+  <div class="card reveal callout" style="font-size:15px;line-height:1.55">Onde você estava ontem às 20h?</div>
 </section>
 
 <section class="section" id="dialogue" style="background:linear-gradient(180deg,var(--cream-3),#fff)">
   <div class="section-head reveal"><span class="sec-num">3</span>
-    <div><h2 class="sec-title">🎧 Listening &amp; Speaking — "First Day"</h2>
-    <p class="sec-sub">Anna conhece Tom.</p></div>
-  </div>
-  <div class="bubble-row reveal">
-    <span class="miniav anna">A</span>
-    <div class="bubble anna"><span class="who">Anna</span>Good morning! My name is Anna. Nice to meet you.
-      <button class="audio-btn" onclick="speak(this,'Good morning! My name is Anna. Nice to meet you.')">🔊</button>
-    </div>
+    <div><h2 class="sec-title">🎧 Listening &amp; Speaking — "Yesterday"</h2>
+    <p class="sec-sub">O que fizeram ontem.</p></div>
   </div>
   <div class="bubble-row reveal">
     <span class="miniav tom">T</span>
-    <div class="bubble tom"><span class="who">Tom</span>Hi, Anna! I'm Tom. Nice to meet you too.
-      <button class="audio-btn" onclick="speak(this,'Hi, Anna! I\'m Tom. Nice to meet you too.')">🔊</button>
+    <div class="bubble tom"><span class="who">Tom</span>Were you at home yesterday?
+      <button class="audio-btn" onclick="speak(this,'Were you at home yesterday?')">🔊</button>
     </div>
   </div>
   <div class="bubble-row reveal">
     <span class="miniav anna">A</span>
-    <div class="bubble anna"><span class="who">Anna</span>How are you today?
-      <button class="audio-btn" onclick="speak(this,'How are you today?')">🔊</button>
+    <div class="bubble anna"><span class="who">Anna</span>Yes, I was. I was tired.
+      <button class="audio-btn" onclick="speak(this,'Yes, I was. I was tired.')">🔊</button>
     </div>
   </div>
   <div class="bubble-row reveal">
     <span class="miniav tom">T</span>
-    <div class="bubble tom"><span class="who">Tom</span>I'm fine, thanks. And you?
-      <button class="audio-btn" onclick="speak(this,'I\'m fine, thanks. And you?')">🔊</button>
+    <div class="bubble tom"><span class="who">Tom</span>Was Paul at the party?
+      <button class="audio-btn" onclick="speak(this,'Was Paul at the party?')">🔊</button>
+    </div>
+  </div>
+  <div class="bubble-row reveal">
+    <span class="miniav anna">A</span>
+    <div class="bubble anna"><span class="who">Anna</span>No, he <span class="vocab-word" data-word="wasn't">wasn't</span>. We were only five people.
+      <button class="audio-btn" onclick="speak(this,'No, he wasn\'t. We were only five people.')">🔊</button>
     </div>
   </div>
   <p class="reveal" style="margin-top:12px;font-size:13px;color:var(--ink-soft)">Ouça (🔊), repita em voz alta e troque os papéis.</p>
@@ -80,34 +80,34 @@
     <div><h2 class="sec-title">🔍 Vocabulário da Lição</h2><p class="sec-sub">Palavras e expressões essenciais.</p></div>
   </div>
   <table class="lesson-table reveal"><thead><tr><th>English</th><th>Português</th><th>Exemplo</th></tr></thead><tbody>
-<tr><td>Hello / Hi <button class="audio-btn" onclick="speak(this,'Hello')">🔊</button></td><td>Oi</td><td>Hi, how are you?</td></tr>
-<tr><td>Good morning <button class="audio-btn" onclick="speak(this,'Good morning')">🔊</button></td><td>Bom dia</td><td>Good morning!</td></tr>
-<tr><td>Good evening <button class="audio-btn" onclick="speak(this,'Good evening')">🔊</button></td><td>Boa noite</td><td>Good evening.</td></tr>
-<tr><td>Nice to meet you <button class="audio-btn" onclick="speak(this,'Nice to meet you')">🔊</button></td><td>Prazer</td><td>Nice to meet you.</td></tr>
-<tr><td>How are you? <button class="audio-btn" onclick="speak(this,'How are you?')">🔊</button></td><td>Como vai?</td><td>How are you?</td></tr>
-<tr><td>I'm fine <button class="audio-btn" onclick="speak(this,'I\'m fine')">🔊</button></td><td>Estou bem</td><td>I'm fine, thanks.</td></tr>
+<tr><td>was <button class="audio-btn" onclick="speak(this,'was')">🔊</button></td><td>era/estava (sing.)</td><td>I was happy.</td></tr>
+<tr><td>were <button class="audio-btn" onclick="speak(this,'were')">🔊</button></td><td>era/estava (plur./you)</td><td>They were here.</td></tr>
+<tr><td><span class="vocab-word" data-word="wasn't">wasn't</span> <button class="audio-btn" onclick="speak(this,'wasn\'t')">🔊</button></td><td>não era</td><td>She <span class="vocab-word" data-word="wasn't">wasn't</span> ready.</td></tr>
+<tr><td><span class="vocab-word" data-word="weren't">weren't</span> <button class="audio-btn" onclick="speak(this,'weren\'t')">🔊</button></td><td>não eram</td><td>We <span class="vocab-word" data-word="weren't">weren't</span> late.</td></tr>
+<tr><td>yesterday <button class="audio-btn" onclick="speak(this,'yesterday')">🔊</button></td><td>ontem</td><td>yesterday morning</td></tr>
+<tr><td>last night <button class="audio-btn" onclick="speak(this,'last night')">🔊</button></td><td>ontem à noite</td><td>last night</td></tr>
 </tbody></table>
 </section>
 
 <section class="section" id="grammar" style="background:linear-gradient(180deg,#fff,var(--cream-3))">
   <div class="section-head reveal"><span class="sec-num">5</span>
-    <div><h2 class="sec-title">📘 Gramática — Saudações e Cortesia</h2>
+    <div><h2 class="sec-title">📘 Gramática — Was / Were</h2>
     <p class="sec-sub">Estrutura e uso no dia a dia.</p></div>
   </div>
   <div class="card reveal" style="margin-bottom:12px">
-    <h3 style="margin:0 0 6px;color:var(--orange-dark);font-size:16px">Por horário</h3>
-    <p style="margin:0 0 8px;font-size:14px">morning / afternoon / evening</p>
-    <div class="struct-example">Good morning, class!</div>
+    <h3 style="margin:0 0 6px;color:var(--orange-dark);font-size:16px">Was</h3>
+    <p style="margin:0 0 8px;font-size:14px">I, he, she, it + was</p>
+    <div class="struct-example">She was at school.</div>
   </div>
   <div class="card reveal" style="margin-bottom:12px">
-    <h3 style="margin:0 0 6px;color:var(--orange-dark);font-size:16px">Apresentação</h3>
-    <p style="margin:0 0 8px;font-size:14px">My name is… / I'm…</p>
-    <div class="struct-example">I'm Lucas.</div>
+    <h3 style="margin:0 0 6px;color:var(--orange-dark);font-size:16px">Were</h3>
+    <p style="margin:0 0 8px;font-size:14px">you, we, they + were</p>
+    <div class="struct-example">You were great.</div>
   </div>
   <div class="card reveal" style="margin-bottom:12px">
-    <h3 style="margin:0 0 6px;color:var(--orange-dark);font-size:16px">Resposta</h3>
-    <p style="margin:0 0 8px;font-size:14px">Nice to meet you too. / Fine, thanks.</p>
-    <div class="struct-example">Fine, thanks. And you?</div>
+    <h3 style="margin:0 0 6px;color:var(--orange-dark);font-size:16px">Pergunta</h3>
+    <p style="margin:0 0 8px;font-size:14px">Was/Were + sujeito?</p>
+    <div class="struct-example">Were you OK?</div>
   </div>
 </section>
 
@@ -131,18 +131,18 @@
 
 <section class="section" id="oral" style="background:linear-gradient(180deg,var(--cream-3),#fff)">
   <div class="section-head reveal"><span class="sec-num">7</span>
-    <div><h2 class="sec-title">🎭 Prática Oral — <span class="vocab-word" data-word="role-play">Role-play</span></h2><p class="sec-sub">Fale em voz alta (só ou em dupla).</p></div>
+    <div><h2 class="sec-title">🎭 Prática Oral — Role-play</h2><p class="sec-sub">Fale em voz alta (só ou em dupla).</p></div>
   </div>
-  <div class="card reveal"><ol style="margin:0;padding-left:18px;line-height:1.7"><li>Cumprimente conforme o horário.</li><li>Apresente-se e pergunte o nome.</li></ol></div>
+  <div class="card reveal"><ol style="margin:0;padding-left:18px;line-height:1.7"><li>Conte onde você was ontem.</li><li>Pergunte ao parceiro sobre o fim de semana passado.</li></ol></div>
 </section>
 
 <section class="section" id="twister">
   <div class="section-head reveal"><span class="sec-num">8</span>
-    <div><h2 class="sec-title">👅 Trava-língua (<span class="vocab-word" data-word="tongue twister">Tongue Twister</span>)</h2><p class="sec-sub">Repita 3× cada vez mais rápido.</p></div>
+    <div><h2 class="sec-title">👅 Trava-língua (Tongue Twister)</h2><p class="sec-sub">Repita 3× cada vez mais rápido.</p></div>
   </div>
   <div class="card reveal" style="text-align:center;font-size:17px;font-weight:700;line-height:1.5">
-    Hi Harry, how happy are you today?
-    <div style="margin-top:10px"><button class="audio-btn btn" onclick="speak(this,'Hi Harry, how happy are you today?')">🔊 Ouvir</button></div>
+    Was Will willing while we were waiting?
+    <div style="margin-top:10px"><button class="audio-btn btn" onclick="speak(this,'Was Will willing while we were waiting?')">🔊 Ouvir</button></div>
   </div>
 </section>
 
@@ -150,29 +150,29 @@
   <div class="section-head reveal"><span class="sec-num">9</span>
     <div><h2 class="sec-title">🌍 Curiosidade Cultural</h2><p class="sec-sub">Inglês no mundo real.</p></div>
   </div>
-  <div class="card reveal callout" style="line-height:1.55">&quot;How are you?&quot; em inglês costuma ser cumprimento curto, não um relatório do dia.</div>
+  <div class="card reveal callout" style="line-height:1.55">Was/were cobrem ser e estar no passado — o resto dos verbos usa <span class="vocab-word" data-word="Simple Past">Simple Past</span>.</div>
 </section>
 
 <section class="section" id="review">
   <div class="section-head reveal"><span class="sec-num">10</span>
     <div><h2 class="sec-title">🔁 Revisão Rápida</h2><p class="sec-sub">Os pontos-chave em um minuto.</p></div>
   </div>
-  <div class="card reveal"><ul style="margin:0;padding-left:18px;line-height:1.7"><li>Hello / Good morning</li><li>My name is…</li><li>Nice to meet you</li></ul></div>
+  <div class="card reveal"><ul style="margin:0;padding-left:18px;line-height:1.7"><li>I was / You were</li><li><span class="vocab-word" data-word="wasn't">wasn't</span> / <span class="vocab-word" data-word="weren't">weren't</span></li><li>Were you…?</li></ul></div>
 </section>
 
 <section class="section" id="homework" style="background:linear-gradient(180deg,var(--cream-3),#fff)">
   <div class="section-head reveal"><span class="sec-num">11</span>
     <div><h2 class="sec-title">🏠 Tarefa de Casa</h2><p class="sec-sub">Pratique fora do app.</p></div>
   </div>
-  <div class="card reveal" style="line-height:1.55">Grave 30s: cumprimento + nome + How are you?</div>
+  <div class="card reveal" style="line-height:1.55">8 frases sobre ontem com was/were.</div>
   <div style="margin-top:18px;text-align:center" class="reveal">
     <button class="btn" type="button" id="btnFinish">🏁 Finalizar Lição</button>
     <p id="finishMsg" class="finish-msg" style="display:none;margin-top:12px;font-weight:700;color:var(--ok)">Parabéns! Lição concluída 🎉</p>
     <p id="finishMessage" style="display:none"></p>
   
     <div class="lesson-nav-next reveal">
-      <a class="btn-next-lesson" href="licao-3-perguntas-artigos.html">Próxima lição →
-        <span class="sub">Lição 3 — Perguntas e Artigos</span>
+      <a class="btn-next-lesson" href="licao-14-simple-past-regular.html">Próxima lição →
+        <span class="sub">Lição 14 — Simple Past Regular</span>
       </a>
     </div></div>
 </section>
@@ -180,14 +180,14 @@
 </div>
 <script src="lesson-kit.js"></script>
 <script>
-const LESSON_ID = "saudacoes-apresentacoes";
+const LESSON_ID = "licao-13-to-be-passado";
 const TOTAL_Q = 13;
 var SCORE = { correct: 0, total: TOTAL_Q };
 function norm(s){ return (s||'').toString().trim().toLowerCase().replace(/[.!?]/g,''); }
 function addXP(n){ if(window.BobcatLesson) BobcatLesson.addXP(n); }
 
 /* Quiz */
-var QUIZ = [{"prompt": "___ morning!", "options": ["Good", "Nice", "Well"], "answer": 0}, {"prompt": "My name ___ Sofia.", "options": ["am", "is", "are"], "answer": 1}, {"prompt": "Nice to ___ you.", "options": ["meet", "met", "meeting"], "answer": 0}, {"prompt": "How ___ you?", "options": ["is", "are", "am"], "answer": 1}, {"prompt": "I'm fine, ___.", "options": ["please", "thanks", "sorry"], "answer": 1}, {"prompt": "Good ___ (à noite).", "options": ["morning", "evening", "day"], "answer": 1}, {"prompt": "___ to meet you too.", "options": ["Nice", "Good", "Well"], "answer": 0}, {"prompt": "I ___ Pedro.", "options": ["am", "is", "are"], "answer": 0}];
+var QUIZ = [{"prompt": "I ___ tired yesterday.", "options": ["was", "were", "am"], "answer": 0}, {"prompt": "They ___ at the park.", "options": ["was", "were", "are"], "answer": 1}, {"prompt": "___ you at home?", "options": ["Was", "Were", "Are"], "answer": 1}, {"prompt": "She ___ not hungry.", "options": ["was", "were", "is"], "answer": 0}, {"prompt": "We ___ friends in 2010.", "options": ["was", "were", "are"], "answer": 1}, {"prompt": "___ he late?", "options": ["Was", "Were", "Did"], "answer": 0}, {"prompt": "The movie ___ good.", "options": ["was", "were", "are"], "answer": 0}, {"prompt": "You ___ not there.", "options": ["was", "were", "are"], "answer": 1}];
 var qi = 0, qCorrect = 0, qAnswered = false;
 function renderQuiz(){
   var box = document.getElementById('quizGame');
@@ -220,7 +220,7 @@ document.getElementById('btnQuizNext').addEventListener('click', function(){
 renderQuiz();
 
 /* Fill */
-var FILL = [{"s": "___ morning!", "a": "Good"}, {"s": "My name ___ Carla.", "a": "is"}, {"s": "Nice to ___ you.", "a": "meet"}, {"s": "How ___ you?", "a": "are"}, {"s": "I'm fine, ___.", "a": "thanks"}];
+var FILL = [{"s": "I ___ at school yesterday.", "a": "was"}, {"s": "They ___ happy.", "a": "were"}, {"s": "___ you tired?", "a": "Were"}, {"s": "She ___ not home.", "a": "wasn't"}, {"s": "We ___ late.", "a": "were"}];
 var fillCorrect = 0;
 (function(){
   var el = document.getElementById('fillBox');
