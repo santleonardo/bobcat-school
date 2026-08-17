@@ -272,7 +272,7 @@ const ACT1_CHECKPOINTS = [
   {
     id: 'encontro_com_mentor',
     stage: 'Encontro com o Mentor',
-    lessonId: 'licao-16-present-continuous', // foco: present continuous (seção 5, A2)
+    lessonId: 'licao-20-present-continuous', // foco: present continuous (seção 5, A2)
     trigger: 'after',
     location: 'mercado_bairro',
     npc: 'idris',
@@ -282,7 +282,7 @@ const ACT1_CHECKPOINTS = [
   {
     id: 'limiar_1',
     stage: 'Cruzamento do 1º Limiar', // Plot Point 1 (seção 5)
-    lessonId: 'licao-24-future-going-to', // foco: going to (seção 5, A2)
+    lessonId: 'licao-16-future-going-to', // foco: going to (seção 5, A2)
     trigger: 'after',
     location: 'campus_escritorio',
     npc: 'idris',
@@ -300,7 +300,7 @@ const ACT2_CHECKPOINTS = [
   {
     id: 'mal_entendido_cobranca',
     stage: 'Testes, Aliados e Inimigos (parte 1)',
-    lessonId: 'licao-32-simple-past-past-continuous', // já existe
+    lessonId: 'licao-31-simple-past-past-continuous', // já existe
     trigger: 'after',
     location: 'bairro_comercial',
     npc: 'officer_reyes',

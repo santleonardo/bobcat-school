@@ -218,10 +218,11 @@ Esquema oficial: **5 semestres**, com **C1 e C2 unidos no Semestre 5**.
 | **4** | B1 → B2 | Lições 41–50 | 📝 Planejado |
 | **5** | B2 → C2 *(C1 + C2)* | Lições 51–70 | 📝 Planejado |
 
-> **Nota de disponibilidade (arquivos em `lessons/`):** Nem todos os IDs da tabela abaixo possuem arquivo HTML dedicado ainda.  
-> Presentes como `licao-*.html`: 2 (perguntas/artigos + interativa), 10–24.  
-> Presentes como `gridscape-*.html` (versão interativa em canvas): verb-to-be, saudacoes, perguntas-artigos, simple-present, do-does, can-cant, there-is, here-there, was-were, past-regular/irregular, going-to, will, present-continuous, countable, quantities, survival, talking-past, comparatives, modals, phrasal-verbs, conditionals, present-perfect e revisões.  
-> Filenames não seguem a numeração sequencial do currículo (ex.: `licao-15-can-cant.html` = Lição 10 no título). Use os títulos e a tabela abaixo como fonte de verdade da ordem pedagógica.
+> **Nota de disponibilidade (arquivos em `lessons/`):**  
+> - `licao-N-*.html`: arquivos alinhados ao número da lição no currículo (ex.: `licao-10-can-cant.html` = Lição 10).  
+> - O app principal usa as versões `gridscape-*.html` (canvas interativo); os `licao-*.html` são a versão completa/alternativa.  
+> - IDs no `app.js` e no catálogo seguem o mesmo padrão (`licao-10-can-cant`, etc.).  
+> - Semestres 4–5 (lições 41–70) continuam planejados.
 
 ---
 
@@ -234,46 +235,46 @@ Esquema oficial: **5 semestres**, com **C1 e C2 unidos no Semestre 5**.
 | 0 | `pronuncia-essencial` | Pronúncia Essencial do Inglês | 15 | Comece por aqui: alfabeto, vogais, consoantes e combinações mais comuns |
 | 1 | `verb-to-be` | Lição 1 — Verb To Be | 21 | am, is, are — afirmativas, negativas e perguntas |
 | 2 | `saudacoes-apresentacoes` | Lição 2 — Saudações e Apresentações | 17 | Greetings, introductions e diálogos com áudio |
-| 3 | `licao-2-perguntas-artigos` | Lição 3 — Fazendo Perguntas e Apresentando Coisas | 20 | Wh- words, artigos a/an/the — base para perguntar sobre pessoas e coisas |
-| 4 | `licao-3-revisao-perguntas` | Lição 4 — Revisando: Quem é Você? O Que é Isso? | 12 | Revisão de To Be, saudações e Wh- questions com prática de diálogos |
-| 5 | `licao-4-preposicoes` | Lição 5 — Preposições: Onde? Com Quem? Como? | 10 | Preposições de lugar e companhia para localizar pessoas e coisas |
-| 6 | `licao-5-posse` | Lição 6 — Posse: De Quem É? | 12 | Possessivos, 's e whose — falar de pertences e pessoas |
-| 7 | `licao-12-simple-present-daily-life` | Lição 7 — Simple Present: Rotina e Hábitos | 12 | Simple Present, advérbios de frequência e a rotina diária |
-| 8 | `licao-10-do-does-to-for` | Lição 8 — DO/DOES, TO e FOR | 14 | Verbos essenciais, perguntas com DO/DOES e o uso de TO e FOR |
-| 9 | `licao-13-perguntas-simple-present` | Lição 9 — Perguntas no Simple Present | 12 | Perguntas e negativas com Do/Does — perguntar sobre pessoas e rotina |
-| 10 | `licao-15-can-cant` | Lição 10 — Can / Can't | 38 | Habilidade, permissão e pedidos do dia a dia com can/can't |
-| 11 | `licao-14-there-is-there-are` | Lição 11 — There Is / There Are | 12 | Descrevendo lugares e objetos com There is/There are |
-| 12 | `licao-6-here-there` | Lição 12 — Aqui e Ali: Localização | 12 | Localização, posição e phrasal verbs básicos de movimento |
-| 13 | `licao-8-to-be-passado` | Lição 13 — To Be no Passado (was/were) | 12 | Was e were — como era, onde estava, quem estava |
-| 14 | `licao-21-simple-past-regular` | Lição 14 — Simple Past: Verbos Regulares | 12 | Passado de ação com verbos regulares (-ed) e expressões de tempo |
-| 15 | `licao-22-simple-past-irregular` | Lição 15 — Simple Past: Verbos Irregulares | 12 | Verbos irregulares mais comuns no Simple Past |
-| 16 | `licao-24-future-going-to` | Lição 16 — Futuro com Going To | 12 | Planos e intenções futuras com going to |
-| 17 | `licao-25-future-will` | Lição 17 — Futuro com Will | 12 | Previsões, decisões espontâneas e promessas com will |
-| 18 | `licao-9-revisao-completa` | Lição 18 — Revisão A1: Conversação Básica 🎓 | 16 | Projeto final do Semestre 1: se apresentar, perguntar sobre pessoas, rotina, ontem e planos |
+| 3 | `licao-3-perguntas-artigos` | Lição 3 — Fazendo Perguntas e Apresentando Coisas | 20 | Wh- words, artigos a/an/the — base para perguntar sobre pessoas e coisas |
+| 4 | `licao-4-revisao-perguntas` | Lição 4 — Revisando: Quem é Você? O Que é Isso? | 12 | Revisão de To Be, saudações e Wh- questions com prática de diálogos |
+| 5 | `licao-5-preposicoes` | Lição 5 — Preposições: Onde? Com Quem? Como? | 10 | Preposições de lugar e companhia para localizar pessoas e coisas |
+| 6 | `licao-6-posse` | Lição 6 — Posse: De Quem É? | 12 | Possessivos, 's e whose — falar de pertences e pessoas |
+| 7 | `licao-7-simple-present-daily-life` | Lição 7 — Simple Present: Rotina e Hábitos | 12 | Simple Present, advérbios de frequência e a rotina diária |
+| 8 | `licao-8-do-does-to-for` | Lição 8 — DO/DOES, TO e FOR | 14 | Verbos essenciais, perguntas com DO/DOES e o uso de TO e FOR |
+| 9 | `licao-9-perguntas-simple-present` | Lição 9 — Perguntas no Simple Present | 12 | Perguntas e negativas com Do/Does — perguntar sobre pessoas e rotina |
+| 10 | `licao-10-can-cant` | Lição 10 — Can / Can't | 38 | Habilidade, permissão e pedidos do dia a dia com can/can't |
+| 11 | `licao-11-there-is-there-are` | Lição 11 — There Is / There Are | 12 | Descrevendo lugares e objetos com There is/There are |
+| 12 | `licao-12-here-there` | Lição 12 — Aqui e Ali: Localização | 12 | Localização, posição e phrasal verbs básicos de movimento |
+| 13 | `licao-13-to-be-passado` | Lição 13 — To Be no Passado (was/were) | 12 | Was e were — como era, onde estava, quem estava |
+| 14 | `licao-14-simple-past-regular` | Lição 14 — Simple Past: Verbos Regulares | 12 | Passado de ação com verbos regulares (-ed) e expressões de tempo |
+| 15 | `licao-15-simple-past-irregular` | Lição 15 — Simple Past: Verbos Irregulares | 12 | Verbos irregulares mais comuns no Simple Past |
+| 16 | `licao-16-future-going-to` | Lição 16 — Futuro com Going To | 12 | Planos e intenções futuras com going to |
+| 17 | `licao-17-future-will` | Lição 17 — Futuro com Will | 12 | Previsões, decisões espontâneas e promessas com will |
+| 18 | `licao-18-revisao-completa` | Lição 18 — Revisão A1: Conversação Básica 🎓 | 16 | Projeto final do Semestre 1: se apresentar, perguntar sobre pessoas, rotina, ontem e planos |
 
 ## Semestre 2 — A2 (expansão do dia a dia)
 
 | # | ID | Nome | Q | Descrição |
 |---|-----|------|---|-----------|
-| 19 | `licao-11-object-possessive-pronouns` | Lição 19 — Pronomes Objeto e Possessivos | 12 | Object pronouns, possessives e mais verbos essenciais |
-| 20 | `licao-16-present-continuous` | Lição 20 — Present Continuous | 12 | Ações em andamento e situações temporárias |
-| 21 | `licao-17-countable-uncountable` | Lição 21 — Contáveis e Incontáveis | 12 | Countable/uncountable, some, any, much e many |
-| 22 | `licao-18-quantities-choices` | Lição 22 — Quantidades e Escolhas | 12 | Expressando quantidades e fazendo escolhas em inglês |
-| 23 | `licao-19-quantities-distance-time` | Lição 23 — Quantidade, Distância e Tempo | 12 | How much/many/long/far e perguntas de medida |
-| 24 | `licao-20-survival-english` | Lição 24 — Survival English | 12 | Inglês de sobrevivência para situações reais do dia a dia |
-| 25 | `licao-23-talking-about-the-past` | Lição 25 — Falando Sobre o Passado | 12 | Perguntas, negativas e expressões de tempo no passado (consolidação) |
+| 19 | `licao-19-object-possessive-pronouns` | Lição 19 — Pronomes Objeto e Possessivos | 12 | Object pronouns, possessives e mais verbos essenciais |
+| 20 | `licao-20-present-continuous` | Lição 20 — Present Continuous | 12 | Ações em andamento e situações temporárias |
+| 21 | `licao-21-countable-uncountable` | Lição 21 — Contáveis e Incontáveis | 12 | Countable/uncountable, some, any, much e many |
+| 22 | `licao-22-quantities-choices` | Lição 22 — Quantidades e Escolhas | 12 | Expressando quantidades e fazendo escolhas em inglês |
+| 23 | `licao-23-quantities-distance-time` | Lição 23 — Quantidade, Distância e Tempo | 12 | How much/many/long/far e perguntas de medida |
+| 24 | `licao-24-survival-english` | Lição 24 — Survival English | 12 | Inglês de sobrevivência para situações reais do dia a dia |
+| 25 | `licao-25-talking-about-the-past` | Lição 25 — Falando Sobre o Passado | 12 | Perguntas, negativas e expressões de tempo no passado (consolidação) |
 | 26 | `licao-26-comparatives-superlatives` | Lição 26 — Comparativos e Superlativos | 12 | Comparando pessoas e coisas em inglês (nível A2) |
-| 27 | `licao-28-modal-verbs` | Lição 27 — Verbos Modais (introdução) | 12 | Could, must, should e outros modais além de can |
-| 28 | `licao-29-phrasal-verbs` | Lição 28 — Phrasal Verbs Essenciais | 12 | Phrasal verbs mais usados no inglês do dia a dia |
-| 29 | `licao-30-revisao-semestre-2` | Lição 29 — Revisão Geral do Semestre 2 🎓 | 12 | Revisão completa do Semestre 2 (A2) e consolidação |
+| 27 | `licao-27-modal-verbs` | Lição 27 — Verbos Modais (introdução) | 12 | Could, must, should e outros modais além de can |
+| 28 | `licao-28-phrasal-verbs` | Lição 28 — Phrasal Verbs Essenciais | 12 | Phrasal verbs mais usados no inglês do dia a dia |
+| 29 | `licao-29-revisao-semestre-2` | Lição 29 — Revisão Geral do Semestre 2 🎓 | 12 | Revisão completa do Semestre 2 (A2) e consolidação |
 
 ## Semestre 3 — B1 (narrativa e experiência)
 
 | # | ID | Nome | Q | Descrição |
 |---|-----|------|---|-----------|
-| 30 | `licao-31-past-continuous` | Lição 30 — Past Continuous | 12 | Ações em progresso no passado: was/were + verbo-ing |
-| 31 | `licao-32-simple-past-past-continuous` | Lição 31 — Simple Past × Past Continuous | 12 | Ações simultâneas e interrompidas ao contar histórias |
-| 32 | `licao-27-present-perfect` | Lição 32 — Present Perfect (introdução) | 12 | Have/has + particípio — primeira abordagem ao Present Perfect |
+| 30 | `licao-30-past-continuous` | Lição 30 — Past Continuous | 12 | Ações em progresso no passado: was/were + verbo-ing |
+| 31 | `licao-31-simple-past-past-continuous` | Lição 31 — Simple Past × Past Continuous | 12 | Ações simultâneas e interrompidas ao contar histórias |
+| 32 | `licao-32-present-perfect` | Lição 32 — Present Perfect (introdução) | 12 | Have/has + particípio — primeira abordagem ao Present Perfect |
 | 33 | `licao-33-present-perfect-experiences` | Lição 33 — Present Perfect: Experiences | 12 | Experiências de vida com ever, never, before |
 | 34 | `licao-34-present-perfect-simple-past` | Lição 34 — Present Perfect × Simple Past | 12 | Quando usar cada tempo: since, for, last, ago |
 | 35 | `licao-35-present-perfect-already-yet-just` | Lição 35 — Present Perfect: Already, Yet, Just | 12 | Already, yet, just, still, recently e lately |
@@ -448,7 +449,7 @@ O curso de inglês (A1–B1) usa o visual **Gridscape**: cards empilhados, arras
 ```
 
 ```js
-BobcatLesson.init({ lessonId: 'licao-2-perguntas-artigos', totalQuestions: 20 });
+BobcatLesson.init({ lessonId: 'licao-3-perguntas-artigos', totalQuestions: 20 });
 // ao finalizar:
 await BobcatLesson.finishLesson(correct, total, 'correct'); // ou 'filled'
 ```

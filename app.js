@@ -413,7 +413,7 @@ const LESSONS = [
     totalQuestions: 29
   },
   {
-    id: "licao-2-perguntas-artigos",
+    id: "licao-3-perguntas-artigos",
     name: "Lição 3 — Fazendo Perguntas e Apresentando Coisas",
     level: "A1",
     icon: "❓",
@@ -422,7 +422,7 @@ const LESSONS = [
     totalQuestions: 26
   },
   {
-    id: "licao-3-revisao-perguntas",
+    id: "licao-4-revisao-perguntas",
     name: "Lição 4 — Revisando: Quem é Você? O Que é Isso?",
     level: "A1",
     icon: "🔁",
@@ -431,7 +431,7 @@ const LESSONS = [
     totalQuestions: 30
   },
   {
-    id: "licao-4-preposicoes",
+    id: "licao-5-preposicoes",
     name: "Lição 5 — Preposições: Onde? Com Quem? Como?",
     level: "A1",
     icon: "📍",
@@ -440,7 +440,7 @@ const LESSONS = [
     totalQuestions: 30
   },
   {
-    id: "licao-5-posse",
+    id: "licao-6-posse",
     name: "Lição 6 — Posse: De Quem É?",
     level: "A1",
     icon: "🎒",
@@ -449,7 +449,7 @@ const LESSONS = [
     totalQuestions: 28
   },
   {
-    id: "licao-12-simple-present-daily-life",
+    id: "licao-7-simple-present-daily-life",
     name: "Lição 7 — Simple Present: Rotina e Hábitos",
     level: "A1",
     icon: "🗓️",
@@ -458,7 +458,7 @@ const LESSONS = [
     totalQuestions: 28
   },
   {
-    id: "licao-10-do-does-to-for",
+    id: "licao-8-do-does-to-for",
     name: "Lição 8 — DO/DOES, TO e FOR",
     level: "A1",
     icon: "🔧",
@@ -467,7 +467,7 @@ const LESSONS = [
     totalQuestions: 30
   },
   {
-    id: "licao-13-perguntas-simple-present",
+    id: "licao-9-perguntas-simple-present",
     name: "Lição 9 — Perguntas no Simple Present",
     level: "A1",
     icon: "🗣️",
@@ -476,7 +476,7 @@ const LESSONS = [
     totalQuestions: 30
   },
   {
-    id: "licao-15-can-cant",
+    id: "licao-10-can-cant",
     name: "Lição 10 — Can / Can't",
     level: "A1",
     icon: "🙌",
@@ -485,7 +485,7 @@ const LESSONS = [
     totalQuestions: 28
   },
   {
-    id: "licao-14-there-is-there-are",
+    id: "licao-11-there-is-there-are",
     name: "Lição 11 — There Is / There Are",
     level: "A1",
     icon: "🏠",
@@ -494,7 +494,7 @@ const LESSONS = [
     totalQuestions: 28
   },
   {
-    id: "licao-6-here-there",
+    id: "licao-12-here-there",
     name: "Lição 12 — Aqui e Ali: Localização",
     level: "A1",
     icon: "📌",
@@ -503,7 +503,7 @@ const LESSONS = [
     totalQuestions: 30
   },
   {
-    id: "licao-8-to-be-passado",
+    id: "licao-13-to-be-passado",
     name: "Lição 13 — To Be no Passado (was/were)",
     level: "A1",
     icon: "⏳",
@@ -512,7 +512,7 @@ const LESSONS = [
     totalQuestions: 28
   },
   {
-    id: "licao-21-simple-past-regular",
+    id: "licao-14-simple-past-regular",
     name: "Lição 14 — Simple Past: Verbos Regulares",
     level: "A1",
     icon: "⏮️",
@@ -521,7 +521,7 @@ const LESSONS = [
     totalQuestions: 30
   },
   {
-    id: "licao-22-simple-past-irregular",
+    id: "licao-15-simple-past-irregular",
     name: "Lição 15 — Simple Past: Verbos Irregulares",
     level: "A1",
     icon: "📖",
@@ -530,7 +530,7 @@ const LESSONS = [
     totalQuestions: 30
   },
   {
-    id: "licao-24-future-going-to",
+    id: "licao-16-future-going-to",
     name: "Lição 16 — Futuro com Going To",
     level: "A1",
     icon: "🎯",
@@ -539,7 +539,7 @@ const LESSONS = [
     totalQuestions: 30
   },
   {
-    id: "licao-25-future-will",
+    id: "licao-17-future-will",
     name: "Lição 17 — Futuro com Will",
     level: "A1",
     icon: "🔮",
@@ -548,7 +548,7 @@ const LESSONS = [
     totalQuestions: 30
   },
   {
-    id: "licao-9-revisao-completa",
+    id: "licao-18-revisao-completa",
     name: "Lição 18 — Revisão A1: Conversação Básica 🎓",
     level: "A1",
     icon: "📚",
@@ -557,7 +557,7 @@ const LESSONS = [
     totalQuestions: 30
   },
   {
-    id: "licao-11-object-possessive-pronouns",
+    id: "licao-19-object-possessive-pronouns",
     name: "Lição 19 — Pronomes Objeto e Possessivos",
     level: "A2",
     icon: "👥",
@@ -566,7 +566,7 @@ const LESSONS = [
     totalQuestions: 29
   },
   {
-    id: "licao-16-present-continuous",
+    id: "licao-20-present-continuous",
     name: "Lição 20 — Present Continuous",
     level: "A2",
     icon: "🏃",
@@ -575,7 +575,7 @@ const LESSONS = [
     totalQuestions: 30
   },
   {
-    id: "licao-17-countable-uncountable",
+    id: "licao-21-countable-uncountable",
     name: "Lição 21 — Contáveis e Incontáveis",
     level: "A2",
     icon: "🍎",
@@ -584,7 +584,7 @@ const LESSONS = [
     totalQuestions: 28
   },
   {
-    id: "licao-18-quantities-choices",
+    id: "licao-22-quantities-choices",
     name: "Lição 22 — Quantidades e Escolhas",
     level: "A2",
     icon: "🛒",
@@ -593,7 +593,7 @@ const LESSONS = [
     totalQuestions: 28
   },
   {
-    id: "licao-19-quantities-distance-time",
+    id: "licao-23-quantities-distance-time",
     name: "Lição 23 — Quantidade, Distância e Tempo",
     level: "A2",
     icon: "📏",
@@ -602,7 +602,7 @@ const LESSONS = [
     totalQuestions: 30
   },
   {
-    id: "licao-20-survival-english",
+    id: "licao-24-survival-english",
     name: "Lição 24 — Survival English",
     level: "A2",
     icon: "🌍",
@@ -611,7 +611,7 @@ const LESSONS = [
     totalQuestions: 30
   },
   {
-    id: "licao-23-talking-about-the-past",
+    id: "licao-25-talking-about-the-past",
     name: "Lição 25 — Falando Sobre o Passado",
     level: "A2",
     icon: "🕰️",
@@ -629,7 +629,7 @@ const LESSONS = [
     totalQuestions: 30
   },
   {
-    id: "licao-28-modal-verbs",
+    id: "licao-27-modal-verbs",
     name: "Lição 27 — Verbos Modais (introdução)",
     level: "A2",
     icon: "🔑",
@@ -638,7 +638,7 @@ const LESSONS = [
     totalQuestions: 28
   },
   {
-    id: "licao-29-phrasal-verbs",
+    id: "licao-28-phrasal-verbs",
     name: "Lição 28 — Phrasal Verbs Essenciais",
     level: "A2",
     icon: "🧩",
@@ -647,7 +647,7 @@ const LESSONS = [
     totalQuestions: 29
   },
   {
-    id: "licao-30-revisao-semestre-2",
+    id: "licao-29-revisao-semestre-2",
     name: "Lição 29 — Revisão Geral do Semestre 2 🎓",
     level: "A2",
     icon: "🎓",
@@ -656,7 +656,7 @@ const LESSONS = [
     totalQuestions: 26
   },
   {
-    id: "licao-31-past-continuous",
+    id: "licao-30-past-continuous",
     name: "Lição 30 — Past Continuous",
     level: "B1",
     icon: "⏳",
@@ -665,7 +665,7 @@ const LESSONS = [
     totalQuestions: 30
   },
   {
-    id: "licao-32-simple-past-past-continuous",
+    id: "licao-31-simple-past-past-continuous",
     name: "Lição 31 — Simple Past × Past Continuous",
     level: "B1",
     icon: "🔀",
@@ -674,7 +674,7 @@ const LESSONS = [
     totalQuestions: 21
   },
   {
-    id: "licao-27-present-perfect",
+    id: "licao-32-present-perfect",
     name: "Lição 32 — Present Perfect (introdução)",
     level: "B1",
     icon: "✅",
