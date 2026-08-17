@@ -219,10 +219,11 @@ Esquema oficial: **5 semestres**, com **C1 e C2 unidos no Semestre 5**.
 | **5** | B2 → C2 *(C1 + C2)* | Lições 51–70 | 📝 Planejado |
 
 > **Nota de disponibilidade (arquivos em `lessons/`):**  
-> - `licao-N-*.html`: arquivos alinhados ao número da lição no currículo (ex.: `licao-10-can-cant.html` = Lição 10).  
-> - O app principal usa as versões `gridscape-*.html` (canvas interativo); os `licao-*.html` são a versão completa/alternativa.  
-> - IDs no `app.js` e no catálogo seguem o mesmo padrão (`licao-10-can-cant`, etc.).  
-> - Semestres 4–5 (lições 41–70) continuam planejados.
+> - Lições de inglês 1–40: formato **gridscape** (`gridscape-*.html`, canvas interativo).  
+> - Introdução: `pronuncia-essencial.html` (formato próprio).  
+> - IDs no `app.js` seguem o padrão do currículo (`licao-10-can-cant`, `verb-to-be`, etc.).  
+> - Semestres 4–5 (lições 41–70) continuam planejados.  
+> - As versões antigas `licao-*.html` (design longo) foram removidas.
 
 ---
 
@@ -396,7 +397,7 @@ Para vídeo real (ex. um vídeo do YouTube sobre o tema), incorpore um `<iframe>
 </div>
 ```
 
-Troque `SEU_VIDEO_ID` pelo ID do vídeo escolhido (a parte depois de `watch?v=` na URL do YouTube). A lição `saudacoes-apresentacoes.html` já tem um bloco `.video-box` reservado para isso — é só trocar o texto de aviso pelo `<iframe>`.
+Troque `SEU_VIDEO_ID` pelo ID do vídeo escolhido (a parte depois de `watch?v=` na URL do YouTube). A versão gridscape (`gridscape-saudacoes.html`) já tem um bloco `.video-box` reservado para isso — é só trocar o texto de aviso pelo `<iframe>`.
 
 
 ## Painel do professor
