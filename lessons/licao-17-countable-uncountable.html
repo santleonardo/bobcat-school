@@ -187,7 +187,7 @@ function norm(s){ return (s||'').toString().trim().toLowerCase().replace(/[.!?]/
 function addXP(n){ if(window.BobcatLesson) BobcatLesson.addXP(n); }
 
 /* Quiz */
-var QUIZ = [{"prompt": "There are ___ apples.", "options": ["many", "much", "a"], "answer": 0}, {"prompt": "How ___ water?", "options": ["much", "many", "a"], "answer": 0}, {"prompt": "I need ___ sugar.", "options": ["some", "an", "many"], "answer": 0}, {"prompt": "Is there ___ milk?", "options": ["any", "many", "a"], "answer": 0}, {"prompt": "She has ___ money.", "options": ["much", "many", "a"], "answer": 0}, {"prompt": "I bought ___ orange.", "options": ["an", "a", "some"], "answer": 0}, {"prompt": "How ___ books?", "options": ["many", "much", "any"], "answer": 0}, {"prompt": "There isn't ___ rice.", "options": ["much", "many", "a"], "answer": 0}];
+var QUIZ = [{"prompt": "There are ___ apples.", "options": ["many", "much", "a"], "answer": 0}, {"prompt": "How ___ water?", "options": ["much", "many", "a"], "answer": 0}, {"prompt": "I need ___ sugar.", "options": ["some", "an", "many"], "answer": 0}, {"prompt": "Is there ___ milk?", "options": ["any", "many", "a"], "answer": 0}, {"prompt": "She doesn't have ___ money.", "options": ["much", "many", "a"], "answer": 0}, {"prompt": "I bought ___ orange.", "options": ["an", "a", "some"], "answer": 0}, {"prompt": "How ___ books?", "options": ["many", "much", "any"], "answer": 0}, {"prompt": "There isn't ___ rice.", "options": ["much", "many", "a"], "answer": 0}];
 var qi = 0, qCorrect = 0, qAnswered = false;
 function renderQuiz(){
   var box = document.getElementById('quizGame');

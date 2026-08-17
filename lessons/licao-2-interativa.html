@@ -44,7 +44,7 @@ button{font-family:inherit;cursor:pointer}
 .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
 .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
 /* ─── HERO ─── */
-.hero{position:relative;min-height:70vh;display:flex;align-items:flex-end;background:linear-gradient(180deg,rgba(43,27,18,0) 40%,rgba(43,27,18,.78) 100%),url("https://sfile.chatglm.cn/images-ppt/d0545b552b80.jpeg") center/cover no-repeat;color:#fff;padding:36px 0 48px}
+.hero{position:relative;min-height:70vh;display:flex;align-items:flex-end;background:linear-gradient(180deg,rgba(43,27,18,0) 40%,rgba(43,27,18,.78) 100%),url("img/hero-park.jpeg") center/cover no-repeat;color:#fff;padding:36px 0 48px}
 .hero::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 20%,rgba(217,121,63,.4),transparent 50%);pointer-events:none}
 .hero-inner{position:relative;z-index:2}
 .hero .badge{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.14);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.35);padding:5px 13px;border-radius:99px;font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:14px}
@@ -406,9 +406,9 @@ button{font-family:inherit;cursor:pointer}
   <!-- PHOTO CARDS -->
   <h3 style="margin:24px 0 4px;color:var(--orange-dark);font-size:18px">🖼️ Artigos na Prática</h3>
   <div class="grid-3 reveal">
-    <div class="photo-card"><div class="img" style="background-image:url('https://sfile.chatglm.cn/images-ppt/7ce7ad3adc81.jpeg')"><span class="badge-art">an</span></div><div class="body"><div class="en">an apple 🍎 <button class="audio-btn" onclick="speak(this,'an apple')">🔊</button></div><div class="why">"apple" começa com som de <b>vogal</b> (/æ/).</div></div></div>
-    <div class="photo-card"><div class="img" style="background-image:url('https://sfile.chatglm.cn/images-ppt/f7e04aa01d00.jpg')"><span class="badge-art">a</span></div><div class="body"><div class="en">a dog 🐕 <button class="audio-btn" onclick="speak(this,'a dog')">🔊</button></div><div class="why">"dog" começa com som de <b>consoante</b> (/d/).</div></div></div>
-    <div class="photo-card"><div class="img" style="background-image:url('https://sfile.chatglm.cn/images-ppt/d4662b77ed8d.png')"><span class="badge-art">the</span></div><div class="body"><div class="en">the book 📖 <button class="audio-btn" onclick="speak(this,'the book')">🔊</button></div><div class="why">"the" indica um livro <b>específico</b> já conhecido.</div></div></div>
+    <div class="photo-card"><div class="img" style="background-image:url('img/apple.jpeg')"><span class="badge-art">an</span></div><div class="body"><div class="en">an apple 🍎 <button class="audio-btn" onclick="speak(this,'an apple')">🔊</button></div><div class="why">"apple" começa com som de <b>vogal</b> (/æ/).</div></div></div>
+    <div class="photo-card"><div class="img" style="background-image:url('img/photo3.jpg')"><span class="badge-art">a</span></div><div class="body"><div class="en">a dog 🐕 <button class="audio-btn" onclick="speak(this,'a dog')">🔊</button></div><div class="why">"dog" começa com som de <b>consoante</b> (/d/).</div></div></div>
+    <div class="photo-card"><div class="img" style="background-image:url('img/photo4.png')"><span class="badge-art">the</span></div><div class="body"><div class="en">the book 📖 <button class="audio-btn" onclick="speak(this,'the book')">🔊</button></div><div class="why">"the" indica um livro <b>específico</b> já conhecido.</div></div></div>
   </div>
   <div class="callout warn reveal" style="margin-top:14px"><span class="ic">⚠️</span><div><p><b>Observação importante:</b></p><p>• Use <b>"a / an"</b> para coisas <u>não específicas</u> (qualquer uma).</p><p>• Use <b>"the"</b> quando todos sabem de qual coisa você está falando.</p></div></div>
 </section>
@@ -481,11 +481,11 @@ button{font-family:inherit;cursor:pointer}
   <div class="chat reveal">
     <div class="chat-head"><span class="av anna" style="background:linear-gradient(135deg,var(--orange),var(--orange-dark))">Y</span><span class="av tom">P</span><div style="font-size:13px"><b>Situação · Meeting Someone New</b><br><span style="color:var(--ink-soft);font-size:11.5px">Use o roteiro e complete os espaços</span></div></div>
     <div class="bubble-row"><span class="miniav anna">Y</span><div class="bubble anna"><span class="who">You</span>Hi! What's your name? <button class="audio-btn" onclick="speak(this,'Hi! What\'s your name?')">🔊</button></div></div>
-    <div class="bubble-row right"><span class="miniav tom">P</span><div class="bubble tom"><span class="who">Partner</span>My name is ___. <button class="audio-btn" onclick="speak(this,'My name is.')">🔊</button></div></div>
+    <div class="bubble-row right"><span class="miniav tom">P</span><div class="bubble tom"><span class="who">Partner</span>My name is ___. <button class="audio-btn" onclick="speak(this,'My name is Tom.')">🔊</button></div></div>
     <div class="bubble-row"><span class="miniav anna">Y</span><div class="bubble anna"><span class="who">You</span>Where are you from? <button class="audio-btn" onclick="speak(this,'Where are you from?')">🔊</button></div></div>
-    <div class="bubble-row right"><span class="miniav tom">P</span><div class="bubble tom"><span class="who">Partner</span>I'm from ___. <button class="audio-btn" onclick="speak(this,'I\'m from.')">🔊</button></div></div>
+    <div class="bubble-row right"><span class="miniav tom">P</span><div class="bubble tom"><span class="who">Partner</span>I'm from ___. <button class="audio-btn" onclick="speak(this,'I\'m from Brazil.')">🔊</button></div></div>
     <div class="bubble-row"><span class="miniav anna">Y</span><div class="bubble anna"><span class="who">You</span>What is in your bag? <button class="audio-btn" onclick="speak(this,'What is in your bag?')">🔊</button></div></div>
-    <div class="bubble-row right"><span class="miniav tom">P</span><div class="bubble tom"><span class="who">Partner</span>I have a ___ and an ___. <button class="audio-btn" onclick="speak(this,'I have a and an.')">🔊</button></div></div>
+    <div class="bubble-row right"><span class="miniav tom">P</span><div class="bubble tom"><span class="who">Partner</span>I have a ___ and an ___. <button class="audio-btn" onclick="speak(this,'I have a sandwich and an apple.')">🔊</button></div></div>
     <div class="bubble-row"><span class="miniav anna">Y</span><div class="bubble anna"><span class="who">You</span>Nice to meet you! <button class="audio-btn" onclick="speak(this,'Nice to meet you!')">🔊</button></div></div>
   </div>
   <div class="callout tip reveal"><span class="ic">🎤</span><p><b>Dica para autoestudo:</b> Grave sua voz e escute depois. Repita até soar natural!</p></div>
@@ -512,7 +512,7 @@ button{font-family:inherit;cursor:pointer}
     <div><h2 class="sec-title">🌍 Curiosidade Cultural — o artigo "the"</h2><p class="sec-sub">Diferente do português, em inglês "the" nem sempre aparece.</p></div>
   </div>
   <div class="culture-card reveal">
-    <div class="img" style="background-image:url('https://sfile.chatglm.cn/images-ppt/768d351eae49.jpg')"></div>
+    <div class="img" style="background-image:url('img/photo5.jpg')"></div>
     <div class="content">
       <h3>Países e nomes próprios</h3>
       <p>Em inglês, <b>não usamos "the"</b> com nomes próprios ou países em geral.</p>
