@@ -218,6 +218,11 @@ Esquema oficial: **5 semestres**, com **C1 e C2 unidos no Semestre 5**.
 | **4** | B1 → B2 | Lições 41–50 | 📝 Planejado |
 | **5** | B2 → C2 *(C1 + C2)* | Lições 51–70 | 📝 Planejado |
 
+> **Nota de disponibilidade (arquivos em `lessons/`):** Nem todos os IDs da tabela abaixo possuem arquivo HTML dedicado ainda.  
+> Presentes como `licao-*.html`: 2 (perguntas/artigos + interativa), 10–24.  
+> Presentes como `gridscape-*.html` (versão interativa em canvas): verb-to-be, saudacoes, perguntas-artigos, simple-present, do-does, can-cant, there-is, here-there, was-were, past-regular/irregular, going-to, will, present-continuous, countable, quantities, survival, talking-past, comparatives, modals, phrasal-verbs, conditionals, present-perfect e revisões.  
+> Filenames não seguem a numeração sequencial do currículo (ex.: `licao-15-can-cant.html` = Lição 10 no título). Use os títulos e a tabela abaixo como fonte de verdade da ordem pedagógica.
+
 ---
 
 ## Semestre 1 — A1 Conversacional
