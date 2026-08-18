@@ -1030,23 +1030,14 @@ function setupProfileScreen() {
 let selectedAvatarEdit = '🦁';
 
 async function renderProfileView() {
-  // Botão "Sair da conta": visível com nuvem + sessão (não depende só do early return)
+  // Sempre mostra "Sair da conta" no perfil (não depende de flags de sessão/nuvem)
   const logoutBtn = document.getElementById('btn-logout');
-  async function refreshLogoutVisibility() {
-    if (!logoutBtn) return;
-    let show = false;
-    try {
-      if (typeof isUsingCloud === 'function' && isUsingCloud()) {
-        if (typeof isLoggedIn === 'function' && isLoggedIn()) show = true;
-        else if (typeof getAccessToken === 'function') {
-          const t = await getAccessToken();
-          if (t) show = true;
-        }
-      }
-    } catch (e) { /* ignore */ }
-    logoutBtn.classList.toggle('hidden', !show);
+  if (logoutBtn) {
+    logoutBtn.classList.remove('hidden');
+    logoutBtn.style.display = 'block';
+    logoutBtn.style.width = '100%';
+    logoutBtn.style.marginTop = '10px';
   }
-  await refreshLogoutVisibility();
 
   const profile = await getProfile();
   if (!profile) return;
@@ -1091,7 +1082,6 @@ async function renderProfileView() {
       : '💾 Salvo neste navegador';
   }
 
-  await refreshLogoutVisibility();
   await renderMessages();
 }
 
