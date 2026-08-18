@@ -1,12 +1,16 @@
 
 :root {
   --orange:#D9793F;--orange-dark:#C9622A;--orange-light:#F2A06A;
+  /* Aliases canvas (gridscape) */
+  --accent:var(--orange);
+  --accent-2:var(--orange-light);
   --cream:#FBEFE6;--cream-2:#F7F1EC;--cream-3:#FDF7F1;
   --ink:#2b2b2b;--ink-soft:#555;
   --ok:#2E8B57;--ok-bg:#EAF7EF;--bad:#C0392B;--bad-bg:#FBEAE8;
   --border:#EBC9AE;--teal:#2A7F8C;--plum:#8C4A6A;--gold:#C9962A;
   --shadow:0 4px 16px rgba(180,120,80,.08);
   --radius:14px;
+  --radius-lg:22px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}

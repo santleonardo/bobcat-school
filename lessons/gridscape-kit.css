@@ -2,8 +2,16 @@
   :root{
     --bg-0:#faf6ef;--bg-1:#f3ebdd;--bg-2:#ffffff;
     --border:rgba(60,40,20,.14);--ink:#2a1f1a;--ink-soft:rgba(42,31,26,.62);
+    /* Canvas accents */
     --accent:#ff5b3d;--accent-2:#ffb347;--violet:#7a6ee0;
-    --ok:#1e8a55;--ok-bg:rgba(30,138,85,.1);--bad:#d9432f;--bad-bg:rgba(217,67,47,.09);--radius:22px;
+    /* Aliases = lesson-kit HUD (não quebrar var(--orange*) do lesson-kit.css) */
+    --orange:var(--accent);
+    --orange-dark:#e04a30;
+    --orange-light:var(--accent-2);
+    --ok:#1e8a55;--ok-bg:rgba(30,138,85,.1);--bad:#d9432f;--bad-bg:rgba(217,67,47,.09);
+    /* --radius único (HUD/kit geral); cards do canvas usam --radius-lg */
+    --radius:14px;
+    --radius-lg:22px;
   }
   html,body{height:100%;overflow:hidden;background:var(--bg-0);}
   body{font-family:"Inter",sans-serif;color:var(--ink);}
@@ -18,7 +26,7 @@
     box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;
     cursor:grab;touch-action:none;
     background:var(--bg-2);
-    border:1px solid var(--border);border-radius:var(--radius);
+    border:1px solid var(--border);border-radius:var(--radius-lg);
     padding:22px 24px 24px;opacity:0;transform:translateY(18px) scale(.97);
     box-shadow:0 14px 34px rgba(60,40,20,.1);
     transition:opacity .5s ease, transform .5s ease;}
