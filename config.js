@@ -9,13 +9,10 @@ window.SUPABASE_CONFIG = {
 };
 
 // Senha exigida para o botão "Zerar progresso das lições" no perfil do aluno.
-// Troque para a senha que quiser — só quem souber essa senha consegue zerar
-// o progresso. Aviso: como este é um arquivo carregado no navegador, essa
-// senha não é um segredo criptográfico de verdade (dá pra ver no código-fonte
-// da página); serve para evitar que o próprio aluno zere sem querer/sem
-// autorização, não para proteger contra alguém tecnicamente curioso.
+// Preferível: definir no painel do professor (tabela student_reset_passwords).
+// Evite senha fixa no código-fonte.
 window.APP_CONFIG = {
-  resetProgressPassword: ''  // defina no painel do professor (tabela student_reset_passwords); evite senha fixa no código,
+  resetProgressPassword: '',
   // Chave pública VAPID (Web Push). A privada fica só na Vercel (VAPID_PRIVATE_KEY).
   // Gere um par novo com: npx web-push generate-vapid-keys
   // Depois cole a pública aqui e a privada + pública nas env vars da Vercel.

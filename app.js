@@ -1998,7 +1998,11 @@ async function boot() {
   const btnLandingStart = document.getElementById('btn-landing-start');
   if (btnLandingStart) {
     btnLandingStart.addEventListener('click', () => {
-      if (isUsingCloud()) {
+      // Nuvem ativa OU config presente → login/cadastro; senão perfil local
+      const cloudReady = (typeof isUsingCloud === 'function' && isUsingCloud())
+        || (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url
+            && !String(window.SUPABASE_CONFIG.url).includes('SEU-PROJETO'));
+      if (cloudReady) {
         setAuthMode('signup');
         showScreen('auth');
       } else {
