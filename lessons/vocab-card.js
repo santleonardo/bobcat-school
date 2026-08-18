@@ -175,14 +175,33 @@
     if (errorBox) errorBox.classList.add('hidden');
 
     try {
+      var headers = { 'Content-Type': 'application/json' };
+      try {
+        if (typeof getAccessToken === 'function') {
+          var t = await getAccessToken();
+          if (t) headers['Authorization'] = 'Bearer ' + t;
+        } else if (window.parent && window.parent !== window && typeof window.parent.getAccessToken === 'function') {
+          var t2 = await window.parent.getAccessToken();
+          if (t2) headers['Authorization'] = 'Bearer ' + t2;
+        } else if (window.SUPABASE_CONFIG && window.supabase) {
+          var c = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
+          var sess = await c.auth.getSession();
+          var token = sess && sess.data && sess.data.session && sess.data.session.access_token;
+          if (token) headers['Authorization'] = 'Bearer ' + token;
+        }
+      } catch (authErr) { /* sem sessão */ }
       var resp = await fetch('/api/vocab-lookup', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: headers,
         body: JSON.stringify({ word: word, context: context, level: level })
       });
       var data = await resp.json().catch(function () { return {}; });
       if (!resp.ok || !data.translation) {
-        showError(data.error);
+        if (resp.status === 401) {
+          showError(data.error || 'Faça login para consultar o vocabulário.');
+        } else {
+          showError(data.error || 'Não foi possível carregar o significado.');
+        }
         return;
       }
       cacheSet(word, level, data);
