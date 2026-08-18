@@ -69,6 +69,14 @@ module.exports = async function handler(req, res) {
     return;
   }
 
+  const { requireSupabaseUser } = require('./_auth');
+  const auth = await requireSupabaseUser(req);
+  if (!auth.ok) {
+    res.status(auth.status).json({ error: auth.error });
+    return;
+  }
+
+
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     res.status(500).json({
