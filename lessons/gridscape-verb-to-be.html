@@ -304,7 +304,7 @@ var NODES = [
   '<div class="gtag"><span><span class="gnum">7</span> QUIZ RELÂMPAGO</span><span class="gscore" id="quizScore">0/8</span></div>'+
   '<h2 class="gtitle">Escolha a forma certa</h2>'+
   '<div id="quizGame"></div>'+
-  '<button type="button" class="gnext" id="btnQuizNext">Próxima pergunta →</button>'+
+  '<button type="button" class="gnext" id="btnQuizNext">Próxima pergunta →</button><button type="button" class="gq-restart" id="btnQuizRestart">Reiniciar quiz</button>'+
   '<div id="quizDone" style="display:none;margin-top:14px">'+
   '<button type="button" class="gnext" data-go>Ir para completar frases →</button></div>',
 
@@ -387,7 +387,7 @@ canvas.addEventListener('click', function(e){
 setTimeout(function(){ centerOnNode(0); }, 30);
 
 // ── Quiz ──
-var qi = 0, qAnswered = false;
+var qi = 0, qAnswered = false, qLocked = false, qScored = false;
 function renderQuiz(){
   var box = document.getElementById('quizGame');
   if(!box) return;
@@ -397,18 +397,44 @@ function renderQuiz(){
     document.getElementById('quizDone').style.display='block';
     return;
   }
-  qAnswered = false;
+  qAnswered = false; qLocked = false; qScored = false;
   var q = QUIZ[qi];
   var opts = q.options.map(function(o,i){
     return '<button type="button" class="gq-opt" data-i="'+i+'">'+o+'</button>';
   }).join('');
-  box.innerHTML = '<p style="font-weight:700;font-size:15px;margin:0 0 8px">'+(qi+1)+'. '+q.prompt+'</p><div>'+opts+'</div>';
+  box.innerHTML = '<p style="font-weight:700;font-size:15px;margin:0 0 8px">'+(qi+1)+'. '+q.prompt+'</p><div>'+opts+'</div>';<button type="button" class="gq-clear" id="quizClearBtn">Limpar seleção</button>';
+  function clearQuizSelection(){
+    if(qLocked) return;
+    box.querySelectorAll('button[data-i]').forEach(function(btn){
+      btn.classList.remove('ok','bad');
+    });
+    qAnswered = false;
+    var clr = document.getElementById('quizClearBtn');
+    if(clr) clr.disabled = true;
+  }
+  var clearBtn = document.getElementById('quizClearBtn');
+  if(clearBtn){
+    clearBtn.disabled = true;
+    clearBtn.addEventListener('click', clearQuizSelection);
+  }
   box.querySelectorAll('button[data-i]').forEach(function(b){
     b.addEventListener('click', function(){
-      if(qAnswered) return; qAnswered = true;
+      if(qLocked) return;
       var ok = +b.dataset.i === q.answer;
-      if(ok){ qCorrect++; addXP(15); b.classList.add('ok'); }
-      else { b.classList.add('bad'); }
+      box.querySelectorAll('button[data-i]').forEach(function(btn){
+        btn.classList.remove('ok','bad');
+      });
+      if(ok){
+        b.classList.add('ok');
+        if(!qScored){ qCorrect++; addXP(15); qScored = true; }
+        qAnswered = true;
+        qLocked = true;
+        if(clearBtn) clearBtn.disabled = true;
+      } else {
+        b.classList.add('bad');
+        qAnswered = true;
+        if(clearBtn) clearBtn.disabled = false;
+      }
       document.getElementById('quizScore').textContent = qCorrect+'/'+QUIZ.length;
       SCORE.correct = qCorrect + fillCorrect + tfCorrect + dialogCorrect;
     });
@@ -418,6 +444,25 @@ document.getElementById('btnQuizNext') && document.getElementById('btnQuizNext')
   if(!qAnswered && qi < QUIZ.length) return;
   qi++; renderQuiz();
 });
+    function restartQuiz(){
+      qi = 0;
+      qCorrect = 0;
+      qAnswered = false;
+      qLocked = false;
+      qScored = false;
+      var scoreEl = document.getElementById('quizScore');
+      if(scoreEl) scoreEl.textContent = '0/'+(QUIZ.length||0);
+      var btnQ2 = document.getElementById('btnQuizNext');
+      if(btnQ2) btnQ2.style.display = '';
+      var done = document.getElementById('quizDone');
+      if(done) done.style.display = 'none';
+      SCORE.correct = qCorrect + fillCorrect + tfCorrect + dialogCorrect;
+      renderQuiz();
+      if(typeof api !== 'undefined' && api && typeof api.remeasure === 'function') api.remeasure();
+    }
+    var btnRestart = document.getElementById('btnQuizRestart');
+    if(btnRestart) btnRestart.addEventListener('click', restartQuiz);
+
 renderQuiz();
 
 // ── Leitura: Verdadeiro ou Falso ──
