@@ -6,111 +6,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="lesson-kit.css">
+<link rel="stylesheet" href="gridscape-kit.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../config.js"></script>
 <script src="../db-client.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
-<style>
-  :root{
-    --bg-0:#faf6ef;--bg-1:#f3ebdd;--bg-2:#ffffff;
-    --border:rgba(60,40,20,.14);--ink:#2a1f1a;--ink-soft:rgba(42,31,26,.62);
-    --accent:#ff5b3d;--accent-2:#ffb347;--violet:#7a6ee0;
-    --ok:#1e8a55;--ok-bg:rgba(30,138,85,.1);--bad:#d9432f;--bad-bg:rgba(217,67,47,.09);--radius:22px;
-  }
-  html,body{height:100%;overflow:hidden;background:var(--bg-0);}
-  body{font-family:"Inter",sans-serif;color:var(--ink);}
-  .hud{position:fixed;}
-  #canvasWrap{position:fixed;inset:0;cursor:default;touch-action:none;overflow:hidden;
-    background:linear-gradient(180deg, var(--bg-0), var(--bg-1) 60%, var(--bg-0));}
-  #canvasWrap.dragging{cursor:grabbing;}
-  #canvas{position:absolute;top:0;left:0;transform-origin:0 0;z-index:1;}
-  .gnode{position:absolute;top:0;left:0;
-    width:min(100vw - 24px, 640px);
-    min-height:calc(100dvh - var(--safe-top, 78px) - var(--safe-bottom, 70px));
-    box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;
-    cursor:grab;touch-action:none;
-    background:var(--bg-2);
-    border:1px solid var(--border);border-radius:var(--radius);
-    padding:22px 24px 24px;opacity:0;transform:translateY(18px) scale(.97);
-    box-shadow:0 14px 34px rgba(60,40,20,.1);
-    transition:opacity .5s ease, transform .5s ease;}
-  .gnode::before{content:'';position:absolute;top:0;left:24px;right:24px;height:3px;border-radius:2px;
-    background:linear-gradient(90deg, transparent, var(--accent-2), var(--accent), transparent);opacity:.9;}
-  .gnode.show{opacity:1;transform:translateY(0) scale(1);}
-  .gnode button,.gnode input,.gnode a{cursor:pointer;touch-action:auto;}
-  .gnode input{cursor:text;}
-  #canvasWrap.dragging .gnode{cursor:grabbing;}
-  @media (max-width:640px){
-    .gnode{width:100vw;border-radius:0;border-left:none;border-right:none;}
-  }
-  .gtag{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:2px;color:var(--ink-soft);
-    text-transform:uppercase;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-  .gtag>span:first-child{display:inline-flex;align-items:center;gap:9px;}
-  .gtag .gnum{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
-    background:radial-gradient(circle at 35% 30%, var(--accent-2), var(--accent) 70%);
-    color:#fff;font-weight:700;font-family:"Inter",sans-serif;font-size:12px;
-    box-shadow:0 0 0 3px rgba(255,138,76,.15);flex-shrink:0;}
-  .gtitle{font-family:"Fraunces",serif;font-style:italic;font-weight:600;font-size:25px;color:var(--ink);
-    margin:0 0 12px;letter-spacing:-.01em;line-height:1.16;}
-  .gsub{font-size:13.5px;color:var(--ink-soft);margin:0 0 14px;line-height:1.55;}
-  .gcontent{font-size:14px;line-height:1.6;color:var(--ink);}
-  .gcard{border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin:10px 0;background:rgba(255,91,61,.04);}
-  .gcard b{color:var(--accent);}
-  .gexample{font-family:"JetBrains Mono",monospace;font-size:12.5px;background:#fff7ed;
-    color:#c2410c;border-left:3px solid var(--accent);border-radius:8px;
-    padding:9px 12px;margin-top:8px;display:inline-block;}
-  .gvocab{display:flex;align-items:center;justify-content:space-between;border-bottom:1px dashed var(--border);
-    padding:8px 0;font-size:14px;color:var(--ink);}
-  .gvocab:last-child{border-bottom:none;}
-  .gvocab b{color:var(--accent);}
-  .gaudio{border:1px solid var(--border);background:#fff;color:var(--ink);
-    border-radius:99px;padding:3px 11px;font-size:11px;font-weight:700;cursor:pointer;
-    font-family:"JetBrains Mono",monospace;transition:all .15s;}
-  .gaudio:hover{background:#fff1e6;border-color:var(--accent-2);}
-  .gnext{margin-top:18px;display:inline-flex;align-items:center;gap:7px;
-    background:linear-gradient(135deg, var(--accent-2), var(--accent));color:#fff;
-    border:none;padding:12px 20px;border-radius:99px;font-weight:700;font-size:13.5px;cursor:pointer;
-    font-family:"Inter",sans-serif;box-shadow:0 8px 20px rgba(255,91,61,.25);transition:transform .15s, box-shadow .15s;}
-  .gnext:hover{transform:translateY(-1px);box-shadow:0 10px 26px rgba(255,91,61,.35);}
-  .gnext:disabled{opacity:.4;cursor:not-allowed;}
-  .gline{position:absolute;top:0;left:0;pointer-events:none;overflow:visible;}
-  .gq-opt{border:1.5px solid var(--border);background:#fff;color:var(--ink);
-    padding:10px 15px;margin:5px 6px 0 0;border-radius:99px;font-weight:600;
-    font-size:13.5px;cursor:pointer;font-family:"Inter",sans-serif;transition:all .15s;}
-  .gq-opt:hover{background:#fff1e6;border-color:var(--accent-2);}
-  .gq-opt.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok);}
-  .gq-opt.bad{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);}
-  .gfill-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:10px 0;font-size:14px;color:var(--ink);}
-  .gfill-input{border:1.5px solid var(--border);background:#fff;color:var(--ink);
-    padding:7px 10px;font-size:14px;width:90px;border-radius:8px;font-family:"JetBrains Mono",monospace;}
-  .gfill-input:focus{outline:none;border-color:var(--accent-2);}
-  .gfill-input.correct{border-color:var(--ok);background:var(--ok-bg);}
-  .gfill-input.incorrect{border-color:var(--bad);background:var(--bad-bg);}
-  .gscore{font-family:"JetBrains Mono",monospace;font-size:11px;background:#fff7ed;
-    border:1px solid var(--border);color:#c2410c;border-radius:99px;padding:3px 11px;}
-  .gtoolbar{position:fixed;bottom:16px;right:16px;background:#fff;color:var(--ink);
-    border:1px solid var(--border);
-    border-radius:99px;padding:6px;display:flex;align-items:center;gap:2px;box-shadow:0 10px 30px rgba(60,40,20,.12);z-index:20;}
-  .gtoolbar button{width:36px;height:36px;border:none;background:transparent;color:var(--ink);font-size:17px;
-    cursor:pointer;border-radius:99px;font-family:"Inter",sans-serif;transition:background .15s;}
-  .gtoolbar button:hover{background:#fff1e6;}
-  .gcapacity{position:fixed;bottom:16px;left:16px;background:#fff;color:#c2410c;
-    border:1px solid var(--border);
-    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
-    padding:7px 14px;border-radius:99px;z-index:20;box-shadow:0 10px 30px rgba(60,40,20,.12);}
-  .gback{position:fixed;top:60px;left:16px;z-index:101;background:#fff;border:1px solid var(--border);
-    font-size:12px;font-weight:600;padding:9px 15px;
-    border-radius:99px;text-decoration:none;color:var(--ink);font-family:"Inter",sans-serif;transition:all .15s;
-    box-shadow:0 10px 30px rgba(60,40,20,.1);}
-  .gback:hover{background:#fff1e6;border-color:var(--accent-2);}
-  .glabel{position:fixed;top:60px;right:16px;z-index:101;background:#fff;border:1px solid var(--border);
-    font-family:"JetBrains Mono",monospace;
-    font-size:9.5px;letter-spacing:1.5px;color:var(--ink-soft);padding:8px 13px;border-radius:99px;
-    box-shadow:0 10px 30px rgba(60,40,20,.1);}
-  @media (max-width:640px){
-    .glabel{display:none;}
-  }
-</style>
 </head><body>
 
 <!-- NOTE: cada .gnode agora ocupa a tela inteira (responsivo via CSS, sem zoom de câmera).
