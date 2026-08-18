@@ -390,6 +390,9 @@ async function getAuthUserHints() {
 
 /** Access token da sessão Supabase (para Authorization nas APIs serverless). */
 async function getAccessToken() {
+  try {
+    await initDataLayer();
+  } catch (e) { /* ignore */ }
   if (!useSupabase || !supabaseClient) return null;
   try {
     const { data: { session } } = await supabaseClient.auth.getSession();
