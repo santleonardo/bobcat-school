@@ -1967,12 +1967,12 @@ async function boot() {
     try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch (e) {}
   }
 
-  // Landing first for visitors without session; returning students go straight in.
-  if (isUsingCloud() && !isLoggedIn()) {
+  // App exige login na nuvem. Sem sessão: landing/auth. Com sessão: app ou criar perfil.
+  if (!isLoggedIn()) {
     if (cameFromLessonGuard) {
       setAuthMode('login');
       showScreen('auth');
-      showAuthInfo('É preciso estar logado para fazer as lições. Entre na sua conta (ou crie uma) para continuar.');
+      showAuthInfo('É preciso estar logado e online para usar o app e as lições. Entre na sua conta (ou crie uma) para continuar.');
     } else {
       showScreen('landing');
     }
@@ -1980,7 +1980,7 @@ async function boot() {
     const profile = await getProfile();
     if (profile) {
       await enterApp();
-    } else if (isUsingCloud() && isLoggedIn()) {
+    } else {
       // Logado (ex.: voltou do Google) mas ainda sem perfil no app
       try {
         if (typeof getAuthUserHints === 'function') {
@@ -1990,24 +1990,14 @@ async function boot() {
         }
       } catch (e) { /* ignore */ }
       showScreen('profile-setup');
-    } else {
-      showScreen('landing');
     }
   }
 
   const btnLandingStart = document.getElementById('btn-landing-start');
   if (btnLandingStart) {
     btnLandingStart.addEventListener('click', () => {
-      // Nuvem ativa OU config presente → login/cadastro; senão perfil local
-      const cloudReady = (typeof isUsingCloud === 'function' && isUsingCloud())
-        || (window.SUPABASE_CONFIG && window.SUPABASE_CONFIG.url
-            && !String(window.SUPABASE_CONFIG.url).includes('SEU-PROJETO'));
-      if (cloudReady) {
-        setAuthMode('signup');
-        showScreen('auth');
-      } else {
-        showScreen('profile-setup');
-      }
+      setAuthMode('signup');
+      showScreen('auth');
     });
   }
 

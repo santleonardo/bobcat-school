@@ -254,7 +254,8 @@ function isUsingCloud() {
 }
 
 function isLoggedIn() {
-  return useSupabase ? !!currentUserId : true; // sem Supabase, "logado" sempre (localStorage)
+  // App exige conta na nuvem: sem sessão = não logado.
+  return !!(useSupabase && currentUserId);
 }
 
 // Retorna { ok: true } ou { ok: false, message: '...', needsConfirmation: true|false }
@@ -431,29 +432,22 @@ async function saveProfile(profile) {
 
 async function getProgress() {
   await initDataLayer();
-  // useSupabase só é usado de fato quando também há uma sessão ativa
-  // (currentUserId). Sem isso, cairíamos silenciosamente em "sem dado
-  // nenhum" mesmo tendo progresso salvo localmente antes — por isso o
-  // fallback para localStorage cobre TANTO "Supabase não configurado"
-  // quanto "Supabase configurado mas sem sessão detectada nesta página".
-  if (useSupabase && currentUserId) {
-    const { data, error } = await supabaseClient
-      .from('progress').select('*').eq('user_id', currentUserId);
-    if (error) { console.error(error); return {}; }
-    const map = {};
-    (data || []).forEach(row => {
-      map[row.lesson_id] = {
-        completed: row.completed,
-        correct: row.correct,
-        total: row.total,
-        answers: row.answers || [],
-        lastAttempt: row.last_attempt
-      };
-    });
-    return map;
-  }
-  const raw = localStorage.getItem(PROGRESS_KEY);
-  return raw ? JSON.parse(raw) : {};
+  // Progresso só na nuvem: sem sessão não há dados de lição.
+  if (!useSupabase || !currentUserId) return {};
+  const { data, error } = await supabaseClient
+    .from('progress').select('*').eq('user_id', currentUserId);
+  if (error) { console.error(error); return {}; }
+  const map = {};
+  (data || []).forEach(row => {
+    map[row.lesson_id] = {
+      completed: row.completed,
+      correct: row.correct,
+      total: row.total,
+      answers: row.answers || [],
+      lastAttempt: row.last_attempt
+    };
+  });
+  return map;
 }
 
 // savedTo indica onde o progresso realmente ficou gravado, para que quem
@@ -473,36 +467,35 @@ async function saveLessonProgressData(lessonId, correct, total, answers) {
   const completed = pct >= PASSING_PCT;
   const safeAnswers = Array.isArray(answers) ? answers : [];
 
-  // Mesma lógica do getProgress(): só usa a nuvem se realmente há uma
-  // sessão logada nesta página. Caso contrário, salva no localStorage em
-  // vez de descartar o progresso silenciosamente (isso evita perder a
-  // tentativa do aluno) — mas quem chamou precisa avisar isso na tela.
-  if (useSupabase && currentUserId) {
-    const row = {
-      user_id: currentUserId,
-      lesson_id: lessonId,
-      completed: completed,
-      correct: correct,
-      total: total,
-      answers: safeAnswers,
-      last_attempt: new Date().toISOString()
+  // Apenas Supabase. Sem login ou sem internet a gravação falha de propósito.
+  if (!useSupabase || !currentUserId || !supabaseClient) {
+    return {
+      completed,
+      pct,
+      savedTo: 'blocked-no-login',
+      error: 'É preciso estar logado e online para salvar o progresso.'
     };
-    const { error } = await supabaseClient.from('progress').upsert(row, { onConflict: 'user_id,lesson_id' });
-    if (error) {
-      console.error(error);
-      // Se a gravação na nuvem falhar (rede, RLS, etc.), ainda assim
-      // guarda localmente para não perder a tentativa do aluno.
-      const progress = await getLocalProgressOnly();
-      progress[lessonId] = { completed, correct, total, answers: safeAnswers, lastAttempt: new Date().toISOString() };
-      localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
-      return { completed, pct, savedTo: 'local-error' };
-    }
-    return { completed, pct, savedTo: 'cloud' };
   }
-  const progress = await getLocalProgressOnly();
-  progress[lessonId] = { completed, correct, total, answers: safeAnswers, lastAttempt: new Date().toISOString() };
-  localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
-  return { completed, pct, savedTo: useSupabase ? 'local-no-login' : 'local-no-cloud' };
+  const row = {
+    user_id: currentUserId,
+    lesson_id: lessonId,
+    completed: completed,
+    correct: correct,
+    total: total,
+    answers: safeAnswers,
+    last_attempt: new Date().toISOString()
+  };
+  const { error } = await supabaseClient.from('progress').upsert(row, { onConflict: 'user_id,lesson_id' });
+  if (error) {
+    console.error(error);
+    return {
+      completed,
+      pct,
+      savedTo: 'cloud-error',
+      error: 'Não foi possível salvar na nuvem. Verifique sua internet e tente de novo.'
+    };
+  }
+  return { completed, pct, savedTo: 'cloud' };
 }
 
 function getLocalProgressOnly() {
@@ -593,34 +586,33 @@ async function saveGameProgress(gameId, data) {
   await initDataLayer();
   const id = String(gameId || '').trim();
   const payload = Object.assign({}, data || {}, { updatedAt: new Date().toISOString() });
-  if (!id) return { savedTo: 'local-no-cloud' };
-
-  setLocalGameProgress(id, payload);
-
-  if (useSupabase && currentUserId) {
-    const cleared = payload.cleared || {};
-    const clearedN = Object.keys(cleared).filter(function (k) { return cleared[k]; }).length;
-    const totalScenarios = typeof payload.totalScenarios === 'number' ? payload.totalScenarios : 5;
-    const row = {
-      user_id: currentUserId,
-      lesson_id: gameLessonId(id),
-      completed: clearedN >= totalScenarios,
-      correct: clearedN,
-      total: totalScenarios,
-      answers: [{ _game: true, data: payload }],
-      last_attempt: new Date().toISOString()
-    };
-    const { error } = await supabaseClient
-      .from('progress')
-      .upsert(row, { onConflict: 'user_id,lesson_id' });
-    if (error) {
-      console.error('saveGameProgress', error);
-      return { savedTo: 'local-error' };
-    }
-    return { savedTo: 'cloud' };
+  if (!id) return { savedTo: 'blocked-no-login', error: 'Jogo inválido.' };
+  if (!useSupabase || !currentUserId || !supabaseClient) {
+    return { savedTo: 'blocked-no-login', error: 'É preciso estar logado e online para salvar.' };
   }
 
-  return { savedTo: useSupabase ? 'local-no-login' : 'local-no-cloud' };
+  const cleared = payload.cleared || {};
+  const clearedN = Object.keys(cleared).filter(function (k) { return cleared[k]; }).length;
+  const totalScenarios = typeof payload.totalScenarios === 'number' ? payload.totalScenarios : 5;
+  const row = {
+    user_id: currentUserId,
+    lesson_id: gameLessonId(id),
+    completed: clearedN >= totalScenarios,
+    correct: clearedN,
+    total: totalScenarios,
+    answers: [{ _game: true, data: payload }],
+    last_attempt: new Date().toISOString()
+  };
+  const { error } = await supabaseClient
+    .from('progress')
+    .upsert(row, { onConflict: 'user_id,lesson_id' });
+  if (error) {
+    console.error('saveGameProgress', error);
+    return { savedTo: 'cloud-error', error: 'Não foi possível salvar na nuvem.' };
+  }
+  // Cache local só como espelho opcional (fonte da verdade = Supabase)
+  try { setLocalGameProgress(id, payload); } catch (e) { /* ignore */ }
+  return { savedTo: 'cloud' };
 }
 
 // ---------- Captura automática das respostas (para o professor revisar) ----------
@@ -754,21 +746,21 @@ function showSaveLocationWarning(savedTo) {
     }
   }
   banner.style.display = 'block';
-  if (savedTo === 'local-no-login') {
+  if (savedTo === 'blocked-no-login' || savedTo === 'local-no-login') {
     banner.style.background = '#fdece8';
     banner.style.border = '1.5px solid #f2b8ab';
     banner.style.color = '#a3321e';
-    banner.textContent = '⚠️ Você não está conectado à sua conta nesta página — este progresso foi salvo SÓ NESTE APARELHO, não na nuvem. Faça login de novo (e refaça a lição) para não perder essa nota em outro dispositivo.';
-  } else if (savedTo === 'local-error') {
+    banner.textContent = '⚠️ Você precisa estar logado e online para salvar o progresso. Entre na sua conta e refaça a lição.';
+  } else if (savedTo === 'cloud-error' || savedTo === 'local-error') {
     banner.style.background = '#fdece8';
     banner.style.border = '1.5px solid #f2b8ab';
     banner.style.color = '#a3321e';
-    banner.textContent = '⚠️ Não consegui salvar na nuvem agora (falha de conexão com o servidor). Guardei este progresso só neste aparelho como reserva — quando a internet voltar, refaça a lição para sincronizar de vez.';
+    banner.textContent = '⚠️ Não foi possível salvar na nuvem (sem internet ou falha no servidor). O progresso desta tentativa NÃO foi guardado. Conecte-se e finalize de novo.';
   } else if (savedTo === 'local-no-cloud') {
-    banner.style.background = '#fdf1ea';
-    banner.style.border = '1.5px solid #f2d3ba';
-    banner.style.color = '#a35a1e';
-    banner.textContent = '💾 Este app está rodando em modo local (sem conta na nuvem configurada) — o progresso fica salvo só neste aparelho/navegador.';
+    banner.style.background = '#fdece8';
+    banner.style.border = '1.5px solid #f2b8ab';
+    banner.style.color = '#a3321e';
+    banner.textContent = '⚠️ Conta na nuvem obrigatória. Configure o Supabase e faça login para usar o app.';
   }
 }
 
@@ -791,9 +783,21 @@ async function handleLessonFinish(lessonId, correct, total, kind) {
   const prev = allProgress[lessonId] || null;
 
   const answers = typeof collectLessonAnswers === 'function' ? collectLessonAnswers() : [];
-  const { completed, pct, savedTo } = await saveLessonProgressData(lessonId, correct, total, answers);
+  const saveResult = await saveLessonProgressData(lessonId, correct, total, answers);
+  const { completed, pct, savedTo } = saveResult;
   const roundedPct = Math.round(pct);
   showSaveLocationWarning(savedTo);
+
+  // Se não gravou na nuvem, não conta como conclusão nem dá XP.
+  if (savedTo !== 'cloud') {
+    if (msg) {
+      msg.style.display = 'block';
+      msg.style.color = '#C0392B';
+      msg.textContent = (saveResult.error || 'Não foi possível salvar na nuvem.') +
+        ' Sua tentativa não foi registrada. Verifique o login e a internet e finalize de novo.';
+    }
+    return false;
+  }
 
   // XP de sessão do HUD da lição (se disponível)
   let sessionXP = 0;
@@ -805,7 +809,7 @@ async function handleLessonFinish(lessonId, correct, total, kind) {
 
   const rewards = await applyLessonRewards(lessonId, correct, total, prev, sessionXP);
 
-  const cloudNote = isUsingCloud() ? ' (☁️)' : ' (💾)';
+  const cloudNote = ' (☁️)';
   const verb = kind === 'filled' ? 'preencheu' : 'acertou';
   const noun = kind === 'filled' ? 'exercícios' : (total === 1 ? 'questão' : 'questões');
 
@@ -829,10 +833,7 @@ async function handleLessonFinish(lessonId, correct, total, kind) {
     if (typeof confetti === 'function') {
       try { confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } }); } catch (e) {}
     }
-    // Se o progresso não foi para a nuvem, dá mais tempo antes de voltar
-    // ao app para o aluno realmente ler o aviso acima.
-    const redirectDelay = (savedTo === 'cloud') ? 2800 : 6000;
-    setTimeout(function () { window.location.href = '../index.html'; }, redirectDelay);
+    setTimeout(function () { window.location.href = '../index.html'; }, 2800);
   } else {
     msg.style.color = '#C0392B';
     msg.textContent = '📌 Você ' + verb + ' ' + correct + ' de ' + total + ' ' + noun +
@@ -1482,14 +1483,12 @@ async function guardLessonRequiresLogin() {
   await initDataLayer();
   if (!/\/lessons\//.test(window.location.pathname)) return;
 
-  if (!useSupabase || currentUserId) {
-    // Sem Supabase configurado (app 100% local) ou já logado: libera a tela.
+  // App só funciona logado + com nuvem. Sem internet/sessão → login.
+  if (useSupabase && currentUserId) {
     document.documentElement.style.visibility = '';
     return;
   }
 
-  // Não logado: guarda qual lição o aluno tentou abrir para reabri-la
-  // automaticamente depois do login, e manda para a tela de login.
   try {
     const target = window.location.pathname.split('/').pop() + window.location.search;
     sessionStorage.setItem('bobcat_pending_lesson', target);
