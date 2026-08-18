@@ -4702,9 +4702,25 @@ async function fetchAiVariants(scenario, playCount){
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
+
+  const headers = { "Content-Type": "application/json" };
+  try {
+    if (typeof getAccessToken === 'function') {
+      const t = await getAccessToken();
+      if (t) headers['Authorization'] = 'Bearer ' + t;
+    } else if (window.parent && window.parent !== window && typeof window.parent.getAccessToken === 'function') {
+      const t = await window.parent.getAccessToken();
+      if (t) headers['Authorization'] = 'Bearer ' + t;
+    } else if (window.SUPABASE_CONFIG && window.supabase) {
+      const c = window.supabase.createClient(window.SUPABASE_CONFIG.url, window.SUPABASE_CONFIG.anonKey);
+      const { data: { session } } = await c.auth.getSession();
+      if (session && session.access_token) headers['Authorization'] = 'Bearer ' + session.access_token;
+    }
+  } catch (e) {}
+
     const resp = await fetch("/api/npc-variant", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({
         scenarioTitle: scenario.title,
         who: scenario.who,
