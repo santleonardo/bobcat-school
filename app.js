@@ -1030,6 +1030,24 @@ function setupProfileScreen() {
 let selectedAvatarEdit = '🦁';
 
 async function renderProfileView() {
+  // Botão "Sair da conta": visível com nuvem + sessão (não depende só do early return)
+  const logoutBtn = document.getElementById('btn-logout');
+  async function refreshLogoutVisibility() {
+    if (!logoutBtn) return;
+    let show = false;
+    try {
+      if (typeof isUsingCloud === 'function' && isUsingCloud()) {
+        if (typeof isLoggedIn === 'function' && isLoggedIn()) show = true;
+        else if (typeof getAccessToken === 'function') {
+          const t = await getAccessToken();
+          if (t) show = true;
+        }
+      }
+    } catch (e) { /* ignore */ }
+    logoutBtn.classList.toggle('hidden', !show);
+  }
+  await refreshLogoutVisibility();
+
   const profile = await getProfile();
   if (!profile) return;
 
@@ -1060,20 +1078,20 @@ async function renderProfileView() {
 
   selectedAvatarEdit = profile.avatar;
   const editContainer = document.getElementById('avatar-picker-edit');
-  editContainer.querySelectorAll('.avatar-option').forEach(o => {
-    o.classList.toggle('selected', o.dataset.avatar === profile.avatar);
-  });
+  if (editContainer) {
+    editContainer.querySelectorAll('.avatar-option').forEach(o => {
+      o.classList.toggle('selected', o.dataset.avatar === profile.avatar);
+    });
+  }
 
   const cloudNote = document.getElementById('cloud-status');
   if (cloudNote) {
     cloudNote.textContent = isUsingCloud()
-      ? '☁️ Conta na nuvem'
+      ? (isLoggedIn() ? '☁️ Conta na nuvem' : '☁️ Nuvem configurada — faça login')
       : '💾 Salvo neste navegador';
   }
 
-  const logoutBtn = document.getElementById('btn-logout');
-  if (logoutBtn) logoutBtn.classList.toggle('hidden', !isUsingCloud());
-
+  await refreshLogoutVisibility();
   await renderMessages();
 }
 

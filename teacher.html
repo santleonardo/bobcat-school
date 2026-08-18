@@ -1749,7 +1749,22 @@ async function loadData() {
   document.getElementById('table-slot').innerHTML = html;
 }
 
-document.addEventListener('DOMContentLoaded', () => { loadData(); checkUnreadMessages(); });
+document.addEventListener('DOMContentLoaded', async () => {
+  // Restaura UI de login se já houver sessão de professor
+  try {
+    const cfg = window.SUPABASE_CONFIG;
+    if (cfg && cfg.url && cfg.anonKey && window.supabase) {
+      const client = window.supabase.createClient(cfg.url, cfg.anonKey);
+      const { data: { session } } = await client.auth.getSession();
+      if (session && session.user) {
+        const { data: row } = await client.from('teachers').select('user_id').eq('user_id', session.user.id).maybeSingle();
+        if (row) updateTeacherAuthUI(session);
+      }
+    }
+  } catch (e) { /* ignore */ }
+  loadData();
+  checkUnreadMessages();
+});
 
 // ---------- Mensagens (canal de comunicação com os alunos) ----------
 
