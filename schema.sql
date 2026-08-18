@@ -50,22 +50,56 @@ create policy "Users manage their own progress"
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
 
--- Permite que qualquer aluno logado LEIA todos os
--- perfis e progresso — é o que possibilita o painel do professor (teacher.html).
--- Escrita continua restrita a "só o próprio registro" pelas políticas acima.
--- Trade-off: com isso, em teoria um aluno também consegue ler dados de outros
--- alunos (só leitura, nunca escrita). Para uma turma pequena costuma ser um
--- risco aceitável; se quiser bloquear isso e restringir a leitura só ao
--- professor, me avise que ajusto para exigir login de professor de verdade.
+
+-- ============================================================
+-- Professores: quem pode ver a turma e agir no painel teacher.html
+-- Depois de criar a conta do professor no Auth (e-mail + senha), rode:
+--   insert into public.teachers (user_id)
+--   values ('UUID-DO-USUARIO-PROFESSOR')
+--   on conflict do nothing;
+-- (UUID em Authentication → Users no painel do Supabase)
+-- ============================================================
+create table if not exists teachers (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  created_at timestamptz not null default now()
+);
+
+alter table teachers enable row level security;
+
+-- Professores autenticados podem ver a própria linha (confirmação no painel).
+drop policy if exists "Teachers can read self" on teachers;
+create policy "Teachers can read self"
+  on teachers for select
+  using (auth.uid() = user_id);
+
+-- Função auxiliar (security definer) para políticas RLS.
+create or replace function public.is_teacher()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.teachers t where t.user_id = auth.uid()
+  );
+$$;
+
+revoke all on function public.is_teacher() from public;
+grant execute on function public.is_teacher() to authenticated;
+
+-- Só professores (tabela teachers) leem perfis/progresso de toda a turma.
 drop policy if exists "Authenticated can view all profiles" on profiles;
-create policy "Authenticated can view all profiles"
+drop policy if exists "Teachers can view all profiles" on profiles;
+create policy "Teachers can view all profiles"
   on profiles for select
-  using (auth.role() = 'authenticated');
+  using (public.is_teacher());
 
 drop policy if exists "Authenticated can view all progress" on progress;
-create policy "Authenticated can view all progress"
+drop policy if exists "Teachers can view all progress" on progress;
+create policy "Teachers can view all progress"
   on progress for select
-  using (auth.role() = 'authenticated');
+  using (public.is_teacher());
 
 -- Tabela de mensagens (canal de comunicação aluno ↔ professor)
 -- Cada linha é uma mensagem dentro da "conversa" do aluno (user_id) com o
@@ -95,26 +129,19 @@ create policy "Students manage their own messages"
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id and sender = 'student');
 
--- Qualquer usuário autenticado pode LER todas as conversas — é o que
--- permite o painel do professor (teacher.html, que usa login anônimo)
--- listar as mensagens de todos os alunos. Mesmo trade-off já assumido
--- acima para profiles/progress: leitura ampla, escrita restrita.
+-- Professores leem todas as conversas; alunos só as próprias (política acima).
 drop policy if exists "Authenticated can view all messages" on messages;
-create policy "Authenticated can view all messages"
+drop policy if exists "Teachers can view all messages" on messages;
+create policy "Teachers can view all messages"
   on messages for select
-  using (auth.role() = 'authenticated');
+  using (public.is_teacher());
 
--- Permite que o painel do professor (sessão anônima) insira respostas em
--- qualquer conversa, desde que marcadas como sender = 'teacher'. Como o
--- teacher.html não tem uma conta de professor "de verdade" (usa login
--- anônimo do Supabase), não dá para restringir isso a um único usuário
--- específico — qualquer sessão autenticada pode enviar como 'teacher'.
--- Para uma turma pequena costuma ser um risco aceitável; se quiser um
--- login de professor de verdade (com senha), me avise que ajusto.
+-- Só professores podem enviar como sender = 'teacher'.
 drop policy if exists "Authenticated can reply as teacher" on messages;
-create policy "Authenticated can reply as teacher"
+drop policy if exists "Teachers can reply as teacher" on messages;
+create policy "Teachers can reply as teacher"
   on messages for insert
-  with check (auth.role() = 'authenticated' and sender = 'teacher');
+  with check (public.is_teacher() and sender = 'teacher');
 
 -- ============================================================
 -- Storage: anexos das mensagens (aluno ↔ professor)
@@ -161,17 +188,13 @@ create policy "Students can read their own reset password"
   on student_reset_passwords for select
   using (auth.uid() = user_id);
 
--- Qualquer sessão autenticada (inclui a sessão anônima do painel do
--- professor) pode ler e definir a senha de qualquer aluno — é o que
--- permite o professor cadastrar/trocar a senha de cada aluno pelo painel.
--- Mesmo trade-off já assumido nas outras tabelas: leitura/escrita ampla
--- para quem estiver autenticado, já que teacher.html não tem uma conta de
--- professor "de verdade" com senha própria.
+-- Só professores gerenciam senhas de reset dos alunos.
 drop policy if exists "Authenticated can manage reset passwords" on student_reset_passwords;
-create policy "Authenticated can manage reset passwords"
+drop policy if exists "Teachers manage reset passwords" on student_reset_passwords;
+create policy "Teachers manage reset passwords"
   on student_reset_passwords for all
-  using (auth.role() = 'authenticated')
-  with check (auth.role() = 'authenticated');
+  using (public.is_teacher())
+  with check (public.is_teacher());
 
 -- ============================================================
 -- Lições customizadas (adicionadas pelo professor pelo painel, via upload
@@ -205,17 +228,13 @@ create policy "Authenticated can view custom lessons"
   on custom_lessons for select
   using (auth.role() = 'authenticated');
 
--- Qualquer sessão autenticada (inclui a sessão anônima do painel do
--- professor) pode criar, editar e apagar lições customizadas — mesmo
--- trade-off já assumido nas outras tabelas deste projeto: como teacher.html
--- não tem um login de professor "de verdade" (usa sessão anônima), não dá
--- para restringir isso a um único usuário específico. Para uma turma
--- pequena costuma ser um risco aceitável.
+-- Só professores criam/editam/apagam lições customizadas.
 drop policy if exists "Authenticated can manage custom lessons" on custom_lessons;
-create policy "Authenticated can manage custom lessons"
+drop policy if exists "Teachers manage custom lessons" on custom_lessons;
+create policy "Teachers manage custom lessons"
   on custom_lessons for all
-  using (auth.role() = 'authenticated')
-  with check (auth.role() = 'authenticated');
+  using (public.is_teacher())
+  with check (public.is_teacher());
 
 -- ============================================================
 -- IMPORTANTE: também é preciso habilitar login por e-mail/senha:
@@ -267,9 +286,9 @@ create policy "Users manage own push subscriptions"
 -- Painel do professor (sessão autenticada) pode ler todas — útil para
 -- enviar lembrete em massa no futuro. Escrita continua restrita ao dono.
 drop policy if exists "Authenticated can view all push subscriptions" on push_subscriptions;
-create policy "Authenticated can view all push subscriptions"
-  on push_subscriptions for select
-  using (auth.role() = 'authenticated');
+drop policy if exists "Teachers can view all push subscriptions" on push_subscriptions;
+-- Push é lido pelo servidor com service role; professores não precisam listar endpoints.
+
 
 -- ============================================================
 -- Personalidades de IA criadas pelo aluno e histórico completo das

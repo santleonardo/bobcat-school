@@ -42,6 +42,30 @@ Pronto — o app já vai detectar automaticamente que o Supabase está configura
 
 ---
 
+
+## Segurança (professor + APIs de IA)
+
+### Conta de professor
+1. Crie um usuário no Supabase Auth (e-mail + senha) só para o professor.
+2. Rode o `schema.sql` atualizado (cria a tabela `teachers` e a função `is_teacher()`).
+3. Insira o UUID do professor:
+   ```sql
+   insert into public.teachers (user_id)
+   values ('COLE-O-UUID-AQUI')
+   on conflict do nothing;
+   ```
+4. Acesse `/teacher.html` e faça login com esse e-mail/senha (não use mais sessão anônima).
+
+### APIs de IA (`/api/chat`, vocab, explain-error, etc.)
+Exigem header `Authorization: Bearer <access_token>` da sessão do aluno. Sem login válido, retornam 401.
+
+### Variáveis na Vercel
+- `GEMINI_API_KEY`
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY` (ou `SUPABASE_ANON_KEY` para validar JWT)
+- `CRON_SECRET` / secrets de push
+
+
 ## Passo 2 — GitHub (guardar o código)
 
 Se ainda não tem o Git configurado, instale em [git-scm.com](https://git-scm.com).

@@ -285,8 +285,26 @@
   <div class="online-banner">
     🌐 <strong>Painel online</strong> — acesse de qualquer dispositivo pelo mesmo link do site
     (<code>…/teacher.html</code>). Abas <strong>Currículo</strong> e <strong>Todos os semestres</strong> funcionam sem login.
-    Progresso, mensagens e senhas precisam do Supabase configurado.
+    Progresso, mensagens e senhas exigem <strong>login de professor</strong>.
   </div>
+
+  <div id="teacher-auth-gate" class="notice" style="margin-bottom:14px;">
+    <strong>🔐 Login do professor</strong>
+    <p style="margin:8px 0 12px;font-size:13.5px;color:var(--ink-soft);">
+      Entre com a conta cadastrada como professor no Supabase (tabela <code>teachers</code>).
+      Alunos não têm acesso a este painel.
+    </p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+      <input id="teacher-email" type="email" placeholder="E-mail do professor" autocomplete="username"
+        style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;min-width:220px;font:inherit;">
+      <input id="teacher-password" type="password" placeholder="Senha" autocomplete="current-password"
+        style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;min-width:160px;font:inherit;">
+      <button type="button" class="btn" id="teacher-login-btn" onclick="teacherLogin()">Entrar</button>
+      <button type="button" class="btn" id="teacher-logout-btn" style="display:none;background:#fff;color:var(--orange-dark);border:1px solid var(--orange);" onclick="teacherLogout()">Sair</button>
+    </div>
+    <p id="teacher-auth-msg" style="margin:10px 0 0;font-size:13px;color:var(--bad);"></p>
+  </div>
+
 
   <div class="tabs">
     <button class="tab-btn active" id="tab-btn-progress" onclick="switchTab('progress')">📊 Progresso da turma</button>
@@ -1504,16 +1522,87 @@ async function ensureClient() {
     return null;
   }
   const client = window.supabase.createClient(cfg.url, cfg.anonKey);
-  let { data: { session } } = await client.auth.getSession();
-  if (!session) {
-    const { error } = await client.auth.signInAnonymously();
-    if (error) {
-      showNotice('⚠️ Não foi possível conectar à nuvem: ' + error.message, true);
-      return null;
-    }
+  const { data: { session } } = await client.auth.getSession();
+  if (!session || !session.user) {
+    showNotice('⚠️ Faça login com a conta de professor para ver progresso, mensagens e senhas.', true);
+    updateTeacherAuthUI(null);
+    return null;
   }
+  // Confirma que o usuário está na tabela teachers
+  const { data: row, error: tErr } = await client.from('teachers').select('user_id').eq('user_id', session.user.id).maybeSingle();
+  if (tErr || !row) {
+    showNotice('⚠️ Esta conta não está autorizada como professor. Peça para incluir seu user_id na tabela <code>teachers</code>.', true);
+    updateTeacherAuthUI(session);
+    return null;
+  }
+  updateTeacherAuthUI(session);
   return client;
 }
+
+function updateTeacherAuthUI(session) {
+  const logoutBtn = document.getElementById('teacher-logout-btn');
+  const loginBtn = document.getElementById('teacher-login-btn');
+  const msg = document.getElementById('teacher-auth-msg');
+  if (!logoutBtn) return;
+  if (session && session.user) {
+    logoutBtn.style.display = 'inline-flex';
+    if (loginBtn) loginBtn.style.display = 'none';
+    if (msg) msg.textContent = 'Conectado: ' + (session.user.email || session.user.id);
+    if (msg) msg.style.color = 'var(--ok, #2E8B57)';
+  } else {
+    logoutBtn.style.display = 'none';
+    if (loginBtn) loginBtn.style.display = 'inline-flex';
+  }
+}
+
+async function teacherLogin() {
+  const cfg = window.SUPABASE_CONFIG;
+  const msg = document.getElementById('teacher-auth-msg');
+  if (!cfg || !cfg.url || !cfg.anonKey || !window.supabase) {
+    if (msg) msg.textContent = 'Supabase não configurado em config.js.';
+    return;
+  }
+  const email = (document.getElementById('teacher-email') || {}).value || '';
+  const password = (document.getElementById('teacher-password') || {}).value || '';
+  if (!email || !password) {
+    if (msg) { msg.textContent = 'Preencha e-mail e senha.'; msg.style.color = 'var(--bad,#C0392B)'; }
+    return;
+  }
+  const client = window.supabase.createClient(cfg.url, cfg.anonKey);
+  const { data, error } = await client.auth.signInWithPassword({ email: email.trim(), password });
+  if (error) {
+    if (msg) { msg.textContent = error.message; msg.style.color = 'var(--bad,#C0392B)'; }
+    return;
+  }
+  // Verifica tabela teachers
+  const uid = data.session.user.id;
+  const { data: row, error: tErr } = await client.from('teachers').select('user_id').eq('user_id', uid).maybeSingle();
+  if (tErr || !row) {
+    await client.auth.signOut();
+    if (msg) {
+      msg.textContent = 'Login ok, mas este usuário não está em public.teachers. Insira o UUID no Supabase.';
+      msg.style.color = 'var(--bad,#C0392B)';
+    }
+    return;
+  }
+  if (msg) { msg.textContent = 'Login de professor ok.'; msg.style.color = 'var(--ok,#2E8B57)'; }
+  updateTeacherAuthUI(data.session);
+  if (typeof loadData === 'function') loadData();
+  if (typeof checkUnreadMessages === 'function') checkUnreadMessages();
+}
+
+async function teacherLogout() {
+  const cfg = window.SUPABASE_CONFIG;
+  if (cfg && window.supabase) {
+    const client = window.supabase.createClient(cfg.url, cfg.anonKey);
+    await client.auth.signOut();
+  }
+  updateTeacherAuthUI(null);
+  const content = document.getElementById('content');
+  if (content) content.style.display = 'none';
+  showNotice('Você saiu. Entre de novo para ver dados da turma.', false);
+}
+
 
 function showNotice(html, isError) {
   const slot = document.getElementById('notice-slot');

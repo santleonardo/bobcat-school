@@ -2944,7 +2944,7 @@ async function vocabCardFetchAndRender(word, context, level) {
   try {
     const resp = await fetch('/api/vocab-lookup', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: await apiAuthHeaders(),
       body: JSON.stringify({ word, context, level })
     });
     const data = await resp.json().catch(() => ({}));
@@ -3346,7 +3346,7 @@ async function aiChatSend(audioPayload) {
 
     const resp = await fetch('/api/chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: await apiAuthHeaders(),
       body: JSON.stringify(body)
     });
     const data = await resp.json().catch(() => ({}));
@@ -3379,6 +3379,18 @@ async function aiChatSend(audioPayload) {
  * A IA inicia a conversa sozinha (quando o aluno abre o chat depois de várias horas).
  * Usa o modo proactive do /api/chat — a mensagem sintética não entra no histórico do aluno.
  */
+
+async function apiAuthHeaders(extra) {
+  const headers = Object.assign({ 'Content-Type': 'application/json' }, extra || {});
+  try {
+    if (typeof getAccessToken === 'function') {
+      const t = await getAccessToken();
+      if (t) headers['Authorization'] = 'Bearer ' + t;
+    }
+  } catch (e) { /* offline / sem sessão */ }
+  return headers;
+}
+
 async function aiChatSendProactive() {
   if (aiChatBusy || !aiChatCurrentPersonaId) return;
   const persona = aiChatCurrentPersona;
@@ -3408,7 +3420,7 @@ async function aiChatSendProactive() {
 
     const resp = await fetch('/api/chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: await apiAuthHeaders(),
       body: JSON.stringify(body)
     });
     const data = await resp.json().catch(() => ({}));

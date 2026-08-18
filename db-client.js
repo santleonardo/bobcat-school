@@ -387,6 +387,20 @@ async function getAuthUserHints() {
 
 // ---------- Perfil ----------
 
+
+/** Access token da sessão Supabase (para Authorization nas APIs serverless). */
+async function getAccessToken() {
+  if (!useSupabase || !supabaseClient) return null;
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    return session && session.access_token ? session.access_token : null;
+  } catch (e) {
+    return null;
+  }
+}
+window.getAccessToken = getAccessToken;
+
+
 async function getProfile() {
   if (useSupabase) {
     if (!currentUserId) return null;
@@ -1302,9 +1316,14 @@ function injectErrorTrailStyles() {
 }
 
 async function callExplainError(payload) {
+  const headers = { 'Content-Type': 'application/json' };
+  try {
+    const t = await getAccessToken();
+    if (t) headers['Authorization'] = 'Bearer ' + t;
+  } catch (e) { /* sem sessão */ }
   const res = await fetch('/api/explain-error', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify(payload)
   });
   const data = await res.json().catch(() => ({}));
