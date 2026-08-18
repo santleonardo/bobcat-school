@@ -15,14 +15,23 @@
   }
   html,body{height:100%;overflow:hidden;background:var(--bg-0);}
   body{font-family:"Inter",sans-serif;color:var(--ink);}
-  .hud{position:fixed;padding-top:max(10px, env(safe-area-inset-top, 0px));padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));}
+  .hud{
+    position:fixed;top:0;left:0;right:0;z-index:120;
+    box-sizing:border-box;
+    padding-top:max(10px, env(safe-area-inset-top, 0px));
+    padding-bottom:10px;
+    padding-left:max(16px, env(safe-area-inset-left, 0px));
+    padding-right:max(16px, env(safe-area-inset-right, 0px));
+    /* altura estável para .gback / .glabel se posicionarem abaixo */
+    min-height:calc(48px + env(safe-area-inset-top, 0px));
+  }
   #canvasWrap{position:fixed;inset:0;cursor:default;touch-action:none;overflow:hidden;
     background:linear-gradient(180deg, var(--bg-0), var(--bg-1) 60%, var(--bg-0));}
   #canvasWrap.dragging{cursor:grabbing;}
   #canvas{position:absolute;top:0;left:0;transform-origin:0 0;z-index:1;}
   .gnode{position:absolute;top:0;left:0;
     width:min(100vw - 24px, 640px);
-    min-height:calc(100dvh - var(--safe-top, 78px) - var(--safe-bottom, 70px));
+    min-height:calc(100dvh - var(--safe-top, 96px) - var(--safe-bottom, 70px));
     box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;
     cursor:grab;touch-action:none;
     background:var(--bg-2);
@@ -114,11 +123,13 @@
     border-radius:99px;z-index:20;box-shadow:0 10px 30px rgba(60,40,20,.12);
     display:inline-flex;align-items:center;
   }
+  /* Abaixo do HUD (min-height do .hud), sem sobrepor XP / pills */
   .gback{
     position:fixed;
-    top:max(60px, calc(12px + env(safe-area-inset-top, 0px)));
-    left:max(16px, env(safe-area-inset-left, 0px));
-    z-index:101;background:#fff;border:1px solid var(--border);
+    top:calc(48px + env(safe-area-inset-top, 0px) + 10px);
+    left:max(12px, env(safe-area-inset-left, 0px));
+    z-index:110;
+    background:#fff;border:1px solid var(--border);
     font-size:13px;font-weight:600;
     padding:10px 16px;min-height:44px;box-sizing:border-box;
     border-radius:99px;text-decoration:none;color:var(--ink);font-family:"Inter",sans-serif;
@@ -129,9 +140,10 @@
   .gback:hover{background:#fff1e6;border-color:var(--accent-2);}
   .glabel{
     position:fixed;
-    top:max(60px, calc(12px + env(safe-area-inset-top, 0px)));
-    right:max(16px, env(safe-area-inset-right, 0px));
-    z-index:101;background:#fff;border:1px solid var(--border);
+    top:calc(48px + env(safe-area-inset-top, 0px) + 10px);
+    right:max(12px, env(safe-area-inset-right, 0px));
+    z-index:110;
+    background:#fff;border:1px solid var(--border);
     font-family:"JetBrains Mono",monospace;
     font-size:9.5px;letter-spacing:1.5px;color:var(--ink-soft);
     padding:10px 14px;min-height:44px;box-sizing:border-box;
@@ -140,6 +152,16 @@
   }
   @media (max-width:640px){
     .glabel{display:none;}
+    /* HUD pode quebrar em 2 linhas: empurra voltar mais para baixo */
+    .gback{
+      top:calc(72px + env(safe-area-inset-top, 0px) + 8px);
+      left:max(10px, env(safe-area-inset-left, 0px));
+      font-size:12.5px;
+      padding:10px 14px;
+    }
+    .hud-left{min-width:0;flex:1 1 auto;}
+    .hud-right{flex:0 1 auto;}
+    .xp-track{max-width:120px;min-width:64px;}
   }
 
 /* ─── Practical exercises ─── */
