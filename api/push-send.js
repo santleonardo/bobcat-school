@@ -217,18 +217,25 @@ async function fetchConversationsForReminder(supabaseUrl, serviceKey, userIds) {
 }
 
 // Detector bem simples (não é análise de idioma de verdade) pra pegar os
-// casos mais óbvios de o modelo ter respondido em inglês em vez de
-// português — frases inteiras em inglês raramente têm nenhuma das palavras
-// comuns do português abaixo, e frequentemente começam com uma saudação
-// genérica de abertura de conversa (sinal de que fugiu do prompt).
-const PT_COMMON_WORDS = /\b(que|não|para|com|uma|seu|sua|você|voc[eê]|est[aá]|vamos|hoje|ainda|sobre|bora|ta[ ]|tá|pra|pro)\b/i;
-const ENGLISH_GREETING_OPENER = /^(hi|hello|hey|good (morning|afternoon|evening))\b[,!.\s]/i;
+// casos de o modelo ter respondido em inglês em vez de português. Em vez de
+// só olhar pro tamanho do texto (frases curtas em inglês tipo "Miss you!"
+// passavam batido antes), agora compara sinais de cada idioma:
+//   - Qualquer acento/caractere típico do português (ã, õ, ç, á, é, ê, í, ó,
+//     ú, à) já é sinal forte de português — aceita direto.
+//   - Senão, procura palavras comuns de cada idioma e compara as contagens.
+const PT_ACCENTS = /[ãõçáéêíóúà]/i;
+const PT_COMMON_WORDS = /\b(que|não|nao|para|com|uma|um|seu|sua|voc[eê]|est[aá]|vamos|hoje|ainda|sobre|bora|tá|ta|pra|pro|de|do|da|no|na|em|ao|aos|as|os|e|é|foi|ser|ter|vai|vem|vamo|olha|ei|oi|fica|deixa)\b/i;
+const EN_COMMON_WORDS = /\b(the|you|your|is|are|was|were|how|hi|hello|hey|miss|missed|ready|come|back|waiting|let'?s|what|when|where|now|again|still|new|today|good|morning|afternoon|evening|practice|chat|talk|to|and|about|with|we)\b/i;
 function looksLikeEnglishGreeting(text) {
   if (!text) return false;
-  if (ENGLISH_GREETING_OPENER.test(text.trim())) return true;
-  // Texto "razoavelmente longo" sem nenhuma palavra comum de português é
-  // suspeito de estar em outro idioma.
-  return text.length > 15 && !PT_COMMON_WORDS.test(text);
+  const trimmed = text.trim();
+  if (PT_ACCENTS.test(trimmed)) return false; // acento típico do português: confia
+  const ptHits = (trimmed.match(new RegExp(PT_COMMON_WORDS, 'gi')) || []).length;
+  const enHits = (trimmed.match(new RegExp(EN_COMMON_WORDS, 'gi')) || []).length;
+  if (enHits > ptHits) return true;
+  // Sem sinal de português nenhum e o texto não é trivialmente curto (ex.:
+  // só emoji) — melhor descartar do que arriscar.
+  return ptHits === 0 && enHits === 0 && trimmed.replace(/[^a-zA-Z]/g, '').length >= 8;
 }
 
 // Pede ao Gemini um título + corpo curtos de notificação, baseados na última
