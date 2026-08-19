@@ -291,7 +291,8 @@ module.exports = async function handler(req, res) {
 
   if (!publicKey || !privateKey) {
     res.status(500).json({
-      error: 'VAPID_PUBLIC_KEY e VAPID_PRIVATE_KEY não configuradas na Vercel. Veja o README.'
+      error: 'VAPID_PUBLIC_KEY e VAPID_PRIVATE_KEY não configuradas na Vercel.',
+      hint: 'Project Settings → Environment Variables. A pública deve ser igual a config.js (vapidPublicKey).'
     });
     return;
   }
@@ -314,7 +315,27 @@ module.exports = async function handler(req, res) {
     const gotPush = req.headers['x-push-secret'] || '';
     const authorized = (cronSecret && gotCron === cronSecret) || (pushSecret && gotPush === pushSecret);
     if ((cronSecret || pushSecret) && !authorized) {
-      res.status(401).json({ error: 'Não autorizado.' });
+      res.status(401).json({ error: 'Não autorizado.', hint: 'Envie header x-push-secret igual a PUSH_SEND_SECRET.' });
+      return;
+    }
+    // Diagnóstico rápido (protegido pelo secret): GET /api/push-send?diagnose=1
+    if (String(body.diagnose || '') === '1') {
+      const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY || process.env.SERVICE_ROLE_KEY;
+      res.status(200).json({
+        ok: true,
+        diagnose: {
+          vapidPublic: !!publicKey,
+          vapidPrivate: !!privateKey,
+          vapidSubject: subject,
+          supabaseUrl: !!supabaseUrl,
+          serviceRole: !!serviceKey,
+          pushSendSecret: !!pushSecret,
+          cronSecret: !!cronSecret,
+          gemini: !!process.env.GEMINI_API_KEY,
+          note: 'serviceRole=false é a causa mais comum de lembrete automático não enviar.'
+        }
+      });
       return;
     }
   } else if (!isAdHocTest) {
@@ -348,7 +369,10 @@ module.exports = async function handler(req, res) {
     const genericPayload = buildPayload(fallbackTitle, fallbackText, url, tag);
 
     const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    // Aceita nomes comuns; service_role é obrigatória para listar todas as subscriptions
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+      || process.env.SUPABASE_SERVICE_KEY
+      || process.env.SERVICE_ROLE_KEY;
     const geminiKey = process.env.GEMINI_API_KEY;
     const canPersonalize = wantsPersonalization && !!supabaseUrl && !!serviceKey && !!geminiKey;
 
@@ -385,7 +409,8 @@ module.exports = async function handler(req, res) {
     // 2) Buscar no Supabase
     if (!supabaseUrl || !serviceKey) {
       res.status(400).json({
-        error: 'Sem subscription no body e sem SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY para buscar no banco.'
+        error: 'Sem subscription no body e sem SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY para buscar no banco.',
+        hint: 'Na Vercel, adicione SUPABASE_SERVICE_ROLE_KEY (Supabase → Settings → API → service_role). NEXT_PUBLIC_SUPABASE_ANON_KEY não basta.'
       });
       return;
     }
@@ -412,7 +437,9 @@ module.exports = async function handler(req, res) {
     let dueRows = rows;
     let skipped = 0;
     if (isScheduledDispatch) {
-      dueRows = rows.filter((row) => isDueNow(row, currentSlot));
+      // ?force=1 ou force=all → manda para TODOS (teste do workflow / admin)
+      const forceAll = String(body.force || '') === '1' || String(body.force || '').toLowerCase() === 'all';
+      dueRows = forceAll ? rows : rows.filter((row) => isDueNow(row, currentSlot));
       skipped = rows.length - dueRows.length;
     }
 
