@@ -216,6 +216,21 @@ async function fetchConversationsForReminder(supabaseUrl, serviceKey, userIds) {
   return result;
 }
 
+// Detector bem simples (não é análise de idioma de verdade) pra pegar os
+// casos mais óbvios de o modelo ter respondido em inglês em vez de
+// português — frases inteiras em inglês raramente têm nenhuma das palavras
+// comuns do português abaixo, e frequentemente começam com uma saudação
+// genérica de abertura de conversa (sinal de que fugiu do prompt).
+const PT_COMMON_WORDS = /\b(que|não|para|com|uma|seu|sua|você|voc[eê]|est[aá]|vamos|hoje|ainda|sobre|bora|ta[ ]|tá|pra|pro)\b/i;
+const ENGLISH_GREETING_OPENER = /^(hi|hello|hey|good (morning|afternoon|evening))\b[,!.\s]/i;
+function looksLikeEnglishGreeting(text) {
+  if (!text) return false;
+  if (ENGLISH_GREETING_OPENER.test(text.trim())) return true;
+  // Texto "razoavelmente longo" sem nenhuma palavra comum de português é
+  // suspeito de estar em outro idioma.
+  return text.length > 15 && !PT_COMMON_WORDS.test(text);
+}
+
 // Pede ao Gemini um título + corpo curtos de notificação, baseados na última
 // conversa do aluno com sua personalidade de IA. Retorna null em qualquer
 // falha (o chamador cai no texto genérico nesse caso).
@@ -228,7 +243,7 @@ async function generatePersonalizedReminder(apiKey, conversation, fallbackTitle,
     .map(m => `${m.role === 'user' ? 'Aluno' : personaName}: ${String(m.text || '').slice(0, 300)}`)
     .join('\n');
 
-  const prompt = `Você escreve notificações push curtas para um app de prática de inglês. Aqui está o final da última conversa entre um aluno e sua personalidade de IA chamada "${personaName}":
+  const prompt = `Você escreve notificações push curtas, em PORTUGUÊS DO BRASIL, para um app de prática de inglês. Aqui está o final da última conversa entre um aluno e sua personalidade de IA chamada "${personaName}" — essa conversa está em inglês, pois é uma prática de idioma, mas isso é só contexto:
 
 """
 ${transcript}
@@ -237,10 +252,13 @@ ${transcript}
 Escreva um lembrete convidando o aluno a voltar e continuar essa conversa específica (mencione o assunto ou algo que ficou no ar, de forma natural). Responda APENAS um JSON válido, sem markdown, no formato exato:
 {"title": "...", "body": "..."}
 
-Regras:
+Regras (IMPORTANTES, sem exceção):
+- "title" e "body" devem estar OS DOIS em português do Brasil — nunca em inglês, mesmo que a conversa citada acima esteja em inglês e mesmo citando algo que o aluno disse.
+- Pode citar UMA palavra ou expressão em inglês entre aspas se for essencial pra lembrar o assunto (ex.: sobre "job interview"), mas o restante da frase é sempre em português.
 - "title" tem no máximo 6 palavras, pode incluir 1 emoji.
-- "body" tem no máximo 120 caracteres, em português, tom leve e convidativo (nunca cobrando ou culpando o aluno).
-- Não invente detalhes que não estão na conversa acima.`;
+- "body" tem no máximo 120 caracteres, tom leve e convidativo (nunca cobrando ou culpando o aluno).
+- Não invente detalhes que não estão na conversa acima.
+- Nunca comece com saudações genéricas em inglês como "Hi" ou "Hello, how are you" — vá direto ao ponto específico da conversa, em português.`;
 
   try {
     const geminiRes = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
@@ -274,6 +292,15 @@ Regras:
     const title = String(parsed.title || '').slice(0, 80).trim();
     const body = String(parsed.body || '').slice(0, 200).trim();
     if (!title || !body) return null;
+    // Rede de segurança: se apesar da instrução o modelo devolveu algo que
+    // claramente não é português (ex.: saudação genérica em inglês tipo "Hi,
+    // how are you today?"), descarta e deixa o chamador cair no texto
+    // genérico em português — melhor um lembrete genérico do que um em
+    // inglês (ou mal traduzido) chegando pro aluno.
+    if (looksLikeEnglishGreeting(title) || looksLikeEnglishGreeting(body)) {
+      console.warn('generatePersonalizedReminder: descartado por parecer inglês:', { title, body });
+      return null;
+    }
     return { title, body };
   } catch (e) {
     console.error('generatePersonalizedReminder failed:', e);
