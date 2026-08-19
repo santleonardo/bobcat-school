@@ -2402,9 +2402,9 @@ async function sendServerTestPush() {
     });
     const data = await resp.json().catch(() => ({}));
     if (!resp.ok) {
-      alert('Falha no push do servidor (' + resp.status + '): ' + (data.error || '') + (data.hint ? ('\n\n' + data.hint) : '') + '\n\nVerifique VAPID_PUBLIC_KEY/PRIVATE_KEY na Vercel (pública = config.js).');
+      alert('Falha no push do servidor (' + resp.status + '): ' + (data.error || '') + (data.hint ? ('\n\n' + data.hint) : '') + '\n\nVerifique as chaves de notificação configuradas no servidor.');
     } else {
-      alert('Servidor aceitou o push (sent=' + (data.sent != null ? data.sent : 'ok') + ').\nSe não aparecer: app em segundo plano, permissão concedida, e VAPID pública do config.js igual à da Vercel.');
+      alert('Tudo certo!');
     }
   } catch (err) {
     console.error(err);
