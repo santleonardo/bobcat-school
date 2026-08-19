@@ -2250,7 +2250,7 @@ async function updatePushRemindersUI() {
 
   btn.disabled = false;
   if (subscribed) {
-    if (statusEl) statusEl.textContent = 'Lembretes ativos. Use “Testar push (servidor)” para validar. Automático depende do GitHub Actions + SUPABASE_SERVICE_ROLE_KEY.';
+    if (statusEl) statusEl.textContent = 'Lembretes ativos. Use “Testar push (servidor)” para validar. O envio automático é feito pelo servidor.';
     btn.textContent = 'Desativar';
     btn.classList.add('is-on');
     if (testBtn) testBtn.classList.remove('hidden');
