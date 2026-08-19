@@ -2250,7 +2250,7 @@ async function updatePushRemindersUI() {
 
   btn.disabled = false;
   if (subscribed) {
-    if (statusEl) statusEl.textContent = 'Lembretes ativos neste aparelho. Você receberá toques para praticar.';
+    if (statusEl) statusEl.textContent = 'Lembretes ativos. Use “Testar push (servidor)” para validar. Automático depende do GitHub Actions + SUPABASE_SERVICE_ROLE_KEY.';
     btn.textContent = 'Desativar';
     btn.classList.add('is-on');
     if (testBtn) testBtn.classList.remove('hidden');
@@ -2270,39 +2270,54 @@ async function enablePushReminders() {
     alert('Seu navegador não suporta notificações push.');
     return;
   }
+  if (typeof isLoggedIn === 'function' && !isLoggedIn()) {
+    alert('Faça login na sua conta antes de ativar os lembretes. Sem login o servidor não consegue enviar push.');
+    return;
+  }
   const vapidKey = (window.APP_CONFIG && window.APP_CONFIG.vapidPublicKey) || '';
   if (!vapidKey || vapidKey.includes('COLE')) {
-    alert('Chave VAPID pública não configurada em config.js. Veja o README.');
+    alert('Chave VAPID pública não configurada em config.js.');
     return;
   }
 
   const permission = await Notification.requestPermission();
   if (permission !== 'granted') {
-    alert('Você precisa permitir notificações para ativar os lembretes.');
+    alert('Você precisa permitir notificações nas configurações do navegador/celular.');
     await updatePushRemindersUI();
     return;
   }
 
   try {
     const reg = await getPushRegistration();
+    if (!reg) throw new Error('Service Worker não está pronto. Recarregue a página.');
+    // Sempre re-inscreve para garantir que a subscription usa a VAPID atual
     let sub = await reg.pushManager.getSubscription();
-    if (!sub) {
-      sub = await reg.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(vapidKey)
-      });
+    if (sub) {
+      try { await sub.unsubscribe(); } catch (e) { /* ignore */ }
     }
+    sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(vapidKey)
+    });
+    let saveResult = { ok: true };
     if (typeof savePushSubscription === 'function') {
-      await savePushSubscription(sub);
+      saveResult = await savePushSubscription(sub) || { ok: true };
     } else {
       try {
         localStorage.setItem('bobcat_push_subscription', JSON.stringify(sub.toJSON()));
       } catch (e) { /* ignore */ }
     }
     localStorage.setItem('bobcat_push_enabled', '1');
+    if (saveResult.localOnly) {
+      alert('Notificações ativadas só neste aparelho. Faça login com conta na nuvem para receber lembretes automáticos.');
+    } else if (saveResult.ok === false) {
+      alert('Inscrição no navegador ok, mas falhou ao salvar no servidor: ' + (saveResult.message || 'erro desconhecido') + '\n\nConfira login e tabela push_subscriptions no Supabase.');
+    } else {
+      alert('Lembretes ativados e salvos na nuvem. Use “Testar push (servidor)” para validar.');
+    }
   } catch (err) {
     console.error(err);
-    alert('Não foi possível ativar as notificações. Tente de novo ou use Chrome/Edge no Android.');
+    alert('Não foi possível ativar as notificações: ' + (err && err.message ? err.message : err) + '\n\nUse Chrome/Edge (Android) ou Safari com o app na tela de início (iOS 16.4+).');
   }
   await updatePushRemindersUI();
 }
@@ -2387,9 +2402,9 @@ async function sendServerTestPush() {
     });
     const data = await resp.json().catch(() => ({}));
     if (!resp.ok) {
-      alert('Falha no push do servidor: ' + (data.error || resp.status));
+      alert('Falha no push do servidor (' + resp.status + '): ' + (data.error || '') + (data.hint ? ('\n\n' + data.hint) : '') + '\n\nVerifique VAPID_PUBLIC_KEY/PRIVATE_KEY na Vercel (pública = config.js).');
     } else {
-      alert('Push enviado! Se não aparecer, confira se o app está em segundo plano e as chaves VAPID na Vercel.');
+      alert('Servidor aceitou o push (sent=' + (data.sent != null ? data.sent : 'ok') + ').\nSe não aparecer: app em segundo plano, permissão concedida, e VAPID pública do config.js igual à da Vercel.');
     }
   } catch (err) {
     console.error(err);
@@ -2403,8 +2418,9 @@ function setupPushRemindersUI() {
   if (btn) btn.addEventListener('click', () => togglePushReminders());
   if (testBtn) {
     testBtn.addEventListener('click', (e) => {
-      if (e.shiftKey) sendServerTestPush();
-      else sendLocalTestNotification();
+      // Padrão: push real pelo servidor. Shift = só notificação local.
+      if (e.shiftKey) sendLocalTestNotification();
+      else sendServerTestPush();
     });
   }
   setupPushTimesUI();
