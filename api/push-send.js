@@ -250,7 +250,10 @@ Regras:
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
         generationConfig: {
           maxOutputTokens: 100,
-          temperature: 0.8,
+          // Nota: temperature/top_p/top_k não têm efeito nos modelos Gemini
+          // 3.x (incluindo gemini-3.5-flash-lite) — o Google recomenda não
+          // mexer nesses valores e deixar a variação a cargo do próprio
+          // modelo. Por isso não são enviados aqui.
           thinkingConfig: { thinkingLevel: 'low' },
           responseMimeType: 'application/json'
         }
