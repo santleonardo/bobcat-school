@@ -1,0 +1,56 @@
+# Dispara lembretes de prática (Web Push + texto da IA quando houver conversa).
+# Roda a cada 15 minutos — a rota /api/push-send filtra quem está no horário (UTC).
+#
+# Secrets necessários (GitHub → Settings → Secrets and variables → Actions):
+#   APP_URL          → https://seu-app.vercel.app  (sem barra no final)
+#   PUSH_SEND_SECRET → mesmo valor da env PUSH_SEND_SECRET na Vercel
+
+name: Push reminders
+
+on:
+  schedule:
+    # A cada 15 min (UTC). Alinha com REMINDER_WINDOW_MINUTES em api/push-send.js
+    - cron: "*/15 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  send-reminders:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check secrets
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          PUSH_SEND_SECRET: ${{ secrets.PUSH_SEND_SECRET }}
+        run: |
+          if [ -z "$APP_URL" ]; then
+            echo "::error::Secret APP_URL não configurado (ex.: https://bobcat-school.vercel.app)"
+            exit 1
+          fi
+          if [ -z "$PUSH_SEND_SECRET" ]; then
+            echo "::error::Secret PUSH_SEND_SECRET não configurado (deve ser igual ao da Vercel)"
+            exit 1
+          fi
+          echo "APP_URL ok; disparando push-send…"
+
+      - name: Call /api/push-send
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
+          PUSH_SEND_SECRET: ${{ secrets.PUSH_SEND_SECRET }}
+        run: |
+          set -euo pipefail
+          BASE="${APP_URL%/}"
+          URL="${BASE}/api/push-send"
+          # GET = modo cron: só envia para quem está no slot de horário atual
+          HTTP_CODE=$(curl -sS -o /tmp/push-send-body.json -w "%{http_code}" \
+            -X GET \
+            -H "x-push-secret: ${PUSH_SEND_SECRET}" \
+            -H "Accept: application/json" \
+            "$URL")
+          echo "HTTP $HTTP_CODE"
+          cat /tmp/push-send-body.json || true
+          echo
+          if [ "$HTTP_CODE" -lt 200 ] || [ "$HTTP_CODE" -ge 300 ]; then
+            echo "::error::push-send falhou com HTTP $HTTP_CODE"
+            exit 1
+          fi
