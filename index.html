@@ -269,7 +269,7 @@
     <div id="update-banner-slot"></div>
     <div id="install-banner-slot"></div>
 
-    <div class="hello-card">
+    <div class="hello-card bento-enter" style="--enter-delay:0ms">
       <div class="emoji" id="menu-avatar">🦁</div>
       <div>
         <div class="greeting" id="menu-greeting">Olá!</div>
@@ -281,7 +281,8 @@
     <div class="bento-grid" id="bento-home">
 
       <!-- 1. Próxima lição de inglês (destaque full-width) -->
-      <button type="button" class="bento-card bento-featured" id="bento-next-en" aria-label="Abrir próxima lição de inglês">
+      <button type="button" class="bento-card bento-featured bento-enter" style="--enter-delay:60ms" id="bento-next-en" aria-label="Abrir próxima lição de inglês">
+        <div class="bento-shine" aria-hidden="true"></div>
         <div class="bento-card-eyebrow">
           <span class="bento-flag" aria-hidden="true">🇬🇧</span>
           Próxima lição · Inglês
@@ -300,7 +301,7 @@
       </button>
 
       <!-- 2. Próxima lição de português -->
-      <button type="button" class="bento-card bento-pt" id="bento-next-pt" aria-label="Abrir próxima lição de português">
+      <button type="button" class="bento-card bento-pt bento-enter" style="--enter-delay:120ms" id="bento-next-pt" aria-label="Abrir próxima lição de português">
         <div class="bento-card-eyebrow">
           <span class="bento-flag" aria-hidden="true">🇧🇷</span>
           Português
@@ -315,7 +316,7 @@
       </button>
 
       <!-- 3. Chat com a IA -->
-      <button type="button" class="bento-card bento-chat" id="bento-ai-chat" data-screen="ai-chat" aria-label="Conversar com a IA">
+      <button type="button" class="bento-card bento-chat bento-enter" style="--enter-delay:180ms" id="bento-ai-chat" data-screen="ai-chat" aria-label="Conversar com a IA">
         <div class="bento-card-eyebrow">Prática</div>
         <div class="bento-card-icon sm">💬</div>
         <div class="bento-card-title">Chat com a IA</div>
@@ -327,7 +328,7 @@
       </button>
 
       <!-- 4. Jogos -->
-      <button type="button" class="bento-card bento-games" id="bento-games" aria-label="Abrir jogos">
+      <button type="button" class="bento-card bento-games bento-enter" style="--enter-delay:240ms" id="bento-games" aria-label="Abrir jogos">
         <div class="bento-card-eyebrow">Diversão</div>
         <div class="bento-card-icon sm">🎮</div>
         <div class="bento-card-title">Jogos</div>
@@ -340,7 +341,7 @@
     </div>
 
     <!-- Menu secundário: o resto -->
-    <div class="bento-more">
+    <div class="bento-more bento-enter" style="--enter-delay:300ms">
       <button type="button" class="bento-more-toggle" id="bento-more-toggle" aria-expanded="false">
         <span>Mais opções</span>
         <span class="bento-more-chevron" aria-hidden="true">▾</span>

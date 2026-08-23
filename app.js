@@ -1643,6 +1643,16 @@ function getNextPortugueseLesson(progress) {
   return ptItems[0] || null;
 }
 
+function replayBentoEnter() {
+  const nodes = document.querySelectorAll('#screen-menu .bento-enter');
+  nodes.forEach(el => {
+    el.style.animation = 'none';
+    // force reflow
+    void el.offsetWidth;
+    el.style.animation = '';
+  });
+}
+
 async function renderMenu() {
   const profile = await getProfile();
   if (!profile) return;
@@ -1710,6 +1720,9 @@ async function renderMenu() {
       morePanel.classList.toggle('hidden', open);
     });
   }
+
+  // Replay entrada staggered a cada visita à tela
+  replayBentoEnter();
 }
 
 // ---------- Tela Home / lista de lições ----------
