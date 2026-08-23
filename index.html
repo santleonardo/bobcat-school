@@ -277,78 +277,138 @@
       </div>
     </div>
 
-    <h2 class="screen-title menu-section-title">O que você quer fazer?</h2>
-    <div class="menu-grid">
-      <button class="menu-btn" data-screen="home">
-        <span class="menu-btn-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11a2 2 0 0 1 2 2v14a1.5 1.5 0 0 0-1.5-1.5H4Z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13a2 2 0 0 0-2 2v14a1.5 1.5 0 0 1 1.5-1.5H20Z"/></svg>
-        </span>
-        <span class="menu-btn-text">
-          <span class="menu-btn-label">Lições</span>
-          <span class="menu-btn-desc">Estude passo a passo, na sua fase</span>
-        </span>
-        <span class="menu-btn-chevron" aria-hidden="true">›</span>
+    <!-- Bento grid — prioridade: próxima EN, próxima PT, chat IA, jogos -->
+    <div class="bento-grid" id="bento-home">
+
+      <!-- 1. Próxima lição de inglês (destaque full-width) -->
+      <button type="button" class="bento-card bento-featured" id="bento-next-en" aria-label="Abrir próxima lição de inglês">
+        <div class="bento-card-eyebrow">
+          <span class="bento-flag" aria-hidden="true">🇬🇧</span>
+          Próxima lição · Inglês
+        </div>
+        <div class="bento-card-body">
+          <div class="bento-card-icon" id="bento-next-en-icon">📘</div>
+          <div class="bento-card-copy">
+            <div class="bento-card-title" id="bento-next-en-title">Lição 1 — Verb To Be</div>
+            <div class="bento-card-desc" id="bento-next-en-desc">am, is, are — afirmativas, negativas e perguntas</div>
+          </div>
+        </div>
+        <div class="bento-card-cta">
+          <span id="bento-next-en-cta">Continuar</span>
+          <span class="bento-card-arrow" aria-hidden="true">→</span>
+        </div>
       </button>
-      <button class="menu-btn" data-screen="ai-chat">
-        <span class="menu-btn-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8.5L4 19.5Z"/><path d="M8 9.5h8M8 12.5h5"/></svg>
-        </span>
-        <span class="menu-btn-text">
-          <span class="menu-btn-label">💬 Conversar</span>
-          <span class="menu-btn-desc">Pratique inglês com a IA</span>
-        </span>
-        <span class="menu-btn-chevron" aria-hidden="true">›</span>
+
+      <!-- 2. Próxima lição de português -->
+      <button type="button" class="bento-card bento-pt" id="bento-next-pt" aria-label="Abrir próxima lição de português">
+        <div class="bento-card-eyebrow">
+          <span class="bento-flag" aria-hidden="true">🇧🇷</span>
+          Português
+        </div>
+        <div class="bento-card-icon sm" id="bento-next-pt-icon">📗</div>
+        <div class="bento-card-title" id="bento-next-pt-title">Capa — Manual Básico</div>
+        <div class="bento-card-desc" id="bento-next-pt-desc">Classes gramaticais</div>
+        <div class="bento-card-cta subtle">
+          <span>Abrir</span>
+          <span class="bento-card-arrow" aria-hidden="true">→</span>
+        </div>
       </button>
-      <button class="menu-btn" data-screen="tests">
-        <span class="menu-btn-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></svg>
-        </span>
-        <span class="menu-btn-text">
-          <span class="menu-btn-label">Testes</span>
-          <span class="menu-btn-desc">Descubra sua fase no inglês</span>
-        </span>
-        <span class="menu-btn-chevron" aria-hidden="true">›</span>
+
+      <!-- 3. Chat com a IA -->
+      <button type="button" class="bento-card bento-chat" id="bento-ai-chat" data-screen="ai-chat" aria-label="Conversar com a IA">
+        <div class="bento-card-eyebrow">Prática</div>
+        <div class="bento-card-icon sm">💬</div>
+        <div class="bento-card-title">Chat com a IA</div>
+        <div class="bento-card-desc">Converse em inglês</div>
+        <div class="bento-card-cta subtle">
+          <span>Conversar</span>
+          <span class="bento-card-arrow" aria-hidden="true">→</span>
+        </div>
       </button>
-      <button class="menu-btn" data-screen="extra">
-        <span class="menu-btn-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H17a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2Z"/></svg>
-        </span>
-        <span class="menu-btn-text">
-          <span class="menu-btn-label">Extra</span>
-          <span class="menu-btn-desc">Materiais e gramática sem pré-requisito</span>
-        </span>
-        <span class="menu-btn-chevron" aria-hidden="true">›</span>
+
+      <!-- 4. Jogos -->
+      <button type="button" class="bento-card bento-games" id="bento-games" aria-label="Abrir jogos">
+        <div class="bento-card-eyebrow">Diversão</div>
+        <div class="bento-card-icon sm">🎮</div>
+        <div class="bento-card-title">Jogos</div>
+        <div class="bento-card-desc">Caça-palavras, labirinto e mais</div>
+        <div class="bento-card-cta subtle">
+          <span>Jogar</span>
+          <span class="bento-card-arrow" aria-hidden="true">→</span>
+        </div>
       </button>
-      <button class="menu-btn" data-screen="how-it-works">
-        <span class="menu-btn-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.5 2.5 0 1 1 3.6 2.25c-.7.35-1.1.9-1.1 1.65v.4"/><circle cx="12" cy="16.7" r=".6" fill="currentColor"/></svg>
-        </span>
-        <span class="menu-btn-text">
-          <span class="menu-btn-label">Como funciona</span>
-          <span class="menu-btn-desc">Entenda o app em poucos passos</span>
-        </span>
-        <span class="menu-btn-chevron" aria-hidden="true">›</span>
+    </div>
+
+    <!-- Menu secundário: o resto -->
+    <div class="bento-more">
+      <button type="button" class="bento-more-toggle" id="bento-more-toggle" aria-expanded="false">
+        <span>Mais opções</span>
+        <span class="bento-more-chevron" aria-hidden="true">▾</span>
       </button>
-      <a class="menu-btn hidden" href="./bobcat-ville.html" id="btn-bobcat-ville">
-        <span class="menu-btn-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-5h4v5h4a1 1 0 0 0 1-1v-9"/><circle cx="12" cy="14" r="1.2" fill="currentColor"/></svg>
-        </span>
-        <span class="menu-btn-text">
-          <span class="menu-btn-label">Bobcat Ville</span>
-          <span class="menu-btn-desc">Explore a cidade e viva a história em inglês</span>
-        </span>
-        <span class="menu-btn-chevron" aria-hidden="true">›</span>
-      </a>
-      <button class="menu-btn" data-screen="profile-view">
-        <span class="menu-btn-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.6 4-5.5 7-5.5s5.8 1.9 7 5.5"/></svg>
-        </span>
-        <span class="menu-btn-text">
-          <span class="menu-btn-label">Perfil</span>
-          <span class="menu-btn-desc">Seu progresso e suas conquistas</span>
-        </span>
-        <span class="menu-btn-chevron" aria-hidden="true">›</span>
-      </button>
+      <div class="bento-more-panel hidden" id="bento-more-panel">
+        <div class="menu-grid menu-grid-compact">
+          <button class="menu-btn" data-screen="home">
+            <span class="menu-btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11a2 2 0 0 1 2 2v14a1.5 1.5 0 0 0-1.5-1.5H4Z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13a2 2 0 0 0-2 2v14a1.5 1.5 0 0 1 1.5-1.5H20Z"/></svg>
+            </span>
+            <span class="menu-btn-text">
+              <span class="menu-btn-label">Todas as lições</span>
+              <span class="menu-btn-desc">Catálogo completo de inglês</span>
+            </span>
+            <span class="menu-btn-chevron" aria-hidden="true">›</span>
+          </button>
+          <button class="menu-btn" data-screen="tests">
+            <span class="menu-btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6" fill="currentColor"/></svg>
+            </span>
+            <span class="menu-btn-text">
+              <span class="menu-btn-label">Testes</span>
+              <span class="menu-btn-desc">Descubra sua fase no inglês</span>
+            </span>
+            <span class="menu-btn-chevron" aria-hidden="true">›</span>
+          </button>
+          <button class="menu-btn" data-screen="extra">
+            <span class="menu-btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H17a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2Z"/></svg>
+            </span>
+            <span class="menu-btn-text">
+              <span class="menu-btn-label">Extra</span>
+              <span class="menu-btn-desc">Manuais e gramática</span>
+            </span>
+            <span class="menu-btn-chevron" aria-hidden="true">›</span>
+          </button>
+          <button class="menu-btn" data-screen="how-it-works">
+            <span class="menu-btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.5 2.5 0 1 1 3.6 2.25c-.7.35-1.1.9-1.1 1.65v.4"/><circle cx="12" cy="16.7" r=".6" fill="currentColor"/></svg>
+            </span>
+            <span class="menu-btn-text">
+              <span class="menu-btn-label">Como funciona</span>
+              <span class="menu-btn-desc">Entenda o app em poucos passos</span>
+            </span>
+            <span class="menu-btn-chevron" aria-hidden="true">›</span>
+          </button>
+          <a class="menu-btn hidden" href="./bobcat-ville.html" id="btn-bobcat-ville">
+            <span class="menu-btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-5h4v5h4a1 1 0 0 0 1-1v-9"/><circle cx="12" cy="14" r="1.2" fill="currentColor"/></svg>
+            </span>
+            <span class="menu-btn-text">
+              <span class="menu-btn-label">Bobcat Ville</span>
+              <span class="menu-btn-desc">Explore a cidade e viva a história</span>
+            </span>
+            <span class="menu-btn-chevron" aria-hidden="true">›</span>
+          </a>
+          <button class="menu-btn" data-screen="profile-view">
+            <span class="menu-btn-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.6 4-5.5 7-5.5s5.8 1.9 7 5.5"/></svg>
+            </span>
+            <span class="menu-btn-text">
+              <span class="menu-btn-label">Perfil</span>
+              <span class="menu-btn-desc">Progresso e conquistas</span>
+            </span>
+            <span class="menu-btn-chevron" aria-hidden="true">›</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 

@@ -1617,7 +1617,31 @@ async function renderExtras() {
   list.appendChild(grid);
 }
 
-// ---------- Tela Menu (página inicial) ----------
+// ---------- Tela Menu (página inicial) — bento grid ----------
+
+function getNextEnglishLesson(progress) {
+  const lockStatus = computeLockStatus(progress);
+  for (const lesson of LESSONS) {
+    const p = progress[lesson.id];
+    const done = p && p.completed;
+    if (!done && !lockStatus[lesson.id]) return lesson;
+  }
+  // Todas concluídas: aponta para a última
+  return LESSONS[LESSONS.length - 1] || null;
+}
+
+function getNextPortugueseLesson(progress) {
+  // Manuais de português (exclui jogos e laboratório)
+  const ptItems = EXTRAS.filter(e => {
+    const g = e.group || '';
+    return g.indexOf('Manual') === 0 || g.indexOf('Portugu') !== -1;
+  });
+  for (const item of ptItems) {
+    const p = progress[item.id];
+    if (!(p && p.completed)) return item;
+  }
+  return ptItems[0] || null;
+}
 
 async function renderMenu() {
   const profile = await getProfile();
@@ -1626,6 +1650,66 @@ async function renderMenu() {
   document.getElementById('menu-avatar').textContent = profile.avatar;
   document.getElementById('menu-greeting').textContent = 'Olá, ' + profile.name + '!';
   document.getElementById('menu-level-sub').textContent = 'Fase ' + profile.level + ' • o que vamos fazer hoje?';
+
+  const progress = await getProgress();
+
+  // --- Próxima lição de inglês ---
+  const nextEn = getNextEnglishLesson(progress);
+  const enBtn = document.getElementById('bento-next-en');
+  if (nextEn && enBtn) {
+    const p = progress[nextEn.id];
+    const done = p && p.completed;
+    const pct = p && p.total > 0 ? Math.round((p.correct / p.total) * 100) : 0;
+    document.getElementById('bento-next-en-icon').textContent = nextEn.icon || '📘';
+    document.getElementById('bento-next-en-title').textContent = nextEn.name;
+    document.getElementById('bento-next-en-desc').textContent = nextEn.description || '';
+    const cta = document.getElementById('bento-next-en-cta');
+    if (cta) {
+      if (done) cta.textContent = 'Revisar · ' + pct + '%';
+      else if (p && p.total > 0) cta.textContent = 'Continuar · ' + pct + '%';
+      else cta.textContent = 'Começar agora';
+    }
+    enBtn.onclick = () => openLesson(nextEn);
+  }
+
+  // --- Próxima lição de português ---
+  const nextPt = getNextPortugueseLesson(progress);
+  const ptBtn = document.getElementById('bento-next-pt');
+  if (nextPt && ptBtn) {
+    document.getElementById('bento-next-pt-icon').textContent = nextPt.icon || '📗';
+    document.getElementById('bento-next-pt-title').textContent = nextPt.name;
+    document.getElementById('bento-next-pt-desc').textContent = nextPt.description || '';
+    ptBtn.onclick = () => { window.location.href = nextPt.url; };
+  }
+
+  // --- Chat IA ---
+  const chatBtn = document.getElementById('bento-ai-chat');
+  if (chatBtn && !chatBtn._bound) {
+    chatBtn._bound = true;
+    chatBtn.addEventListener('click', () => showScreen('ai-chat'));
+  }
+
+  // --- Jogos ---
+  const gamesBtn = document.getElementById('bento-games');
+  if (gamesBtn && !gamesBtn._bound) {
+    gamesBtn._bound = true;
+    gamesBtn.addEventListener('click', () => {
+      window._extraOpenGroup = 'Jogos';
+      showScreen('extra');
+    });
+  }
+
+  // --- Mais opções (accordion) ---
+  const moreToggle = document.getElementById('bento-more-toggle');
+  const morePanel = document.getElementById('bento-more-panel');
+  if (moreToggle && morePanel && !moreToggle._bound) {
+    moreToggle._bound = true;
+    moreToggle.addEventListener('click', () => {
+      const open = moreToggle.getAttribute('aria-expanded') === 'true';
+      moreToggle.setAttribute('aria-expanded', open ? 'false' : 'true');
+      morePanel.classList.toggle('hidden', open);
+    });
+  }
 }
 
 // ---------- Tela Home / lista de lições ----------
