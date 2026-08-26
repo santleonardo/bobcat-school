@@ -20,7 +20,7 @@
     --radius:18px;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  html,body{height:100%}
+  html,body{height:100%;overflow-x:hidden;max-width:100%}
   body{
     font-family:"Inter",sans-serif;color:var(--ink);min-height:100vh;
     line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:40px;
@@ -97,7 +97,7 @@
     border-radius:var(--radius);padding:12px;box-shadow:var(--shadow);display:flex;justify-content:center;width:100%;
     transition:box-shadow .2s}
   .board-card.hurt{box-shadow:0 0 0 3px var(--bad), var(--shadow)}
-  #board{display:grid;user-select:none;touch-action:none;gap:2px}
+  #board{display:grid;user-select:none;touch-action:none;gap:2px;width:100%;max-width:100%;aspect-ratio:1;box-sizing:border-box}
   .cell{display:flex;align-items:center;justify-content:center;font-weight:800;
     font-family:"Poppins",sans-serif;border-radius:5px;background:var(--cream-2);
     color:var(--ink-soft);font-size:12px;position:relative}
@@ -397,8 +397,10 @@ const state = {
 /* ─── Construção do tabuleiro ─── */
 const boardEl = document.getElementById('board');
 function buildBoard(){
-  boardEl.style.gridTemplateColumns = `repeat(${SIZE}, minmax(16px, 26px))`;
-  boardEl.style.gridTemplateRows = `repeat(${SIZE}, minmax(16px, 26px))`;
+  boardEl.style.gridTemplateColumns = `repeat(${SIZE}, minmax(0, 1fr))`;
+  boardEl.style.gridTemplateRows = `repeat(${SIZE}, minmax(0, 1fr))`;
+  boardEl.style.width = '100%';
+  boardEl.style.aspectRatio = '1';
   boardEl.innerHTML = '';
   state.cells = [];
   for (let r = 0; r < SIZE; r++){

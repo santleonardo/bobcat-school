@@ -22,7 +22,7 @@
     --radius:18px;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  html,body{height:100%}
+  html,body{height:100%;overflow-x:hidden;max-width:100%}
   body{
     font-family:"Inter",sans-serif;color:var(--ink);min-height:100vh;
     line-height:1.5;-webkit-font-smoothing:antialiased;padding-bottom:40px;
@@ -61,10 +61,8 @@
   /* Grid */
   .board-card{background:linear-gradient(160deg,var(--cream),var(--cream-2));border:1px solid var(--border);
     border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);display:flex;justify-content:center;width:100%}
-  #grid{display:grid;user-select:none;touch-action:none;gap:3px}
-  .cell{display:flex;align-items:center;justify-content:center;font-weight:700;
-    font-family:"Poppins",sans-serif;border-radius:6px;background:var(--cream-2);
-    color:var(--ink-soft);cursor:pointer;transition:background .1s,color .1s,transform .12s;position:relative}
+  #grid{display:grid;user-select:none;touch-action:none;gap:2px;width:100%;max-width:100%;aspect-ratio:1;box-sizing:border-box}
+  .cell{display:flex;align-items:center;justify-content:center;font-weight:700;font-size:clamp(9px,3.2vw,15px);aspect-ratio:1;min-width:0;border-radius:6px;background:var(--cream-2);color:var(--ink);cursor:pointer;user-select:none;-webkit-user-select:none}
   .cell.selecting{background:linear-gradient(135deg,var(--orange-light),var(--pink));color:#1c1614;transform:scale(1.06)}
   .cell.found{background:linear-gradient(135deg,var(--ok),#26b06c);color:#0a0a0b;
     animation:popIn .3s cubic-bezier(.34,1.56,.64,1)}
@@ -585,8 +583,10 @@ async function loadTopic(index){
 
 function renderGrid(){
   const el = document.getElementById('grid');
-  el.style.gridTemplateColumns = `repeat(${state.size}, minmax(20px, 32px))`;
-  el.style.gridTemplateRows = `repeat(${state.size}, minmax(20px, 32px))`;
+  el.style.gridTemplateColumns = `repeat(${state.size}, minmax(0, 1fr))`;
+  el.style.gridTemplateRows = `repeat(${state.size}, minmax(0, 1fr))`;
+  el.style.width = '100%';
+  el.style.aspectRatio = '1';
   el.innerHTML = '';
   for (let r = 0; r < state.size; r++){
     for (let c = 0; c < state.size; c++){
