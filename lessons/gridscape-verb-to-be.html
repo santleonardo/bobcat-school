@@ -402,7 +402,7 @@ function renderQuiz(){
   var opts = q.options.map(function(o,i){
     return '<button type="button" class="gq-opt" data-i="'+i+'">'+o+'</button>';
   }).join('');
-  box.innerHTML = '<p style="font-weight:700;font-size:15px;margin:0 0 8px">'+(qi+1)+'. '+q.prompt+'</p><div>'+opts+'</div>';<button type="button" class="gq-clear" id="quizClearBtn">Limpar seleção</button>';
+  box.innerHTML = '<p style="font-weight:700;font-size:15px;margin:0 0 8px">'+(qi+1)+'. '+q.prompt+'</p><div>'+opts+'</div><button type="button" class="gq-clear" id="quizClearBtn">Limpar seleção</button>';
   function clearQuizSelection(){
     if(qLocked) return;
     box.querySelectorAll('button[data-i]').forEach(function(btn){
