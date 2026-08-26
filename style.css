@@ -215,11 +215,16 @@ a { color: var(--terracotta-deep); }
   max-width: 480px;
   margin: 0 auto;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  padding-bottom: 90px; /* room for bottom nav */
+  /* espaço p/ bottom-nav + home indicator do iPhone */
+  padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
   background: var(--paper);
   position: relative;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Top bar */
@@ -1018,9 +1023,10 @@ body.on-auth-screen .auth-hint { color: var(--ink-soft); }
 .hello-card .greeting { font-family: "Fraunces", Georgia, serif; font-size: 19.5px; font-weight: 600; letter-spacing: -0.01em; position: relative; z-index: 1; }
 .hello-card .sub { font-size: 12.5px; opacity: 0.8; margin-top: 4px; position: relative; z-index: 1; }
 
-.stats-row { display: flex; gap: 12px; margin-bottom: 24px; }
+.stats-row { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
 .stat-box {
-  flex: 1;
+  flex: 1 1 calc(50% - 8px);
+  min-width: 120px;
   background: var(--surface);
   border: none;
   border-radius: var(--radius-sm);
@@ -1225,7 +1231,7 @@ body.on-auth-screen .auth-hint { color: var(--ink-soft); }
   box-shadow: var(--clay-well);
 }
 .lesson-card .info { flex: 1; min-width: 0; }
-.lesson-card .name { font-weight: 700; font-size: 14.5px; color: var(--ink); }
+.lesson-card .name { font-weight: 700; font-size: 14.5px; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .lesson-card .level { font-size: 11.5px; color: var(--ink-soft); margin-top: 1px; }
 .lesson-card .progress-track { height: 7px; background: var(--progress-track-bg); border-radius: 999px; margin-top: 9px; overflow: hidden; box-shadow: var(--clay-well); }
 .lesson-card .progress-fill { height: 100%; background: linear-gradient(90deg, var(--ok), #2db87a); border-radius: 999px; }
@@ -1667,15 +1673,17 @@ body.on-auth-screen .auth-hint { color: var(--ink-soft); }
 /* Bottom nav */
 .bottom-nav {
   position: fixed;
-  bottom: 10px; left: 0; right: 0;
+  bottom: max(10px, env(safe-area-inset-bottom, 0px));
+  left: max(10px, env(safe-area-inset-left, 0px));
+  right: max(10px, env(safe-area-inset-right, 0px));
   max-width: 440px;
   margin: 0 auto;
   background: var(--surface);
   border: none;
   border-radius: 26px;
   display: flex;
-  padding-bottom: env(safe-area-inset-bottom, 0);
   box-shadow: var(--clay-raised-deep);
+  z-index: 50;
 }
 .bottom-nav.single { justify-content: center; }
 .bottom-nav.single .nav-btn { flex: none; padding: 13px 44px 11px 44px; }
@@ -1815,6 +1823,8 @@ body.on-auth-screen .auth-hint { color: var(--ink-soft); }
   font-size: 13.5px;
   line-height: 1.45;
   word-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .chat-bubble .chat-meta {
   display: block;
